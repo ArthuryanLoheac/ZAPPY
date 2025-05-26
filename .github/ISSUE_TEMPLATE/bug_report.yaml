@@ -1,5 +1,5 @@
 name: "Bug Report"
-description: Create a report to track bugs.
+description: Create a report for a bug
 labels: ["bug"]
 body:
   - type: textarea

@@ -1,5 +1,5 @@
 name: Feature Request
-description: Suggest an idea for this project
+description: Add an idea request for this project
 labels: ["enhancement"]
 body:
   - type: textarea

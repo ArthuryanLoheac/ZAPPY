@@ -1,0 +1,118 @@
+name: pain_au_chocolat
+
+on:
+  push:
+    branches-ignore:
+      - 'ga-ignore-**'
+  pull_request:
+    branches-ignore:
+      - 'ga-ignore-**'
+
+env:
+  MIRROR_URL: 'git@github.com:EpitechPromo2028/B-YEP-400-NAN-4-1-zappy-arthuryan.loheac-de-sainte-marie'
+  EXECUTABLES: 'zappy_server, zappy_gui, zappy_ai'
+  FUNCTIONS_BANNED: ''
+
+jobs:
+  check_coding_style:
+    if: github.repository != 'EpitechPromo2028/B-YEP-400-NAN-4-1-zappy-arthuryan.loheac-de-sainte-marie'
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/epitech/coding-style-checker:latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: "Check the coding style"
+        run: |
+          check.sh "$(pwd)" "$(pwd)"
+          tmpfile=$(mktemp)
+          
+          echo "0" > "$tmpfile"
+          cat coding-style-reports.log | while read -r line; do
+            file=$(echo "$line" | cut -d':' -f1 | cut -d'/' -f 2-)
+            nbline=$(echo "$line" | cut -d':' -f2)
+            title=$(echo "$line" | cut -d':' -f3)" coding style error"
+            code=$(echo "$line" | cut -d':' -f4)
+            echo "::error title=$title,file=$file,line=$nbline,col=0::$code"
+            echo "1" > "$tmpfile"
+          done
+          
+          if [ "$(cat "$tmpfile")" = "1" ]; then
+            rm "$tmpfile"
+            exit 1
+          fi
+          rm "$tmpfile"
+  check_program_compilation:
+    needs: check_coding_style
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+      - name: "Make"
+        timeout-minutes: 2
+        run: make
+      - name: "Check existing executables"
+        run: |
+          LIST=$(echo $EXECUTABLES | tr ',' ' ')
+          find $LIST
+  check_banned_function:
+    needs: check_program_compilation
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+      - name: "Make"
+        run: make
+      - name: "Check banned functions"
+        run: |
+          liste_binaires=$(echo "$EXECUTABLES" | tr ',' '\n')
+          fonctions_bannies=$(echo "$FUNCTIONS_BANNED" | tr ', ' '\n')
+          
+          while read -r binaire; do
+              echo "Analyse du binaire : $binaire"
+              symboles=$(nm "$binaire" | grep ' U ' | awk '{print $2}' | cut -d'@' -f1 | c++filt | sort -u)
+              while read -r symbole; do
+                  if [[ ${symbole:0:1} != "_" ]]; then
+                      if echo "$fonctions_bannies" | grep -xq "$symbole"; then
+                          echo "Fonction bannie trouvée : $symbole"
+                          exit 1
+                      fi
+                  fi
+              done <<< "$symboles"
+          done <<< "$liste_binaires"
+      
+          echo "Aucune fonction bannie trouvée."
+        shell: bash
+  run_tests:
+    needs: check_banned_function
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+      - name: "Launch tests"
+        timeout-minutes: 2
+        run: make tests_run
+  push_to_mirror: 
+    needs: run_tests
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: "Mirroring"
+        uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url:
+            ${{ env.MIRROR_URL }}
+          ssh_private_key:
+            ${{ secrets.GIT_SSH_PRIVATE_KEY }}

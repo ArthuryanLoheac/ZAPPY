@@ -1,0 +1,14 @@
+*.a
+*.o
+.vscode/
+*.log
+vgcore*
+*.gcda
+*.gcno
+*.gcov
+unit_tests
+*.out
+*.d
+obj/
+build
+zappy_server, zappy_gui, zappy_ai

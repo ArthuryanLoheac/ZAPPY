@@ -5,7 +5,7 @@
 ## Makefile for zappy project
 ##
 
-.PHONY: all clean fclean re run unit_tests tests_run tests_run_coverage tests_clean_run tests_clean_run_coverage
+.PHONY: all clean fclean re run unit_tests tests_run tests_run_coverage
 
 # ============= OBJECT ============= #
 
@@ -108,9 +108,4 @@ tests_run: unit_tests
 	./$(OBJ_DIR)/unit_tests --verbose
 
 tests_run_coverage: tests_run
-	gcovr -r . -e tests/
-
-tests_clean_run: fclean tests_run
-
-tests_clean_run_coverage: tests_clean_run
 	gcovr -r . -e tests/

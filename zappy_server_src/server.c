@@ -9,6 +9,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <poll.h>
 
 #include "include/server.h"
 #include "include/parser.h"
@@ -49,6 +50,18 @@ static int create_socket(void)
     return server_fd;
 }
 
+static struct pollfd *create_poll(int server_fd)
+{
+    struct pollfd *fds = malloc(sizeof(struct pollfd));
+
+    if (fds == NULL)
+        display_error("Memory allocation failed for poll file descriptors.");
+    fds[0].fd = server_fd;
+    fds[0].events = POLLIN;
+    fds[0].revents = 0;
+    return fds;
+}
+
 server_t *create_server(int port)
 {
     server_t *server = malloc(sizeof(server_t));
@@ -57,8 +70,8 @@ server_t *create_server(int port)
         display_error("Memory allocation failed for server structure.");
     server->port = port;
     server->server_fd = create_socket();
-    server->nb_fds = 0;
-    server->fds = NULL;
+    server->nb_fds = 1;
+    server->fds = create_poll(server->server_fd);
     config_socket(server->server_fd);
     bind_socket(server->server_fd, port);
     listen_socket(server->server_fd);
@@ -69,5 +82,6 @@ void destroy_server(server_t *server)
 {
     if (close(server->server_fd) == -1)
         display_error("Failed to close server socket.");
+    free(server->fds);
     free(server);
 }

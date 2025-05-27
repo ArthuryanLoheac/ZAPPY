@@ -5,7 +5,8 @@
 ## Makefile for zappy project
 ##
 
-.PHONY: all clean fclean re run unit_tests tests_run tests_run_coverage
+.PHONY: all clean fclean re run coding_style \
+	unit_tests tests_run tests_run_coverage
 
 # ============= OBJECT ============= #
 
@@ -95,6 +96,11 @@ re: fclean all
 
 run: all
 	./$(ZAPPY_SERVER) -p 4242 -x 10 -y 10 -n team1 team2 -c 10
+
+coding_style: fclean
+	coding-style . .
+	cat coding-style-reports.log
+	rm -f coding-style-reports.log
 
 # ============= TESTS ============= #
 

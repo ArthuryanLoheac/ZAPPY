@@ -10,8 +10,11 @@
 
 typedef struct parser_s parser_t;
 
+typedef struct server_s server_t;
+
 typedef struct zappy_s {
     parser_t *parser;
+    server_t *server;
 } zappy_t;
 
 #endif /* !ZAPPY_H */

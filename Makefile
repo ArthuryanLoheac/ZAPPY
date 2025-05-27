@@ -30,7 +30,7 @@ FLAGS_SERVER = -MMD -MP \
 
 FLAGS_GUI =	-MMD -MP -lIrrlicht \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
-	-std=c++20 -Wall -Wextra -Werror
+	-std=c++17 -Wall -Wextra -Werror
 
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \

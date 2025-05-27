@@ -1,17 +1,26 @@
+# Compilation
+zappy_server
+zappy_gui
+zappy_ai
+*.out
 *.a
 *.o
-.vscode/
-*.log
-vgcore*
+*.d
+*.so
+
+# Unit tests
+unit_tests
 *.gcda
 *.gcno
 *.gcov
-unit_tests
-*.out
-*.d
-obj/
+
+# Other
+zappy_ref-v3.0.0
+.vscode/
 private/
+build/
 .idea/
+obj/
+vgcore*
+*.log
 .DS_Store
-build
-zappy_server, zappy_gui, zappy_ai

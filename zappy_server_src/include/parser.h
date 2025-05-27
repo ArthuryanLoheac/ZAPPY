@@ -20,5 +20,6 @@ typedef struct parser_s {
 parser_t *parse_arguments(int ac, char **av);
 void display_help(void);
 void display_error(const char *message);
+void destroy_parser(parser_t *parser);
 
 #endif /* !PARSER_H */

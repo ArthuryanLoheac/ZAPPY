@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2025
-** parsing.c
+** parser.c
 ** File description:
 ** Functions to parse command line arguments
 */
@@ -103,4 +103,10 @@ parser_t *parse_arguments(int ac, char **av)
         parser->team_names == NULL || parser->clients_per_team == 0)
         display_help();
     return parser;
+}
+
+void destroy_parser(parser_t *parser)
+{
+    free(parser->team_names);
+    free(parser);
 }

@@ -49,9 +49,9 @@ SRC_MAIN_SERVER	= zappy_server_src/main.c
 SRC_MAIN_GUI = zappy_gui_src/main.cpp
 SRC_MAIN_AI	= zappy_ai_src/main.cpp
 
-SRC_SERVER = $(shell find zappy_server_src -type f -name "*.c" ! -name "main.c")
-SRC_GUI	= $(shell find zappy_gui_src -type f -name "*.cpp" ! -name "main.cpp")
-SRC_AI = $(shell find zappy_ai_src -type f -name "*.cpp" ! -name "main.cpp")
+SRC_SERVER = $(shell find zappy_server_src -type f -name "*.c" !-name "main.c")
+SRC_GUI	= $(shell find zappy_gui_src -type f -name "*.cpp" !-name "main.cpp")
+SRC_AI = $(shell find zappy_ai_src -type f -name "*.cpp" !-name "main.cpp")
 SRC_TESTS = $(shell find tests -type f -name "*.c" -o -name "*.cpp")
 
 # ============= RULES ============= #
@@ -100,7 +100,8 @@ run: all
 
 unit_tests:
 	@mkdir -p $(OBJ_DIR)
-	g++ -o $(OBJ_DIR)/unit_tests $(SRC_TESTS) $(SRC_SERVER) $(SRC_GUI) $(SRC_AI) \
+	g++ -o $(OBJ_DIR)/unit_tests $(SRC_TESTS) \
+	$(SRC_SERVER) $(SRC_GUI) $(SRC_AI) \
 	$(FLAGS_TEST) $(FLAGS_GUI) $(FLAGS_AI)
 	cp $(OBJ_DIR)/unit_tests unit_tests
 

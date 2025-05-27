@@ -10,5 +10,8 @@ unit_tests
 *.out
 *.d
 obj/
+private/
+.idea/
+.DS_Store
 build
 zappy_server, zappy_gui, zappy_ai

@@ -17,4 +17,7 @@ typedef struct zappy_s {
     server_t *server;
 } zappy_t;
 
+void start_server(zappy_t *zappy);
+void down_server(zappy_t *zappy);
+
 #endif /* !ZAPPY_H */

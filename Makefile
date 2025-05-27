@@ -30,7 +30,7 @@ FLAGS_SERVER = -MMD -MP \
 
 FLAGS_GUI =	-MMD -MP -lIrrlicht \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
-	-std=c++17 -Wall -Wextra -Werror
+	-std=c++20 -Wall -Wextra -Werror
 
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
@@ -80,13 +80,17 @@ fclean: clean
 
 # ============= COMPILATION ============= #
 
-$(OBJ_DIR)/%.o: %.c
+$(OBJ_DIR)/zappy_server_src/%.o: zappy_server_src/%.c
 	@mkdir -p $(dir $@)
 	gcc -c $(FLAGS_SERVER) $< -o $@
 
-$(OBJ_DIR)/%.o: %.cpp
+$(OBJ_DIR)/zappy_gui_src/%.o: zappy_gui_src/%.cpp
 	@mkdir -p $(dir $@)
-	g++ -c $(FLAGS_GUI) $(FLAGS_AI) $< -o $@
+	g++ -c $(FLAGS_GUI) $< -o $@
+
+$(OBJ_DIR)/zappy_ai_src/%.o: zappy_ai_src/%.cpp
+	@mkdir -p $(dir $@)
+	g++ -c $(FLAGS_AI) $< -o $@
 
 -include $(DEPS)
 

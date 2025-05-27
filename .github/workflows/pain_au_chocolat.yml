@@ -28,7 +28,7 @@ jobs:
         run: |
           check.sh "$(pwd)" "$(pwd)"
           tmpfile=$(mktemp)
-          
+
           echo "0" > "$tmpfile"
           cat coding-style-reports.log | while read -r line; do
             file=$(echo "$line" | cut -d':' -f1 | cut -d'/' -f 2-)
@@ -38,7 +38,7 @@ jobs:
             echo "::error title=$title,file=$file,line=$nbline,col=0::$code"
             echo "1" > "$tmpfile"
           done
-          
+
           if [ "$(cat "$tmpfile")" = "1" ]; then
             rm "$tmpfile"
             exit 1
@@ -73,7 +73,7 @@ jobs:
         run: |
           liste_binaires=$(echo "$EXECUTABLES" | tr ',' '\n')
           fonctions_bannies=$(echo "$FUNCTIONS_BANNED" | tr ', ' '\n')
-          
+
           while read -r binaire; do
               echo "Analyse du binaire : $binaire"
               symboles=$(nm "$binaire" | grep ' U ' | awk '{print $2}' | cut -d'@' -f1 | c++filt | sort -u)
@@ -86,7 +86,7 @@ jobs:
                   fi
               done <<< "$symboles"
           done <<< "$liste_binaires"
-      
+
           echo "Aucune fonction bannie trouvée."
         shell: bash
   run_tests:
@@ -100,7 +100,7 @@ jobs:
       - name: "Launch tests"
         timeout-minutes: 2
         run: make tests_run
-  push_to_mirror: 
+  push_to_mirror:
     needs: run_tests
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}

@@ -16,7 +16,6 @@ class ServerGuiConnection {
     void setFdServer(int fd);
  private:
     int fdServer = -1;
-    void sendCommand(const std::string &command);
     std::vector<std::string> parseCommands(std::string &command);
 
     std::map<std::string, void (ServerGuiConnection::*)(std::vector<std::string> &)> commands = {

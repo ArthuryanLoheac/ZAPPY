@@ -10,11 +10,6 @@
 
     #include "zappy.h"
 
-typedef struct command_s {
-    char *name;
-    void (*func)(zappy_t *zappy, char **args);
-} command_t;
-
 void handle_client_command(zappy_t *zappy, int fd);
 void send_client_command(zappy_t *zappy, int fd);
 void append_client_out_buffer(client_t *client, const char *format, ...);

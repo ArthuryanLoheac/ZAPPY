@@ -34,7 +34,7 @@ The GUI renders the Trantor world in 3D to help users visualize:
 
 # <p align=center> 💻 Usage </p>
 
-<details> <summary> <b><span style="font-size: 1.2em;">🖥️ Server</span><b> </summary>
+<details> <summary> <b><span style="font-size: 1.2em;">🖥️ Server</span></b> </summary>
 
 ```sh
 USAGE: ./zappy_server -p port -x width -y height -n name1 name2 ... -c clientsNb -f freq
@@ -53,7 +53,7 @@ USAGE: ./zappy_server -p port -x width -y height -n name1 name2 ... -c clientsNb
 
 </details>
 
-<details> <summary> <b><span style="font-size: 1.2em;">🌍 GUI</span><b> </summary>
+<details> <summary> <b><span style="font-size: 1.2em;">🌍 GUI</span></b> </summary>
 
 ```sh
 USAGE: ./zappy_gui -p port -h machine
@@ -66,7 +66,7 @@ USAGE: ./zappy_gui -p port -h machine
 
 </details>
 
-<details> <summary> <b><span style="font-size: 1.2em;">🤖 AI Client</span><b> </summary>
+<details> <summary> <b><span style="font-size: 1.2em;">🤖 AI Client</span></b> </summary>
 
 ```sh
 USAGE: ./zappy_ai -p port -n name -h machine
@@ -84,7 +84,7 @@ USAGE: ./zappy_ai -p port -n name -h machine
 
 # <p align=center> 🚀 Getting Started </p>
 
-<details> <summary> <b><span style="font-size: 1.2em;">⚙️ Prerequisites</span><b> </summary>
+<details> <summary> <b><span style="font-size: 1.2em;">⚙️ Prerequisites</span></b> </summary>
 
 - C/C++ compiler (gcc/g++)
 - Make
@@ -92,7 +92,7 @@ USAGE: ./zappy_ai -p port -n name -h machine
 
 </details>
 
-<details> <summary> <b><span style="font-size: 1.2em;">🛜 Installation</span><b> </summary>
+<details> <summary> <b><span style="font-size: 1.2em;">🛜 Installation</span></b> </summary>
 
 1. Clone the repository
 ```sh
@@ -114,7 +114,7 @@ make <name-of-the-binary>
 
 </details>
 
-<details> <summary> <b><span style="font-size: 1.2em;">🏃‍♂️ Running a game</span><b> </summary>
+<details> <summary> <b><span style="font-size: 1.2em;">🏃‍♂️ Running a game</span></b> </summary>
 
 1. Start the server:
 ```sh

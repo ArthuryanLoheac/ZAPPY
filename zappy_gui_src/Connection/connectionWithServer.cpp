@@ -7,29 +7,6 @@
 #include <string.h>
 #include <iostream>
 
-static void checkCommand()
-{
-    while (GUI::ServerGuiConnection::i().buffer.find("\n") != std::string::npos) {
-        size_t pos = GUI::ServerGuiConnection::i().buffer.find("\n");
-        std::string command = GUI::ServerGuiConnection::i().buffer.substr(0, pos);
-        GUI::ServerGuiConnection::i().buffer.erase(0, pos + 1);
-
-        if (command.empty())
-            continue;
-
-        std::vector<std::string> args = GUI::ServerGuiConnection::i().parseCommands(command);
-        if (args.empty())
-            continue;
-
-        auto it = GUI::ServerGuiConnection::i().commands.find(args[0]);
-        if (it != GUI::ServerGuiConnection::i().commands.end()) {
-            (GUI::ServerGuiConnection::i().*(it->second))(args);
-        } else {
-            std::cerr << "Unknown command: " << args[0] << std::endl;
-        }
-    }
-}
-
 static void readDatasFromServer(int sockfd)
 {
     char buffer[1024];
@@ -40,7 +17,7 @@ static void readDatasFromServer(int sockfd)
         throw std::runtime_error("Error reading from server");
     buffer[bytes_read] = '\0';
     GUI::ServerGuiConnection::i().buffer.append(buffer);
-    checkCommand();
+    GUI::ServerGuiConnection::i().handleCommand();
 }
 
 void start_server()

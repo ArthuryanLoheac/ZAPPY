@@ -10,21 +10,26 @@ ServerGuiConnection::ServerGuiConnection()
 {
 }
 
-void GUI::ServerGuiConnection::handleCommand(std::string &command)
+void GUI::ServerGuiConnection::handleCommand()
 {
-    try {
-        std::vector<std::string> args = parseCommands(command);
+    while (GUI::ServerGuiConnection::i().buffer.find("\n") != std::string::npos) {
+        size_t pos = GUI::ServerGuiConnection::i().buffer.find("\n");
+        std::string command = GUI::ServerGuiConnection::i().buffer.substr(0, pos);
+        GUI::ServerGuiConnection::i().buffer.erase(0, pos + 1);
+
+        if (command.empty())
+            continue;
+
+        std::vector<std::string> args = GUI::ServerGuiConnection::i().parseCommands(command);
         if (args.empty())
-            throw std::runtime_error("No command provided");
-        std::string commandName = args[0];
-        auto it = commands.find(commandName);
-        if (it != commands.end()) {
-            (this->*(it->second))(args);
+            continue;
+
+        auto it = GUI::ServerGuiConnection::i().commands.find(args[0]);
+        if (it != GUI::ServerGuiConnection::i().commands.end()) {
+            (GUI::ServerGuiConnection::i().*(it->second))(args);
         } else {
-            //std::cerr << "Unknown command: " << commandName << std::endl;
+            std::cerr << "Unknown command: " << args[0] << std::endl;
         }
-    } catch (const std::exception &e) {
-        std::cerr << "Error handling command: " << e.what() << std::endl;
     }
 }
 
@@ -60,4 +65,5 @@ void ServerGuiConnection::sendDatasToServer(int sockfd, pollfd &fd, const std::s
         printf("Sent data: %s\n", message.c_str());
     }
 }
+
 } // namespace GUI

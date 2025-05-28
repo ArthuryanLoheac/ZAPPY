@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <poll.h>
 
 namespace GUI
 {

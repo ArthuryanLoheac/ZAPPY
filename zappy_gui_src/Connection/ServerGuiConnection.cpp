@@ -28,11 +28,6 @@ void GUI::ServerGuiConnection::handleCommand(std::string &command)
     }
 }
 
-void ServerGuiConnection::setFdServer(int fd)
-{
-    fdServer = fd;
-}
-
 std::vector<std::string> ServerGuiConnection::parseCommands(std::string &command)
 {
     std::vector<std::string> args;

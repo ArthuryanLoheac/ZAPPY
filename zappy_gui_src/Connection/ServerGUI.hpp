@@ -28,8 +28,8 @@ class ServerGUI {
 
     void welcomeCommand(std::vector<std::string> &args);
 
-    std::map<std::string, void(ServerGUI::*)
-        (std::vector<std::string> &)> commands = {
+    std::map<std::string,
+     void(ServerGUI::*)(std::vector<std::string> &)> commands = {
         {"WELCOME", &ServerGUI::welcomeCommand},
     };
 };

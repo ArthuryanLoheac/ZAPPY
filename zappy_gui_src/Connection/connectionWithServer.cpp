@@ -42,6 +42,7 @@ int loopClient(int sockfd) {
 
     fds.fd = sockfd;
     fds.events = POLLIN;
+    GUI::ServerGuiConnection::i().setFdServer(sockfd);
     while (GUI::DataManager::i().running) {
         readDatas(sockfd, fds, buffer);
     }

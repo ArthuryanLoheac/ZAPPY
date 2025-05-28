@@ -1,5 +1,8 @@
 #include "ServerGuiConnection.hpp"
 #include <iostream>
+#include <unistd.h>
+#include <sys/poll.h>
+#include <string.h>
 
 namespace GUI
 {
@@ -18,10 +21,37 @@ void GUI::ServerGuiConnection::handleCommand(std::string &command)
         if (it != commands.end()) {
             (this->*(it->second))(args);
         } else {
-            std::cerr << "Unknown command: " << commandName << std::endl;
+            //std::cerr << "Unknown command: " << commandName << std::endl;
         }
     } catch (const std::exception &e) {
         std::cerr << "Error handling command: " << e.what() << std::endl;
+    }
+}
+
+void ServerGuiConnection::setFdServer(int fd)
+{
+    fdServer = fd;
+}
+
+void ServerGuiConnection::sendCommand(const std::string &command)
+{
+    std::string finalCommand = command;
+    pollfd fds = {fdServer, POLLOUT | POLLIN, 0};
+    int nb_fds = 1;
+
+    if (!finalCommand.empty() && finalCommand.back() != '\n')
+        finalCommand.push_back('\n');
+
+    if (fdServer == -1)
+        throw std::runtime_error("File descriptor for server is not set");
+    int ready = poll(&fds, nb_fds, -1);
+    if (ready == -1)
+        throw std::runtime_error("Poll error occurred while sending command");
+    if (fds.revents & POLLOUT) {
+        ssize_t bytesWritten = write(fdServer, finalCommand.c_str(), finalCommand.size());
+        if (bytesWritten == -1)
+            throw std::runtime_error("Failed to write command to server");
+        fds.revents = 0;
     }
 }
 
@@ -29,11 +59,12 @@ std::vector<std::string> ServerGuiConnection::parseCommands(std::string &command
 {
     std::vector<std::string> args;
     size_t pos = 0;
+
     while ((pos = command.find(' ')) != std::string::npos) {
         args.push_back(command.substr(0, pos));
         command.erase(0, pos + 1);
     }
-    args.push_back(command); // Add the last part of the command
+    args.push_back(command);
     if (args.empty()) {
         std::cerr << "Empty command received." << std::endl;
         throw std::runtime_error("Empty command received");
@@ -43,8 +74,7 @@ std::vector<std::string> ServerGuiConnection::parseCommands(std::string &command
 
 void GUI::ServerGuiConnection::welcomeCommand(std::vector<std::string> &args)
 {
-    for (const auto &arg : args) {
-        std::cout << "WELCOME argument: " << arg << std::endl;
-    }
+    (void) args;
+    sendCommand("GRAPHIC");
 }
 } // namespace GUI

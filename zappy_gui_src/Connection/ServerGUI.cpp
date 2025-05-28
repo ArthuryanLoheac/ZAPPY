@@ -14,31 +14,52 @@ ServerGUI::ServerGUI() {
 }
 
 void GUI::ServerGUI::handleCommand() {
-    while (GUI::ServerGUI::i().buffer.find("\n") != std::string::npos) {
-        size_t pos = GUI::ServerGUI::i().buffer.find("\n");
-        std::string command =
-            GUI::ServerGUI::i().buffer.substr(0, pos);
-        GUI::ServerGUI::i().buffer.erase(0, pos + 1);
+    while (buffer.find("\n") != std::string::npos) {
+        size_t pos = buffer.find("\n");
+        std::string command = buffer.substr(0, pos);
+        buffer.erase(0, pos + 1);
 
-        if (command.empty())
-            continue;
+        if (command.empty()) continue;
 
         std::vector<std::string> args =
-            GUI::ServerGUI::i().parseCommands(command);
-        if (args.empty())
-            continue;
+            parseCommands(command);
+        if (args.empty()) continue;
 
-        auto it = GUI::ServerGUI::i().commands.find(args[0]);
-        if (it != GUI::ServerGUI::i().commands.end()) {
+        auto it = commands.find(args[0]);
+        if (it != commands.end())
             (GUI::ServerGUI::i().*(it->second))(args);
-        } else {
+        else
             std::cerr << "Unknown command: " << args[0] << std::endl;
-        }
     }
 }
 
-std::vector<std::string> ServerGUI::parseCommands
-(std::string &command) {
+void ServerGUI::readDatasFromServer() {
+    char bufferTemp[1024];
+    ssize_t bytes_read = 0;
+
+    bytes_read = read(server_fd,
+        bufferTemp, sizeof(bufferTemp) - 1);
+    if (bytes_read <= 0)
+        throw std::runtime_error("Error reading from server");
+    bufferTemp[bytes_read] = '\0';
+    buffer.append(bufferTemp);
+    handleCommand();
+}
+
+void ServerGUI::startServer() {
+    int ready = 0;
+
+    while (1) {
+        ready = poll(
+            &GUI::ServerGUI::i().fd, 1, -1);
+        if (ready == -1)
+            throw std::runtime_error("Poll error occurred");
+        if (fd.revents & POLLIN)
+            readDatasFromServer();
+    }
+}
+
+std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
     std::vector<std::string> args;
     size_t pos = 0;
 
@@ -55,8 +76,8 @@ std::vector<std::string> ServerGUI::parseCommands
 }
 
 void ServerGUI::sendDatasToServer(const std::string &message) {
-    if (GUI::ServerGUI::i().fd.revents & POLLOUT) {
-        ssize_t bytes_sent = write(GUI::ServerGUI::i().server_fd,
+    if (fd.revents & POLLOUT) {
+        ssize_t bytes_sent = write(server_fd,
             message.c_str(), message.size());
         if (bytes_sent == -1) {
             throw std::runtime_error("Error sending data to server");

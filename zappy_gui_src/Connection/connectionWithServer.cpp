@@ -14,37 +14,11 @@
 #include "DataManager/DataManager.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
 
-static void readDatasFromServer(int sockfd) {
-    char buffer[1024];
-    ssize_t bytes_read = 0;
-
-    bytes_read = read(sockfd, buffer, sizeof(buffer) - 1);
-    if (bytes_read <= 0)
-        throw std::runtime_error("Error reading from server");
-    buffer[bytes_read] = '\0';
-    GUI::ServerGUI::i().buffer.append(buffer);
-    GUI::ServerGUI::i().handleCommand();
-}
-
-void start_server() {
-    int ready = 0;
-
-    while (1) {
-        ready = poll(
-            &GUI::ServerGUI::i().fd, 1, -1);
-        if (ready == -1)
-            throw std::runtime_error("Poll error occurred");
-        if (GUI::ServerGUI::i().fd.revents & POLLIN) {
-            // Read data from the server
-            readDatasFromServer(GUI::ServerGUI::i().server_fd);
-        }
-    }
-}
-
 int loopClient(int sockfd) {
     GUI::ServerGUI::i().server_fd = sockfd;
     GUI::ServerGUI::i().fd = {sockfd, .events = POLLIN | POLLOUT, 0};
-    start_server();
+
+    GUI::ServerGUI::i().startServer();
     return 0;
 }
 

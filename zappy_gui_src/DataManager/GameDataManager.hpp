@@ -15,7 +15,7 @@ class GameDataManager {
         return i;
     }
 
-    GameDataManager() : width(0), height(0) {}
+    GameDataManager() : width(-1), height(-1) {}
     int getWidth() const;
     int getHeight() const;
     void setWidth(int w);

@@ -1,5 +1,6 @@
-#include <iostream>
 #include <irrlicht/irrlicht.h>
+
+#include <iostream>
 
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "Graphic/Window/window.hpp"

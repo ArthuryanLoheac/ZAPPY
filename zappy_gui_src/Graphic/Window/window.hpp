@@ -1,9 +1,11 @@
 #pragma once
-#include <vector>
 #include <irrlicht/irrlicht.h>
+
+#include <vector>
+#include <memory>
+
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
-#include <memory>
 
 namespace GUI {
 class Window {

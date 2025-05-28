@@ -1,4 +1,4 @@
-#include "window.hpp"
+#include "Graphic/Window/window.hpp"
 
 namespace GUI {
 Window::Window() {
@@ -13,16 +13,16 @@ Window::Window() {
     guienv = device->getGUIEnvironment();
     // Camera
     auto cam = smgr->addCameraSceneNodeFPS();
-    cam->setFOV(3.14159f / 2.0f); // 90°
+    cam->setFOV(M_PI / 2.0f);
     cam->setNearValue(0.1f);
     cam->setFarValue(10000.0f);
 }
 
 void Window::update() {
-    while(device->run()) {
-        if (device->isWindowActive())
-        {
-            driver->beginScene(true, true, irr::video::SColor(255,100,101,140));
+    while (device->run()) {
+        if (device->isWindowActive()) {
+            driver->beginScene(true, true,
+                irr::video::SColor(255, 100, 101, 140));
 
             smgr->drawAll();
             guienv->drawAll();
@@ -47,7 +47,8 @@ void Window::setupWorld() {
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            auto cube = smgr->addCubeSceneNode(0.8f, 0, -1, irr::core::vector3df(i - (width/2), -3, -j  + (height/2)));
+            auto cube = smgr->addCubeSceneNode(0.8f, 0, -1,
+                irr::core::vector3df(i - (width/2), -3, -j  + (height/2)));
             cube->setMaterialFlag(irr::video::EMF_LIGHTING, false);
         }
     }

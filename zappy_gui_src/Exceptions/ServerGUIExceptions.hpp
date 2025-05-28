@@ -9,15 +9,16 @@ namespace GUI {
  * @brief Base class for all server GUI exceptions
  */
 class ServerGUIException : public std::exception {
-public:
-    explicit ServerGUIException(const std::string& message) : _message(message) {}
+ public:
+    explicit ServerGUIException(const std::string& message) :
+        _message(message) {}
     virtual ~ServerGUIException() = default;
 
     const char* what() const noexcept override {
         return _message.c_str();
     }
 
-protected:
+ protected:
     std::string _message;
 };
 
@@ -25,7 +26,7 @@ protected:
  * @brief Exception thrown when parsing commands fails
  */
 class CommandParsingException : public ServerGUIException {
-public:
+ public:
     explicit CommandParsingException(const std::string& message)
         : ServerGUIException("Command parsing error: " + message) {}
 };
@@ -34,7 +35,7 @@ public:
  * @brief Exception thrown when sending data to the server fails
  */
 class SendingException : public ServerGUIException {
-public:
+ public:
     explicit SendingException(const std::string& message)
         : ServerGUIException("Sending error: " + message) {}
 };
@@ -43,7 +44,7 @@ public:
  * @brief Exception thrown when receiving data from the server fails
  */
 class ReceivingException : public ServerGUIException {
-public:
+ public:
     explicit ReceivingException(const std::string& message)
         : ServerGUIException("Receiving error: " + message) {}
 };
@@ -52,9 +53,9 @@ public:
  * @brief Exception thrown when connection to the server fails
  */
 class ConnectionException : public ServerGUIException {
-public:
+ public:
     explicit ConnectionException(const std::string& message)
         : ServerGUIException("Connection error: " + message) {}
 };
 
-} // namespace GUI
+}  // namespace GUI

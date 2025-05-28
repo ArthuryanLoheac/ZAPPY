@@ -23,4 +23,4 @@ void ServerGUI::mszCommand(std::vector<std::string> &args) {
 
     GUI::Window::i().setupWorld();
 }
-} // namespace GUI
+}  // namespace GUI

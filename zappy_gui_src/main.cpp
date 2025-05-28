@@ -39,12 +39,12 @@ int main(int ac, char **av) {
         if (checkArgs(ac, av) == 84)
             return 84;
         if (client_connection(sockfd) == 84)
-            throw ConnectionException("Failed to connect to server");
+            throw GUI::ConnectionException("Failed to connect to server");
     } catch (std::exception &e) {
         fprintf(stderr, "Error: %s\n", e.what());
         return 84;
     }
-    std::thread t1(graphic, sockfd);
+    std::thread t1(graphic);
     std::thread t2(loopClient, sockfd);
     t1.join();
     t2.join();

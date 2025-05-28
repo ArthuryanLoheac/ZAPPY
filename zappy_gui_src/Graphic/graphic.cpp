@@ -1,6 +1,15 @@
 #include <iostream>
+#include <irrlicht/irrlicht.h>
 
-int graphic(int sockfd) {
-    (void)sockfd;  // Placeholder for actual graphic implementation
+#include "Exceptions/GraphicalExceptions.hpp"
+#include "Graphic/Window/window.hpp"
+
+int graphic() {
+    try {
+        Window window;
+    } catch(const std::exception& e) {
+        std::cerr << e.what() << '\n';
+        return 84;
+    }
     return 0;
 }

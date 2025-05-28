@@ -3,6 +3,7 @@
 #include <exception>
 #include <string>
 
+namespace GUI {
 class GuiException : public std::exception {
  protected:
     std::string _message;
@@ -45,3 +46,4 @@ class InvalidDataException : public DataManagerException {
     explicit InvalidDataException(const std::string &message) :
         DataManagerException("Invalid data: " + message) {}
 };
+}  // namespace GUI

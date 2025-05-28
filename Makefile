@@ -28,10 +28,10 @@ FLAGS_SERVER = -MMD -MP \
 	-I./zappy_server_src/include \
 	-std=gnu17 -Wall -Wextra -Werror \
 
-FLAGS_GUI =	-MMD -MP -lIrrlicht \
+FLAGS_GUI =	-MMD -MP \
+	-lIrrlicht \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
 	-std=c++17 -Wall -Wextra -Werror
-
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
 	-std=c++20 -Wall -Wextra -Werror

@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include "DataManager.hpp"
 #include "GuiConnection.hpp"
+#include "ServerGuiConnection.hpp"
 
 static void checkCommand(std::string &buffer) {
     size_t pos = buffer.find("\n");
@@ -15,7 +16,7 @@ static void checkCommand(std::string &buffer) {
             if (command[i] >= 'a' && command[i] <= 'z')
                 command[i] -= 32;
         }
-        handleCommand(command);
+        GUI::ServerGuiConnection::i().handleCommand(command);
     }
 }
 

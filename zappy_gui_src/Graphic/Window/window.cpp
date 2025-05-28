@@ -14,17 +14,19 @@ Window::Window() {
     smgr = device->getSceneManager();
     guienv = device->getGUIEnvironment();
     // Camera
-    auto cam = smgr->addCameraSceneNode(nullptr,
-        irr::core::vector3df(0, 0, -10),
-        irr::core::vector3df(0, 0, 0));
+    cam = smgr->addCameraSceneNode(nullptr,
+        irr::core::vector3df(0, 0, 0),
+        irr::core::vector3df(-0.5f, -3, -0.5f));
     cam->setFOV(M_PI / 2.0f);
     cam->setNearValue(0.1f);
     cam->setFarValue(10000.0f);
+    then = device->getTimer()->getTime();
 }
 
 void Window::update() {
     while (device->run()) {
         if (device->isWindowActive()) {
+            updateDeltaTime();
             handleEvent();
             driver->beginScene(true, true,
                 irr::video::SColor(255, 100, 101, 140));

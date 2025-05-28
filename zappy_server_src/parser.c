@@ -10,7 +10,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include "include/zappy.h"
 #include "include/parser.h"
 
 void display_help(void)

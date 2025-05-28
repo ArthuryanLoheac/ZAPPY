@@ -19,7 +19,7 @@ void handle_down_server(int sig)
 {
     (void)sig;
     down_server(&zappy);
-    printf("Server shutting down.\n");
+    printf("Server shutting down\n");
     exit(0);
 }
 
@@ -37,6 +37,7 @@ int main(int ac, char **av)
 
     zappy_ptr->parser = parse_arguments(ac, av);
     zappy_ptr->server = create_server(zappy_ptr->parser->port);
+    zappy_ptr->clients = NULL;
     setup_down_server();
     start_server(zappy_ptr);
     down_server(zappy_ptr);

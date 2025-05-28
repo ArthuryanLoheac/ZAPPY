@@ -8,13 +8,15 @@
 #ifndef ZAPPY_H
     #define ZAPPY_H
 
-typedef struct parser_s parser_t;
+#include "parser.h"
+#include "server.h"
 
-typedef struct server_s server_t;
+typedef struct client_s client_t;
 
 typedef struct zappy_s {
     parser_t *parser;
     server_t *server;
+    client_t *clients;
 } zappy_t;
 
 void start_server(zappy_t *zappy);

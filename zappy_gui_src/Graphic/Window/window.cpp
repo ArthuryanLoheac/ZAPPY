@@ -13,18 +13,6 @@ Window::Window() {
     // Camera
     smgr->addCameraSceneNode(0, irr::core::vector3df(0,0,5),
         irr::core::vector3df(0,0,0));
-
-    // Test object
-    irr::scene::IAnimatedMesh* mesh = smgr->getMesh("assets/drone.obj");
-    if (!mesh) {
-        device->drop();
-        return;
-    }
-    irr::scene::IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode(mesh);
-    if (node) {
-        node->setMD2Animation(irr::scene::EMAT_STAND);
-        node->setMaterialTexture(0, driver->getTexture("assets/BakedDrone.png"));
-    }
 }
 
 void Window::update() {

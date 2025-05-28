@@ -1,7 +1,7 @@
 #include "window.hpp"
 
 Window::Window() {
-    device = irr::createDevice(irr::video::EDT_SOFTWARE,
+    device = irr::createDevice(irr::video::EDT_OPENGL,
         irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false, 0);
 
     if (!device)
@@ -11,19 +11,26 @@ Window::Window() {
     smgr = device->getSceneManager();
     guienv = device->getGUIEnvironment();
     // Camera
-    smgr->addCameraSceneNode(0, irr::core::vector3df(0,5,10),
-        irr::core::vector3df(0,2,0));
+    auto cam = smgr->addCameraSceneNodeFPS();
+    cam->setFOV(3.14159f / 2.0f); // 90°
+    cam->setNearValue(0.1f);
+    cam->setFarValue(10000.0f); // distance maximale visible
     setupWorld();
 }
 
 void Window::update() {
     while(device->run()) {
-        driver->beginScene(true, true, irr::video::SColor(255,100,101,140));
+        if (device->isWindowActive())
+        {
+            driver->beginScene(true, true, irr::video::SColor(255,100,101,140));
 
-        smgr->drawAll();
-        guienv->drawAll();
+            smgr->drawAll();
+            guienv->drawAll();
 
-        driver->endScene();
+            driver->endScene();
+        } else {
+            device->yield();
+        }
     }
     device->drop();
 }
@@ -34,7 +41,8 @@ void Window::setupWorld() {
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            smgr->addCubeSceneNode(0.8f, 0, -1, irr::core::vector3df(i - (width/2), -1, -j  + (height/2)));
+            auto cube = smgr->addCubeSceneNode(0.8f, 0, -1, irr::core::vector3df(i - (width/2), -3, -j  + (height/2)));
+            cube->setMaterialFlag(irr::video::EMF_LIGHTING, false);
         }
     }
 }

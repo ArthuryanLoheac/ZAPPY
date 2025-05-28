@@ -8,8 +8,8 @@
 #ifndef ZAPPY_H
     #define ZAPPY_H
 
-#include "parser.h"
-#include "server.h"
+    #include "parser.h"
+    #include "server.h"
 
 typedef struct client_s client_t;
 

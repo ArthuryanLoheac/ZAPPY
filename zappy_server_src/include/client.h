@@ -8,9 +8,9 @@
 #ifndef CLIENT_H
     #define CLIENT_H
 
-#include <stdbool.h>
+    #include <stdbool.h>
 
-#include "zappy.h"
+    #include "zappy.h"
 
 typedef struct client_s {
     int fd;

@@ -50,7 +50,7 @@ void ServerGUI::readDatasFromServer() {
 void ServerGUI::startServer() {
     int ready = 0;
 
-    while (1) {
+    while (DataManager::i().running) {
         ready = poll(
             &GUI::ServerGUI::i().fd, 1, -1);
         if (ready == -1)

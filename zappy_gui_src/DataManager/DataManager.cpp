@@ -41,4 +41,9 @@ void DataManager::setIp(std::string _ip) {
     ip = _ip;
 }
 
+void DataManager::setRunning(bool b) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    running = b;
+}
+
 }  // namespace GUI

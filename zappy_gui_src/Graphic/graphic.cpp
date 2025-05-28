@@ -3,6 +3,7 @@
 
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "Graphic/Window/window.hpp"
+#include "DataManager/DataManager.hpp"
 
 int graphic() {
     try {
@@ -12,5 +13,6 @@ int graphic() {
         std::cerr << e.what() << '\n';
         return 84;
     }
+    GUI::DataManager::i().setRunning(false);
     return 0;
 }

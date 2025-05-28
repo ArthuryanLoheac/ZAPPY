@@ -7,6 +7,7 @@
 int graphic() {
     try {
         Window window;
+        window.update();
     } catch(const std::exception& e) {
         std::cerr << e.what() << '\n';
         return 84;

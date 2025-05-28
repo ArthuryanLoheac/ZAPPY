@@ -8,6 +8,7 @@
 #include <cstdio>
 
 #include "Connection/ServerGUI.hpp"
+#include "DataManager/DataManager.hpp"
 
 namespace GUI {
 ServerGUI::ServerGUI() {
@@ -28,7 +29,7 @@ void GUI::ServerGUI::handleCommand() {
         auto it = commands.find(args[0]);
         if (it != commands.end())
             (GUI::ServerGUI::i().*(it->second))(args);
-        else
+        else if (GUI::DataManager::i().getDebug())
             std::cerr << "Unknown command: " << args[0] << std::endl;
     }
 }

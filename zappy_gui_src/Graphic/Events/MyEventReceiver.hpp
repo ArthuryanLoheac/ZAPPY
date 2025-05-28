@@ -9,6 +9,11 @@ public:
         if (event.EventType == irr::EET_KEY_INPUT_EVENT)
             KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
 
+        if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
+            if (event.MouseInput.Event == irr::EMIE_MOUSE_WHEEL) {
+                MouseWheelDelta = event.MouseInput.Wheel;
+            }
+        }
         return false;
     }
 
@@ -21,6 +26,13 @@ public:
             KeyIsDown[i] = false;
     }
 
+    float ConsumeWheelDelta() {
+        float delta = MouseWheelDelta;
+        MouseWheelDelta = 0.0f; // Consommer l'événement
+        return delta;
+    }
+
 private:
     bool KeyIsDown[irr::KEY_KEY_CODES_COUNT];
+    float MouseWheelDelta;
 };

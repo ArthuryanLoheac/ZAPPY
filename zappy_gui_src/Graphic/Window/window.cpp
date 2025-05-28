@@ -16,7 +16,7 @@ Window::Window() {
     // Camera
     cam = smgr->addCameraSceneNode(nullptr,
         irr::core::vector3df(0, 0, 0),
-        irr::core::vector3df(-0.5f, -3, -0.5f));
+        irr::core::vector3df(0, -3, 0));
     cam->setFOV(M_PI / 2.0f);
     cam->setNearValue(0.1f);
     cam->setFarValue(10000.0f);
@@ -52,10 +52,15 @@ void Window::setupWorld() {
     int width = GUI::GameDataManager::i().getWidth();
     int height = GUI::GameDataManager::i().getHeight();
 
+    float deltaWidth = (width % 2 == 0) ? 0.5f : 0;
+    float deltaHeight = (height % 2 == 0) ? 0.5f : 0;
+
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            auto cube = smgr->addCubeSceneNode(0.8f, 0, -1,
-                irr::core::vector3df(i - (width/2), -3, -j  + (height/2)));
+            irr::core::vector3df position(i - (width/2) + deltaWidth,
+                -3,
+                j - (height/2) + deltaHeight);
+            auto cube = smgr->addCubeSceneNode(0.8f, 0, -1, position);
             cube->setMaterialFlag(irr::video::EMF_LIGHTING, false);
         }
     }

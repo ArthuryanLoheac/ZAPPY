@@ -24,6 +24,7 @@ class Window {
     std::vector<irr::scene::ISceneNode*> cubes;
 
     float rotationSpeedCamera = 100.f;
+    float zoomSpeedCamera = 20.f;
     float angleXCamera = 0;
     float distanceFromCenter = 10.f;
 
@@ -32,7 +33,7 @@ class Window {
     void handleEvent();
     void updateDeltaTime();
 
-    void moveCamera(float x);
+    void moveCamera(float x, float zoom);
 
     static Window &i() {
         static Window instance;

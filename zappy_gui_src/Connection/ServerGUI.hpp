@@ -27,10 +27,12 @@ class ServerGUI {
     void sendDatasToServer(const std::string &message);
 
     void welcomeCommand(std::vector<std::string> &args);
+    void mszCommand(std::vector<std::string> &args);
 
     std::map<std::string,
      void(ServerGUI::*)(std::vector<std::string> &)> commands = {
         {"WELCOME", &ServerGUI::welcomeCommand},
+        {"MSZ", &ServerGUI::mszCommand},
     };
 };
 

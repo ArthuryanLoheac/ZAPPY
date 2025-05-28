@@ -26,6 +26,9 @@ void GUI::ServerGUI::handleCommand() {
             parseCommands(command);
         if (args.empty()) continue;
 
+        for (size_t i = 0; i < args[0].length(); ++i)
+            args[0][i] = toupper(args[0][i]);
+
         auto it = commands.find(args[0]);
         if (it != commands.end())
             (GUI::ServerGUI::i().*(it->second))(args);

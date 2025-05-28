@@ -1,9 +1,11 @@
 #include "Graphic/Window/window.hpp"
+#include "MyEventReceiver.hpp"
+#include "window.hpp"
 
 namespace GUI {
 Window::Window() {
     device = irr::createDevice(irr::video::EDT_OPENGL,
-        irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false, 0);
+        irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false, &receiver);
 
     if (!device)
         throw GUI::WindowCreationException("Error creating device");
@@ -12,7 +14,9 @@ Window::Window() {
     smgr = device->getSceneManager();
     guienv = device->getGUIEnvironment();
     // Camera
-    auto cam = smgr->addCameraSceneNodeFPS();
+    auto cam = smgr->addCameraSceneNode(nullptr,
+        irr::core::vector3df(0, 0, -10),
+        irr::core::vector3df(0, 0, 0));
     cam->setFOV(M_PI / 2.0f);
     cam->setNearValue(0.1f);
     cam->setFarValue(10000.0f);
@@ -21,6 +25,7 @@ Window::Window() {
 void Window::update() {
     while (device->run()) {
         if (device->isWindowActive()) {
+            handleEvent();
             driver->beginScene(true, true,
                 irr::video::SColor(255, 100, 101, 140));
 
@@ -53,5 +58,4 @@ void Window::setupWorld() {
         }
     }
 }
-
-}  // namespace GUI
+} // namespace GUI

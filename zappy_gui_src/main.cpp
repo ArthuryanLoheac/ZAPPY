@@ -3,6 +3,7 @@
 #include <cstdio>
 
 #include "DataManager/DataManager.hpp"
+#include "DataManager/GameDataManager.hpp"
 #include "include/GuiConnection.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
 
@@ -31,7 +32,8 @@ int checkArgs(int ac, char **av) {
 
 int main(int ac, char **av) {
     int sockfd;
-    GUI::DataManager dataManager;
+    GUI::DataManager::i();
+    GUI::GameDataManager::i();
 
     try {
         if (!(ac == 5 || ac == 6))

@@ -2,6 +2,7 @@
 
 #include "Connection/ServerGUI.hpp"
 #include "Exceptions/ServerGUIExceptions.hpp"
+#include <GameDataManager.hpp>
 
 namespace GUI {
 void GUI::ServerGUI::welcomeCommand(std::vector<std::string> &args) {
@@ -16,6 +17,7 @@ void ServerGUI::mszCommand(std::vector<std::string> &args) {
     int height = std::stoi(args[2]);
     if (width <= 0 || height <= 0)
         throw GUI::CommandParsingException("Invalid dimensions in msz command");
-    printf("Map size: %d x %d\n", width, height);
+    GUI::GameDataManager::i().setWidth(width);
+    GUI::GameDataManager::i().setHeight(height);
 }
 } // namespace GUI

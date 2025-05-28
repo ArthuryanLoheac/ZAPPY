@@ -13,9 +13,12 @@ class ServerGuiConnection {
         return i;
     }
     void handleCommand(std::string &command);
-    void setFdServer(int fd);
+    int server_fd;
+    int nb_fds;
+    struct pollfd fd;
  private:
-    int fdServer = -1;
+
+
     std::vector<std::string> parseCommands(std::string &command);
 
     std::map<std::string, void (ServerGuiConnection::*)(std::vector<std::string> &)> commands = {

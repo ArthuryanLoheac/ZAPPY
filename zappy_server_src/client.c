@@ -10,6 +10,7 @@
 #include <unistd.h>
 
 #include "include/client.h"
+#include "include/command.h"
 
 static void add_client_data(zappy_t *zappy, int fd)
 {
@@ -23,6 +24,7 @@ static void add_client_data(zappy_t *zappy, int fd)
     client->is_connected = true;
     client->next = zappy->clients;
     zappy->clients = client;
+    append_client_out_buffer(client, "WELCOME\n");
 }
 
 void add_client(zappy_t *zappy, int fd)

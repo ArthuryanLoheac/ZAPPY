@@ -13,6 +13,7 @@
 
 #include "include/zappy.h"
 #include "include/client.h"
+#include "include/command.h"
 
 static void check_for_new_client(zappy_t *zappy)
 {
@@ -33,9 +34,9 @@ static void check_for_client_command(zappy_t *zappy)
 
     for (int i = 1; i < server->nb_fds; i++) {
         if (server->fds[i].revents & POLLIN)
-            continue;
+            handle_client_command(zappy, server->fds[i].fd);
         if (server->fds[i].revents & POLLOUT)
-            continue;
+            send_client_command(zappy, server->fds[i].fd);
     }
 }
 

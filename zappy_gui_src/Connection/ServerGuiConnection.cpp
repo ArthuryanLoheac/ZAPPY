@@ -50,15 +50,10 @@ std::vector<std::string> ServerGuiConnection::parseCommands(std::string &command
     return args;
 }
 
-void GUI::ServerGuiConnection::welcomeCommand(std::vector<std::string> &args)
-{
-    (void) args;
-    sendDatasToServer(GUI::ServerGuiConnection::i().server_fd, GUI::ServerGuiConnection::i().fd, "GRAPHIC\n");
-}
+void ServerGuiConnection::sendDatasToServer(const std::string &message) {
 
-void ServerGuiConnection::sendDatasToServer(int sockfd, pollfd &fd, const std::string &message) {
-    if (fd.revents & POLLOUT) {
-        ssize_t bytes_sent = write(sockfd, message.c_str(), message.size());
+    if (GUI::ServerGuiConnection::i().fd.revents & POLLOUT) {
+        ssize_t bytes_sent = write(GUI::ServerGuiConnection::i().server_fd, message.c_str(), message.size());
         if (bytes_sent == -1) {
             throw std::runtime_error("Error sending data to server");
         }

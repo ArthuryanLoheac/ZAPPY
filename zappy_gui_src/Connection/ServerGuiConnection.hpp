@@ -27,7 +27,7 @@ private:
     };
 
     void welcomeCommand(std::vector<std::string> &args);
-    void sendDatasToServer(int sockfd, struct pollfd &fd, const std::string &message);
+    void sendDatasToServer(const std::string &message);
 };
 
 } // namespace GUI

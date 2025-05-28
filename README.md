@@ -112,6 +112,8 @@ If you want to compile only one part, you can use
 make <name-of-the-binary>
 ```
 
+Name of the binary is either `zappy-server`, `zappy-ai` or `zappy-gui`.
+
 </details>
 
 <details> <summary> <b><span style="font-size: 1.2em;">🏃‍♂️ Running a game</span></b> </summary>
@@ -146,7 +148,7 @@ make <name-of-the-binary>
 
 # <p align=center> 👥 Contributors </p>
 
-- [ArthuryanLoheac](https://github.com/ArthuryanLoheace)
+- [ArthuryanLoheac](https://github.com/ArthuryanLoheac)
 - [Léopold PINTARD](https://github.com/Leopold-PINTARD)
 - [Naat](https://github.com/NathanBezard)
 - [Mathys Fillion](https://github.com/mathys-f)

@@ -19,7 +19,7 @@ class DataManager {
     std::string ip;
  public:
     bool running = true;
-    std::mutex mutexState;
+    std::mutex mutexDatas;
     static DataManager &i() {
         static DataManager i;
         return i;

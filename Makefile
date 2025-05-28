@@ -36,7 +36,7 @@ FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
 	-std=c++20 -Wall -Wextra -Werror
 
-FLAGS_TEST = -lcriterion --coverage
+FLAGS_TEST = -lcriterion --coverage -include cstdint
 
 # ============= NAMES ============= #
 
@@ -54,7 +54,7 @@ SRC_SERVER = $(shell find zappy_server_src -type f -name "*.c" ! -name \
 	"main.c")
 SRC_GUI	= $(shell find zappy_gui_src -type f -name "*.cpp" ! -name "main.cpp")
 SRC_AI = $(shell find zappy_ai_src -type f -name "*.cpp" ! -name "main.cpp")
-SRC_TESTS = $(shell find tests -type f -name "*.c" -o -name "*.cpp")
+SRC_TESTS = tests/test_1.cpp \
 
 # ============= RULES ============= #
 
@@ -110,14 +110,10 @@ coding_style: fclean
 # ============= TESTS ============= #
 
 unit_tests:
-	@mkdir -p $(OBJ_DIR)
-	g++ -o $(OBJ_DIR)/unit_tests $(SRC_TESTS) \
-	$(SRC_SERVER) $(SRC_GUI) $(SRC_AI) \
-	$(FLAGS_TEST) $(FLAGS_GUI) $(FLAGS_AI)
-	cp $(OBJ_DIR)/unit_tests unit_tests
+	g++ -o unit_tests $(SRC_TESTS) $(FLAGS_TEST)
 
 tests_run: unit_tests
-	./$(OBJ_DIR)/unit_tests --verbose
+	./unit_tests --verbose
 
 tests_run_coverage: tests_run
 	gcovr -r . -e tests/

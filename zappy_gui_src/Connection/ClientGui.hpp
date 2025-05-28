@@ -4,7 +4,7 @@
 namespace GUI {
 class ClientGui {
  public:
-    ClientGui(int _clientFd);
+    explicit ClientGui(int _clientFd);
     int clientFd;
 };
 }  // namespace GUI

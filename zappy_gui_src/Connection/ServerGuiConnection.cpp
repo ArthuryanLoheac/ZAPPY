@@ -1,26 +1,30 @@
-#include "ServerGuiConnection.hpp"
-#include <iostream>
+#include <string.h>
 #include <unistd.h>
 #include <sys/poll.h>
-#include <string.h>
 
-namespace GUI
-{
-ServerGuiConnection::ServerGuiConnection()
-{
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cstdio>
+
+#include "Connection/ServerGuiConnection.hpp"
+
+namespace GUI {
+ServerGuiConnection::ServerGuiConnection() {
 }
 
-void GUI::ServerGuiConnection::handleCommand()
-{
-    while (GUI::ServerGuiConnection::i().buffer.find("\n") != std::string::npos) {
+void GUI::ServerGuiConnection::handleCommand() {
+    while (GUI::ServerGuiConnection::i().buffer.find("\n") != -1) {
         size_t pos = GUI::ServerGuiConnection::i().buffer.find("\n");
-        std::string command = GUI::ServerGuiConnection::i().buffer.substr(0, pos);
+        std::string command =
+            GUI::ServerGuiConnection::i().buffer.substr(0, pos);
         GUI::ServerGuiConnection::i().buffer.erase(0, pos + 1);
 
         if (command.empty())
             continue;
 
-        std::vector<std::string> args = GUI::ServerGuiConnection::i().parseCommands(command);
+        std::vector<std::string> args =
+            GUI::ServerGuiConnection::i().parseCommands(command);
         if (args.empty())
             continue;
 
@@ -33,8 +37,8 @@ void GUI::ServerGuiConnection::handleCommand()
     }
 }
 
-std::vector<std::string> ServerGuiConnection::parseCommands(std::string &command)
-{
+std::vector<std::string> ServerGuiConnection::parseCommands
+(std::string &command) {
     std::vector<std::string> args;
     size_t pos = 0;
 
@@ -51,9 +55,9 @@ std::vector<std::string> ServerGuiConnection::parseCommands(std::string &command
 }
 
 void ServerGuiConnection::sendDatasToServer(const std::string &message) {
-
     if (GUI::ServerGuiConnection::i().fd.revents & POLLOUT) {
-        ssize_t bytes_sent = write(GUI::ServerGuiConnection::i().server_fd, message.c_str(), message.size());
+        ssize_t bytes_sent = write(GUI::ServerGuiConnection::i().server_fd,
+            message.c_str(), message.size());
         if (bytes_sent == -1) {
             throw std::runtime_error("Error sending data to server");
         }
@@ -61,4 +65,4 @@ void ServerGuiConnection::sendDatasToServer(const std::string &message) {
     }
 }
 
-} // namespace GUI
+}  // namespace GUI

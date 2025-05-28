@@ -1,11 +1,11 @@
 #pragma once
+#include <poll.h>
+
 #include <string>
 #include <map>
 #include <vector>
-#include <poll.h>
 
-namespace GUI
-{
+namespace GUI {
 class ServerGuiConnection {
  public:
     ServerGuiConnection();
@@ -19,10 +19,12 @@ class ServerGuiConnection {
     struct pollfd fd;
 
     std::string buffer;
-private:
+
+ private:
     std::vector<std::string> parseCommands(std::string &command);
 
-    std::map<std::string, void (ServerGuiConnection::*)(std::vector<std::string> &)> commands = {
+    std::map<std::string, void(ServerGuiConnection::*)
+        (std::vector<std::string> &)> commands = {
         {"WELCOME", &ServerGuiConnection::welcomeCommand},
     };
 
@@ -30,4 +32,4 @@ private:
     void sendDatasToServer(const std::string &message);
 };
 
-} // namespace GUI
+}  // namespace GUI

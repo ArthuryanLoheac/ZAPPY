@@ -1,9 +1,11 @@
 #include <string.h>
+#include <thread>
+#include <cstdio>
+
+#include "zappy_gui_src/DataManager.hpp"
 #include "Connection/ClientGui.hpp"
-#include "DataManager.hpp"
 #include "include/GuiConnection.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
-#include <thread>
 
 int checkArgs(int ac, char **av) {
     int i = 1;

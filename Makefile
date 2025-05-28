@@ -38,6 +38,14 @@ FLAGS_AI = -MMD -MP \
 
 FLAGS_TEST = -lcriterion --coverage -include cstdint
 
+FLAGS_LINTER =	\
+	--repository=. \
+	--quiet \
+	--output=vs7	\
+	--filter=-legal/copyright,-build/c++17,+build/c++20,-runtime/references \
+	--recursive \
+	--exclude=tests/ \
+
 # ============= NAMES ============= #
 
 ZAPPY_SERVER = zappy_server
@@ -107,6 +115,9 @@ coding_style: fclean
 	cat coding-style-reports.log
 	rm -f coding-style-reports.log
 
+style_check:
+
+
 # ============= TESTS ============= #
 
 unit_tests:
@@ -117,3 +128,7 @@ tests_run: unit_tests
 
 tests_run_coverage: tests_run
 	gcovr -r . -e tests/
+
+style_check:
+	@cpplint $(FLAGS_LINTER) \
+		$(shell find . -type f \( -name '*.cpp' -o -name '*.hpp' \))

@@ -1,14 +1,15 @@
 #include <poll.h>
 #include <unistd.h>
-#include "DataManager.hpp"
-#include "GuiConnection.hpp"
-#include "ServerGuiConnection.hpp"
-#include <stdexcept>
 #include <string.h>
+
+#include <stdexcept>
 #include <iostream>
 
-static void readDatasFromServer(int sockfd)
-{
+#include "zappy_gui_src/DataManager.hpp"
+#include "include/GuiConnection.hpp"
+#include "Connection/ServerGuiConnection.hpp"
+
+static void readDatasFromServer(int sockfd) {
     char buffer[1024];
     ssize_t bytes_read = 0;
 
@@ -20,8 +21,7 @@ static void readDatasFromServer(int sockfd)
     GUI::ServerGuiConnection::i().handleCommand();
 }
 
-void start_server()
-{
+void start_server() {
     int ready = 0;
 
     while (1) {

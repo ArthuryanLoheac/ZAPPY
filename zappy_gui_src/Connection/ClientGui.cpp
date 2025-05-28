@@ -1,8 +1,7 @@
-#include "ClientGui.hpp"
+#include "Connection/ClientGui.hpp"
 
 namespace GUI {
-ClientGui::ClientGui(int _clientFd)
-{
+ClientGui::ClientGui(int _clientFd) {
     clientFd = _clientFd;
 }
 }  // namespace GUI

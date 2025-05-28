@@ -4,44 +4,44 @@
 #include <string>
 
 class GuiException : public std::exception {
-protected:
+ protected:
     std::string _message;
 
-public:
-    GuiException(const std::string &message) : _message(message) {}
+ public:
+    explicit GuiException(const std::string &message) : _message(message) {}
     virtual ~GuiException() = default;
-    virtual const char *what() const noexcept override {
+    const char *what() const noexcept override {
         return _message.c_str();
     }
 };
 
 class DataManagerException : public GuiException {
-public:
-    DataManagerException(const std::string &message) :
+ public:
+    explicit DataManagerException(const std::string &message) :
         GuiException("DataManager: " + message) {}
     virtual ~DataManagerException() = default;
 };
 
 class ConnectionException : public DataManagerException {
-public:
-    ConnectionException(const std::string &message) :
+ public:
+    explicit ConnectionException(const std::string &message) :
         DataManagerException("Connection error: " + message) {}
 };
 
 class ParseException : public DataManagerException {
-public:
-    ParseException(const std::string &message) :
+ public:
+    explicit ParseException(const std::string &message) :
         DataManagerException("Parse error: " + message) {}
 };
 
 class TimeoutException : public DataManagerException {
-public:
-    TimeoutException(const std::string &message = "Operation timed out") :
+ public:
+    explicit TimeoutException(const std::string &message) :
         DataManagerException(message) {}
 };
 
 class InvalidDataException : public DataManagerException {
-public:
-    InvalidDataException(const std::string &message) :
+ public:
+    explicit InvalidDataException(const std::string &message) :
         DataManagerException("Invalid data: " + message) {}
 };

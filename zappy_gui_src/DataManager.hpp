@@ -1,16 +1,14 @@
 #pragma once
-#pragma once
 #include <string>
 #include <vector>
 #include <memory>
 #include <queue>
 #include <map>
 #include <mutex>
+
 #include "Exceptions/DataManagerExceptions.hpp"
 
-namespace GUI
-{
-
+namespace GUI {
 class DataManager {
  private:
     bool debug;
@@ -34,4 +32,4 @@ class DataManager {
     void setPort(int port);
     void setIp(std::string ip);
 };
-} // namespace GUI
+}  // namespace GUI

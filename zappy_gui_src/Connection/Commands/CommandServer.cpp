@@ -1,10 +1,11 @@
-#include "ServerGuiConnection.hpp"
+#include <string>
+
+#include "Connection/ServerGuiConnection.hpp"
 
 namespace GUI {
-void GUI::ServerGuiConnection::welcomeCommand(std::vector<std::string> &args)
-{
+void GUI::ServerGuiConnection::welcomeCommand(std::vector<std::string> &args) {
     (void) args;
     sendDatasToServer("GRAPHIC\n");
 }
 
-} // namespace GUI
+}  // namespace GUI

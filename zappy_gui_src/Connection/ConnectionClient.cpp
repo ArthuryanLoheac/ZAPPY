@@ -8,7 +8,7 @@
 #include <string>
 #include <iostream>
 
-#include "DataManager.hpp"
+#include "zappy_gui_src/DataManager.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
 
 int client_connection(int &sockfd) {

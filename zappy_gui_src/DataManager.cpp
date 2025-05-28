@@ -1,9 +1,9 @@
-#include "DataManager.hpp"
+#include <string>
 
-namespace GUI
-{
-DataManager::DataManager()
-{
+#include "zappy_gui_src/DataManager.hpp"
+
+namespace GUI {
+DataManager::DataManager() {
     std::lock_guard<std::mutex> lock(mutexDatas);
     debug = false;
     port = 0;
@@ -41,4 +41,4 @@ void DataManager::setIp(std::string _ip) {
     ip = _ip;
 }
 
-} // namespace GUI
+}  // namespace GUI

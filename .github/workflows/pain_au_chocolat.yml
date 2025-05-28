@@ -11,11 +11,19 @@ on:
 env:
   MIRROR_URL: 'git@github.com:EpitechPromo2028/B-YEP-400-NAN-4-1-zappy-arthuryan.loheac-de-sainte-marie'
   EXECUTABLES: 'zappy_server, zappy_gui, zappy_ai'
-  FUNCTIONS_BANNED: ''
 
 jobs:
-  check_program_compilation:
+  check_coding_style:
     if: github.repository != 'EpitechPromo2028/B-YEP-400-NAN-4-1-zappy-arthuryan.loheac-de-sainte-marie'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: 3.x
+    - run: pip install cpplint
+    - run: make style_check
+  check_program_compilation:
     runs-on: ubuntu-latest
     container:
       image: epitechcontent/epitest-docker:latest
@@ -29,38 +37,8 @@ jobs:
         run: |
           LIST=$(echo $EXECUTABLES | tr ',' ' ')
           find $LIST
-  check_banned_function:
-    needs: check_program_compilation
-    runs-on: ubuntu-latest
-    container:
-      image: epitechcontent/epitest-docker:latest
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v4
-      - name: "Make"
-        run: make
-      - name: "Check banned functions"
-        run: |
-          liste_binaires=$(echo "$EXECUTABLES" | tr ',' '\n')
-          fonctions_bannies=$(echo "$FUNCTIONS_BANNED" | tr ', ' '\n')
-
-          while read -r binaire; do
-              echo "Analyse du binaire : $binaire"
-              symboles=$(nm "$binaire" | grep ' U ' | awk '{print $2}' | cut -d'@' -f1 | c++filt | sort -u)
-              while read -r symbole; do
-                  if [[ ${symbole:0:1} != "_" ]]; then
-                      if echo "$fonctions_bannies" | grep -xq "$symbole"; then
-                          echo "Fonction bannie trouvée : $symbole"
-                          exit 1
-                      fi
-                  fi
-              done <<< "$symboles"
-          done <<< "$liste_binaires"
-
-          echo "Aucune fonction bannie trouvée."
-        shell: bash
   run_tests:
-    needs: check_banned_function
+    needs: [check_program_compilation, check_coding_style]
     runs-on: ubuntu-latest
     container:
       image: epitechcontent/epitest-docker:latest

@@ -115,9 +115,6 @@ coding_style: fclean
 	cat coding-style-reports.log
 	rm -f coding-style-reports.log
 
-style_check:
-
-
 # ============= TESTS ============= #
 
 unit_tests:

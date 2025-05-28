@@ -6,7 +6,7 @@
 
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
-#include "MyEventReceiver.hpp"
+#include "Graphic/Events/MyEventReceiver.hpp"
 
 namespace GUI {
 class Window {
@@ -25,6 +25,8 @@ class Window {
 
     float rotationSpeedCamera = 100.f;
     float zoomSpeedCamera = 20.f;
+    float moveSpeedCamera = 5.f;
+
     float angleXCamera = 0;
     float distanceFromCenter = 10.f;
 
@@ -33,7 +35,7 @@ class Window {
     void handleEvent();
     void updateDeltaTime();
 
-    void moveCamera(float x, float zoom);
+    void moveCamera(float x, float zoom, float xMove, float yMove);
 
     static Window &i() {
         static Window instance;

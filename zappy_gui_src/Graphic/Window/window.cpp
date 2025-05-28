@@ -1,11 +1,11 @@
 #include "Graphic/Window/window.hpp"
-#include "MyEventReceiver.hpp"
-#include "window.hpp"
+#include "Graphic/Events/MyEventReceiver.hpp"
 
 namespace GUI {
 Window::Window() {
     device = irr::createDevice(irr::video::EDT_OPENGL,
-        irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false, &receiver);
+        irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false,
+        &receiver);
 
     if (!device)
         throw GUI::WindowCreationException("Error creating device");
@@ -65,4 +65,4 @@ void Window::setupWorld() {
         }
     }
 }
-} // namespace GUI
+}  // namespace GUI

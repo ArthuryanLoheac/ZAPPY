@@ -2,9 +2,8 @@
 
 #include <irrlicht/irrlicht.h>
 
-class MyEventReceiver : public irr::IEventReceiver
-{
-public:
+class MyEventReceiver : public irr::IEventReceiver {
+ public:
     bool OnEvent(const irr::SEvent& event) override {
         if (event.EventType == irr::EET_KEY_INPUT_EVENT)
             KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
@@ -28,11 +27,18 @@ public:
 
     float ConsumeWheelDelta() {
         float delta = MouseWheelDelta;
-        MouseWheelDelta = 0.0f; // Consommer l'événement
+        MouseWheelDelta = 0.0f;
         return delta;
     }
 
-private:
+    float getValueTwoKey(irr::EKEY_CODE plus, irr::EKEY_CODE minus) {
+        float i = 0;
+        i += IsKeyDown(plus);
+        i -= IsKeyDown(minus);
+        return i;
+    }
+
+ private:
     bool KeyIsDown[irr::KEY_KEY_CODES_COUNT];
     float MouseWheelDelta;
 };

@@ -4,7 +4,6 @@
 
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "Graphic/Window/window.hpp"
-#include "window.hpp"
 
 namespace GUI {
 void Window::handleEvent() {
@@ -45,7 +44,8 @@ void Window::updateZoomCamera(float zoom) {
     distanceFromCenter = std::clamp(distanceFromCenter, 1.f, 50.f);
 }
 
-void Window::updateMoveOrigin(float xMove, float yMove, float radX, float radZ) {
+void Window::updateMoveOrigin(float xMove, float yMove, float radX,
+float radZ) {
     int width = GUI::GameDataManager::i().getWidth();
     int height = GUI::GameDataManager::i().getHeight();
 
@@ -68,4 +68,4 @@ void Window::updateRotation(float x) {
     if (angleXCamera > 360.f) angleXCamera -= 360.f;
     if (angleXCamera < 0.f) angleXCamera += 360.f;
 }
-} // namespace GUI
+}  // namespace GUI

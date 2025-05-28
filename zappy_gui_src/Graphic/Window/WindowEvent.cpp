@@ -4,6 +4,7 @@
 
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "Graphic/Window/window.hpp"
+#include "window.hpp"
 
 namespace GUI {
 void Window::handleEvent() {
@@ -26,34 +27,45 @@ void Window::updateDeltaTime() {
 
 void Window::moveCamera(float x, float zoom, float xMove, float yMove) {
     // rotate around
-    angleXCamera += x * frameDeltaTime * rotationSpeedCamera;
-    if (angleXCamera > 360.f) angleXCamera -= 360.f;
-    if (angleXCamera < 0.f) angleXCamera += 360.f;
+    updateRotation(x);
     float radAngleX = std::cos(angleXCamera * (M_PI / 180.0f));
     float radAngleZ = std::sin(angleXCamera * (M_PI / 180.0f));
+    updateMoveOrigin(xMove, yMove, radAngleX, radAngleZ);
+    updateZoomCamera(zoom);
+
     irr::core::vector3df pos(
         distanceFromCenter * radAngleX, 1,
         distanceFromCenter * radAngleZ);
+    cam->setPosition(pos);
+}
 
-    // move Origin
+void Window::updateZoomCamera(float zoom) {
+    // Zoom
+    distanceFromCenter += zoom * frameDeltaTime * zoomSpeedCamera;
+    distanceFromCenter = std::clamp(distanceFromCenter, 1.f, 50.f);
+}
+
+void Window::updateMoveOrigin(float xMove, float yMove, float radX, float radZ) {
     int width = GUI::GameDataManager::i().getWidth();
     int height = GUI::GameDataManager::i().getHeight();
 
     irr::core::vector3df posTarget = cam->getTarget();
-    float rotatedXMove = xMove * radAngleX - yMove * radAngleZ;
-    float rotatedYMove = xMove * radAngleZ + yMove * radAngleX;
+    // Rotate X & Y by the camera rotation
+    float rotatedXMove = xMove * radX - yMove * radZ;
+    float rotatedYMove = xMove * radZ + yMove * radX;
     xMove = rotatedXMove;
     yMove = rotatedYMove;
+    // Move origin
     posTarget.X += xMove * frameDeltaTime * moveSpeedCamera;
     posTarget.Z += yMove * frameDeltaTime * moveSpeedCamera;
     posTarget.X = std::clamp(posTarget.X, -(width / 2.f), (width / 2.f));
     posTarget.Z = std::clamp(posTarget.Z, -(height / 2.f), (height / 2.f));
     cam->setTarget(posTarget);
-
-    // Zoom
-    distanceFromCenter += zoom * frameDeltaTime * zoomSpeedCamera;
-    distanceFromCenter = std::clamp(distanceFromCenter, 1.f, 50.f);
-    cam->setPosition(pos);
 }
 
-}  // namespace GUI
+void Window::updateRotation(float x) {
+    angleXCamera += x * frameDeltaTime * rotationSpeedCamera;
+    if (angleXCamera > 360.f) angleXCamera -= 360.f;
+    if (angleXCamera < 0.f) angleXCamera += 360.f;
+}
+} // namespace GUI

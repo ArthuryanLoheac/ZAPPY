@@ -36,6 +36,9 @@ class Window {
     void updateDeltaTime();
 
     void moveCamera(float x, float zoom, float xMove, float yMove);
+    void updateZoomCamera(float zoom);
+    void updateMoveOrigin(float xMove, float yMove, float radX, float radZ);
+    void updateRotation(float x);
 
     static Window &i() {
         static Window instance;

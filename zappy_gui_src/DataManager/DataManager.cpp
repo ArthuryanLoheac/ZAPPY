@@ -1,6 +1,6 @@
 #include <string>
 
-#include "zappy_gui_src/DataManager.hpp"
+#include "DataManager/DataManager.hpp"
 
 namespace GUI {
 DataManager::DataManager() {

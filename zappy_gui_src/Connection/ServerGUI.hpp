@@ -6,11 +6,11 @@
 #include <vector>
 
 namespace GUI {
-class ServerGuiConnection {
+class ServerGUI {
  public:
-    ServerGuiConnection();
-    static ServerGuiConnection &i() {
-        static ServerGuiConnection i;
+    ServerGUI();
+    static ServerGUI &i() {
+        static ServerGUI i;
         return i;
     }
     void handleCommand();
@@ -23,9 +23,9 @@ class ServerGuiConnection {
  private:
     std::vector<std::string> parseCommands(std::string &command);
 
-    std::map<std::string, void(ServerGuiConnection::*)
+    std::map<std::string, void(ServerGUI::*)
         (std::vector<std::string> &)> commands = {
-        {"WELCOME", &ServerGuiConnection::welcomeCommand},
+        {"WELCOME", &ServerGUI::welcomeCommand},
     };
 
     void welcomeCommand(std::vector<std::string> &args);

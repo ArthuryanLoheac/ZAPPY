@@ -1,13 +1,18 @@
-#include <poll.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <poll.h>
+#include <netinet/in.h>
 #include <string.h>
 
+#include <string>
 #include <stdexcept>
 #include <iostream>
 
-#include "zappy_gui_src/DataManager.hpp"
 #include "include/GuiConnection.hpp"
-#include "Connection/ServerGuiConnection.hpp"
+#include "Connection/ServerGUI.hpp"
+#include "DataManager/DataManager.hpp"
+#include "Exceptions/DataManagerExceptions.hpp"
 
 static void readDatasFromServer(int sockfd) {
     char buffer[1024];
@@ -17,8 +22,8 @@ static void readDatasFromServer(int sockfd) {
     if (bytes_read <= 0)
         throw std::runtime_error("Error reading from server");
     buffer[bytes_read] = '\0';
-    GUI::ServerGuiConnection::i().buffer.append(buffer);
-    GUI::ServerGuiConnection::i().handleCommand();
+    GUI::ServerGUI::i().buffer.append(buffer);
+    GUI::ServerGUI::i().handleCommand();
 }
 
 void start_server() {
@@ -26,20 +31,36 @@ void start_server() {
 
     while (1) {
         ready = poll(
-            &GUI::ServerGuiConnection::i().fd, 1, -1);
+            &GUI::ServerGUI::i().fd, 1, -1);
         if (ready == -1)
             throw std::runtime_error("Poll error occurred");
-        if (GUI::ServerGuiConnection::i().fd.revents & POLLIN) {
+        if (GUI::ServerGUI::i().fd.revents & POLLIN) {
             // Read data from the server
-            readDatasFromServer(GUI::ServerGuiConnection::i().server_fd);
+            readDatasFromServer(GUI::ServerGUI::i().server_fd);
         }
     }
 }
 
-
 int loopClient(int sockfd) {
-    GUI::ServerGuiConnection::i().server_fd = sockfd;
-    GUI::ServerGuiConnection::i().fd = {sockfd, .events = POLLIN | POLLOUT, 0};
+    GUI::ServerGUI::i().server_fd = sockfd;
+    GUI::ServerGUI::i().fd = {sockfd, .events = POLLIN | POLLOUT, 0};
     start_server();
+    return 0;
+}
+
+int client_connection(int &sockfd) {
+    struct sockaddr_in serv_addr;
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0)
+        throw InvalidDataException("Socket creation failed");
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    if (inet_pton(AF_INET, GUI::DataManager::i().getIp().c_str(),
+        &serv_addr.sin_addr) <= 0)
+        throw InvalidDataException("Invalid IP address");
+    serv_addr.sin_port = htons(GUI::DataManager::i().getPort());
+    if (connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
+        throw InvalidDataException("Connection failed");
     return 0;
 }

@@ -2,8 +2,7 @@
 #include <thread>
 #include <cstdio>
 
-#include "zappy_gui_src/DataManager.hpp"
-#include "Connection/ClientGui.hpp"
+#include "DataManager/DataManager.hpp"
 #include "include/GuiConnection.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
 
@@ -33,7 +32,6 @@ int checkArgs(int ac, char **av) {
 int main(int ac, char **av) {
     int sockfd;
     GUI::DataManager dataManager;
-    GUI::ClientGui client(sockfd);
 
     try {
         if (!(ac == 5 || ac == 6))

@@ -7,37 +7,37 @@
 #include <string>
 #include <cstdio>
 
-#include "Connection/ServerGuiConnection.hpp"
+#include "Connection/ServerGUI.hpp"
 
 namespace GUI {
-ServerGuiConnection::ServerGuiConnection() {
+ServerGUI::ServerGUI() {
 }
 
-void GUI::ServerGuiConnection::handleCommand() {
-    while (GUI::ServerGuiConnection::i().buffer.find("\n") != -1) {
-        size_t pos = GUI::ServerGuiConnection::i().buffer.find("\n");
+void GUI::ServerGUI::handleCommand() {
+    while (GUI::ServerGUI::i().buffer.find("\n") != std::string::npos) {
+        size_t pos = GUI::ServerGUI::i().buffer.find("\n");
         std::string command =
-            GUI::ServerGuiConnection::i().buffer.substr(0, pos);
-        GUI::ServerGuiConnection::i().buffer.erase(0, pos + 1);
+            GUI::ServerGUI::i().buffer.substr(0, pos);
+        GUI::ServerGUI::i().buffer.erase(0, pos + 1);
 
         if (command.empty())
             continue;
 
         std::vector<std::string> args =
-            GUI::ServerGuiConnection::i().parseCommands(command);
+            GUI::ServerGUI::i().parseCommands(command);
         if (args.empty())
             continue;
 
-        auto it = GUI::ServerGuiConnection::i().commands.find(args[0]);
-        if (it != GUI::ServerGuiConnection::i().commands.end()) {
-            (GUI::ServerGuiConnection::i().*(it->second))(args);
+        auto it = GUI::ServerGUI::i().commands.find(args[0]);
+        if (it != GUI::ServerGUI::i().commands.end()) {
+            (GUI::ServerGUI::i().*(it->second))(args);
         } else {
             std::cerr << "Unknown command: " << args[0] << std::endl;
         }
     }
 }
 
-std::vector<std::string> ServerGuiConnection::parseCommands
+std::vector<std::string> ServerGUI::parseCommands
 (std::string &command) {
     std::vector<std::string> args;
     size_t pos = 0;
@@ -54,9 +54,9 @@ std::vector<std::string> ServerGuiConnection::parseCommands
     return args;
 }
 
-void ServerGuiConnection::sendDatasToServer(const std::string &message) {
-    if (GUI::ServerGuiConnection::i().fd.revents & POLLOUT) {
-        ssize_t bytes_sent = write(GUI::ServerGuiConnection::i().server_fd,
+void ServerGUI::sendDatasToServer(const std::string &message) {
+    if (GUI::ServerGUI::i().fd.revents & POLLOUT) {
+        ssize_t bytes_sent = write(GUI::ServerGUI::i().server_fd,
             message.c_str(), message.size());
         if (bytes_sent == -1) {
             throw std::runtime_error("Error sending data to server");

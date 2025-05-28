@@ -1,9 +1,9 @@
 #include <string>
 
-#include "Connection/ServerGuiConnection.hpp"
+#include "Connection/ServerGUI.hpp"
 
 namespace GUI {
-void GUI::ServerGuiConnection::welcomeCommand(std::vector<std::string> &args) {
+void GUI::ServerGUI::welcomeCommand(std::vector<std::string> &args) {
     (void) args;
     sendDatasToServer("GRAPHIC\n");
 }

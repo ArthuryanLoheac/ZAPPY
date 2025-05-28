@@ -1,16 +1,17 @@
-# 🎮 Zappy - Virtual World Simulator
+<h1 align=center>🎮 Zappy - Virtual World Simulator</h1>
+<p align="center">
+    <img src="https://img.shields.io/badge/Game-Simulation-orange" alt="Game"/>
+    <img src="https://img.shields.io/badge/Language-C/C++-blue" alt="Language"/>
+    <img src="https://img.shields.io/badge/Status-In%20Development-green" alt="Status"/>
+</p>
 
-![Game](https://img.shields.io/badge/Game-Simulation-orange)
-![Language](https://img.shields.io/badge/Language-C/C++-blue)
-![Status](https://img.shields.io/badge/Status-In%20Development-green)
+# <p align=center> 📜 Overview </p>
 
-## 📜 Overview
+#### Zappy is a network game where several teams confront each other on a tile map containing resources. The game simulates a virtual world called Trantor where AI-controlled beings called "trantorians" must evolve and survive.
 
-Zappy is a network game where several teams confront each other on a tile map containing resources. The game simulates a virtual world called Trantor where AI-controlled beings called "trantorians" must evolve and survive.
+# <p align=center> 🌍 Project Architecture </p>
 
-## 🌍 Project Architecture
-
-The Zappy project is divided into 3 components:
+### The Zappy project is divided into 3 components:
 
 ### 🖥️ Server
 The server manages the simulation of the Trantor world, including:
@@ -31,68 +32,71 @@ The GUI renders the Trantor world in 3D to help users visualize:
 - Resource distribution on the map
 - Team progress and evolution levels
 
-## 💻 Usage
+# <p align=center> 💻 Usage </p>
 
-### Server
+<details> <summary> <b><span style="font-size: 1.2em;">🖥️ Server</span><b> </summary>
 
 ```sh
-./zappy_server -help
-```
-
-```text
 USAGE: ./zappy_server -p port -x width -y height -n name1 name2 ... -c clientsNb -f freq
-
-option                           description
--p port                          port number
--x width                         width of the world
--y height                        height of the world
--n name1 name2 ...               name of the team
--c clientsNb                     number of authorized clients per team
--f freq                          reciprocal of time unit for execution of actions
 ```
 
-### GUI
+| Option | Parameter | Description |
+|--------|-----------|-------------|
+| -p | port | port number |
+| -x | width | width of the world |
+| -y | height | height of the world |
+| -n | name1 name2 ... | name of the team |
+| -c | clientsNb | number of authorized clients per team |
+| -f | freq | reciprocal of time unit for execution of actions |
+
+> The team name GRAPHIC is reserved for the GUI to authenticate itself as such to the server.
+
+</details>
+
+<details> <summary> <b><span style="font-size: 1.2em;">🌍 GUI</span><b> </summary>
 
 ```sh
-./zappy_gui -help
-```
-
-```text
 USAGE: ./zappy_gui -p port -h machine
-
-option                           description
--p port                          port number
--h machine                       hostname of the server
 ```
 
-### AI Client
+| Option | Parameter | Description |
+|--------|-----------|-------------|
+| -p | port | port number |
+| -h | machine | hostname of the server |
+
+</details>
+
+<details> <summary> <b><span style="font-size: 1.2em;">🤖 AI Client</span><b> </summary>
 
 ```sh
-./zappy_ai -help
-```
-
-```text
 USAGE: ./zappy_ai -p port -n name -h machine
-
-option                           description
--p port                          port number
--n name                          name of the team
--h machine                       name of the machine; localhost by default
 ```
 
-## 🚀 Getting Started
+| Option | Parameter | Description |
+|--------|-----------|-------------|
+| -p | port | port number |
+| -n | name | name of the team |
+| -h | machine | name of the machine; localhost by default |
 
-### Prerequisites
+> The team name GRAPHIC is reserved for the GUI to authenticate itself as such to the server.
+
+</details>
+
+# <p align=center> 🚀 Getting Started </p>
+
+<details> <summary> <b><span style="font-size: 1.2em;">⚙️ Prerequisites</span><b> </summary>
 
 - C/C++ compiler (gcc/g++)
 - Make
-- Any 3D graphics library dependencies for the GUI
+- Irrlicht 3D library
 
-### Installation
+</details>
+
+<details> <summary> <b><span style="font-size: 1.2em;">🛜 Installation</span><b> </summary>
 
 1. Clone the repository
 ```sh
-git clone <repository-url>
+git clone https://github.com/ArthuryanLoheac/ZAPPY.git
 cd ZAPPY
 ```
 
@@ -103,7 +107,14 @@ make
 
 This will build all three components: the server, AI clients, and GUI.
 
-### Running a Game Session
+If you want to compile only one part, you can use
+```sh
+make <name-of-the-binary>
+```
+
+</details>
+
+<details> <summary> <b><span style="font-size: 1.2em;">🏃‍♂️ Running a game</span><b> </summary>
 
 1. Start the server:
 ```sh
@@ -118,20 +129,22 @@ This will build all three components: the server, AI clients, and GUI.
 3. Connect AI clients:
 ```sh
 ./zappy_ai -p 4242 -n team1 -h localhost
+./zappy_ai -p 4242 -n team2 -h localhost
 ```
 
-## 🏗️ Project Structure
+</details>
+
+# <p align=center> 🏗️ Project Structure </p>
 
 ```sh
 ├── zappy_server_src/  # Server implementation
 ├── zappy_ai_src/      # AI client implementation
 ├── zappy_gui_src/     # GUI implementation
 ├── docs/              # Documentation
-├── tests/             # Test files
-└── private/           # Additional resources
+└── tests/             # Test files
 ```
 
-## 👥 Contributors
+# <p align=center> 👥 Contributors </p>
 
 - [ArthuryanLoheac](https://github.com/ArthuryanLoheace)
 - [Léopold PINTARD](https://github.com/Leopold-PINTARD)
@@ -139,7 +152,3 @@ This will build all three components: the server, AI clients, and GUI.
 - [Mathys Fillion](https://github.com/mathys-f)
 - [Matthieu](https://github.com/MatthieuGA)
 - [Jean BIZEUL](https://github.com/JeanBizeul)
-
-## 📝 License
-
-This project is part of the EPITECH curriculum and follows its guidelines.

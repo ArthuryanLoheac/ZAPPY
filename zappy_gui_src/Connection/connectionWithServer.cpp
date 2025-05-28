@@ -7,13 +7,26 @@
 #include <string.h>
 #include <iostream>
 
-static void sendDatasToServer(int sockfd, struct pollfd &fd, const std::string &message) {
-    if (fd.revents & POLLOUT) {
-        ssize_t bytes_sent = write(sockfd, message.c_str(), message.size());
-        if (bytes_sent == -1) {
-            throw std::runtime_error("Error sending data to server");
+static void checkCommand()
+{
+    while (GUI::ServerGuiConnection::i().buffer.find("\n") != std::string::npos) {
+        size_t pos = GUI::ServerGuiConnection::i().buffer.find("\n");
+        std::string command = GUI::ServerGuiConnection::i().buffer.substr(0, pos);
+        GUI::ServerGuiConnection::i().buffer.erase(0, pos + 1);
+
+        if (command.empty())
+            continue;
+
+        std::vector<std::string> args = GUI::ServerGuiConnection::i().parseCommands(command);
+        if (args.empty())
+            continue;
+
+        auto it = GUI::ServerGuiConnection::i().commands.find(args[0]);
+        if (it != GUI::ServerGuiConnection::i().commands.end()) {
+            (GUI::ServerGuiConnection::i().*(it->second))(args);
+        } else {
+            std::cerr << "Unknown command: " << args[0] << std::endl;
         }
-        printf("Sent data: %s\n", message.c_str());
     }
 }
 
@@ -23,18 +36,11 @@ static void readDatasFromServer(int sockfd)
     ssize_t bytes_read = 0;
 
     bytes_read = read(sockfd, buffer, sizeof(buffer) - 1);
-    if (bytes_read <= 0) {
-        if (bytes_read == -1)
-            throw std::runtime_error("Error reading from server");
-        else
-            throw std::runtime_error("Server connection closed");
-    }
-    buffer[bytes_read] = '\0'; // Null-terminate the string
-    std::string data(buffer);
-    printf("Received data: %s\n", data.c_str());
-    if (data.find("WELCOME") != std::string::npos) {
-        sendDatasToServer(sockfd, GUI::ServerGuiConnection::i().fd, "GRAPHIC\n");
-    }
+    if (bytes_read <= 0)
+        throw std::runtime_error("Error reading from server");
+    buffer[bytes_read] = '\0';
+    GUI::ServerGuiConnection::i().buffer.append(buffer);
+    checkCommand();
 }
 
 void start_server()

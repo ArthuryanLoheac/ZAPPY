@@ -48,6 +48,16 @@ std::vector<std::string> ServerGuiConnection::parseCommands(std::string &command
 void GUI::ServerGuiConnection::welcomeCommand(std::vector<std::string> &args)
 {
     (void) args;
-    //sendCommand("GRAPHIC");
+    sendDatasToServer(GUI::ServerGuiConnection::i().server_fd, GUI::ServerGuiConnection::i().fd, "GRAPHIC\n");
+}
+
+void ServerGuiConnection::sendDatasToServer(int sockfd, pollfd &fd, const std::string &message) {
+    if (fd.revents & POLLOUT) {
+        ssize_t bytes_sent = write(sockfd, message.c_str(), message.size());
+        if (bytes_sent == -1) {
+            throw std::runtime_error("Error sending data to server");
+        }
+        printf("Sent data: %s\n", message.c_str());
+    }
 }
 } // namespace GUI

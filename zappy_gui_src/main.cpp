@@ -1,8 +1,8 @@
 #include <string.h>
-#include "ClientGui.hpp"
+#include "Connection/ClientGui.hpp"
 #include "DataManager.hpp"
 #include "include/GuiConnection.hpp"
-#include "DataManagerExceptions.hpp"
+#include "Exceptions/DataManagerExceptions.hpp"
 #include <thread>
 
 int checkArgs(int ac, char **av) {

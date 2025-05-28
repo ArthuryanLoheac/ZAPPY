@@ -1,5 +1,6 @@
 #include "window.hpp"
 
+namespace GUI {
 Window::Window() {
     device = irr::createDevice(irr::video::EDT_OPENGL,
         irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false, 0);
@@ -14,8 +15,7 @@ Window::Window() {
     auto cam = smgr->addCameraSceneNodeFPS();
     cam->setFOV(3.14159f / 2.0f); // 90°
     cam->setNearValue(0.1f);
-    cam->setFarValue(10000.0f); // distance maximale visible
-    setupWorld();
+    cam->setFarValue(10000.0f);
 }
 
 void Window::update() {
@@ -36,6 +36,12 @@ void Window::update() {
 }
 
 void Window::setupWorld() {
+    if (cubes.size() > 0) {
+        for (auto &cube : cubes) {
+            cube->remove();
+        }
+        cubes.clear();
+    }
     int width = GUI::GameDataManager::i().getWidth();
     int height = GUI::GameDataManager::i().getHeight();
 
@@ -46,3 +52,5 @@ void Window::setupWorld() {
         }
     }
 }
+
+}  // namespace GUI

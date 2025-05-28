@@ -5,6 +5,7 @@
 #include "DataManager/GameDataManager.hpp"
 #include <memory>
 
+namespace GUI {
 class Window {
  public:
     Window();
@@ -17,5 +18,10 @@ class Window {
 
     void update();
     void setupWorld();
-};
 
+    static Window &i() {
+        static Window instance;
+        return instance;
+    }
+};
+}  // namespace GUI

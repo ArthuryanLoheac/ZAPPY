@@ -2,6 +2,7 @@
 
 #include "Connection/ServerGUI.hpp"
 #include "Exceptions/ServerGUIExceptions.hpp"
+#include "Window/window.hpp"
 #include <GameDataManager.hpp>
 
 namespace GUI {
@@ -19,5 +20,7 @@ void ServerGUI::mszCommand(std::vector<std::string> &args) {
         throw GUI::CommandParsingException("Invalid dimensions in msz command");
     GUI::GameDataManager::i().setWidth(width);
     GUI::GameDataManager::i().setHeight(height);
+
+    GUI::Window::i().setupWorld();
 }
 } // namespace GUI

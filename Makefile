@@ -101,7 +101,8 @@ $(OBJ_DIR)/zappy_ai_src/%.o: zappy_ai_src/%.cpp
 	@mkdir -p $(dir $@)
 	g++ -c $(FLAGS_AI) $< -o $@
 
--include $(DEPS)
+-include $(OBJ_MAIN_SERVER:.o=.d) $(OBJ_MAIN_GUI:.o=.d) $(OBJ_MAIN_AI:.o=.d)
+-include $(OBJ_SRC_SERVER:.o=.d) $(OBJ_SRC_GUI:.o=.d) $(OBJ_SRC_AI:.o=.d)
 
 # ============= OTHERS ============= #
 

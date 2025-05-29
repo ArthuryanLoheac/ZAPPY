@@ -3,7 +3,7 @@
 
 namespace GUI {
 Window::Window() {
-    device = irr::createDevice(irr::video::EDT_SOFTWARE,
+    device = irr::createDevice(irr::video::EDT_BURNINGSVIDEO,
         irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false,
         &receiver);
 

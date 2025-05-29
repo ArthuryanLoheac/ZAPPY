@@ -3,7 +3,7 @@
 
 namespace GUI {
 Window::Window() {
-    device = irr::createDevice(irr::video::EDT_OPENGL,
+    device = irr::createDevice(irr::video::EDT_SOFTWARE,
         irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false,
         &receiver);
 
@@ -60,8 +60,19 @@ void Window::setupWorld() {
             irr::core::vector3df position(i - (width/2) + deltaWidth,
                 -3,
                 j - (height/2) + deltaHeight);
-            auto cube = smgr->addCubeSceneNode(0.8f, 0, -1, position);
-            cube->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+            auto mesh = smgr->getMesh("assets/plane.obj");
+            if (!mesh)
+                throw GUI::ShaderCompilationException("Error loading mesh");
+            auto node = smgr->addAnimatedMeshSceneNode(mesh);
+            if (node) {
+                node->setScale(irr::core::vector3df(0.5f));
+                float rotation = std::rand() % 4;
+                node->setRotation(irr::core::vector3df(0, rotation * 90, 0));
+                node->setPosition(position);
+                node->setMD2Animation(irr::scene::EMAT_STAND);
+                node->setMaterialTexture(0, driver->getTexture("assets/BakedPlane.png"));
+                node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+            }
         }
     }
 }

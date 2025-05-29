@@ -31,7 +31,7 @@ class MyEventReceiver : public irr::IEventReceiver {
         return delta;
     }
 
-    float getValueTwoKey(irr::EKEY_CODE plus, irr::EKEY_CODE minus) {
+    float getValBetween(irr::EKEY_CODE plus, irr::EKEY_CODE minus) {
         float i = 0;
         i += IsKeyDown(plus);
         i -= IsKeyDown(minus);

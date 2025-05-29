@@ -70,7 +70,8 @@ void Window::setupWorld() {
                 node->setRotation(irr::core::vector3df(0, rotation * 90, 0));
                 node->setPosition(position);
                 node->setMD2Animation(irr::scene::EMAT_STAND);
-                node->setMaterialTexture(0, driver->getTexture("assets/BakedPlane.png"));
+                node->setMaterialTexture(0, driver->getTexture
+                    ("assets/BakedPlane.png"));
                 node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
             }
         }

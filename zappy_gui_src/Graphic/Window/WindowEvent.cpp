@@ -7,9 +7,9 @@
 
 namespace GUI {
 void Window::handleEvent() {
-    int xMoveCam = receiver.getValueTwoKey(irr::KEY_KEY_D, irr::KEY_KEY_Q);
-    int yMoveCenterCam = receiver.getValueTwoKey(irr::KEY_RIGHT, irr::KEY_LEFT);
-    int xMoveCenterCam = receiver.getValueTwoKey(irr::KEY_DOWN, irr::KEY_UP);
+    int xMoveCam = receiver.getValBetween(irr::KEY_KEY_E, irr::KEY_KEY_A);
+    int yMoveCenterCam = receiver.getValBetween(irr::KEY_KEY_D, irr::KEY_KEY_Q);
+    int xMoveCenterCam = receiver.getValBetween(irr::KEY_KEY_S, irr::KEY_KEY_Z);
     float zoom = 0;
 
     if (receiver.IsKeyDown(irr::KEY_ESCAPE))

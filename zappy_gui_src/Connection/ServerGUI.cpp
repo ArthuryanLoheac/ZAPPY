@@ -8,6 +8,7 @@
 #include <cstdio>
 
 #include "Connection/ServerGUI.hpp"
+#include "DataManager/DataManager.hpp"
 
 namespace GUI {
 ServerGUI::ServerGUI() {
@@ -25,10 +26,13 @@ void GUI::ServerGUI::handleCommand() {
             parseCommands(command);
         if (args.empty()) continue;
 
+        for (size_t i = 0; i < args[0].length(); ++i)
+            args[0][i] = toupper(args[0][i]);
+
         auto it = commands.find(args[0]);
         if (it != commands.end())
             (GUI::ServerGUI::i().*(it->second))(args);
-        else
+        else if (GUI::DataManager::i().getDebug())
             std::cerr << "Unknown command: " << args[0] << std::endl;
     }
 }
@@ -49,7 +53,7 @@ void ServerGUI::readDatasFromServer() {
 void ServerGUI::startServer() {
     int ready = 0;
 
-    while (1) {
+    while (DataManager::i().running) {
         ready = poll(
             &GUI::ServerGUI::i().fd, 1, -1);
         if (ready == -1)

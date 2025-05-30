@@ -31,5 +31,6 @@ class DataManager {
     void setDebug(bool isDebug);
     void setPort(int port);
     void setIp(std::string ip);
+    void setRunning(bool b);
 };
 }  // namespace GUI

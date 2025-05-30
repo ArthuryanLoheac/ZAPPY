@@ -28,10 +28,10 @@ FLAGS_SERVER = -MMD -MP \
 	-I./zappy_server_src/include \
 	-std=gnu17 -Wall -Wextra -Werror \
 
-FLAGS_GUI =	-MMD -MP -lIrrlicht \
+FLAGS_GUI =	-MMD -MP \
+	-lIrrlicht \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
 	-std=c++17 -Wall -Wextra -Werror
-
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
 	-std=c++20 -Wall -Wextra -Werror
@@ -101,7 +101,8 @@ $(OBJ_DIR)/zappy_ai_src/%.o: zappy_ai_src/%.cpp
 	@mkdir -p $(dir $@)
 	g++ -c $(FLAGS_AI) $< -o $@
 
--include $(DEPS)
+-include $(OBJ_MAIN_SERVER:.o=.d) $(OBJ_MAIN_GUI:.o=.d) $(OBJ_MAIN_AI:.o=.d)
+-include $(OBJ_SRC_SERVER:.o=.d) $(OBJ_SRC_GUI:.o=.d) $(OBJ_SRC_AI:.o=.d)
 
 # ============= OTHERS ============= #
 

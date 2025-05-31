@@ -24,9 +24,10 @@ void GameDataManager::setHeight(int h) {
     height = h;
 }
 
-void GameDataManager::addTile(int x, int y) {
+GameTile &GameDataManager::addTile(int x, int y) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     tiles.push_back(GameTile(x, y));
+    return tiles.back();
 }
 
 GameTile &GameDataManager::getTile(int x, int y) {

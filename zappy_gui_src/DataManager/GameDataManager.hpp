@@ -22,7 +22,7 @@ class GameDataManager {
     int getHeight() const;
     void setWidth(int w);
     void setHeight(int h);
-    void addTile(int x, int y);
+    GameTile &addTile(int x, int y);
     GameTile &getTile(int x, int y);
 };
 }  // namespace GUI

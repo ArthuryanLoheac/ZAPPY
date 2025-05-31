@@ -58,14 +58,15 @@ void Window::setupWorld() {
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            irr::core::vector3df position(i - (width/2) + deltaWidth,
-                -3,
+            irr::core::vector3df position(i - (width/2) + deltaWidth, -3,
                 j - (height/2) + deltaHeight);
             float rotation = std::rand() % 4;
             auto cube = importMesh(smgr, driver, "Plane", position,
                 irr::core::vector3df(0.45f),
                 irr::core::vector3df(0, rotation * 90, 0));
-            (void) cube;
+            GameTile &tile = GUI::GameDataManager::i().addTile(i, j);
+            tile.tileMesh = std::shared_ptr<irr::scene::IAnimatedMeshSceneNode>
+                (cube, [](irr::scene::IAnimatedMeshSceneNode* p) {(void) p;});
         }
     }
 }

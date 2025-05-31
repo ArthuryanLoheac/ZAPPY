@@ -1,5 +1,6 @@
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
+#include "tools.hpp"
 
 namespace GUI {
 Window::Window() {
@@ -60,20 +61,11 @@ void Window::setupWorld() {
             irr::core::vector3df position(i - (width/2) + deltaWidth,
                 -3,
                 j - (height/2) + deltaHeight);
-            auto mesh = smgr->getMesh("assets/plane.obj");
-            if (!mesh)
-                throw GUI::ShaderCompilationException("Error loading mesh");
-            auto node = smgr->addAnimatedMeshSceneNode(mesh);
-            if (node) {
-                node->setScale(irr::core::vector3df(0.5f));
-                float rotation = std::rand() % 4;
-                node->setRotation(irr::core::vector3df(0, rotation * 90, 0));
-                node->setPosition(position);
-                node->setMD2Animation(irr::scene::EMAT_STAND);
-                node->setMaterialTexture(0, driver->getTexture
-                    ("assets/BakedPlane.png"));
-                node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-            }
+            float rotation = std::rand() % 4;
+            auto cube = importMesh(smgr, driver, "Plane", position,
+                irr::core::vector3df(0.45f),
+                irr::core::vector3df(0, rotation * 90, 0));
+            (void) cube;
         }
     }
 }

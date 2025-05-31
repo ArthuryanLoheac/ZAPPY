@@ -42,4 +42,12 @@ void GUI::ServerGUI::enwCommand(std::vector<std::string> &args) {
     }
 }
 
+void ServerGUI::tnaCommand(std::vector<std::string> &args) {
+    if (args.size() != 2)
+        throw GUI::CommandParsingException("Invalid tna command format");
+
+    std::string teamName = args[1];
+    GUI::GameDataManager::i().addTeam(teamName);
+}
+
 }  // namespace GUI

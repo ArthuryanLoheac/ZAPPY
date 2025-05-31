@@ -39,4 +39,13 @@ GameTile &GameDataManager::getTile(int x, int y) {
     }
     throw std::runtime_error("Tile not found");
 }
+void GameDataManager::addTeam(const std::string &teamName) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    teams.push_back(teamName);
+}
+
+const std::vector<std::string> &GameDataManager::getTeams() const {
+    return teams;
+}
+
 } // namespace GUI

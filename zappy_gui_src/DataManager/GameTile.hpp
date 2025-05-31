@@ -4,22 +4,24 @@
 #include <irrlicht/irrlicht.h>
 #include <memory>
 #include <mutex>
+#include "tools.hpp"
 
 namespace GUI {
 class GameTile {
  public:
     class Egg {
      public:
-        std::string team;
-        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> EggMesh;
-        Egg(const std::string &teamName,
-            const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh);
+        int id;
+        int team;
+        std::shared_ptr<Mesh> EggMesh;
+        Egg(int id, int team,
+            const std::shared_ptr<Mesh> &eggMesh);
     };
 
  private:
     int x;
     int y;
-    std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> tileMesh;
+    std::shared_ptr<Mesh> tileMesh;
     std::vector<Egg> eggs;
 
  public:
@@ -38,10 +40,10 @@ class GameTile {
     void setX(int xCoord);
     void setY(int yCoord);
 
-    std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> getTileMesh() const;
-    void setTileMesh(const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &mesh);
+    std::shared_ptr<Mesh> getTileMesh() const;
+    void setTileMesh(const std::shared_ptr<Mesh> &mesh);
 
     const std::vector<Egg> &getEggs() const;
-    void addEgg(const std::string &team, const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh);
+    void addEgg(int id, int team);
 };
 }  // namespace GUI

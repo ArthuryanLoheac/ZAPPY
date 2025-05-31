@@ -61,7 +61,7 @@ void Window::setupWorld() {
             irr::core::vector3df position(i - (width/2) + deltaWidth, -3,
                 j - (height/2) + deltaHeight);
             float rotation = std::rand() % 4;
-            auto cube = importMesh(smgr, driver, "Plane", position,
+            auto cube = importMesh("Plane", position,
                 irr::core::vector3df(0.45f),
                 irr::core::vector3df(0, rotation * 90, 0));
             GameTile &tile = GUI::GameDataManager::i().addTile(i, j);

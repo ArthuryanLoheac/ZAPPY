@@ -2,12 +2,14 @@
 #include <irrlicht/irrlicht.h>
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "tools.hpp"
+#include "window.hpp"
 #include <memory>
 
-std::shared_ptr<Mesh>
-    importMesh(irr::scene::ISceneManager *smgr,
-        irr::video::IVideoDriver *driver, std::string meshName,
+std::shared_ptr<Mesh> importMesh(std::string meshName,
         const Vec3d &position, const Vec3d &scale, const Vec3d &rotation) {
+    irr::scene::ISceneManager *smgr = GUI::Window::i().smgr;
+    irr::video::IVideoDriver *driver = GUI::Window::i().driver;
+
     irr::io::path pathObj =
         irr::io::path(("assets/" + meshName + ".obj").c_str());
     irr::io::path pathTexture =

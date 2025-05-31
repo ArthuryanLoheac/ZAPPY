@@ -1,4 +1,5 @@
 #include "GameTile.hpp"
+#include "window.hpp"
 
 namespace GUI {
 GameTile::GameTile(int xCoord, int yCoord)
@@ -52,15 +53,17 @@ const std::vector<GameTile::Egg> &GameTile::getEggs() const {
     return eggs;
 }
 
-void GameTile::addEgg(const std::string &team,
-const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh) {
+void GameTile::addEgg(int id, int team) {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    eggs.push_back(Egg(team, eggMesh));
+    eggs.emplace_back(id, team, importMesh("DroneEgg"));
 }
 
 // ======= Egg ========= //
 
-GameTile::Egg::Egg(const std::string &teamName,
-        const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh)
-    : team(teamName), EggMesh(eggMesh) {}
+GameTile::Egg::Egg(int id, int team,
+    const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh)
+    : id(id), team(team), EggMesh(eggMesh) {
+    if (!EggMesh)
+        throw GUI::ShaderCompilationException("Error creating egg mesh");
+}
 }  // namespace GUI

@@ -1,10 +1,15 @@
 #pragma once
 #include <irrlicht/irrlicht.h>
 #include <string>
+#include <memory>
 
-std::shared_ptr<irr::scene::IAnimatedMeshSceneNode>
+#define Mesh irr::scene::IAnimatedMeshSceneNode
+#define Vec3d irr::core::vector3df
+
+std::shared_ptr<Mesh>
 importMesh(irr::scene::ISceneManager *smgr,
         irr::video::IVideoDriver *driver, std::string meshName,
-        const irr::core::vector3df &position = irr::core::vector3df(0, 0, 0),
-        const irr::core::vector3df &scale = irr::core::vector3df(1, 1, 1),
-        const irr::core::vector3df &rotation = irr::core::vector3df(0, 0, 0));
+        const Vec3d &position = Vec3d(0, 0, 0),
+        const Vec3d &scale = Vec3d(1, 1, 1),
+        const Vec3d &rotation = Vec3d(0, 0, 0));
+

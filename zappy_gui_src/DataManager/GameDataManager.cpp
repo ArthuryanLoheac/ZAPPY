@@ -34,7 +34,7 @@ GameTile &GameDataManager::getTile(int x, int y) {
     if (x < 0 || x >= width || y < 0 || y >= height)
         throw std::out_of_range("Tile coordinates out of bounds");
     for (auto &tile : tiles) {
-        if (tile.x == x && tile.y == y)
+        if (tile.getX() == x && tile.getY() == y)
             return tile;
     }
     throw std::runtime_error("Tile not found");

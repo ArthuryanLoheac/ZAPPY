@@ -1,0 +1,66 @@
+#include "GameTile.hpp"
+
+namespace GUI {
+GameTile::GameTile(int xCoord, int yCoord)
+    : x(xCoord), y(yCoord) {}
+
+GameTile::GameTile(GameTile &&other) noexcept
+    : x(other.x), y(other.y), tileMesh(std::move(other.tileMesh)), eggs(std::move(other.eggs)) {
+}
+
+GameTile &GameTile::operator=(GameTile &&other) noexcept {
+    if (this != &other) {
+        std::lock_guard<std::mutex> lock(mutexDatas);
+        x = other.x;
+        y = other.y;
+        tileMesh = std::move(other.tileMesh);
+        eggs = std::move(other.eggs);
+    }
+    return *this;
+}
+
+int GameTile::getX() const {
+    return x;
+}
+
+int GameTile::getY() const {
+    return y;
+}
+
+void GameTile::setX(int xCoord) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    x = xCoord;
+}
+
+void GameTile::setY(int yCoord) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    y = yCoord;
+}
+
+std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> GameTile::getTileMesh()
+const {
+    return tileMesh;
+}
+
+void GameTile::setTileMesh(const
+std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &mesh) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    tileMesh = mesh;
+}
+
+const std::vector<GameTile::Egg> &GameTile::getEggs() const {
+    return eggs;
+}
+
+void GameTile::addEgg(const std::string &team,
+const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    eggs.push_back(Egg(team, eggMesh));
+}
+
+// ======= Egg ========= //
+
+GameTile::Egg::Egg(const std::string &teamName,
+        const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh)
+    : team(teamName), EggMesh(eggMesh) {}
+}  // namespace GUI

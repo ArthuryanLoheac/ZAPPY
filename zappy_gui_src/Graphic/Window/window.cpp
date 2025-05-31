@@ -65,8 +65,7 @@ void Window::setupWorld() {
                 irr::core::vector3df(0.45f),
                 irr::core::vector3df(0, rotation * 90, 0));
             GameTile &tile = GUI::GameDataManager::i().addTile(i, j);
-            tile.tileMesh = std::shared_ptr<irr::scene::IAnimatedMeshSceneNode>
-                (cube, [](irr::scene::IAnimatedMeshSceneNode* p) {(void) p;});
+            tile.setTileMesh(cube);
         }
     }
 }

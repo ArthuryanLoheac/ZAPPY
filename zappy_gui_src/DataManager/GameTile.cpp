@@ -49,13 +49,21 @@ std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &mesh) {
     tileMesh = mesh;
 }
 
+Vec3d GameTile::getWorldPos() const {
+    if (!tileMesh)
+        return Vec3d(0, 0, 0);
+    return tileMesh->getPosition();
+}
+
 const std::vector<GameTile::Egg> &GameTile::getEggs() const {
     return eggs;
 }
 
 void GameTile::addEgg(int id, int team) {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    eggs.emplace_back(id, team, importMesh("DroneEgg"));
+    Vec3d position = getWorldPos();
+    position.Y += 0.2f;
+    eggs.emplace_back(id, team, importMesh("DroneEgg", position, Vec3d(0.25f)));
 }
 
 // ======= Egg ========= //

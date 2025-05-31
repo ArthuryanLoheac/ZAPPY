@@ -26,12 +26,20 @@ void ServerGUI::mszCommand(std::vector<std::string> &args) {
 }
 
 void GUI::ServerGUI::enwCommand(std::vector<std::string> &args) {
-    printf("ENW command received with args: ");
-    for (const auto &arg : args) {
-        printf("%s ", arg.c_str());
+    if (args.size() != 5)
+        throw GUI::CommandParsingException("Invalid enw command format");
+    if (args[1].size() < 2 || args[2].size() < 2)
+        throw GUI::CommandParsingException("Invalid team or id name");
+    try {
+        int id = std::stoi(args[1].c_str() + 1);
+        int team = std::stoi(args[2].c_str() + 1);
+        int x = std::stoi(args[3]);
+        int y = std::stoi(args[4]);
+
+        GUI::GameDataManager::i().getTile(x, y).addEgg(id, team);
+    } catch (const std::exception &e) {
+        throw GUI::CommandParsingException("Invalid parameters in enw command");
     }
-    printf("\n");
-    //GUI::GameDataManager::i().getTile(x, y).addEgg();
 }
 
 }  // namespace GUI

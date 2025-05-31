@@ -42,6 +42,7 @@ class GameTile {
 
     std::shared_ptr<Mesh> getTileMesh() const;
     void setTileMesh(const std::shared_ptr<Mesh> &mesh);
+    Vec3d getWorldPos() const;
 
     const std::vector<Egg> &getEggs() const;
     void addEgg(int id, int team);

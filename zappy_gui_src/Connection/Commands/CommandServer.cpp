@@ -3,8 +3,7 @@
 #include "Connection/ServerGUI.hpp"
 #include "Exceptions/ServerGUIExceptions.hpp"
 #include "Window/window.hpp"
-#include <GameDataManager.hpp>
-#include "ServerGUI.hpp"
+#include "DataManager/GameDataManager.hpp"
 
 namespace GUI {
 void GUI::ServerGUI::welcomeCommand(std::vector<std::string> &args) {

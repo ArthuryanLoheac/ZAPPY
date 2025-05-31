@@ -1,10 +1,12 @@
 #pragma once
+#include <irrlicht/irrlicht.h>
+
 #include <string>
 #include <vector>
-#include <irrlicht/irrlicht.h>
 #include <memory>
 #include <mutex>
-#include "tools.hpp"
+
+#include "include/tools.hpp"
 
 namespace GUI {
 class GameTile {

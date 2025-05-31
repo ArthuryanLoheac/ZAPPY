@@ -1,9 +1,11 @@
-#include <string>
 #include <irrlicht/irrlicht.h>
-#include "Exceptions/GraphicalExceptions.hpp"
-#include "tools.hpp"
-#include "window.hpp"
+
+#include <string>
 #include <memory>
+
+#include "Exceptions/GraphicalExceptions.hpp"
+#include "include/tools.hpp"
+#include "Graphic/Window/window.hpp"
 
 std::shared_ptr<Mesh> importMesh(std::string meshName,
         const Vec3d &position, const Vec3d &scale, const Vec3d &rotation) {

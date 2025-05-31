@@ -1,6 +1,9 @@
 #pragma once
 #include <mutex>
+#include <vector>
 #include <stdexcept>
+#include <string>
+
 #include "DataManager/GameTile.hpp"
 
 namespace GUI {

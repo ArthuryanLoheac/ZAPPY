@@ -1,13 +1,17 @@
-#include "GameTile.hpp"
-#include "window.hpp"
+#include <memory>
+#include <vector>
+#include <utility>
+
+#include "DataManager/GameTile.hpp"
+#include "Graphic/Window/window.hpp"
 
 namespace GUI {
 GameTile::GameTile(int xCoord, int yCoord)
-    : x(xCoord), y(yCoord) {}
+: x(xCoord), y(yCoord) {}
 
 GameTile::GameTile(GameTile &&other) noexcept
-    : x(other.x), y(other.y), tileMesh(std::move(other.tileMesh)), eggs(std::move(other.eggs)) {
-}
+: x(other.x), y(other.y), tileMesh(std::move(other.tileMesh)),
+eggs(std::move(other.eggs)) {}
 
 GameTile &GameTile::operator=(GameTile &&other) noexcept {
     if (this != &other) {
@@ -69,8 +73,8 @@ void GameTile::addEgg(int id, int team) {
 // ======= Egg ========= //
 
 GameTile::Egg::Egg(int id, int team,
-    const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh)
-    : id(id), team(team), EggMesh(eggMesh) {
+const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh)
+: id(id), team(team), EggMesh(eggMesh) {
     if (!EggMesh)
         throw GUI::ShaderCompilationException("Error creating egg mesh");
 }

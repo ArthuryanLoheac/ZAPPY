@@ -1,6 +1,6 @@
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
-#include "tools.hpp"
+#include "include/tools.hpp"
 
 namespace GUI {
 Window::Window() {

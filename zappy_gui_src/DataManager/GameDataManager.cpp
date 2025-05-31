@@ -1,5 +1,7 @@
+#include <vector>
+#include <string>
+
 #include "DataManager/GameDataManager.hpp"
-#include "GameDataManager.hpp"
 
 namespace GUI {
 int GameDataManager::getWidth() const {
@@ -48,4 +50,4 @@ const std::vector<std::string> &GameDataManager::getTeams() const {
     return teams;
 }
 
-} // namespace GUI
+}  // namespace GUI

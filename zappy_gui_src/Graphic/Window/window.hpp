@@ -20,6 +20,7 @@ class Window {
     MyEventReceiver receiver;
     irr::u32 then;
     irr::f32 frameDeltaTime;
+    std::shared_ptr<irr::gui::IGUIFont> font;
 
     std::vector<irr::scene::ISceneNode*> cubes;
 
@@ -31,6 +32,7 @@ class Window {
     float distanceFromCenter = 10.f;
 
     void update();
+    void drawUI();
     void setupWorld();
     void handleEvent();
     void updateDeltaTime();

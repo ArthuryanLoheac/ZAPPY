@@ -1,3 +1,6 @@
+#include <vector>
+#include <string>
+
 #include "DataManager/GameDataManager.hpp"
 
 namespace GUI {
@@ -22,4 +25,29 @@ void GameDataManager::setHeight(int h) {
         throw std::invalid_argument("Height must be non-negative");
     height = h;
 }
+
+GameTile &GameDataManager::addTile(int x, int y) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    tiles.push_back(GameTile(x, y));
+    return tiles.back();
+}
+
+GameTile &GameDataManager::getTile(int x, int y) {
+    if (x < 0 || x >= width || y < 0 || y >= height)
+        throw std::out_of_range("Tile coordinates out of bounds");
+    for (auto &tile : tiles) {
+        if (tile.getX() == x && tile.getY() == y)
+            return tile;
+    }
+    throw std::runtime_error("Tile not found");
+}
+void GameDataManager::addTeam(const std::string &teamName) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    teams.push_back(teamName);
+}
+
+const std::vector<std::string> &GameDataManager::getTeams() const {
+    return teams;
+}
+
 }  // namespace GUI

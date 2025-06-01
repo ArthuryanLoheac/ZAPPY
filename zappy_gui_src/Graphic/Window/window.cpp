@@ -1,5 +1,9 @@
+#include <iostream>
+#include <memory>
+
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
+#include "tools/MeshImporter.hpp"
 
 namespace GUI {
 Window::Window() {
@@ -16,11 +20,15 @@ Window::Window() {
     // Camera
     cam = smgr->addCameraSceneNode(nullptr,
         irr::core::vector3df(0, 0, 0),
-        irr::core::vector3df(0, -3, 0));
+        irr::core::vector3df(0, -2, 0));
     cam->setFOV(M_PI / 2.0f);
     cam->setNearValue(0.1f);
     cam->setFarValue(10000.0f);
     then = device->getTimer()->getTime();
+
+    font = std::shared_ptr<irr::gui::IGUIFont>(
+        guienv->getFont("assets/fonts/DejaVuSansMono.png"),
+        [](irr::gui::IGUIFont *f) { (void) f; });
 }
 
 void Window::update() {
@@ -32,6 +40,7 @@ void Window::update() {
                 irr::video::SColor(255, 100, 101, 140));
 
             smgr->drawAll();
+            drawUI();
             guienv->drawAll();
 
             driver->endScene();
@@ -42,6 +51,28 @@ void Window::update() {
     device->drop();
 }
 
+void Window::drawUI() {
+    int x = 300;
+    int y = 10;
+
+    if (font) {
+        // TEAMS
+        font->draw("TEAMS : ", irr::core::rect<irr::s32>(x, y, 300, 500),
+            irr::video::SColor(255, 255, 255, 255));
+        for (auto &team : GUI::GameDataManager::i().getTeams()) {
+            y += 20;
+            Vec3d pos(x, y, 0);
+            font->draw(("\t" + team).c_str(),
+                irr::core::rect<irr::s32>(pos.X, pos.Y, 300, 50),
+                irr::video::SColor(255, 255, 255, 255));
+        }
+
+        // FPS
+        font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
+            irr::core::rect<irr::s32>(10, 10, 300, 50),
+            irr::video::SColor(255, 255, 255, 255));
+    }
+}
 void Window::setupWorld() {
     if (cubes.size() > 0) {
         for (auto &cube : cubes) {
@@ -57,23 +88,14 @@ void Window::setupWorld() {
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            irr::core::vector3df position(i - (width/2) + deltaWidth,
-                -3,
+            irr::core::vector3df position(i - (width/2) + deltaWidth, -2,
                 j - (height/2) + deltaHeight);
-            auto mesh = smgr->getMesh("assets/plane.obj");
-            if (!mesh)
-                throw GUI::ShaderCompilationException("Error loading mesh");
-            auto node = smgr->addAnimatedMeshSceneNode(mesh);
-            if (node) {
-                node->setScale(irr::core::vector3df(0.5f));
-                float rotation = std::rand() % 4;
-                node->setRotation(irr::core::vector3df(0, rotation * 90, 0));
-                node->setPosition(position);
-                node->setMD2Animation(irr::scene::EMAT_STAND);
-                node->setMaterialTexture(0, driver->getTexture
-                    ("assets/BakedPlane.png"));
-                node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-            }
+            float rotation = std::rand() % 4;
+            auto cube = MeshImporter::i().importMesh("Plane", position,
+                irr::core::vector3df(0.45f),
+                irr::core::vector3df(0, rotation * 90, 0));
+            GameTile &tile = GUI::GameDataManager::i().addTile(i, j);
+            tile.setTileMesh(cube);
         }
     }
 }

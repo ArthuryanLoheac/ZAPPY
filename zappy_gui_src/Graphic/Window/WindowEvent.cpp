@@ -41,7 +41,7 @@ void Window::moveCamera(float x, float zoom, float xMove, float yMove) {
 void Window::updateZoomCamera(float zoom) {
     // Zoom
     distanceFromCenter += zoom * frameDeltaTime * zoomSpeedCamera;
-    distanceFromCenter = std::clamp(distanceFromCenter, 1.f, 50.f);
+    distanceFromCenter = std::clamp(distanceFromCenter, 1.f, 10.f);
 }
 
 void Window::updateMoveOrigin(float xMove, float yMove, float radX,

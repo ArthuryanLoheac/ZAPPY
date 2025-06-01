@@ -69,7 +69,7 @@ void GameTile::addEgg(int id, int team) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getWorldPos();
     position.Y += 0.2f;
-    eggs.emplace_back(id, team, MeshImporter::i().importMesh("DroneEgg", position, Vec3d(0.25f)));
+    eggs.emplace_back(id, team, MeshImporter::i().importMesh("DroneEgg", position, Vec3d(0.2f)));
 }
 
 void GameTile::setRessources(int food, int r1, int r2, int r3, int r4,
@@ -86,13 +86,13 @@ int r5, int r6) {
 }
 
 void GameTile::updateMeshesRessources() {
-    updateMesh("Battery", food, meshesFood, 0.05f, 0.35f, 0.2f, 0.35f);
-    updateMesh("Mat1", r1, meshesR1, 0.1f, -0.35f, 0.2f, 0.35f);
-    updateMesh("Mat2", r2, meshesR2, 0.1f, 0.35f, 0.2f, -0.35f);
-    updateMesh("Mat3", r3, meshesR3, 0.05f, -0.35f, 0.2f, -0.35f);
-    updateMesh("Mat4", r4, meshesR4, 0.05f, 0.15f, 0.2f, 0.35f);
-    updateMesh("Mat5", r5, meshesR5, 0.05f, -0.15f, 0.2f, 0.35f);
-    updateMesh("Mat6", r6, meshesR6, 0.05f, 0.15f, 0.2f, -0.35f);
+    updateMesh("Battery", food, meshesFood, 0.05f, 0.35f, 0.3f, 0.35f);
+    updateMesh("Mat1", r1, meshesR1, 0.1f, -0.35f, 0.15f, 0.35f);
+    updateMesh("Mat2", r2, meshesR2, 0.1f, 0.35f, 0.15f, -0.35f);
+    updateMesh("Mat3", r3, meshesR3, 0.1f, -0.35f, 0.15f, -0.35f);
+    updateMesh("Mat4", r4, meshesR4, 0.1f, 0.15f, 0.15f, 0.35f);
+    updateMesh("Mat5", r5, meshesR5, 0.1f, -0.15f, 0.15f, 0.35f);
+    updateMesh("Mat6", r6, meshesR6, 0.1f, 0.15f, 0.15f, -0.35f);
 }
 
 void GameTile::updateMesh(std::string meshName, int count,
@@ -110,7 +110,7 @@ float offsetX, float offsetY, float offsetZ) {
             meshes.push_back(MeshImporter::i().importMesh(meshName));
         meshActual = meshes[i];
         Vec3d position = getWorldPos();
-        position.Y += 0.2f + (i * offsetY);
+        position.Y += 0.05f + (i * offsetY);
         position.X += offsetX;
         position.Z += offsetZ;
         meshActual->setPosition(position);

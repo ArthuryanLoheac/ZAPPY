@@ -1,6 +1,8 @@
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "include/tools.hpp"
+#include "window.hpp"
+#include <iostream>
 
 namespace GUI {
 Window::Window() {
@@ -22,6 +24,10 @@ Window::Window() {
     cam->setNearValue(0.1f);
     cam->setFarValue(10000.0f);
     then = device->getTimer()->getTime();
+
+    font = std::shared_ptr<irr::gui::IGUIFont>(
+        guienv->getFont("assets/fonts/DejaVuSansMono.png"),
+        [](irr::gui::IGUIFont *f) { (void) f; });
 }
 
 void Window::update() {
@@ -33,6 +39,7 @@ void Window::update() {
                 irr::video::SColor(255, 100, 101, 140));
 
             smgr->drawAll();
+            drawUI();
             guienv->drawAll();
 
             driver->endScene();
@@ -43,7 +50,24 @@ void Window::update() {
     device->drop();
 }
 
-void Window::setupWorld() {
+void Window::drawUI() {
+    int x = 10;
+    int y = 10;
+
+    if (font) {
+        // TEAMS
+        font->draw("TEAMS : ", irr::core::rect<irr::s32>(x, y, 3000, 500),
+            irr::video::SColor(255, 255, 255, 255));
+        for (auto &team : GUI::GameDataManager::i().getTeams()) {
+            y += 20;
+            Vec3d pos(x, y, 0);
+            font->draw(("\t" + team).c_str(), irr::core::rect<irr::s32>(pos.X, pos.Y, 300, 50),
+                irr::video::SColor(255, 255, 255, 255));
+        }
+    }
+}
+void Window::setupWorld()
+{
     if (cubes.size() > 0) {
         for (auto &cube : cubes) {
             cube->remove();

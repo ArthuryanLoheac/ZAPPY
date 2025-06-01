@@ -86,15 +86,36 @@ int r5, int r6) {
 }
 
 void GameTile::updateMeshesRessources() {
-    for (auto &mesh : meshesFood)
-        mesh->remove();
-    meshesFood.clear();
-    for (int i = 0; i < food; ++i) {
+    updateMesh("Battery", food, meshesFood, 0.05f, 0.35f, 0.2f, 0.35f);
+    updateMesh("Mat1", r1, meshesR1, 0.05f, -0.35f, 0.2f, 0.35f);
+    updateMesh("Mat2", r2, meshesR2, 0.05f, 0.35f, 0.2f, -0.35f);
+    updateMesh("Mat3", r3, meshesR3, 0.05f, -0.35f, 0.2f, -0.35f);
+    updateMesh("Mat4", r4, meshesR4, 0.05f, 0.15f, 0.2f, 0.35f);
+    updateMesh("Mat5", r5, meshesR5, 0.05f, -0.15f, 0.2f, 0.35f);
+    updateMesh("Mat6", r6, meshesR6, 0.05f, 0.15f, 0.2f, -0.35f);
+}
+
+void GameTile::updateMesh(std::string meshName, int count,
+std::vector<std::shared_ptr<Mesh>> &meshes, float scale,
+float offsetX, float offsetY, float offsetZ) {
+    // Clear
+    for (auto &mesh : meshes)
+        mesh->setVisible(false);
+
+    // Create new meshes
+    for (int i = 0; i < count; ++i) {
+        std::shared_ptr<Mesh> meshActual;
+        // create mesh if it doesn't exist
+        if ((size_t)i >= meshes.size())
+            meshes.push_back(MeshImporter::i().importMesh(meshName));
+        meshActual = meshes[i];
         Vec3d position = getWorldPos();
-        position.Y += 0.2f + (i * 0.3f);
-        position.X += 0.35f;
-        position.Z += 0.35f;
-        meshesFood.push_back(MeshImporter::i().importMesh("Battery", position, Vec3d(0.05f)));
+        position.Y += 0.2f + (i * offsetY);
+        position.X += offsetX;
+        position.Z += offsetZ;
+        meshActual->setPosition(position);
+        meshActual->setScale(Vec3d(scale));
+        meshActual->setVisible(true);
     }
 }
 

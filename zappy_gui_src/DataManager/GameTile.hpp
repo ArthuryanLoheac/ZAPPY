@@ -68,5 +68,8 @@ class GameTile {
     void setRessources(int food, int r1, int r2, int r3, int r4,
                      int r5, int r6);
     void updateMeshesRessources();
+    void updateMesh(std::string meshName, int count,
+        std::vector<std::shared_ptr<Mesh>> &meshes,
+        float scale, float offsetX = 0, float offsetY = 0, float offsetZ = 0);
 };
 }  // namespace GUI

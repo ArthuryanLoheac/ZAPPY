@@ -33,7 +33,8 @@ void GUI::ServerGUI::handleCommand() {
         if (it != commands.end())
             (GUI::ServerGUI::i().*(it->second))(args);
         else if (GUI::DataManager::i().getDebug())
-            std::cerr << "Unknown command: " << args[0] << std::endl;
+            printf("\033[1;31m[ERROR]\033[0m Unknown Command: %s\n",
+                args[0].c_str());
     }
 }
 

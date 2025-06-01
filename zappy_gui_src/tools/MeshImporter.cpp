@@ -6,7 +6,6 @@
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "tools/MeshImporter.hpp"
 #include "Graphic/Window/window.hpp"
-#include "MeshImporter.hpp"
 
 std::shared_ptr<Mesh> MeshImporter::importMesh(std::string meshName,
         const Vec3d &position, const Vec3d &scale, const Vec3d &rotation) {
@@ -33,7 +32,8 @@ irr::scene::IAnimatedMesh *MeshImporter::getMesh(std::string meshName) {
     if (meshes.find(meshName) == meshes.end()) {
         auto mesh = GUI::Window::i().smgr->getMesh(pathObj);
         if (!mesh)
-            throw GUI::ShaderCompilationException("Error loading mesh: " + meshName);
+            throw GUI::ShaderCompilationException("Error loading mesh: "
+                + meshName);
         meshes[meshName] = mesh;
         return mesh;
     }
@@ -47,7 +47,8 @@ irr::video::ITexture *MeshImporter::getTexture(std::string textureName) {
     if (textures.find(textureName) == textures.end()) {
         auto mesh = GUI::Window::i().driver->getTexture(pathTexture);
         if (!mesh)
-            throw GUI::ShaderCompilationException("Error loading mesh: " + textureName);
+            throw GUI::ShaderCompilationException("Error loading mesh: "
+                + textureName);
         textures[textureName] = mesh;
         return mesh;
     }

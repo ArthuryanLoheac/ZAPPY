@@ -87,8 +87,8 @@ int r5, int r6) {
 
 void GameTile::updateMeshesRessources() {
     updateMesh("Battery", food, meshesFood, 0.05f, 0.35f, 0.2f, 0.35f);
-    updateMesh("Mat1", r1, meshesR1, 0.05f, -0.35f, 0.2f, 0.35f);
-    updateMesh("Mat2", r2, meshesR2, 0.05f, 0.35f, 0.2f, -0.35f);
+    updateMesh("Mat1", r1, meshesR1, 0.1f, -0.35f, 0.2f, 0.35f);
+    updateMesh("Mat2", r2, meshesR2, 0.1f, 0.35f, 0.2f, -0.35f);
     updateMesh("Mat3", r3, meshesR3, 0.05f, -0.35f, 0.2f, -0.35f);
     updateMesh("Mat4", r4, meshesR4, 0.05f, 0.15f, 0.2f, 0.35f);
     updateMesh("Mat5", r5, meshesR5, 0.05f, -0.15f, 0.2f, 0.35f);

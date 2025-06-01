@@ -4,7 +4,6 @@
 #include "Exceptions/ServerGUIExceptions.hpp"
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
-#include "ServerGUI.hpp"
 
 namespace GUI {
 void GUI::ServerGUI::welcomeCommand(std::vector<std::string> &args) {
@@ -64,9 +63,10 @@ void ServerGUI::bctCommand(std::vector<std::string> &args) {
         int r5 = std::stoi(args[8]);
         int r6 = std::stoi(args[9]);
 
-        GUI::GameDataManager::i().getTile(x, y).setRessources(food, r1, r2, r3, r4, r5, r6);
+        GUI::GameDataManager::i().getTile(x, y).setRessources(food, r1, r2, r3,
+            r4, r5, r6);
     } catch (const std::exception &e) {
         throw GUI::CommandParsingException("Invalid parameters in bct command");
     }
 }
-} // namespace GUI
+}  // namespace GUI

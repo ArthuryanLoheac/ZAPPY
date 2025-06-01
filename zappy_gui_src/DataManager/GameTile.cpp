@@ -4,7 +4,6 @@
 
 #include "DataManager/GameTile.hpp"
 #include "Graphic/Window/window.hpp"
-#include "GameTile.hpp"
 
 namespace GUI {
 GameTile::GameTile(int xCoord, int yCoord)
@@ -71,7 +70,8 @@ void GameTile::addEgg(int id, int team) {
     eggs.emplace_back(id, team, importMesh("DroneEgg", position, Vec3d(0.25f)));
 }
 
-void GameTile::setRessources(int food, int r1, int r2, int r3, int r4, int r5, int r6) {
+void GameTile::setRessources(int food, int r1, int r2, int r3, int r4,
+int r5, int r6) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     this->food = food;
     this->r1 = r1;

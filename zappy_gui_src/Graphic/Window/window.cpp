@@ -1,8 +1,9 @@
+#include <iostream>
+#include <memory>
+
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "include/tools.hpp"
-#include "window.hpp"
-#include <iostream>
 
 namespace GUI {
 Window::Window() {
@@ -61,13 +62,13 @@ void Window::drawUI() {
         for (auto &team : GUI::GameDataManager::i().getTeams()) {
             y += 20;
             Vec3d pos(x, y, 0);
-            font->draw(("\t" + team).c_str(), irr::core::rect<irr::s32>(pos.X, pos.Y, 300, 50),
+            font->draw(("\t" + team).c_str(),
+                irr::core::rect<irr::s32>(pos.X, pos.Y, 300, 50),
                 irr::video::SColor(255, 255, 255, 255));
         }
     }
 }
-void Window::setupWorld()
-{
+void Window::setupWorld() {
     if (cubes.size() > 0) {
         for (auto &cube : cubes) {
             cube->remove();

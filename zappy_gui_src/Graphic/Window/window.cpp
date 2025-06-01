@@ -3,7 +3,7 @@
 
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
-#include "include/tools.hpp"
+#include "tools/MeshImporter.hpp"
 
 namespace GUI {
 Window::Window() {
@@ -86,7 +86,7 @@ void Window::setupWorld() {
             irr::core::vector3df position(i - (width/2) + deltaWidth, -2,
                 j - (height/2) + deltaHeight);
             float rotation = std::rand() % 4;
-            auto cube = importMesh("Plane", position,
+            auto cube = MeshImporter::i().importMesh("Plane", position,
                 irr::core::vector3df(0.45f),
                 irr::core::vector3df(0, rotation * 90, 0));
             GameTile &tile = GUI::GameDataManager::i().addTile(i, j);

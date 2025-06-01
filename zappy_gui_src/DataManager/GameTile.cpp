@@ -4,6 +4,8 @@
 
 #include "DataManager/GameTile.hpp"
 #include "Graphic/Window/window.hpp"
+#include "GameTile.hpp"
+#include "tools/MeshImporter.hpp"
 
 namespace GUI {
 GameTile::GameTile(int xCoord, int yCoord)
@@ -67,7 +69,7 @@ void GameTile::addEgg(int id, int team) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getWorldPos();
     position.Y += 0.2f;
-    eggs.emplace_back(id, team, importMesh("DroneEgg", position, Vec3d(0.25f)));
+    eggs.emplace_back(id, team, MeshImporter::i().importMesh("DroneEgg", position, Vec3d(0.25f)));
 }
 
 void GameTile::setRessources(int food, int r1, int r2, int r3, int r4,
@@ -80,6 +82,20 @@ int r5, int r6) {
     this->r4 = r4;
     this->r5 = r5;
     this->r6 = r6;
+    updateMeshesRessources();
+}
+
+void GameTile::updateMeshesRessources() {
+    for (auto &mesh : meshesFood)
+        mesh->remove();
+    meshesFood.clear();
+    for (int i = 0; i < food; ++i) {
+        Vec3d position = getWorldPos();
+        position.Y += 0.2f + (i * 0.3f);
+        position.X += 0.35f;
+        position.Z += 0.35f;
+        meshesFood.push_back(MeshImporter::i().importMesh("Battery", position, Vec3d(0.05f)));
+    }
 }
 
 // ======= Egg ========= //

@@ -6,7 +6,7 @@
 #include <memory>
 #include <mutex>
 
-#include "include/tools.hpp"
+#include "tools/MeshImporter.hpp"
 
 namespace GUI {
 class GameTile {
@@ -34,6 +34,14 @@ class GameTile {
     int r5;
     int r6;
 
+    std::vector<std::shared_ptr<Mesh>> meshesFood;
+    std::vector<std::shared_ptr<Mesh>> meshesR1;
+    std::vector<std::shared_ptr<Mesh>> meshesR2;
+    std::vector<std::shared_ptr<Mesh>> meshesR3;
+    std::vector<std::shared_ptr<Mesh>> meshesR4;
+    std::vector<std::shared_ptr<Mesh>> meshesR5;
+    std::vector<std::shared_ptr<Mesh>> meshesR6;
+
  public:
     std::mutex mutexDatas;
 
@@ -59,5 +67,6 @@ class GameTile {
 
     void setRessources(int food, int r1, int r2, int r3, int r4,
                      int r5, int r6);
+    void updateMeshesRessources();
 };
 }  // namespace GUI

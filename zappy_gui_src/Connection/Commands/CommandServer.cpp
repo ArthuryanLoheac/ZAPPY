@@ -30,8 +30,8 @@ void GUI::ServerGUI::enwCommand(std::vector<std::string> &args) {
     if (args[1].size() < 2 || args[2].size() < 2)
         throw GUI::CommandParsingException("Invalid team or id name");
     try {
-        int id = std::stoi(args[1].c_str() + 1);
-        int team = std::stoi(args[2].c_str() + 1);
+        int id = std::stoi(args[1].substr(1));
+        int team = std::stoi(args[2].substr(1));
         int x = std::stoi(args[3]);
         int y = std::stoi(args[4]);
 

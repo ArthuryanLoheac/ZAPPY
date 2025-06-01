@@ -52,12 +52,12 @@ void Window::update() {
 }
 
 void Window::drawUI() {
-    int x = 10;
+    int x = 300;
     int y = 10;
 
     if (font) {
         // TEAMS
-        font->draw("TEAMS : ", irr::core::rect<irr::s32>(x, y, 3000, 500),
+        font->draw("TEAMS : ", irr::core::rect<irr::s32>(x, y, 300, 500),
             irr::video::SColor(255, 255, 255, 255));
         for (auto &team : GUI::GameDataManager::i().getTeams()) {
             y += 20;
@@ -66,6 +66,11 @@ void Window::drawUI() {
                 irr::core::rect<irr::s32>(pos.X, pos.Y, 300, 50),
                 irr::video::SColor(255, 255, 255, 255));
         }
+
+        // FPS
+        font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
+            irr::core::rect<irr::s32>(10, 10, 300, 50),
+            irr::video::SColor(255, 255, 255, 255));
     }
 }
 void Window::setupWorld() {

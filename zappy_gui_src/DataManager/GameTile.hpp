@@ -26,6 +26,14 @@ class GameTile {
     std::shared_ptr<Mesh> tileMesh;
     std::vector<Egg> eggs;
 
+    int food;
+    int r1;
+    int r2;
+    int r3;
+    int r4;
+    int r5;
+    int r6;
+
  public:
     std::mutex mutexDatas;
 
@@ -48,5 +56,8 @@ class GameTile {
 
     const std::vector<Egg> &getEggs() const;
     void addEgg(int id, int team);
+
+    void setRessources(int food, int r1, int r2, int r3, int r4,
+                     int r5, int r6);
 };
 }  // namespace GUI

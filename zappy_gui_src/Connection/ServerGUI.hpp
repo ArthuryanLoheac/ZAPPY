@@ -30,6 +30,7 @@ class ServerGUI {
     void mszCommand(std::vector<std::string> &args);
     void enwCommand(std::vector<std::string> &args);
     void tnaCommand(std::vector<std::string> &args);
+    void bctCommand(std::vector<std::string> &args);
 
     std::map<std::string,
      void(ServerGUI::*)(std::vector<std::string> &)> commands = {
@@ -37,6 +38,7 @@ class ServerGUI {
         {"MSZ", &ServerGUI::mszCommand},
         {"ENW", &ServerGUI::enwCommand},
         {"TNA", &ServerGUI::tnaCommand},
+        {"BCT", &ServerGUI::bctCommand},
     };
 };
 

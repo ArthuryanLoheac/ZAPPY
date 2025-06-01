@@ -4,6 +4,7 @@
 #include "Exceptions/ServerGUIExceptions.hpp"
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
+#include "ServerGUI.hpp"
 
 namespace GUI {
 void GUI::ServerGUI::welcomeCommand(std::vector<std::string> &args) {
@@ -49,4 +50,23 @@ void ServerGUI::tnaCommand(std::vector<std::string> &args) {
     GUI::GameDataManager::i().addTeam(teamName);
 }
 
-}  // namespace GUI
+void ServerGUI::bctCommand(std::vector<std::string> &args) {
+    if (args.size() != 10)
+        throw GUI::CommandParsingException("Invalid bct command format");
+    try {
+        int x = std::stoi(args[1]);
+        int y = std::stoi(args[2]);
+        int food = std::stoi(args[3]);
+        int r1 = std::stoi(args[4]);
+        int r2 = std::stoi(args[5]);
+        int r3 = std::stoi(args[6]);
+        int r4 = std::stoi(args[7]);
+        int r5 = std::stoi(args[8]);
+        int r6 = std::stoi(args[9]);
+
+        GUI::GameDataManager::i().getTile(x, y).setRessources(food, r1, r2, r3, r4, r5, r6);
+    } catch (const std::exception &e) {
+        throw GUI::CommandParsingException("Invalid parameters in bct command");
+    }
+}
+} // namespace GUI

@@ -46,9 +46,9 @@ int main(int ac, char **av) {
         fprintf(stderr, "Error: %s\n", e.what());
         return 84;
     }
-    std::thread t1(graphic);
-    std::thread t2(loopClient, sockfd);
-    t1.join();
-    t2.join();
+    std::thread t(loopClient, sockfd);
+    graphic();
+    GUI::DataManager::i().setRunning(false);
+    t.join();
     return 0;
 }

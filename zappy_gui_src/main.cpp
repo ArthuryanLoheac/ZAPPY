@@ -1,6 +1,7 @@
 #include <string.h>
 #include <thread>
 #include <cstdio>
+#include <iostream>
 
 #include "DataManager/DataManager.hpp"
 #include "DataManager/GameDataManager.hpp"
@@ -46,9 +47,16 @@ int main(int ac, char **av) {
         fprintf(stderr, "Error: %s\n", e.what());
         return 84;
     }
-    std::thread t1(graphic);
-    std::thread t2(loopClient, sockfd);
-    t1.join();
-    t2.join();
+    std::thread communicationThread(loopClient, sockfd);
+    try {
+        graphic();
+    } catch (std::exception &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        GUI::DataManager::i().setRunning(false);
+        communicationThread.join();
+        return 84;
+    }
+    GUI::DataManager::i().setRunning(false);
+    communicationThread.join();
     return 0;
 }

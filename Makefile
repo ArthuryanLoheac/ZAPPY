@@ -29,9 +29,10 @@ FLAGS_SERVER = -MMD -MP \
 	-std=gnu17 -Wall -Wextra -Werror \
 
 FLAGS_GUI =	-MMD -MP \
-	-lIrrlicht \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
 	-std=c++17 -Wall -Wextra -Werror
+
+LDFLAGS_GUI = -lIrrlicht
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
 	-std=c++20 -Wall -Wextra -Werror
@@ -72,7 +73,7 @@ $(ZAPPY_SERVER): $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER)
 	gcc -o $(ZAPPY_SERVER) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER) $(FLAGS_SERVER)
 
 $(ZAPPY_GUI): $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI)
-	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) $(FLAGS_GUI)
+	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) $(LDFLAGS_GUI)
 
 $(ZAPPY_AI): $(OBJ_SRC_AI) $(OBJ_MAIN_AI)
 	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) $(FLAGS_AI)

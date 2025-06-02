@@ -47,8 +47,13 @@ int main(int ac, char **av) {
         return 84;
     }
     std::thread communicationThread(loopClient, sockfd);
-    graphic();
-    GUI::DataManager::i().setRunning(false);
-    communicationThread.join();
+    try {
+        graphic();
+    } catch (std::exception &e) {
+        fprintf(stderr, "Error in graphic(): %s\n", e.what());
+        GUI::DataManager::i().setRunning(false);
+        communicationThread.join();
+        return 84;
+    }
     return 0;
 }

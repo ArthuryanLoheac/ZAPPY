@@ -53,8 +53,10 @@ int main(int ac, char **av) {
     } catch (std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         GUI::DataManager::i().setRunning(false);
+        communicationThread.join();
         return 84;
     }
+    GUI::DataManager::i().setRunning(false);
     communicationThread.join();
     return 0;
 }

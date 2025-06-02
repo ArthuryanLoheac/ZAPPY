@@ -1,6 +1,7 @@
 #include <string.h>
 #include <thread>
 #include <cstdio>
+#include <iostream>
 
 #include "DataManager/DataManager.hpp"
 #include "DataManager/GameDataManager.hpp"
@@ -50,7 +51,7 @@ int main(int ac, char **av) {
     try {
         graphic();
     } catch (std::exception &e) {
-        fprintf(stderr, "Error in graphic(): %s\n", e.what());
+        std::cerr << "Error: " << e.what() << std::endl;
         GUI::DataManager::i().setRunning(false);
         communicationThread.join();
         return 84;

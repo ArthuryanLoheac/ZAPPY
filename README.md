@@ -9,6 +9,26 @@
 
 #### Zappy is a network game where several teams confront each other on a tile map containing resources. The game simulates a virtual world called Trantor where AI-controlled beings called "trantorians" must evolve and survive.
 
+# <p align=center> 📖 Lore of Trantor </p>
+
+<p align="center">
+    <img src="docs/assets/trantor.png" alt="Trantor World" width="600"/>
+</p>
+
+Trantor is a donut-shaped world where trantorians, small drones, started a war for the extinction of the other kingdoms. Each team of trantorians must gather resources to upgrade their drones with new modules. At every level, they gain the following module:
+- **Level 1**: Camera
+- **Level 2**: Memory
+- **Level 3**: Processor
+- **Level 4**: Rotor
+- **Level 5**: Propulsion system
+- **Level 6**: Holographic shield
+- **Level 7**: Nuclear reactor
+- **Level 8**: Mini-gun
+
+To survive on Trantor, trantorians must keep their energy levels high by consuming resources. Luckly for them, the world grows batteries in the soil, but also rare stones that can be used to upgrade their modules.
+
+Each kingdom needs 6 trantorians with a mini-gun to win the game. The last team standing wins the game and becomes the ruler of Trantor.
+
 # <p align=center> 🌍 Project Architecture </p>
 
 ### The Zappy project is divided into 3 components:

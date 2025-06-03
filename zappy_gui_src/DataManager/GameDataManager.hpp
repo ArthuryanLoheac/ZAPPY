@@ -3,6 +3,7 @@
 #include <vector>
 #include <stdexcept>
 #include <string>
+#include <memory>
 
 #include "DataManager/GameTile.hpp"
 
@@ -14,9 +15,9 @@ class GameDataManager {
         int id;
         int team;
         std::shared_ptr<Mesh> EggMesh;
-        Egg(int id, int team,
-            const std::shared_ptr<Mesh> &eggMesh);
+        Egg(int id, int team, const std::shared_ptr<Mesh> &eggMesh);
     };
+
  private:
     int width;
     int height;
@@ -40,6 +41,8 @@ class GameDataManager {
     GameTile &getTile(int x, int y);
     const std::vector<Egg> &getEggs() const;
     void addEgg(int id, int team, int x, int y);
+    void removeEgg(int id);
+
     void addTeam(const std::string &teamName);
     const std::vector<std::string> &getTeams() const;
 };

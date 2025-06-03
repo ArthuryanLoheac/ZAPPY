@@ -37,8 +37,10 @@ void GUI::ServerGUI::handleCommand() {
                 printf("\033[1;32m[OK]\033[0m Received Command: %s\n",
                     args[0].c_str());
         } else if (GUI::DataManager::i().getErrors()) {
-            printf("\033[1;31m[ERROR]\033[0m Unknown Command: %s\n",
-                args[0].c_str());
+            printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
+            for (size_t i = 0; i < args.size(); i++)
+                printf(" %s", args[i].c_str());
+            printf("\n");
         }
     }
 }

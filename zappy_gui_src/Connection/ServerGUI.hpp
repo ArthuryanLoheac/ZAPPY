@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <chrono>
 
 namespace GUI {
 class ServerGUI {
@@ -12,6 +13,7 @@ class ServerGUI {
     int nb_fds;
     struct pollfd fd;
     std::string buffer;
+    int updateMapTime = 3;
 
     ServerGUI();
     static ServerGUI &i() {
@@ -21,6 +23,8 @@ class ServerGUI {
     void startServer();
 
  private:
+    void clockUpdate(std::chrono::_V2::system_clock::time_point &time,
+        std::chrono::_V2::system_clock::time_point &timeNext);
     void handleCommand();
     void readDatasFromServer();
     std::vector<std::string> parseCommands(std::string &command);
@@ -31,6 +35,9 @@ class ServerGUI {
     void enwCommand(std::vector<std::string> &args);
     void tnaCommand(std::vector<std::string> &args);
     void bctCommand(std::vector<std::string> &args);
+    void sgtCommand(std::vector<std::string> &args);
+    void eboCommand(std::vector<std::string> &args);
+    void ediCommand(std::vector<std::string> &args);
 
     std::map<std::string,
      void(ServerGUI::*)(std::vector<std::string> &)> commands = {
@@ -39,6 +46,9 @@ class ServerGUI {
         {"ENW", &ServerGUI::enwCommand},
         {"TNA", &ServerGUI::tnaCommand},
         {"BCT", &ServerGUI::bctCommand},
+        {"SGT", &ServerGUI::sgtCommand},
+        {"EBO", &ServerGUI::eboCommand},
+        {"EDI", &ServerGUI::ediCommand},
     };
 };
 

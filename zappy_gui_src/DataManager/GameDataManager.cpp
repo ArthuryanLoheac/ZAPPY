@@ -1,7 +1,11 @@
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "DataManager/GameDataManager.hpp"
+#include "Exceptions/GraphicalExceptions.hpp"
+#include "Exceptions/DataManagerExceptions.hpp"
+#include "Window/window.hpp"
 
 namespace GUI {
 int GameDataManager::getWidth() const {
@@ -46,8 +50,41 @@ void GameDataManager::addTeam(const std::string &teamName) {
     teams.push_back(teamName);
 }
 
+const std::vector<GameDataManager::Egg> &GameDataManager::getEggs() const {
+    return eggs;
+}
+
+void GameDataManager::addEgg(int id, int team, int x, int y) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    Vec3d position = getTile(x, y).getWorldPos();
+    position.Y += 0.2f;
+    eggs.emplace_back(id, team, MeshImporter::i().importMesh("DroneEgg",
+        position, Vec3d(0.2f)));
+}
+
+void GameDataManager::removeEgg(int id) {
+    for (size_t i = 0; i < eggs.size(); i++) {
+        if (eggs[i].id == id) {
+            int idM = eggs[i].EggMesh->getID();
+            if (GUI::Window::i().smgr->getSceneNodeFromId(idM))
+                GUI::Window::i().smgr->getSceneNodeFromId(idM)->remove();
+            eggs.erase(eggs.begin() + i);
+            return;
+        }
+    }
+    throw ParseException("Invalid ID egg");
+}
+
 const std::vector<std::string> &GameDataManager::getTeams() const {
     return teams;
 }
 
+// ======= Egg ========= //
+
+GameDataManager::Egg::Egg(int id, int team,
+const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh)
+: id(id), team(team), EggMesh(eggMesh) {
+    if (!EggMesh)
+        throw GUI::ShaderCompilationException("Error creating egg mesh");
+}
 }  // namespace GUI

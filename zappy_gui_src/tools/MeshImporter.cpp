@@ -6,6 +6,7 @@
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "tools/MeshImporter.hpp"
 #include "Graphic/Window/window.hpp"
+#include <random>
 
 std::shared_ptr<Mesh> MeshImporter::importMesh(std::string meshName,
         const Vec3d &position, const Vec3d &scale, const Vec3d &rotation) {

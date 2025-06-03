@@ -40,6 +40,8 @@ class GameDataManager {
     GameTile &getTile(int x, int y);
     const std::vector<Egg> &getEggs() const;
     void addEgg(int id, int team, int x, int y);
+    void removeEgg(int id);
+
     void addTeam(const std::string &teamName);
     const std::vector<std::string> &getTeams() const;
 };

@@ -3,6 +3,9 @@
 
 #include "DataManager/GameDataManager.hpp"
 #include "Exceptions/GraphicalExceptions.hpp"
+#include "Exceptions/DataManagerExceptions.hpp"
+#include "GameDataManager.hpp"
+#include "window.hpp"
 
 namespace GUI {
 int GameDataManager::getWidth() const {
@@ -59,7 +62,21 @@ void GameDataManager::addEgg(int id, int team, int x, int y) {
         position, Vec3d(0.2f)));
 }
 
-const std::vector<std::string> &GameDataManager::getTeams() const {
+void GameDataManager::removeEgg(int id) {
+    for (size_t i = 0; i < eggs.size(); i++) {
+        if (eggs[i].id == id) {
+            int idM = eggs[i].EggMesh->getID();
+            if (GUI::Window::i().smgr->getSceneNodeFromId(idM))
+                GUI::Window::i().smgr->getSceneNodeFromId(idM)->remove();
+            eggs.erase(eggs.begin() + i);
+            return;
+        }
+    }
+    throw ParseException("Invalid ID egg");
+}
+
+const std::vector<std::string> &GameDataManager::getTeams() const
+{
     return teams;
 }
 

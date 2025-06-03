@@ -21,6 +21,7 @@ class DataManager {
 
     int port;
     std::string ip;
+    int frequency = 0;
  public:
     bool running = true;
     std::mutex mutexDatas;
@@ -33,11 +34,13 @@ class DataManager {
     bool getDebug() const;
     bool getErrors() const;
     int getPort() const;
+    int getFrequency() const;
     std::string getIp() const;
 
     void setDebug(debugMode isDebug);
     void setPort(int port);
     void setIp(std::string ip);
     void setRunning(bool b);
+    void setFrequency(int f);
 };
 }  // namespace GUI

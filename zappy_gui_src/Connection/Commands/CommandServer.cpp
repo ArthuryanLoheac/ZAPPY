@@ -4,6 +4,7 @@
 #include "Exceptions/ServerGUIExceptions.hpp"
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
+#include "DataManager/DataManager.hpp"
 
 namespace GUI {
 void GUI::ServerGUI::welcomeCommand(std::vector<std::string> &args) {
@@ -69,4 +70,17 @@ void ServerGUI::bctCommand(std::vector<std::string> &args) {
         throw GUI::CommandParsingException("Invalid parameters in bct command");
     }
 }
+
+void ServerGUI::sgtCommand(std::vector<std::string> &args) {
+    if (args.size() != 2)
+        throw GUI::CommandParsingException("Invalid sgt command format");
+    try {
+        int f = std::stoi(args[1]);
+
+        DataManager::i().setFrequency(f);
+    } catch (const std::exception &e) {
+        throw GUI::CommandParsingException("Invalid parameters in sgt command");
+    }
+}
+
 }  // namespace GUI

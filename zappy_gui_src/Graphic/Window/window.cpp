@@ -4,6 +4,7 @@
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "tools/MeshImporter.hpp"
+#include "DataManager.hpp"
 
 namespace GUI {
 Window::Window() {
@@ -71,6 +72,12 @@ void Window::drawUI() {
         font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
             irr::core::rect<irr::s32>(10, 10, 300, 50),
             irr::video::SColor(255, 255, 255, 255));
+
+        // Frequency
+        font->draw(("Freq : " + std::to_string(GUI::DataManager::i().getFrequency())).c_str(),
+            irr::core::rect<irr::s32>(150, 10, 300, 50),
+            irr::video::SColor(255, 255, 255, 255));
+
     }
 }
 void Window::setupWorld() {

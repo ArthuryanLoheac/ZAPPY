@@ -18,9 +18,13 @@ bool DataManager::getDebug() const {
 bool DataManager::getErrors() const {
     return (debug == ALL_DEBUG) || (debug == ERRORS);
 }
-int DataManager::getPort() const
-{
+
+int DataManager::getPort() const {
     return port;
+}
+
+int DataManager::getFrequency() const {
+    return frequency;
 }
 
 std::string DataManager::getIp() const {
@@ -49,6 +53,11 @@ void DataManager::setIp(std::string _ip) {
 void DataManager::setRunning(bool b) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     running = b;
+}
+
+void DataManager::setFrequency(int f) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    frequency = f;
 }
 
 }  // namespace GUI

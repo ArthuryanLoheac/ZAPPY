@@ -10,8 +10,14 @@
 
 namespace GUI {
 class DataManager {
+ public:
+    enum debugMode {
+        NO_DEBUG,
+        ALL_DEBUG,
+        ERRORS
+    };
  private:
-    bool debug;
+    debugMode debug = NO_DEBUG;
 
     int port;
     std::string ip;
@@ -25,10 +31,11 @@ class DataManager {
 
     DataManager();
     bool getDebug() const;
+    bool getErrors() const;
     int getPort() const;
     std::string getIp() const;
 
-    void setDebug(bool isDebug);
+    void setDebug(debugMode isDebug);
     void setPort(int port);
     void setIp(std::string ip);
     void setRunning(bool b);

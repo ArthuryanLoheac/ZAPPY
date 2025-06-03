@@ -12,16 +12,19 @@ int checkArgs(int ac, char **av) {
     int i = 1;
 
     while (i < ac) {
-        if (strcmp(av[i], "-d") == 0) {
-            GUI::DataManager::i().setDebug(true);
+        if (std::string(av[i]) == "-d") {
+            GUI::DataManager::i().setDebug(GUI::DataManager::ALL_DEBUG);
             i++;
-        } else if (strcmp(av[i], "-p") == 0) {
+        } else if (std::string(av[i]) == "-e") {
+            GUI::DataManager::i().setDebug(GUI::DataManager::ERRORS);
+            i++;
+        } else if (std::string(av[i]) == "-p") {
             GUI::DataManager::i().setPort(atoi(av[i + 1]));
             if (GUI::DataManager::i().getPort() < 0 ||
                 GUI::DataManager::i().getPort() > 65535)
                 return 84;
             i+= 2;
-        } else if (strcmp(av[i], "-h") == 0) {
+        } else if (std::string(av[i]) == "-h") {
             GUI::DataManager::i().setIp(av[i + 1]);
             i+= 2;
         } else {

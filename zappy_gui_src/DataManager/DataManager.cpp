@@ -1,20 +1,25 @@
 #include <string>
 
 #include "DataManager/DataManager.hpp"
+#include "DataManager.hpp"
 
 namespace GUI {
 DataManager::DataManager() {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    debug = false;
+    debug = NO_DEBUG;
     port = 0;
     ip = "";
 }
 
 bool DataManager::getDebug() const {
-    return debug;
+    return debug == ALL_DEBUG;
 }
 
-int DataManager::getPort() const {
+bool DataManager::getErrors() const {
+    return (debug == ALL_DEBUG) || (debug == ERRORS);
+}
+int DataManager::getPort() const
+{
     return port;
 }
 
@@ -22,7 +27,7 @@ std::string DataManager::getIp() const {
     return ip;
 }
 
-void DataManager::setDebug(bool isDebug) {
+void DataManager::setDebug(debugMode isDebug) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     debug = isDebug;
 }

@@ -2,6 +2,7 @@
 #include <thread>
 #include <cstdio>
 #include <iostream>
+#include <string>
 
 #include "DataManager/DataManager.hpp"
 #include "DataManager/GameDataManager.hpp"

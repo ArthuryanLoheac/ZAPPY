@@ -31,14 +31,15 @@ void GUI::ServerGUI::handleCommand() {
             args[0][i] = toupper(args[0][i]);
 
         auto it = commands.find(args[0]);
-        if (it != commands.end()){
+        if (it != commands.end()) {
             (GUI::ServerGUI::i().*(it->second))(args);
             if (GUI::DataManager::i().getDebug())
                 printf("\033[1;32m[OK]\033[0m Received Command: %s\n",
                     args[0].c_str());
-        } else if (GUI::DataManager::i().getErrors())
+        } else if (GUI::DataManager::i().getErrors()) {
             printf("\033[1;31m[ERROR]\033[0m Unknown Command: %s\n",
                 args[0].c_str());
+        }
     }
 }
 

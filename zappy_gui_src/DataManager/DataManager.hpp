@@ -16,12 +16,14 @@ class DataManager {
         ALL_DEBUG,
         ERRORS
     };
+
  private:
     debugMode debug = NO_DEBUG;
 
     int port;
     std::string ip;
     int frequency = 0;
+
  public:
     bool running = true;
     std::mutex mutexDatas;

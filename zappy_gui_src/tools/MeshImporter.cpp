@@ -16,7 +16,8 @@ std::shared_ptr<Mesh> MeshImporter::importMesh(std::string meshName,
     if (node) {
         node->setScale(scale);
         node->setRotation(Vec3d(rotation));
-        node->setID(random());
+        std::random_device rd;
+        node->setID(rd());
         node->setPosition(position);
         node->setMD2Animation(irr::scene::EMAT_STAND);
         node->setMaterialTexture(0, getTexture(meshName));

@@ -31,6 +31,15 @@ int checkArgs(int ac, char **av) {
     return 0;
 }
 
+int returnHelp() {
+    std::cout << "Usage: ./zappy_gui -h <ip> -p <port> [-d]\n"
+              << "Options:\n"
+              << "  -h <ip>   : Set the server IP address\n"
+              << "  -p <port> : Set the server port (0-65535)\n"
+              << "  -d        : Enable debug mode\n";
+    return 84;
+}
+
 int main(int ac, char **av) {
     int sockfd;
     GUI::DataManager::i();
@@ -38,9 +47,9 @@ int main(int ac, char **av) {
 
     try {
         if (!(ac == 5 || ac == 6))
-            return 84;
+            return returnHelp();
         if (checkArgs(ac, av) == 84)
-            return 84;
+            return returnHelp();
         if (client_connection(sockfd) == 84)
             throw GUI::ConnectionException("Failed to connect to server");
     } catch (std::exception &e) {

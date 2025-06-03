@@ -8,10 +8,20 @@
 
 namespace GUI {
 class GameDataManager {
+ public:
+    class Egg {
+     public:
+        int id;
+        int team;
+        std::shared_ptr<Mesh> EggMesh;
+        Egg(int id, int team,
+            const std::shared_ptr<Mesh> &eggMesh);
+    };
  private:
     int width;
     int height;
     std::vector<GameTile> tiles;
+    std::vector<Egg> eggs;
     std::vector<std::string> teams;
 
  public:
@@ -28,6 +38,8 @@ class GameDataManager {
     void setHeight(int h);
     GameTile &addTile(int x, int y);
     GameTile &getTile(int x, int y);
+    const std::vector<Egg> &getEggs() const;
+    void addEgg(int id, int team, int x, int y);
     void addTeam(const std::string &teamName);
     const std::vector<std::string> &getTeams() const;
 };

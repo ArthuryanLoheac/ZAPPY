@@ -5,6 +5,7 @@
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
+#include "ServerGUI.hpp"
 
 namespace GUI {
 void GUI::ServerGUI::welcomeCommand(std::vector<std::string> &args) {
@@ -36,7 +37,7 @@ void GUI::ServerGUI::enwCommand(std::vector<std::string> &args) {
         int x = std::stoi(args[3]);
         int y = std::stoi(args[4]);
 
-        GUI::GameDataManager::i().getTile(x, y).addEgg(id, team);
+        GUI::GameDataManager::i().addEgg(id, team, x, y);
     } catch (const std::exception &e) {
         throw GUI::CommandParsingException("Invalid parameters in enw command");
     }
@@ -83,4 +84,18 @@ void ServerGUI::sgtCommand(std::vector<std::string> &args) {
     }
 }
 
-}  // namespace GUI
+void ServerGUI::eboCommand(std::vector<std::string> &args) {
+    if (args.size() != 2)
+        throw GUI::CommandParsingException("Invalid ebo command format");
+    if (args[1].size() < 2)
+        throw GUI::CommandParsingException("Invalid id name");
+    try {
+        int id = std::stoi(args[1].substr(1));
+
+        (void) id;
+    } catch (const std::exception &e) {
+        throw GUI::CommandParsingException("Invalid parameters in ebo command");
+    }
+}
+
+} // namespace GUI

@@ -10,21 +10,10 @@
 
 namespace GUI {
 class GameTile {
- public:
-    class Egg {
-     public:
-        int id;
-        int team;
-        std::shared_ptr<Mesh> EggMesh;
-        Egg(int id, int team,
-            const std::shared_ptr<Mesh> &eggMesh);
-    };
-
  private:
     int x;
     int y;
     std::shared_ptr<Mesh> tileMesh;
-    std::vector<Egg> eggs;
 
     int food;
     int r1;
@@ -61,9 +50,6 @@ class GameTile {
     std::shared_ptr<Mesh> getTileMesh() const;
     void setTileMesh(const std::shared_ptr<Mesh> &mesh);
     Vec3d getWorldPos() const;
-
-    const std::vector<Egg> &getEggs() const;
-    void addEgg(int id, int team);
 
     void setRessources(int food, int r1, int r2, int r3, int r4,
                      int r5, int r6);

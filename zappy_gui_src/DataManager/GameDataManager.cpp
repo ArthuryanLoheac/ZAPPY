@@ -2,6 +2,7 @@
 #include <string>
 
 #include "DataManager/GameDataManager.hpp"
+#include "Exceptions/GraphicalExceptions.hpp"
 
 namespace GUI {
 int GameDataManager::getWidth() const {
@@ -46,8 +47,28 @@ void GameDataManager::addTeam(const std::string &teamName) {
     teams.push_back(teamName);
 }
 
+const std::vector<GameDataManager::Egg> &GameDataManager::getEggs() const {
+    return eggs;
+}
+
+void GameDataManager::addEgg(int id, int team, int x, int y) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    Vec3d position = getTile(x, y).getWorldPos();
+    position.Y += 0.2f;
+    eggs.emplace_back(id, team, MeshImporter::i().importMesh("DroneEgg",
+        position, Vec3d(0.2f)));
+}
+
 const std::vector<std::string> &GameDataManager::getTeams() const {
     return teams;
 }
 
+// ======= Egg ========= //
+
+GameDataManager::Egg::Egg(int id, int team,
+const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh)
+: id(id), team(team), EggMesh(eggMesh) {
+    if (!EggMesh)
+        throw GUI::ShaderCompilationException("Error creating egg mesh");
+}
 }  // namespace GUI

@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <chrono>
 
 namespace GUI {
 class ServerGUI {
@@ -12,6 +13,7 @@ class ServerGUI {
     int nb_fds;
     struct pollfd fd;
     std::string buffer;
+    int updateMapTime = 3;
 
     ServerGUI();
     static ServerGUI &i() {
@@ -21,6 +23,8 @@ class ServerGUI {
     void startServer();
 
  private:
+    void clockUpdate(std::chrono::_V2::system_clock::time_point &time,
+        std::chrono::_V2::system_clock::time_point &timeNext);
     void handleCommand();
     void readDatasFromServer();
     std::vector<std::string> parseCommands(std::string &command);

@@ -22,27 +22,11 @@ class Player {
         : id(id), x(x), y(y), o(o), level(l), teamName(team),
         PlayerMesh(pMesh) {}
 
-    // Custom move constructor
     Player(Player &&other) noexcept
         : id(other.id), x(other.x), y(other.y), o(other.o), level(other.level),
           teamName(std::move(other.teamName)),
           PlayerMesh(std::move(other.PlayerMesh)) {}
-
-    // Custom move assignment operator
-    Player &operator=(Player &&other) noexcept {
-        if (this != &other) {
-            id = other.id;
-            x = other.x;
-            y = other.y;
-            o = other.o;
-            level = other.level;
-            teamName = std::move(other.teamName);
-            PlayerMesh = std::move(other.PlayerMesh);
-        }
-        return *this;
-    }
-
-    // Delete copy constructor and copy assignment operator
+    Player &operator=(Player &&other) noexcept;
     Player(const Player &) = delete;
     Player &operator=(const Player &) = delete;
 
@@ -58,7 +42,7 @@ class Player {
     int getLevel() const;
     void setTeamName(const std::string &newTeamName);
     const std::string &getTeamName() const;
-    void setPosition(int newX, int newY);
+    void setPosition(int newX, int newY, Orientation newO);
 
     void setMesh(const std::shared_ptr<Mesh> &mesh);
     std::shared_ptr<Mesh> getMesh() const;

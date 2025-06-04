@@ -3,10 +3,26 @@
 #include <mutex>
 
 #include "DataManager/Player.hpp"
+#include "DataManager/GameDataManager.hpp"
+#include "Player.hpp"
 
 namespace GUI {
 
+Player &Player::operator=(Player &&other) noexcept{
+    if (this != &other) {
+        id = other.id;
+        x = other.x;
+        y = other.y;
+        o = other.o;
+        level = other.level;
+        teamName = std::move(other.teamName);
+        PlayerMesh = std::move(other.PlayerMesh);
+    }
+    return *this;
+}
+
 void Player::setId(int newId) {
+
     std::lock_guard<std::mutex> lock(mutexDatas);
     id = newId;
 }
@@ -60,10 +76,17 @@ const std::string &Player::getTeamName() const {
     return teamName;
 }
 
-void Player::setPosition(int newX, int newY) {
+void Player::setPosition(int newX, int newY, Orientation new0) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     x = newX;
     y = newY;
+    o = new0;
+    if (PlayerMesh) {
+        Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
+        position.Y += 0.5f;
+        PlayerMesh->setPosition(position);
+        PlayerMesh->setRotation(Vec3d(0, (new0 + 1) * 90, 0));
+    }
 }
 
 void Player::setMesh(const std::shared_ptr<Mesh> &mesh) {

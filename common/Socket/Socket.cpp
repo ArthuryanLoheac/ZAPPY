@@ -1,4 +1,4 @@
-#include "Socket.hpp"
+#include "common/Socket/Socket.hpp"
 
 #include <unistd.h>
 #include <arpa/inet.h>
@@ -6,14 +6,15 @@
 
 #include <vector>
 #include <string>
+#include <stdexcept>
 
 namespace Network {
 
-Socket::Socket(): server_fd(0), nb_fds(0), fd(), running(false) {
+Socket::Socket(): port(0), ip(), server_fd(0), nb_fds(0), fd(), running(false) {
 }
 
-Socket::Socket(const std::string &ip, const int port) {
-    startSocket(ip, port);
+Socket::Socket(const int port, const std::string &ip) : port(port), ip(ip),
+    server_fd(0), nb_fds(0), fd(), running(false) {
 }
 
 Socket::~Socket() {
@@ -22,8 +23,7 @@ Socket::~Socket() {
     }
 }
 
-
-void Socket::startSocket(const std::string &ip, int port) {
+void Socket::startSocket(int port, const std::string &ip) {
     if (running)
         throw std::runtime_error("Socket is already running");
 
@@ -64,7 +64,7 @@ void Socket::stopSocket() {
 
 void Socket::handleCommand() {
     while (buffer.find("\n") != std::string::npos) {
-        size_t pos = buffer.find("\n");
+        const size_t pos = buffer.find("\n");
         std::string command = buffer.substr(0, pos);
         buffer.erase(0, pos + 1);
 
@@ -115,7 +115,6 @@ void Socket::sendDatasToServer(const std::string &message) const {
         if (bytes_sent == -1) {
             throw std::runtime_error("Error sending data to server");
         }
-        printf("Sent data: %s\n", message.c_str());
     }
 }
 

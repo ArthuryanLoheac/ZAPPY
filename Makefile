@@ -16,6 +16,7 @@ OBJ_MAIN_SERVER = $(SRC_MAIN_SERVER:%.c=$(OBJ_DIR)/%.o)
 OBJ_MAIN_GUI = $(SRC_MAIN_GUI:%.cpp=$(OBJ_DIR)/%.o)
 OBJ_MAIN_AI = $(SRC_MAIN_AI:%.cpp=$(OBJ_DIR)/%.o)
 
+OBJ_CPP_COMMON = $(SRC_CPP_COMMON:%.cpp=$(OBJ_DIR)/%.o)
 OBJ_SRC_SERVER = $(SRC_SERVER:%.c=$(OBJ_DIR)/%.o)
 OBJ_SRC_GUI = $(SRC_GUI:%.cpp=$(OBJ_DIR)/%.o)
 OBJ_SRC_AI = $(SRC_AI:%.cpp=$(OBJ_DIR)/%.o)
@@ -31,10 +32,14 @@ FLAGS_SERVER = -MMD -MP \
 FLAGS_GUI =	-MMD -MP \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
 	-std=c++17 -Wall -Wextra -Werror
-
 LDFLAGS_GUI = -lIrrlicht
+
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
+	-std=c++20 -Wall -Wextra -Werror
+
+FLAGS_COMMON = -MMD -MP \
+	$(shell find common -type d -exec echo -I{} \;) \
 	-std=c++20 -Wall -Wextra -Werror
 
 FLAGS_TEST = -lcriterion --coverage -include cstdint
@@ -59,6 +64,7 @@ SRC_MAIN_SERVER	= zappy_server_src/main.c
 SRC_MAIN_GUI = zappy_gui_src/main.cpp
 SRC_MAIN_AI	= zappy_ai_src/main.cpp
 
+SRC_CPP_COMMON = $(shell find common -type f -name "*.cpp")
 SRC_SERVER = $(shell find zappy_server_src -type f -name "*.c" ! -name \
 	"main.c")
 SRC_GUI	= $(shell find zappy_gui_src -type f -name "*.cpp" ! -name "main.cpp")
@@ -72,11 +78,13 @@ all: $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI)
 $(ZAPPY_SERVER): $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER)
 	gcc -o $(ZAPPY_SERVER) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER) $(FLAGS_SERVER)
 
-$(ZAPPY_GUI): $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI)
-	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) $(LDFLAGS_GUI)
+$(ZAPPY_GUI): $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) $(OBJ_CPP_COMMON)
+	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_CPP_COMMON) $(OBJ_MAIN_GUI) \
+	$(LDFLAGS_GUI)
 
-$(ZAPPY_AI): $(OBJ_SRC_AI) $(OBJ_MAIN_AI)
-	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) $(FLAGS_AI)
+$(ZAPPY_AI): $(OBJ_SRC_AI) $(OBJ_MAIN_AI) $(OBJ_CPP_COMMON)
+	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_CPP_COMMON) $(OBJ_MAIN_AI) \
+	$(FLAGS_AI)
 
 # ============= CLEANS ============= #
 
@@ -102,8 +110,13 @@ $(OBJ_DIR)/zappy_ai_src/%.o: zappy_ai_src/%.cpp
 	@mkdir -p $(dir $@)
 	g++ -c $(FLAGS_AI) $< -o $@
 
+$(OBJ_DIR)/common/%.o: common/%.cpp
+	@mkdir -p $(dir $@)
+	g++ -c $(FLAGS_COMMON) $< -o $@
+
 -include $(OBJ_MAIN_SERVER:.o=.d) $(OBJ_MAIN_GUI:.o=.d) $(OBJ_MAIN_AI:.o=.d)
 -include $(OBJ_SRC_SERVER:.o=.d) $(OBJ_SRC_GUI:.o=.d) $(OBJ_SRC_AI:.o=.d)
+-include $(OBJ_CPP_COMMON:.o=.d)
 
 # ============= OTHERS ============= #
 

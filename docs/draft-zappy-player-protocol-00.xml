@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../utils/xml2rfc-v3.rng" type="application/xml"?>
+
+<rfc ipr="none" submissionType="independent" category="info">
+    <front>
+        <title>Player communication protocol</title>
+        <author fullname="Jean Bizeul" >
+            <organization>Epitech</organization>
+            <address>
+                <email>jean.bizeul@epitech.eu</email>
+            </address>
+        </author>
+        <date day="04" month="06" year="2025"/>
+        <abstract anchor="abstract">
+            <t>This document describes the communication protocol used between players and a server in the Zappy project.</t>
+        </abstract>
+    </front>
+    <middle>
+        <section anchor="intro" >
+            <name>Introduction</name>
+            <t>
+                Cool intro !
+                Have merci, don't just repeat what was in the abstract plz
+            </t>
+        </section>
+    </middle>
+</rfc>

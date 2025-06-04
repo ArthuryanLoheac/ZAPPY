@@ -1,0 +1,56 @@
+
+
+
+
+                                                               J. Bizeul
+                                                                 Epitech
+                                                             4 June 2025
+
+
+                     Player communication protocol
+
+Abstract
+
+   This document describes the communication protocol used between
+   players and a server in the Zappy project.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   1
+
+1.  Introduction
+
+   Cool intro !  Have merci, don't just repeat what was in the abstract
+   plz
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bizeul                        Informational                     [Page 1]

@@ -27,6 +27,7 @@ class Socket {
         return i;
     }
 
+    void startSocket();
     void startSocket(int port, const std::string &ip = "localhost");
     void run();
     void stopSocket();

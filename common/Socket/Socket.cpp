@@ -23,7 +23,15 @@ Socket::~Socket() {
     }
 }
 
-void Socket::startSocket(int port, const std::string &ip) {
+void Socket::startSocket(const int port, const std::string &ip) {
+    this->port = port;
+    this->ip = ip;
+    if (running)
+        throw std::runtime_error("Socket is already running");
+    startSocket();
+}
+
+void Socket::startSocket() {
     if (running)
         throw std::runtime_error("Socket is already running");
 
@@ -63,8 +71,8 @@ void Socket::stopSocket() {
 }
 
 void Socket::handleCommand() {
-    while (buffer.find("\n") != std::string::npos) {
-        const size_t pos = buffer.find("\n");
+    while (buffer.find('\n') != std::string::npos) {
+        const size_t pos = buffer.find('\n');
         std::string command = buffer.substr(0, pos);
         buffer.erase(0, pos + 1);
 

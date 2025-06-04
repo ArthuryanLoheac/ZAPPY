@@ -7,7 +7,6 @@
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
-#include "ServerGUI.hpp"
 
 void printError(const std::exception &e, std::vector<std::string> &args) {
     std::cerr << "Error: " << e.what() << std::endl;
@@ -197,4 +196,4 @@ void ServerGUI::plvCommand(std::vector<std::string> &args) {
 
     GameDataManager::i().getPlayer(id).setLevel(level);
 }
-} // namespace GUI
+}  // namespace GUI

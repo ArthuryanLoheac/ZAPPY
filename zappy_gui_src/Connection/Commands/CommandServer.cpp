@@ -176,22 +176,12 @@ void ServerGUI::pinCommand(std::vector<std::string> &args) {
 }
 
 void ServerGUI::pdiCommand(std::vector<std::string> &args) {
-    if (args.size() != 11)
-        throw CommandParsingException("Invalid pin command format");
+    if (args.size() != 2)
+        throw CommandParsingException("Invalid pdi command format");
     if (args[1].size() < 2)
         throw CommandParsingException("Invalid id name");
     int id = std::stoi(args[1].substr(1));
-    int x = std::stoi(args[2]);
-    int y = std::stoi(args[3]);
-
-    Player &p = GameDataManager::i().getPlayer(id);
-    for (int i = 4; i <= 10; i++) {
-        int r = std::stoi(args[i]);
-        if (r < 0)
-            throw CommandParsingException("Invalid resource in pin command");
-        p.setRessource(i - 4, r);
-    }
-    p.setPosition(x, y);
+    GameDataManager::i().removePlayer(id);
 }
 
 }  // namespace GUI

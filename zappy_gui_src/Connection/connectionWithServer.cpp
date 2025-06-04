@@ -15,10 +15,15 @@
 #include "Exceptions/DataManagerExceptions.hpp"
 
 int loopClient(int sockfd) {
-    GUI::ServerGUI::i().server_fd = sockfd;
-    GUI::ServerGUI::i().fd = {sockfd, .events = POLLIN | POLLOUT, 0};
+    try {
+        GUI::ServerGUI::i().server_fd = sockfd;
+        GUI::ServerGUI::i().fd = {sockfd, .events = POLLIN | POLLOUT, 0};
 
-    GUI::ServerGUI::i().startServer();
+        GUI::ServerGUI::i().startServer();
+    } catch (const std::exception &e) {
+        std::cerr << "Server Closed: " << e.what() << std::endl;
+        close(sockfd);
+    }
     return 0;
 }
 

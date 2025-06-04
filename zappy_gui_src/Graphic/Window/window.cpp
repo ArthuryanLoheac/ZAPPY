@@ -65,7 +65,7 @@ void Window::drawUI() {
             Vec3d pos(x, y, 0);
             font->draw(("\t" + team).c_str(),
                 irr::core::rect<irr::s32>(pos.X, pos.Y, 300, 50),
-                irr::video::SColor(255, 255, 255, 255));
+                MeshImporter::i().getColor(team));
         }
 
         // FPS
@@ -98,7 +98,7 @@ void Window::setupWorld() {
             irr::core::vector3df position(i - (width/2) + deltaWidth, -2,
                 j - (height/2) + deltaHeight);
             float rotation = std::rand() % 4;
-            auto cube = MeshImporter::i().importMesh("Plane", position,
+            auto cube = MeshImporter::i().importMesh("Plane", "", position,
                 irr::core::vector3df(0.45f),
                 irr::core::vector3df(0, rotation * 90, 0));
             GameTile &tile = GUI::GameDataManager::i().addTile(i, j);

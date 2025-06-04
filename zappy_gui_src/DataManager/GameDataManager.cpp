@@ -50,7 +50,7 @@ void GameDataManager::addTeam(const std::string &teamName) {
     teams.push_back(teamName);
 }
 
-const std::vector<GameDataManager::Egg> &GameDataManager::getEggs() const {
+const std::vector<Egg> &GameDataManager::getEggs() const {
     return eggs;
 }
 
@@ -58,7 +58,7 @@ void GameDataManager::addEgg(int id, int team, int x, int y) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getTile(x, y).getWorldPos();
     position.Y += 0.2f;
-    eggs.emplace_back(id, team, MeshImporter::i().importMesh("DroneEgg",
+    eggs.emplace_back(id, team, MeshImporter::i().importMesh("DroneEgg", "",
         position, Vec3d(0.2f)));
 }
 
@@ -75,16 +75,48 @@ void GameDataManager::removeEgg(int id) {
     throw ParseException("Invalid ID egg");
 }
 
-const std::vector<std::string> &GameDataManager::getTeams() const {
-    return teams;
+void GameDataManager::addPlayer(int id, int x, int y,
+Player::Orientation o, int level, const std::string &teamName) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    Vec3d position = getTile(x, y).getWorldPos();
+    position.Y += 0.5f;
+    players.emplace_back(id, x, y, o, level, teamName,
+        MeshImporter::i().importMesh("Drone", teamName, position, Vec3d(0.2f),
+        Vec3d(0, o * 90, 0)));
 }
 
-// ======= Egg ========= //
+Player &GameDataManager::getPlayer(int id) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    for (auto &player : players) {
+        if (player.getId() == id)
+            return player;
+    }
+    throw ParseException("Player with this ID not found");
+}
 
-GameDataManager::Egg::Egg(int id, int team,
-const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh)
-: id(id), team(team), EggMesh(eggMesh) {
-    if (!EggMesh)
-        throw GUI::ShaderCompilationException("Error creating egg mesh");
+const std::vector<Player> &GameDataManager::getPlayers() const {
+    return players;
+}
+
+void GameDataManager::removePlayer(int id) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    for (size_t i = 0; i < players.size(); i++) {
+        if (players[i].getId() == id) {
+            auto mesh = players[i].getMesh();
+            if (mesh) {
+                int idM = mesh->getID();
+                auto sceneNode = GUI::Window::i().smgr->getSceneNodeFromId(idM);
+                if (sceneNode)
+                    GUI::Window::i().smgr->addToDeletionQueue(sceneNode);
+            }
+            players.erase(players.begin() + i);
+            return;
+        }
+    }
+    throw ParseException("Invalid ID player");
+}
+
+const std::vector<std::string> &GameDataManager::getTeams() const {
+    return teams;
 }
 }  // namespace GUI

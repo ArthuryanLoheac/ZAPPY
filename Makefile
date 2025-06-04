@@ -39,7 +39,7 @@ FLAGS_AI = -MMD -MP \
 	-std=c++20 -Wall -Wextra -Werror
 
 FLAGS_COMMON = -MMD -MP \
-	$(shell find common -type d -exec echo -I{} \;) \
+	$(shell find lib -type d -exec echo -I{} \;) \
 	-std=c++20 -Wall -Wextra -Werror
 
 FLAGS_TEST = -lcriterion --coverage -include cstdint
@@ -57,6 +57,7 @@ FLAGS_LINTER =	\
 ZAPPY_SERVER = zappy_server
 ZAPPY_GUI = zappy_gui
 ZAPPY_AI = zappy_ai
+COMMON_LIB = lib/libcommon.a
 
 # ============= SOURCES ============= #
 
@@ -64,7 +65,7 @@ SRC_MAIN_SERVER	= zappy_server_src/main.c
 SRC_MAIN_GUI = zappy_gui_src/main.cpp
 SRC_MAIN_AI	= zappy_ai_src/main.cpp
 
-SRC_CPP_COMMON = $(shell find common -type f -name "*.cpp")
+SRC_CPP_COMMON = $(shell find lib -type f -name "*.cpp")
 SRC_SERVER = $(shell find zappy_server_src -type f -name "*.c" ! -name \
 	"main.c")
 SRC_GUI	= $(shell find zappy_gui_src -type f -name "*.cpp" ! -name "main.cpp")
@@ -75,15 +76,20 @@ SRC_TESTS = tests/test_1.cpp \
 
 all: $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI)
 
+$(COMMON_LIB): $(OBJ_CPP_COMMON)
+	@mkdir -p $(dir $@)
+	ar rc $(COMMON_LIB) $(OBJ_CPP_COMMON)
+	ranlib $(COMMON_LIB)
+
 $(ZAPPY_SERVER): $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER)
 	gcc -o $(ZAPPY_SERVER) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER) $(FLAGS_SERVER)
 
-$(ZAPPY_GUI): $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) $(OBJ_CPP_COMMON)
-	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_CPP_COMMON) $(OBJ_MAIN_GUI) \
+$(ZAPPY_GUI): $(COMMON_LIB) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI)
+	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) -Llib -lcommon \
 	$(LDFLAGS_GUI)
 
-$(ZAPPY_AI): $(OBJ_SRC_AI) $(OBJ_MAIN_AI) $(OBJ_CPP_COMMON)
-	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_CPP_COMMON) $(OBJ_MAIN_AI) \
+$(ZAPPY_AI): $(COMMON_LIB) $(OBJ_SRC_AI) $(OBJ_MAIN_AI)
+	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) -Llib -lcommon \
 	$(FLAGS_AI)
 
 # ============= CLEANS ============= #
@@ -93,7 +99,7 @@ clean:
 	rm -f *.gcda *.gcno
 
 fclean: clean
-	rm -f $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI)
+	rm -f $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI) $(COMMON_LIB)
 	rm -f unit_tests
 
 # ============= COMPILATION ============= #
@@ -110,7 +116,7 @@ $(OBJ_DIR)/zappy_ai_src/%.o: zappy_ai_src/%.cpp
 	@mkdir -p $(dir $@)
 	g++ -c $(FLAGS_AI) $< -o $@
 
-$(OBJ_DIR)/common/%.o: common/%.cpp
+$(OBJ_DIR)/lib/%.o: lib/%.cpp
 	@mkdir -p $(dir $@)
 	g++ -c $(FLAGS_COMMON) $< -o $@
 

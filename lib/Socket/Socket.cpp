@@ -1,4 +1,4 @@
-#include "common/Socket/Socket.hpp"
+#include "lib/Socket/Socket.hpp"
 
 #include <unistd.h>
 #include <arpa/inet.h>
@@ -54,8 +54,7 @@ void Socket::startSocket() {
 }
 
 void Socket::run() {
-    const int ready = poll(&fd, 1, -1);
-    if (ready == -1)
+    if (poll(&fd, 1, -1) == -1)
         throw std::runtime_error("Poll error occurred");
     if (fd.revents & POLLIN)
         readDatasFromServer();

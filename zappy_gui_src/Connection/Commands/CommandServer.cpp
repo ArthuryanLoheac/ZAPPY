@@ -129,8 +129,16 @@ void ServerGUI::pnwCommand(std::vector<std::string> &args) {
             throw CommandParsingException("Invalid orientation in pnw command");
         if (level < 1 || level > 8)
             throw CommandParsingException("Invalid level in pnw command");
+        Player::Orientation pOrient;
 
-        Player::Orientation pOrient = static_cast<Player::Orientation>(orient);
+        if (orient == 0)
+            pOrient = Player::WEST;
+        else if (orient == 1)
+            pOrient = Player::NORTH;
+        else if (orient == 2)
+            pOrient = Player::EAST;
+        else
+            pOrient = Player::SOUTH;
 
         GameDataManager::i().addPlayer(id, x, y, pOrient, level, teamName);
     } catch (const std::exception &e) {
@@ -150,8 +158,17 @@ void ServerGUI::ppoCommand(std::vector<std::string> &args) {
         int orient = std::stoi(args[4]) - 1;
         if (orient < 0 || orient > 3)
             throw CommandParsingException("Invalid orientation in pnw command");
+        Player::Orientation pOrient;
 
-        Player::Orientation pOrient = static_cast<Player::Orientation>(orient);
+        if (orient == 0)
+            pOrient = Player::WEST;
+        else if (orient == 1)
+            pOrient = Player::NORTH;
+        else if (orient == 2)
+            pOrient = Player::EAST;
+        else
+            pOrient = Player::SOUTH;
+
 
         GameDataManager::i().getPlayer(id).setPosition(x, y, pOrient);
     } catch (const std::exception &e) {

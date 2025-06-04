@@ -85,7 +85,7 @@ void Player::setPosition(int newX, int newY, Orientation new0) {
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
         position.Y += 0.5f;
         PlayerMesh->setPosition(position);
-        PlayerMesh->setRotation(Vec3d(0, (new0 + 1) * 90, 0));
+        PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
     }
 }
 

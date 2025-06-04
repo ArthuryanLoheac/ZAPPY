@@ -11,10 +11,10 @@ namespace GUI {
 class Player {
  public:
     enum Orientation {
-        NORTH,
+        WEST,
         SOUTH,
         EAST,
-        WEST
+        NORTH,
     };
 
     Player(int id, int x, int y, Orientation o, int l, const std::string &team,

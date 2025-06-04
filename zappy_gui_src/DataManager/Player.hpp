@@ -43,9 +43,13 @@ class Player {
     void setTeamName(const std::string &newTeamName);
     const std::string &getTeamName() const;
     void setPosition(int newX, int newY, Orientation newO);
+    void setPosition(int newX, int newY);
 
     void setMesh(const std::shared_ptr<Mesh> &mesh);
     std::shared_ptr<Mesh> getMesh() const;
+
+    void setRessource(int id, int value);
+    int getRessource(int id) const;
 
  private:
     int id;
@@ -54,7 +58,9 @@ class Player {
     Orientation o;
     int level;
     std::string teamName;
-    std::mutex mutexDatas;  // Mutex remains unmovable
+    std::mutex mutexDatas;
     std::shared_ptr<Mesh> PlayerMesh;
+
+    std::vector<int> ressources = {0, 0, 0, 0, 0, 0, 0};
 };
 }  // namespace GUI

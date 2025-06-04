@@ -89,6 +89,10 @@ void Player::setPosition(int newX, int newY, Orientation new0) {
     }
 }
 
+void Player::setPosition(int newX, int newY) {
+    setPosition(newX, newY, o);
+}
+
 void Player::setMesh(const std::shared_ptr<Mesh> &mesh) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     PlayerMesh = mesh;
@@ -98,4 +102,18 @@ std::shared_ptr<Mesh> Player::getMesh() const {
     return PlayerMesh;
 }
 
+void Player::setRessource(int id, int value) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    if (id < 0 || id >= static_cast<int>(ressources.size()))
+        throw std::out_of_range("Invalid resource ID : " + std::to_string(id));
+    ressources[id] = value;
+}
+
+int Player::getRessource(int id) const {
+    if (id < 0 || id >= static_cast<int>(ressources.size()))
+        throw std::out_of_range("Invalid resource ID");
+    return ressources[id];
+}
+
 }  // namespace GUI
+

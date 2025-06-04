@@ -7,6 +7,7 @@
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
+#include "ServerGUI.hpp"
 
 void printError(const std::exception &e, std::vector<std::string> &args) {
     std::cerr << "Error: " << e.what() << std::endl;
@@ -184,4 +185,16 @@ void ServerGUI::pdiCommand(std::vector<std::string> &args) {
     GameDataManager::i().removePlayer(id);
 }
 
-}  // namespace GUI
+void ServerGUI::plvCommand(std::vector<std::string> &args) {
+    if (args.size() != 3)
+        throw CommandParsingException("Invalid plv command format");
+    if (args[1].size() < 2)
+        throw CommandParsingException("Invalid id name");
+    int id = std::stoi(args[1].substr(1));
+    int level = std::stoi(args[2]);
+    if (level < 1 || level > 8)
+        throw CommandParsingException("Invalid level in plv command");
+
+    GameDataManager::i().getPlayer(id).setLevel(level);
+}
+} // namespace GUI

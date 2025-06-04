@@ -44,6 +44,7 @@ class ServerGUI {
     void ppoCommand(std::vector<std::string> &args);
     void pinCommand(std::vector<std::string> &args);
     void pdiCommand(std::vector<std::string> &args);
+    void plvCommand(std::vector<std::string> &args);
 
     std::map<std::string,
      void(ServerGUI::*)(std::vector<std::string> &)> commands = {
@@ -59,6 +60,7 @@ class ServerGUI {
         {"PPO", &ServerGUI::ppoCommand},
         {"PIN", &ServerGUI::pinCommand},
         {"PDI", &ServerGUI::pdiCommand},
+        {"PLV", &ServerGUI::plvCommand},
     };
 };
 

@@ -1,4 +1,4 @@
-# 🧾 Project Contribution Guidelines
+# Project Contribution Guidelines
 
 ## 📦 1. Git Commit Convention: Gitmoji
 

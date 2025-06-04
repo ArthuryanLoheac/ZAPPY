@@ -3,6 +3,7 @@
 #include <string>
 #include <mutex>
 #include <memory>
+#include <utility>
 
 #include "tools/MeshImporter.hpp"
 
@@ -18,12 +19,14 @@ class Player {
 
     Player(int id, int x, int y, Orientation o, int l, const std::string &team,
            const std::shared_ptr<Mesh> &pMesh)
-        : id(id), x(x), y(y), o(o), level(l), teamName(team), PlayerMesh(pMesh) {}
+        : id(id), x(x), y(y), o(o), level(l), teamName(team),
+        PlayerMesh(pMesh) {}
 
     // Custom move constructor
     Player(Player &&other) noexcept
         : id(other.id), x(other.x), y(other.y), o(other.o), level(other.level),
-          teamName(std::move(other.teamName)), PlayerMesh(std::move(other.PlayerMesh)) {}
+          teamName(std::move(other.teamName)),
+          PlayerMesh(std::move(other.PlayerMesh)) {}
 
     // Custom move assignment operator
     Player &operator=(Player &&other) noexcept {

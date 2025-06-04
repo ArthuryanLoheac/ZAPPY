@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 
 #include "Connection/ServerGUI.hpp"
@@ -5,8 +6,6 @@
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
-#include "ServerGUI.hpp"
-#include <iostream>
 
 namespace GUI {
 void GUI::ServerGUI::welcomeCommand(std::vector<std::string> &args) {
@@ -137,4 +136,4 @@ void ServerGUI::pnwCommand(std::vector<std::string> &args) {
         std::cerr << "Error parsing pnw command: " << e.what() << std::endl;
     }
 }
-} // namespace GUI
+}  // namespace GUI

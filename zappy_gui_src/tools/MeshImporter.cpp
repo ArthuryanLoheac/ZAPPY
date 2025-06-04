@@ -8,12 +8,12 @@
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "tools/MeshImporter.hpp"
 #include "Graphic/Window/window.hpp"
-#include "MeshImporter.hpp"
 
 #define img std::shared_ptr<irr::video::IImage>
 
-std::shared_ptr<Mesh> MeshImporter::importMesh(std::string meshName, const std::string &teamName,
-        const Vec3d &position, const Vec3d &scale, const Vec3d &rotation) {
+std::shared_ptr<Mesh> MeshImporter::importMesh(std::string meshName,
+const std::string &teamName, const Vec3d &position, const Vec3d &scale,
+const Vec3d &rotation) {
     auto mesh = getMesh(meshName);
     if (!mesh)
         throw GUI::ShaderCompilationException("Error loading mesh");

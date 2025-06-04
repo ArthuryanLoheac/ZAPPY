@@ -79,7 +79,7 @@ void GameDataManager::addPlayer(int id, int x, int y,
         Player::Orientation o, int level, const std::string &teamName) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getTile(x, y).getWorldPos();
-    position.Y += 0.2f;
+    position.Y += 0.5f;
     players.emplace_back(id, x, y, o, level, teamName,
         MeshImporter::i().importMesh("Drone", teamName, position, Vec3d(0.2f)));
 }

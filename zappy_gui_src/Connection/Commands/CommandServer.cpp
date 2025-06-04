@@ -193,25 +193,15 @@ void ServerGUI::pinCommand(std::vector<std::string> &args) {
         int id = std::stoi(args[1].substr(1));
         int x = std::stoi(args[2]);
         int y = std::stoi(args[3]);
-        int food = std::stoi(args[4]);
-        int r1 = std::stoi(args[5]);
-        int r2 = std::stoi(args[6]);
-        int r3 = std::stoi(args[7]);
-        int r4 = std::stoi(args[8]);
-        int r5 = std::stoi(args[9]);
-        int r6 = std::stoi(args[10]);
-        if (food < 0 || r1 < 0 || r2 < 0 || r3 < 0 || r4 < 0 || r5 < 0 || r6 < 0)
-            throw CommandParsingException("Invalid resources in pin command");
 
         Player &p = GameDataManager::i().getPlayer(id);
+        for (int i = 4; i <= 10; i++) {
+            int r = std::stoi(args[i]);
+            if (r < 0)
+                throw CommandParsingException("Invalid resource in pin command");
+            p.setRessource(i - 4, r);
+        }
         p.setPosition(x, y);
-        p.setRessource(0, food);
-        p.setRessource(1, r1);
-        p.setRessource(2, r2);
-        p.setRessource(3, r3);
-        p.setRessource(4, r4);
-        p.setRessource(5, r5);
-        p.setRessource(6, r6);
     } catch (const std::exception &e) {
         printError(e, args);
     }

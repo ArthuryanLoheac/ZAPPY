@@ -45,5 +45,7 @@ class GameDataManager {
 
     void addTeam(const std::string &teamName);
     const std::vector<std::string> &getTeams() const;
+
+    void Update(float deltaTime);
 };
 }  // namespace GUI

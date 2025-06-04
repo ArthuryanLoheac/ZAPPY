@@ -113,4 +113,10 @@ void GameDataManager::removePlayer(int id) {
 const std::vector<std::string> &GameDataManager::getTeams() const {
     return teams;
 }
+
+void GameDataManager::Update(float deltaTime) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    for (auto &player : players)
+        player.Update(deltaTime);
+}
 }  // namespace GUI

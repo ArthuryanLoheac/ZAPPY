@@ -27,6 +27,8 @@ class Player {
     Player &operator=(const Player &) = delete;
     ~Player() {}
 
+    void Init(std::string team, int level);
+
     void setId(int newId);
     int getId() const;
     void setX(int newX);
@@ -50,6 +52,8 @@ class Player {
 
     void destroy();
 
+    void Update(float deltaTime);
+
  private:
     int id;
     int x;
@@ -60,7 +64,10 @@ class Player {
     std::mutex mutexDatas;
     std::shared_ptr<Mesh> PlayerMesh;
     std::vector<std::shared_ptr<Mesh>> PlayerMeshesCylinder;
+    std::vector<Vec3d> PlayerMeshesCylinderRotation;
 
     std::vector<int> ressources = {0, 0, 0, 0, 0, 0, 0};
+
+    const int maxLevel = 8;
 };
 }  // namespace GUI

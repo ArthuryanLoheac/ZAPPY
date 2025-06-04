@@ -37,6 +37,7 @@ void Window::update() {
         if (device->isWindowActive()) {
             updateDeltaTime();
             handleEvent();
+            GameDataManager::i().Update(frameDeltaTime);
             driver->beginScene(true, true,
                 irr::video::SColor(255, 100, 101, 140));
 

@@ -5,7 +5,6 @@
 
 #include "DataManager/Player.hpp"
 #include "DataManager/GameDataManager.hpp"
-#include "Player.hpp"
 #include "Graphic/Window/window.hpp"
 
 namespace GUI {
@@ -13,23 +12,13 @@ namespace GUI {
 Player::Player(int id, int x, int y, Orientation o, int l,
 const std::string &team, const std::shared_ptr<Mesh> &pMesh)
 : id(id), x(x), y(y), o(o), level(l), teamName(team), PlayerMesh(pMesh) {
-    for (int i = 0; i < 8; i++) {
-        PlayerMeshesCylinder.push_back(
-            std::shared_ptr<Mesh>(MeshImporter::i().importMesh("Cylinder", team)));
-        PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
-        PlayerMeshesCylinder[i]->setVisible((i + 1) <= l);
-    }
+    Init(team, l);
 }
 
 Player::Player(Player &&other) noexcept
 : id(other.id), x(other.x), y(other.y), o(other.o), level(other.level),
 teamName(std::move(other.teamName)), PlayerMesh(std::move(other.PlayerMesh))  {
-    for (int i = 0; i < 8; i++) {
-        PlayerMeshesCylinder.push_back(
-            std::shared_ptr<Mesh>(MeshImporter::i().importMesh("Cylinder", teamName)));
-        PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
-        PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);
-    }
+    Init(other.teamName, other.level);
 }
 
 Player &Player::operator=(Player &&other) noexcept {
@@ -43,6 +32,18 @@ Player &Player::operator=(Player &&other) noexcept {
         PlayerMesh = std::move(other.PlayerMesh);
     }
     return *this;
+}
+
+void Player::Init(std::string team, int level) {
+    for (int i = 0; i < maxLevel; i++) {
+        PlayerMeshesCylinder.push_back(
+            std::shared_ptr<Mesh>(MeshImporter::i().importMesh("Cylinder",
+                team)));
+        PlayerMeshesCylinderRotation.push_back(Vec3d(random() % 360,
+            random() % 360, random() % 360));
+        PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
+        PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);
+    }
 }
 
 void Player::setId(int newId) {
@@ -85,7 +86,8 @@ void Player::setLevel(int newLevel) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     level = newLevel;
     for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++)
-        PlayerMeshesCylinder[i]->setVisible((i + 1)  <= static_cast<size_t>(level));
+        PlayerMeshesCylinder[i]->setVisible((i + 1) <=
+            static_cast<size_t>(level));
 }
 
 int Player::getLevel() const {
@@ -111,10 +113,8 @@ void Player::setPosition(int newX, int newY, Orientation new0) {
         position.Y += 0.5f;
         PlayerMesh->setPosition(position);
         PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
-        for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
+        for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++)
             PlayerMeshesCylinder[i]->setPosition(position);
-            PlayerMeshesCylinder[i]->setRotation(Vec3d(0, o * 90, 0));
-        }
     }
 }
 
@@ -155,6 +155,20 @@ void Player::destroy() {
         auto sceneNodeC = GUI::Window::i().smgr->getSceneNodeFromId(idMC);
         if (sceneNodeC)
             GUI::Window::i().smgr->addToDeletionQueue(sceneNodeC);
+    }
+}
+
+void Player::Update(float deltaTime) {
+    // Rotation animation
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
+        if (PlayerMeshesCylinder[i]) {
+            Vec3d rot = PlayerMeshesCylinder[i]->getRotation();
+            PlayerMeshesCylinder[i]->setRotation(
+                Vec3d(rot.X + PlayerMeshesCylinderRotation[i].X * deltaTime,
+                      rot.Y + PlayerMeshesCylinderRotation[i].Y * deltaTime,
+                      rot.Z + PlayerMeshesCylinderRotation[i].Z * deltaTime));
+        }
     }
 }
 

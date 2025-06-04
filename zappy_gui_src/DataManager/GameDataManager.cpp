@@ -50,7 +50,7 @@ void GameDataManager::addTeam(const std::string &teamName) {
     teams.push_back(teamName);
 }
 
-const std::vector<GameDataManager::Egg> &GameDataManager::getEggs() const {
+const std::vector<Egg> &GameDataManager::getEggs() const {
     return eggs;
 }
 
@@ -77,14 +77,5 @@ void GameDataManager::removeEgg(int id) {
 
 const std::vector<std::string> &GameDataManager::getTeams() const {
     return teams;
-}
-
-// ======= Egg ========= //
-
-GameDataManager::Egg::Egg(int id, int team,
-const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &eggMesh)
-: id(id), team(team), EggMesh(eggMesh) {
-    if (!EggMesh)
-        throw GUI::ShaderCompilationException("Error creating egg mesh");
 }
 }  // namespace GUI

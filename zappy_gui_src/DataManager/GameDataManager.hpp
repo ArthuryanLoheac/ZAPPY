@@ -6,24 +6,18 @@
 #include <memory>
 
 #include "DataManager/GameTile.hpp"
+#include "DataManager/Player.hpp"
+#include "DataManager/Egg.hpp"
 
 namespace GUI {
 class GameDataManager {
- public:
-    class Egg {
-     public:
-        int id;
-        int team;
-        std::shared_ptr<Mesh> EggMesh;
-        Egg(int id, int team, const std::shared_ptr<Mesh> &eggMesh);
-    };
-
  private:
     int width;
     int height;
     std::vector<GameTile> tiles;
     std::vector<Egg> eggs;
     std::vector<std::string> teams;
+    std::vector<Player> players;
 
  public:
     std::mutex mutexDatas;

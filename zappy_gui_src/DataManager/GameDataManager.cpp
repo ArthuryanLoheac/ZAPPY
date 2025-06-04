@@ -75,6 +75,42 @@ void GameDataManager::removeEgg(int id) {
     throw ParseException("Invalid ID egg");
 }
 
+void GameDataManager::addPlayer(const Player &player) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    for (auto &p : players) {
+        if (p.getId() == player.getId())
+            throw ParseException("Player with this ID already exists");
+    }
+    players.push_back(player);
+}
+
+Player &GameDataManager::getPlayer(int id) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    for (auto &player : players) {
+        if (player.getId() == id)
+            return player;
+    }
+    throw ParseException("Player with this ID not found");
+}
+
+const std::vector<Player> &GameDataManager::getPlayers() const {
+    return players;
+}
+
+void GameDataManager::removePlayer(int id) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    for (size_t i = 0; i < players.size(); i++) {
+        if (players[i].getId() == id) {
+            int idM = players[i].getMesh()->getID();
+            if (GUI::Window::i().smgr->getSceneNodeFromId(idM))
+                GUI::Window::i().smgr->getSceneNodeFromId(idM)->remove();
+            players.erase(players.begin() + i);
+            return;
+        }
+    }
+    throw ParseException("Invalid ID player");
+}
+
 const std::vector<std::string> &GameDataManager::getTeams() const {
     return teams;
 }

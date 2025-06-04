@@ -2,6 +2,9 @@
 
 #include <string>
 #include <mutex>
+#include <memory>
+
+#include "tools/MeshImporter.hpp"
 
 namespace GUI {
 class Player {
@@ -14,7 +17,7 @@ class Player {
     };
 
     Player();
-    Player(int id, int x, int y, Orientation o, int level, const std::string &teamName)
+    Player(int id, int x, int y, Orientation o, int l, const std::string &team)
         : id(id), x(x), y(y), o(o), level(level), teamName(teamName) {}
     void setId(int newId);
     int getId() const;
@@ -30,6 +33,9 @@ class Player {
     const std::string &getTeamName() const;
     void setPosition(int newX, int newY);
 
+    void setMesh(const std::shared_ptr<Mesh> &mesh);
+    std::shared_ptr<Mesh> getMesh() const;
+
  private:
     int id;
     int x;
@@ -38,5 +44,6 @@ class Player {
     int level;
     std::string teamName;
     std::mutex mutexDatas;
+    std::shared_ptr<Mesh> PlayerMesh;
 };
 }  // namespace GUI

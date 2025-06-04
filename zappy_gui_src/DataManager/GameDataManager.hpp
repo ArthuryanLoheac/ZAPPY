@@ -37,6 +37,11 @@ class GameDataManager {
     void addEgg(int id, int team, int x, int y);
     void removeEgg(int id);
 
+    void addPlayer(const Player &player);
+    Player &getPlayer(int id);
+    const std::vector<Player> &getPlayers() const;
+    void removePlayer(int id);
+
     void addTeam(const std::string &teamName);
     const std::vector<std::string> &getTeams() const;
 };

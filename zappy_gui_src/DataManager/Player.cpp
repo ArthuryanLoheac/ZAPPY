@@ -1,4 +1,8 @@
-#include "Player.hpp"
+#include <memory>
+#include <string>
+#include <mutex>
+
+#include "DataManager/Player.hpp"
 
 namespace GUI {
 Player::Player() {}
@@ -62,4 +66,14 @@ void Player::setPosition(int newX, int newY) {
     x = newX;
     y = newY;
 }
+
+void Player::setMesh(const std::shared_ptr<Mesh> &mesh) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    PlayerMesh = mesh;
+}
+
+std::shared_ptr<Mesh> Player::getMesh() const {
+    return PlayerMesh;
+}
+
 }  // namespace GUI

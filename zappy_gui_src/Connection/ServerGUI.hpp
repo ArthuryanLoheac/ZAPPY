@@ -28,6 +28,8 @@ class ServerGUI {
     void handleCommand();
     void readDatasFromServer();
     std::vector<std::string> parseCommands(std::string &command);
+    void execCommand(std::map<std::string, void (GUI::ServerGUI::*)
+    (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args);
     void sendDatasToServer(const std::string &message);
 
     void welcomeCommand(std::vector<std::string> &args);
@@ -41,6 +43,7 @@ class ServerGUI {
     void pnwCommand(std::vector<std::string> &args);
     void ppoCommand(std::vector<std::string> &args);
     void pinCommand(std::vector<std::string> &args);
+    void pdiCommand(std::vector<std::string> &args);
 
     std::map<std::string,
      void(ServerGUI::*)(std::vector<std::string> &)> commands = {
@@ -55,6 +58,7 @@ class ServerGUI {
         {"PNW", &ServerGUI::pnwCommand},
         {"PPO", &ServerGUI::ppoCommand},
         {"PIN", &ServerGUI::pinCommand},
+        {"PDI", &ServerGUI::pdiCommand},
     };
 };
 

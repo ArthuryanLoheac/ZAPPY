@@ -10,6 +10,7 @@
 
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
+#include "ServerGUI.hpp"
 
 namespace GUI {
 ServerGUI::ServerGUI() {
@@ -31,17 +32,32 @@ void GUI::ServerGUI::handleCommand() {
             args[0][i] = toupper(args[0][i]);
 
         auto it = commands.find(args[0]);
-        if (it != commands.end()) {
+        execCommand(it, args);
+    }
+}
+
+void ServerGUI::execCommand(std::map<std::string, void (GUI::ServerGUI::*)
+(std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
+    if (it != commands.end()) {
+        try {
             (GUI::ServerGUI::i().*(it->second))(args);
             if (GUI::DataManager::i().getDebug())
                 printf("\033[1;32m[OK]\033[0m Received Command: %s\n",
                     args[0].c_str());
-        } else if (GUI::DataManager::i().getErrors()) {
-            printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
-            for (size_t i = 0; i < args.size(); i++)
-                printf(" %s", args[i].c_str());
-            printf("\n");
+        } catch (const std::exception &e) {
+            if (GUI::DataManager::i().getErrors()) {
+                printf("\033[1;31m[ERROR]\033[0m %s : ", e.what());
+                for (size_t i = 0; i < args.size(); i++)
+                    printf(" %s", args[i].c_str());
+                printf("\n");
+            }
         }
+    } else if (GUI::DataManager::i().getErrors()) {
+        // Error
+        printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
+        for (size_t i = 0; i < args.size(); i++)
+            printf(" %s", args[i].c_str());
+        printf("\n");
     }
 }
 
@@ -100,7 +116,9 @@ std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
     return args;
 }
 
-void ServerGUI::sendDatasToServer(const std::string &message) {
+
+void ServerGUI::sendDatasToServer(const std::string &message)
+{
     if (fd.revents & POLLOUT) {
         ssize_t bytes_sent = write(server_fd,
             message.c_str(), message.size());

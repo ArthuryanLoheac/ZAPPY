@@ -26,6 +26,7 @@ Example:
 | :lipstick:        | UI/style changes                       |
 | :rotating_light:  | Fix compilation errors                 |
 | :memo:            | Documentation update                   |
+| :see_no_evil:     | Update .gitignore file(s)              |
 | :construction:    | Work in progress                       |
 | :white_check_mark:| Adding tests                           |
 | :ambulance:       | Hotfix                                 |

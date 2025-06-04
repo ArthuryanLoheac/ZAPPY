@@ -28,7 +28,7 @@ class ServerGUI {
     void handleCommand();
     void readDatasFromServer();
     std::vector<std::string> parseCommands(std::string &command);
-    void execCommand(std::map<std::string, void (GUI::ServerGUI::*)
+    void execCommand(std::map<std::string, void(GUI::ServerGUI::*)
     (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args);
     void sendDatasToServer(const std::string &message);
 

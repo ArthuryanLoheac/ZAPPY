@@ -6,11 +6,11 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include <map>
 #include <cstdio>
 
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
-#include "ServerGUI.hpp"
 
 namespace GUI {
 ServerGUI::ServerGUI() {
@@ -36,7 +36,7 @@ void GUI::ServerGUI::handleCommand() {
     }
 }
 
-void ServerGUI::execCommand(std::map<std::string, void (GUI::ServerGUI::*)
+void ServerGUI::execCommand(std::map<std::string, void(GUI::ServerGUI::*)
 (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
     if (it != commands.end()) {
         try {
@@ -117,8 +117,7 @@ std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
 }
 
 
-void ServerGUI::sendDatasToServer(const std::string &message)
-{
+void ServerGUI::sendDatasToServer(const std::string &message) {
     if (fd.revents & POLLOUT) {
         ssize_t bytes_sent = write(server_fd,
             message.c_str(), message.size());

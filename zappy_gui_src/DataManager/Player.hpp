@@ -2,6 +2,7 @@
 
 #include <string>
 #include <mutex>
+#include <vector>
 #include <memory>
 #include <utility>
 
@@ -29,7 +30,7 @@ class Player {
     Player &operator=(Player &&other) noexcept;
     Player(const Player &) = delete;
     Player &operator=(const Player &) = delete;
-    ~Player() {};
+    ~Player() {}
 
     void setId(int newId);
     int getId() const;

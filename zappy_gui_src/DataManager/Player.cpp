@@ -1,14 +1,14 @@
 #include <memory>
 #include <string>
 #include <mutex>
+#include <utility>
 
 #include "DataManager/Player.hpp"
 #include "DataManager/GameDataManager.hpp"
-#include "Player.hpp"
 
 namespace GUI {
 
-Player &Player::operator=(Player &&other) noexcept{
+Player &Player::operator=(Player &&other) noexcept {
     if (this != &other) {
         id = other.id;
         x = other.x;
@@ -22,7 +22,6 @@ Player &Player::operator=(Player &&other) noexcept{
 }
 
 void Player::setId(int newId) {
-
     std::lock_guard<std::mutex> lock(mutexDatas);
     id = newId;
 }

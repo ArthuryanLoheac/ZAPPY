@@ -1,12 +1,12 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "Connection/ServerGUI.hpp"
 #include "Exceptions/ServerGUIExceptions.hpp"
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
-#include "ServerGUI.hpp"
 
 void printError(const std::exception &e, std::vector<std::string> &args) {
     std::cerr << "Error: " << e.what() << std::endl;

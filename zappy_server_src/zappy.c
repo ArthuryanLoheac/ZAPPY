@@ -58,6 +58,7 @@ void start_server(zappy_t *zappy)
 void down_server(zappy_t *zappy)
 {
     destroy_parser(zappy->parser);
+    destroy_parser_str(zappy->parser_str);
     destroy_server(zappy->server);
     destroy_clients(zappy->clients);
 }

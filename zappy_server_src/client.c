@@ -8,6 +8,7 @@
 #include <poll.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "include/client.h"
 #include "include/command.h"
@@ -38,6 +39,7 @@ void add_client(zappy_t *zappy, int fd)
     server->fds[server->nb_fds].fd = fd;
     server->fds[server->nb_fds].events = POLLIN | POLLOUT;
     server->fds[server->nb_fds].revents = 0;
+    send_data(zappy, fd);
     add_client_data(zappy, fd);
     server->nb_fds++;
 }

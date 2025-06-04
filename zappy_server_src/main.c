@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <time.h>
 
 #include "include/zappy.h"
 #include "include/parser.h"
@@ -35,9 +36,12 @@ int main(int ac, char **av)
 {
     zappy_t *zappy_ptr = &zappy;
 
+    srand(time(NULL));
     zappy_ptr->parser = parse_arguments(ac, av);
+    zappy_ptr->parser_str = parse_str_arguments(ac, av);
     zappy_ptr->server = create_server(zappy_ptr->parser->port);
     zappy_ptr->clients = NULL;
+    zappy_ptr->map = init_starting_map(zappy_ptr, 2);
     setup_down_server();
     start_server(zappy_ptr);
     down_server(zappy_ptr);

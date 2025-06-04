@@ -5,7 +5,6 @@
 #include "DataManager/Player.hpp"
 
 namespace GUI {
-Player::Player() {}
 
 void Player::setId(int newId) {
     std::lock_guard<std::mutex> lock(mutexDatas);

@@ -75,13 +75,15 @@ void GameDataManager::removeEgg(int id) {
     throw ParseException("Invalid ID egg");
 }
 
-void GameDataManager::addPlayer(const Player &player) {
+void GameDataManager::addPlayer(int id, int x, int y,
+        Player::Orientation o, int level, const std::string &teamName) {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    for (auto &p : players) {
-        if (p.getId() == player.getId())
-            throw ParseException("Player with this ID already exists");
-    }
-    players.push_back(player);
+    Vec3d position = getTile(x, y).getWorldPos();
+    position.Y += 0.2f;
+    players.emplace_back(id, x, y, o, level, teamName,
+        MeshImporter::i().importMesh("Drone", position, Vec3d(0.2f)));
+    printf("Player %d added at position (%d, %d) with orientation %d\n",
+           id, x, y, static_cast<int>(o));
 }
 
 Player &GameDataManager::getPlayer(int id) {

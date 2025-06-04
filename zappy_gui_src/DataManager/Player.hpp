@@ -16,9 +16,33 @@ class Player {
         WEST
     };
 
-    Player();
-    Player(int id, int x, int y, Orientation o, int l, const std::string &team)
-        : id(id), x(x), y(y), o(o), level(level), teamName(teamName) {}
+    Player(int id, int x, int y, Orientation o, int l, const std::string &team,
+           const std::shared_ptr<Mesh> &pMesh)
+        : id(id), x(x), y(y), o(o), level(l), teamName(team), PlayerMesh(pMesh) {}
+
+    // Custom move constructor
+    Player(Player &&other) noexcept
+        : id(other.id), x(other.x), y(other.y), o(other.o), level(other.level),
+          teamName(std::move(other.teamName)), PlayerMesh(std::move(other.PlayerMesh)) {}
+
+    // Custom move assignment operator
+    Player &operator=(Player &&other) noexcept {
+        if (this != &other) {
+            id = other.id;
+            x = other.x;
+            y = other.y;
+            o = other.o;
+            level = other.level;
+            teamName = std::move(other.teamName);
+            PlayerMesh = std::move(other.PlayerMesh);
+        }
+        return *this;
+    }
+
+    // Delete copy constructor and copy assignment operator
+    Player(const Player &) = delete;
+    Player &operator=(const Player &) = delete;
+
     void setId(int newId);
     int getId() const;
     void setX(int newX);
@@ -43,7 +67,7 @@ class Player {
     Orientation o;
     int level;
     std::string teamName;
-    std::mutex mutexDatas;
+    std::mutex mutexDatas;  // Mutex remains unmovable
     std::shared_ptr<Mesh> PlayerMesh;
 };
 }  // namespace GUI

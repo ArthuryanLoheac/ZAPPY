@@ -38,6 +38,7 @@ class ServerGUI {
     void sgtCommand(std::vector<std::string> &args);
     void eboCommand(std::vector<std::string> &args);
     void ediCommand(std::vector<std::string> &args);
+    void pnwCommand(std::vector<std::string> &args);
 
     std::map<std::string,
      void(ServerGUI::*)(std::vector<std::string> &)> commands = {
@@ -49,6 +50,7 @@ class ServerGUI {
         {"SGT", &ServerGUI::sgtCommand},
         {"EBO", &ServerGUI::eboCommand},
         {"EDI", &ServerGUI::ediCommand},
+        {"PNW", &ServerGUI::pnwCommand},
     };
 };
 

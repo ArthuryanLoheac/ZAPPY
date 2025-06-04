@@ -5,6 +5,8 @@
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
+#include "ServerGUI.hpp"
+#include <iostream>
 
 namespace GUI {
 void GUI::ServerGUI::welcomeCommand(std::vector<std::string> &args) {
@@ -38,7 +40,7 @@ void GUI::ServerGUI::enwCommand(std::vector<std::string> &args) {
 
         GameDataManager::i().addEgg(id, team, x, y);
     } catch (const std::exception &e) {
-        throw CommandParsingException("Invalid parameters in enw command");
+        std::cerr << "Error parsing pnw command: " << e.what() << std::endl;
     }
 }
 
@@ -67,7 +69,7 @@ void ServerGUI::bctCommand(std::vector<std::string> &args) {
         GameDataManager::i().getTile(x, y).setRessources(food, r1, r2, r3,
             r4, r5, r6);
     } catch (const std::exception &e) {
-        throw CommandParsingException("Invalid parameters in bct command");
+        std::cerr << "Error parsing pnw command: " << e.what() << std::endl;
     }
 }
 
@@ -79,7 +81,7 @@ void ServerGUI::sgtCommand(std::vector<std::string> &args) {
 
         DataManager::i().setFrequency(f);
     } catch (const std::exception &e) {
-        throw CommandParsingException("Invalid parameters in sgt command");
+        std::cerr << "Error parsing pnw command: " << e.what() << std::endl;
     }
 }
 
@@ -93,7 +95,7 @@ void ServerGUI::eboCommand(std::vector<std::string> &args) {
 
         GameDataManager::i().removeEgg(id);
     } catch (const std::exception &e) {
-        throw CommandParsingException("Invalid parameters in ebo command");
+        std::cerr << "Error parsing pnw command: " << e.what() << std::endl;
     }
 }
 
@@ -107,8 +109,32 @@ void ServerGUI::ediCommand(std::vector<std::string> &args) {
 
         GameDataManager::i().removeEgg(id);
     } catch (const std::exception &e) {
-        throw CommandParsingException("Invalid parameters in edi command");
+        std::cerr << "Error parsing pnw command: " << e.what() << std::endl;
     }
 }
 
-}  // namespace GUI
+void ServerGUI::pnwCommand(std::vector<std::string> &args) {
+    if (args.size() != 7)
+        throw CommandParsingException("Invalid pnw command format");
+    if (args[1].size() < 2)
+        throw CommandParsingException("Invalid id name");
+    try {
+        int id = std::stoi(args[1].substr(1));
+        int x = std::stoi(args[2]);
+        int y = std::stoi(args[3]);
+        int orient = std::stoi(args[4]) - 1;
+        int level = std::stoi(args[5]);
+        std::string teamName = args[6];
+        if (orient < 0 || orient > 3)
+            throw CommandParsingException("Invalid orientation in pnw command");
+        if (level < 1 || level > 8)
+            throw CommandParsingException("Invalid level in pnw command");
+
+        Player::Orientation pOrient = static_cast<Player::Orientation>(orient);
+
+        GameDataManager::i().addPlayer(id, x, y, pOrient, level, teamName);
+    } catch (const std::exception &e) {
+        std::cerr << "Error parsing pnw command: " << e.what() << std::endl;
+    }
+}
+} // namespace GUI

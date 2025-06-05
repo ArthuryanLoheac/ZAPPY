@@ -13,7 +13,7 @@ class ServerGUI {
     int nb_fds;
     struct pollfd fd;
     std::string buffer;
-    int updateMapTime = 3;
+    int updateMapTime = 30;
 
     ServerGUI();
     static ServerGUI &i() {

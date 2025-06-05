@@ -33,7 +33,7 @@ void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
             return;
         }
         if (strcmp(args[0], "GRAPHIC") == 0){
-            printf("New graphic client connected\n");
+            send_data(zappy_ptr, client->fd);
             return;
         }
         client->out_buffer = strdup("ko\n");

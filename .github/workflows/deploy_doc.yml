@@ -4,9 +4,10 @@ on:
   pull_request:
     branches:
       - main
-# To remove , for test purpose only
+  push:
+    branches:
+      - main
       - Add-docusorus
-# End to remove
 
 jobs:
   build:

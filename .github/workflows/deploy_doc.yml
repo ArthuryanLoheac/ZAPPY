@@ -20,28 +20,28 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-          cache-dependency-path: docs/package-lock.json
+          cache-dependency-path: ./docs/package-lock.json
 
       - name: Install dependencies
         run: npm ci
-        working-directory: docs
+        working-directory: ./docs
 
       - name: Build website
         run: npm run build
-        working-directory: docs
+        working-directory: ./docs
 
       - name: Configure Git identity
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
+      - name: Override git remote with PAT
+        run: git remote set-url origin https://x-access-token:${{ secrets.DOCU_TOKEN }}@github.com/ArthuryanLoheac/ZAPPY.git
+        working-directory: ./docs
+
       - name: Deploy to GitHub Pages
+        run: npm run deploy
+        working-directory: ./docs
         env:
-          GIT_USER: ${{ github.actor }}
-          GIT_PASS: ${{ secrets.GITHUB_TOKEN }}
-        run : |
-          export GIT_USER=github-actions
-          export USE_SSH=false
-          export GH_TOKEN=${{ secrets.DOCU_TOKEN }}
-          npm run deploy
-        working-directory: docs
+          GIT_USER: github-actions[bot]
+          GH_TOKEN: ${{ secrets.DOCU_TOKEN }}

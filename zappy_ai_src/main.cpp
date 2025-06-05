@@ -22,7 +22,7 @@ void parseArgs(int argc, char **argv, std::string &ip, int &port,
 
     if (argc == 2 && std::string(argv[1]) == "--help") {
         printHelp();
-        return;
+        exit(0);
     }
 
     for (int i = 1; i < argc; ++i) {

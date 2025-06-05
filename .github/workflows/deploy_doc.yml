@@ -11,6 +11,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    working-directory: docs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,11 +21,11 @@ jobs:
           node-version: 18
           cache: 'npm'
       - name: Install dependencies
-        run: cd docs && npm ci
+        run: npm ci
       - name: Build website
-        run: cd docs && npm run build
+        run: npm run build
       - name: Deploy to GitHub Pages
         env:
           GIT_USER: ${{ github.actor }}
           GIT_PASS: ${{ secrets.GITHUB_TOKEN }}
-        run : cd docs && npm run deploy
+        run : npm run deploy

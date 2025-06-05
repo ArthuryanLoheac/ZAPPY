@@ -39,5 +39,9 @@ jobs:
         env:
           GIT_USER: ${{ github.actor }}
           GIT_PASS: ${{ secrets.GITHUB_TOKEN }}
-        run : npm run deploy
+        run : |
+          export GIT_USER=github-actions
+          export USE_SSH=false
+          export GH_TOKEN=${{ secrets.DOCU_TOKEN }}
+          npm run deploy
         working-directory: docs

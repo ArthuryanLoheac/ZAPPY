@@ -33,9 +33,9 @@ void Window::moveCamera(float x, float zoom, float xMove, float yMove) {
     updateZoomCamera(zoom);
 
     irr::core::vector3df pos(
-        distanceFromCenter * radAngleX, 1,
+        distanceFromCenter * radAngleX, 3,
         distanceFromCenter * radAngleZ);
-    cam->setPosition(pos);
+    cam->setPosition(cam->getTarget() + pos);
 }
 
 void Window::updateZoomCamera(float zoom) {

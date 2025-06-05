@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2025
-** ZAPPY
-** File description:
-** Arguments
-*/
-
 #pragma once
 
 #include <exception>

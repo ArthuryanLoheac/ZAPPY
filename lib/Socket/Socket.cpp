@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <stdexcept>
+#include <iostream>
 
 namespace Network {
 
@@ -84,9 +85,7 @@ void Socket::handleCommand() {
         for (size_t i = 0; i < args[0].length(); ++i)
             args[0][i] = toupper(args[0][i]);
 
-        auto it = commands.find(args[0]);
-        if (it != commands.end())
-            it->second(args);
+        listOuputs.push_back(args);
     }
 }
 
@@ -125,10 +124,10 @@ void Socket::sendDatasToServer(const std::string &message) const {
     }
 }
 
-void Socket::addCommand(const std::string &command,
-    void(*func)(std::vector<std::string> &)) {
-    commands[command] = func;
+std::vector<std::vector<std::string>> Socket::getListOutputs() {
+    std::vector<std::vector<std::string>> outputs;
+    outputs.swap(listOuputs);
+    return outputs;
 }
-
 
 }  // namespace Network

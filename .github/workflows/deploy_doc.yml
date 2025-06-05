@@ -1,13 +1,9 @@
 name: Deploy Docusorus to GitHub Pages
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
-      - Add-docusorus
 
 jobs:
   build:

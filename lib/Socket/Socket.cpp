@@ -1,4 +1,4 @@
-#include "lib/Socket/Socket.hpp"
+#include "Socket/Socket.hpp"
 
 #include <unistd.h>
 #include <arpa/inet.h>

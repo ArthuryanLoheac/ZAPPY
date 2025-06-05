@@ -3,7 +3,7 @@
 
 #include "Exceptions/Factory.hpp"
 #include "ForkWrapper/Fork.hpp"
-#include "lib/Socket/Socket.hpp"
+#include "Socket/Socket.hpp"
 #include "Interface/Interface.hpp"
 
 void printHelp() {

@@ -31,12 +31,12 @@ FLAGS_SERVER = -MMD -MP \
 
 FLAGS_GUI =	-MMD -MP \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
-	-std=c++17 -Wall -Wextra -Werror
+	-Ilib -std=c++17 -Wall -Wextra -Werror
 LDFLAGS_GUI = -lIrrlicht
 
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
-	-std=c++20 -Wall -Wextra -Werror
+	-Ilib -std=c++20 -Wall -Wextra -Werror
 
 FLAGS_COMMON = -MMD -MP \
 	$(shell find lib -type d -exec echo -I{} \;) \

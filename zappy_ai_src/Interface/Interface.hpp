@@ -7,6 +7,6 @@
 
 #pragma once
 
-#include "lib/Socket/Socket.hpp"
+#include "Socket/Socket.hpp"
 
 void initSocketCommands(Network::Socket &socket);

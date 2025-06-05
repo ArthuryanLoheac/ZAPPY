@@ -43,10 +43,8 @@ static int parse_int(char *value, int min, int max)
     return num;
 }
 
-static char **parse_teams(char **av, int *index, int ac)
+static int count_teams(char **av, int start, int ac)
 {
-    char **teams = NULL;
-    int start = *index + 1;
     int count = 0;
 
     for (int i = start; i < ac && av[i][0] != '-'; i++)
@@ -55,13 +53,28 @@ static char **parse_teams(char **av, int *index, int ac)
         printf("No team names provided\n");
         display_help();
     }
+    return count;
+}
+
+static char **parse_teams(char **av, int *index, int ac, int *nb_teams)
+{
+    char **teams = NULL;
+    int start = *index + 1;
+    int count = count_teams(av, start, ac);
+
     teams = malloc(sizeof(char *) * (count + 1));
     if (!teams)
         display_error("Failed to allocate memory for team names");
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < count; i++) {
+        if (strcmp(av[start + i], "GRAPHIC") == 0) {
+            printf("The team GRAPHIC is reserved for the graphical client.\n");
+            display_help();
+        }
         teams[i] = av[start + i];
+    }
     teams[count] = NULL;
     *index = start + count - 1;
+    *nb_teams = count;
     return teams;
 }
 
@@ -75,6 +88,7 @@ static parser_t *init_parser(void)
     parser->width = 0;
     parser->height = 0;
     parser->team_names = NULL;
+    parser->nb_teams = 0;
     parser->clients_per_team = 0;
     parser->freq = 100;
     return parser;
@@ -92,7 +106,7 @@ parser_t *parse_arguments(int ac, char **av)
         if (strcmp(av[i], "-y") == 0 && i + 1 < ac)
             parser->height = parse_int(av[i + 1], 10, 42);
         if (strcmp(av[i], "-n") == 0)
-            parser->team_names = parse_teams(av, &i, ac);
+            parser->team_names = parse_teams(av, &i, ac, &parser->nb_teams);
         if (strcmp(av[i], "-c") == 0 && i + 1 < ac)
             parser->clients_per_team = parse_int(av[i + 1], 1, 200);
         if (strcmp(av[i], "-f") == 0 && i + 1 < ac)

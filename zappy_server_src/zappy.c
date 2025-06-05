@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2025
-** main.c
+** zappy.c
 ** File description:
-** Main entry file for the Zappy server
+** Functions to manage the Zappy server
 */
 
 #include <stdio.h>
@@ -14,6 +14,7 @@
 #include "include/zappy.h"
 #include "include/client.h"
 #include "include/command.h"
+#include "include/core.h"
 
 static void check_for_new_client(zappy_t *zappy)
 {
@@ -57,11 +58,14 @@ void start_server(zappy_t *zappy)
 
 void down_server(zappy_t *zappy)
 {
-    if (!zappy || !zappy->server || !zappy->parser || !zappy->map)
+    if (!zappy)
         return;
-    free_starting_map(zappy->map, zappy->parser->height);
-    destroy_parser(zappy->parser);
-    destroy_parser_str(zappy->parser_str);
-    destroy_server(zappy->server);
-    destroy_clients(zappy->clients);
+    if (zappy->parser)
+        destroy_parser(zappy->parser);
+    if (zappy->server)
+        destroy_server(zappy->server);
+    if (zappy->clients)
+        destroy_clients(zappy->clients);
+    if (zappy->core)
+        destroy_core(zappy->core);
 }

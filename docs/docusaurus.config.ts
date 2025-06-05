@@ -88,7 +88,7 @@ const config: Config = {
           items: [
             {
               label: 'Docusorus Tutorial',
-              to: '/docs/intro',
+              to: '/docs/tutorial/intro',
             },
           ],
         }

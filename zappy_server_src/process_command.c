@@ -12,6 +12,7 @@
 static bool is_in_teams(char *get, char **teams)
 {
     char **team_ptr = teams;
+
     if (get == NULL || teams == NULL)
         return false;
     while (*team_ptr != NULL) {
@@ -38,6 +39,6 @@ void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
         }
         client->out_buffer = strdup("ko\n");
     } else {
-        // Handle other commands
+        printf("Command received from client %d: %s\n", client->fd, args[0]);
     }
 }

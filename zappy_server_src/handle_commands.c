@@ -87,7 +87,8 @@ static void free_command_args(char **args)
     free(args);
 }
 
-static void process_command_line(client_t *client, char *command_line, zappy_t *zappy_ptr)
+static void process_command_line(client_t *client, char *command_line,
+    zappy_t *zappy_ptr)
 {
     char **args = parse_command(command_line);
 

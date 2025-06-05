@@ -57,6 +57,9 @@ void start_server(zappy_t *zappy)
 
 void down_server(zappy_t *zappy)
 {
+    if (!zappy || !zappy->server || !zappy->parser || !zappy->map)
+        return;
+    free_starting_map(zappy->map, zappy->parser->height);
     destroy_parser(zappy->parser);
     destroy_parser_str(zappy->parser_str);
     destroy_server(zappy->server);

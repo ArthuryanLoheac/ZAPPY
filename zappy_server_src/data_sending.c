@@ -46,7 +46,7 @@ static void send_sgt(zappy_t *zappy, int fd)
 static void send_bct(starting_map_t *map, int fd, int x, int y)
 {
     char bct_data[21 + get_size(x) + get_size(y)];
-    cell_t cell = map->grid[x][y];
+    cell_t cell = map->grid[y][x];
 
     snprintf(bct_data, sizeof(bct_data), "bct %d %d %d %d %d %d %d %d %d\n",
         x, y, cell.nbr_food, cell.nbr_linemate,

@@ -44,12 +44,16 @@ starting_map_t *init_starting_map(zappy_t *zappy, int num_teams)
     if (!map)
         return NULL;
     map->grid = malloc(sizeof(cell_t *) * zappy->parser->height);
-    if (!map->grid)
+    if (!map->grid) {
+        free(map);
         return NULL;
+    }
     for (int y = 0; y < zappy->parser->height; ++y) {
         map->grid[y] = calloc(zappy->parser->width, sizeof(cell_t));
-        if (!map->grid[y])
+        if (!map->grid[y]) {
+            free_starting_map(map, y);
             return NULL;
+        }
     }
     do_distrib(map, zappy, num_teams);
     return (map);

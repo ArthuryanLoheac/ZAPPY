@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "client.h"
+#include "command.h"
 
 static int count_tokens(char *str)
 {
@@ -86,7 +87,7 @@ static void free_command_args(char **args)
     free(args);
 }
 
-static void process_command_line(client_t *client, char *command_line)
+static void process_command_line(client_t *client, char *command_line, zappy_t *zappy_ptr)
 {
     char **args = parse_command(command_line);
 
@@ -94,12 +95,11 @@ static void process_command_line(client_t *client, char *command_line)
         free_command_args(args);
         return;
     }
-    (void) client;
-    printf("Processing command: %s\n", args[0]);
+    process_command(args, client, zappy_ptr);
     free_command_args(args);
 }
 
-void execute_command(client_t *client)
+void execute_command(client_t *client, zappy_t *zappy_ptr)
 {
     char *newline_pos = NULL;
     char *command_line = NULL;
@@ -111,7 +111,7 @@ void execute_command(client_t *client)
         *newline_pos = '\0';
         command_line = strdup(client->in_buffer);
         if (command_line) {
-            process_command_line(client, command_line);
+            process_command_line(client, command_line, zappy_ptr);
             free(command_line);
         }
         memmove(client->in_buffer, newline_pos + 1,

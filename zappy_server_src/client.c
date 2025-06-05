@@ -23,6 +23,7 @@ static void add_client_data(zappy_t *zappy, int fd)
     client->in_buffer = NULL;
     client->out_buffer = NULL;
     client->is_connected = true;
+    client->is_waiting_id = true;
     client->next = zappy->clients;
     zappy->clients = client;
     append_client_out_buffer(client, "WELCOME\n");
@@ -39,7 +40,6 @@ void add_client(zappy_t *zappy, int fd)
     server->fds[server->nb_fds].fd = fd;
     server->fds[server->nb_fds].events = POLLIN | POLLOUT;
     server->fds[server->nb_fds].revents = 0;
-    send_data(zappy, fd);
     add_client_data(zappy, fd);
     server->nb_fds++;
 }

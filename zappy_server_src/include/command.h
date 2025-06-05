@@ -13,5 +13,6 @@
 void handle_client_command(zappy_t *zappy, int fd);
 void send_client_command(zappy_t *zappy, int fd);
 void append_client_out_buffer(client_t *client, const char *format, ...);
+void execute_command(client_t *client);
 
 #endif /* !COMMAND_H */

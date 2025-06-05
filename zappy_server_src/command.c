@@ -67,6 +67,7 @@ static bool get_client_buffer(client_t *client, int fd)
         client->in_buffer = buffer;
     else
         client->in_buffer = append_client_buffer(client->in_buffer, buffer);
+    execute_command(client);
     return true;
 }
 

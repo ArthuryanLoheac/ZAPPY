@@ -30,6 +30,11 @@ jobs:
         run: npm run build
         working-directory: ./docs
 
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs/build
+
   deploy:
     name: Deploy to GitHub Pages
     needs: build

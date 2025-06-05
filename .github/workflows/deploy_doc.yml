@@ -4,12 +4,9 @@ on:
   push:
     branches:
       - main
-# To remove !
-    branches-ignore:
-      - 'ga-ignore-**'
-  pull_request:
-    branches-ignore:
-      - 'ga-ignore-**'
+# To remove , for test purpose only
+      - Add-docusorus
+# End to remove
 
 jobs:
   deploy:

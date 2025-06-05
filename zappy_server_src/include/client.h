@@ -18,7 +18,6 @@ typedef struct client_s {
     char *out_buffer;
     bool is_connected;
     bool is_waiting_id;
-    char *team;
     struct client_s *next;
 } client_t;
 

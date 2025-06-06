@@ -8,6 +8,7 @@
 #include <poll.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "include/client.h"
 #include "include/command.h"
@@ -22,6 +23,7 @@ static void add_client_data(zappy_t *zappy, int fd)
     client->in_buffer = NULL;
     client->out_buffer = NULL;
     client->is_connected = true;
+    client->is_waiting_id = true;
     client->next = zappy->clients;
     zappy->clients = client;
     append_client_out_buffer(client, "WELCOME\n");

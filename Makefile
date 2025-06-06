@@ -42,6 +42,10 @@ FLAGS_COMMON = -MMD -MP \
 	$(shell find lib -type d -exec echo -I{} \;) \
 	-std=c++20 -Wall -Wextra -Werror
 
+FLAGS_COMMON = -MMD -MP \
+	$(shell find lib -type d -exec echo -I{} \;) \
+	-std=c++20 -Wall -Wextra -Werror
+
 FLAGS_TEST = -lcriterion --coverage -include cstdint
 
 FLAGS_LINTER =	\

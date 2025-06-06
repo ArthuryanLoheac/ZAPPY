@@ -49,7 +49,7 @@ void append_client_out_buffer(client_t *client, const char *format, ...)
             new_buffer);
 }
 
-static bool get_client_buffer(client_t *client, int fd)
+static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
 {
     char *buffer = malloc(sizeof(char) * 1024);
     ssize_t bytes_read = 0;
@@ -67,6 +67,7 @@ static bool get_client_buffer(client_t *client, int fd)
         client->in_buffer = buffer;
     else
         client->in_buffer = append_client_buffer(client->in_buffer, buffer);
+    execute_command(client, zappy);
     return true;
 }
 
@@ -76,7 +77,7 @@ void handle_client_command(zappy_t *zappy, int fd)
 
     while (current != NULL && current->fd != fd)
         current = current->next;
-    if (current == NULL || get_client_buffer(current, fd) == false)
+    if (current == NULL || get_client_buffer(current, fd, zappy) == false)
         return;
 }
 

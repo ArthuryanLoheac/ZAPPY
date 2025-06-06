@@ -52,6 +52,7 @@ void Socket::startSocket() {
 
     fd.fd = server_fd;
     fd.events = POLLIN | POLLOUT;
+    running = true;
 }
 
 void Socket::run() {

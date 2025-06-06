@@ -1,4 +1,4 @@
-# 🧾 Project Contribution Guidelines
+# Project Contribution Guidelines
 
 ## 📦 1. Git Commit Convention: Gitmoji
 
@@ -18,20 +18,21 @@ Example:
 
 ### 🚀 Common Gitmojis
 
-| Emoji             | Use case                               |
-|-------------------|----------------------------------------|
-| :sparkles:        | New feature                            |
-| :bug:             | Bug fix                                |
-| :recycle:         | Code refactor (no new features/fixes)  |
-| :lipstick:        | UI/style changes                       |
-| :rotating_light:  | Fix compilation errors                 |
-| :memo:            | Documentation update                   |
-| :construction:    | Work in progress                       |
-| :white_check_mark:| Adding tests                           |
-| :ambulance:       | Hotfix                                 |
-| :package:         | Adding or updating dependencies        |
-| :fire:            | Removing code or files                 |
-| :tada:            | Initial commit                         |
+| Emoji                 | Use case                               |
+|-----------------------|----------------------------------------|
+| :sparkles:            | New feature                            |
+| :bug:                 | Bug fix                                |
+| :recycle:             | Code refactor (no new features/fixes)  |
+| :lipstick:            | UI/style changes                       |
+| :rotating_light:      | Fix compilation errors                 |
+| :memo:                | Documentation update                   |
+| :construction:        | Work in progress                       |
+| :construction_worker: | Add or update CI build system.         |
+| :white_check_mark:    | Adding tests                           |
+| :ambulance:           | Hotfix                                 |
+| :package:             | Adding or updating dependencies        |
+| :fire:                | Removing code or files                 |
+| :tada:                | Initial commit                         |
 
 Full list available at [https://gitmoji.dev](https://gitmoji.dev)
 

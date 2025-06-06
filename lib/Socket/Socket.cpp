@@ -52,9 +52,13 @@ void Socket::startSocket() {
 
     fd.fd = server_fd;
     fd.events = POLLIN | POLLOUT;
+    running = true;
 }
 
 void Socket::run() {
+    if (!running) {
+        throw std::runtime_error("Socket is not running");
+    }
     if (poll(&fd, 1, -1) == -1)
         throw std::runtime_error("Poll error occurred");
     if (fd.revents & POLLIN)

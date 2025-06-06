@@ -50,39 +50,24 @@ void parseArgs(int argc, char **argv, std::string &ip, int &port,
 
 int initChildProcess(int port, const std::string &ip,
     const std::string &name) {
-    Network::Socket socket;
+    AI::Interface &interface = AI::Interface::i();
     try {
-        socket.startSocket(port, ip);
-    } catch (const std::exception &e) {
-        std::cerr << "Child PID " << getpid() << " error: " << e.what()
-            << std::endl;
+        interface.start(port, ip, name);
+    } catch (const AI::FactoryException &e) {
+        std::cerr << "Error starting interface: " << e.what() << std::endl;
         return 84;
     }
-    initSocketCommands(socket);
     while (true) {
         try {
-            socket.run();
-            auto outputs = socket.getListOutputs();
-            for (const auto &output : outputs) {
-                if (!output.empty()) {
-                    std::cout << "Received command: ";
-                    for (const auto &arg : output) {
-                        std::cout << arg << " ";
-                    }
-                    std::cout << std::endl;
-                    if (output[0] == "WELCOME") {
-                        socket.sendDatasToServer(name + "\n");
-                    }
-                    outputs.clear();
-                }
-            }
-        } catch (const std::exception &e) {
-            std::cerr << "Child PID " << getpid() << " error: " << e.what()
-                << std::endl;
+            interface.run();
+        } catch (const AI::ChildProcessException &e) {
+            std::cerr << "Child process error: " << e.what() << std::endl;
+            return 84;
+        } catch (const AI::FactoryException &e) {
+            std::cerr << "Factory error: " << e.what() << std::endl;
             return 84;
         }
     }
-    (void)name;
     return 0;
 }
 
@@ -97,8 +82,9 @@ int main(int argc, char **argv) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 84;
     }
-    std::cout << "Zappy AI started with team name: " << name
-        << ", port: " << port << ", IP: " << ip << std::endl;
-    Fork(initChildProcess, port, ip, name);
+    Fork fork(initChildProcess, port, ip, name);
+    fork.wait();
+    std::cout << "Child process exited with status: "
+              << fork.getExitStatus() << std::endl;
     return 0;
 }

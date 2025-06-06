@@ -1,10 +1,23 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <csignal>
+#include <chrono>
+#include <thread>
+#include <memory>
 
 #include "Exceptions/Factory.hpp"
 #include "ForkWrapper/Fork.hpp"
 #include "Socket/Socket.hpp"
 #include "Interface/Interface.hpp"
+
+volatile bool needNewChild = false;
+
+void handleSIGUSR1(int signal) {
+    if (signal == SIGUSR1) {
+        needNewChild = true;
+    }
+}
 
 void printHelp() {
     std::cout << "USAGE: ./zappy_ai -p port -n name -h machine" << std::endl <<
@@ -57,6 +70,7 @@ int initChildProcess(int port, const std::string &ip,
         std::cerr << "Error starting interface: " << e.what() << std::endl;
         return 84;
     }
+
     while (true) {
         try {
             interface.run();
@@ -71,6 +85,39 @@ int initChildProcess(int port, const std::string &ip,
     return 0;
 }
 
+int mainLoop(int port, const std::string &ip,
+    const std::string &name) {
+    std::vector<std::unique_ptr<Fork>> childs;
+
+    signal(SIGUSR1, handleSIGUSR1);
+    childs.push_back(std::make_unique<Fork>(initChildProcess, port, ip, name));
+
+    while (true) {
+        for (auto it = childs.begin(); it != childs.end();) {
+            if ((*it)->waitNoHang()) {
+                std::cout << "Child process exited with status: "
+                    << (*it)->getExitStatus() << std::endl;
+                it = childs.erase(it);
+            } else {
+                ++it;
+            }
+        }
+
+        if (needNewChild) {
+            childs.push_back(std::make_unique<Fork>(
+                initChildProcess, port, ip, name));
+            std::cout << "New child process created." << std::endl;
+            needNewChild = false;
+        }
+
+        if (childs.empty()) {
+            return 0;
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+}
+
 int main(int argc, char **argv) {
     std::string ip = "localhost";
     std::string name = "";
@@ -82,9 +129,6 @@ int main(int argc, char **argv) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 84;
     }
-    Fork fork(initChildProcess, port, ip, name);
-    fork.wait();
-    std::cout << "Child process exited with status: "
-              << fork.getExitStatus() << std::endl;
-    return 0;
+
+    return mainLoop(port, ip, name);
 }

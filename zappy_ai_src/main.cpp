@@ -11,14 +11,6 @@
 #include "Socket/Socket.hpp"
 #include "Interface/Interface.hpp"
 
-volatile bool needNewChild = false;
-
-void handleSIGUSR1(int signal) {
-    if (signal == SIGUSR1) {
-        needNewChild = true;
-    }
-}
-
 void printHelp() {
     std::cout << "USAGE: ./zappy_ai -p port -n name -h machine" << std::endl <<
         "  -n name:    name of the team of the AI" << std::endl <<
@@ -88,8 +80,8 @@ int initChildProcess(int port, const std::string &ip,
 int mainLoop(int port, const std::string &ip,
     const std::string &name) {
     std::vector<std::unique_ptr<Fork>> childs;
+    int countForForks = 0;
 
-    signal(SIGUSR1, handleSIGUSR1);
     childs.push_back(std::make_unique<Fork>(initChildProcess, port, ip, name));
 
     while (true) {
@@ -103,17 +95,16 @@ int mainLoop(int port, const std::string &ip,
             }
         }
 
-        if (needNewChild) {
-            childs.push_back(std::make_unique<Fork>(
-                initChildProcess, port, ip, name));
-            std::cout << "New child process created." << std::endl;
-            needNewChild = false;
+        if (countForForks >= 10) {
+            childs.push_back(
+                std::make_unique<Fork>(initChildProcess, port, ip, name));
         }
 
         if (childs.empty()) {
             return 0;
         }
 
+        countForForks++;
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }

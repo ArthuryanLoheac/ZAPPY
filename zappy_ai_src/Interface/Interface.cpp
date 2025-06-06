@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <signal.h>
 
 #include <iostream>
 #include <string>
@@ -91,6 +92,17 @@ void Interface::factoryCommands() {
     commands["WELCOME"] = &Interface::commandWELCOME;
 }
 
+static void sendSIGUSR1(pid_t pid) {
+    if (pid <= 0) {
+        std::cerr << "Invalid PID for SIGUSR1: " << pid << std::endl;
+        return;
+    }
+    if (kill(pid, SIGUSR1) == -1) {
+        std::cerr << "Failed to send SIGUSR1 to PID " << pid
+            << ": " << strerror(errno) << std::endl;
+    }
+}
+
 void Interface::commandWELCOME(std::vector<std::string> &args) {
     if (args.size() != 1) {
         throw AI::CommandArgumentsException("WELCOME",
@@ -126,7 +138,10 @@ void Interface::commandWELCOME(std::vector<std::string> &args) {
                 "Invalid response format");
         }
 
-        Data::i().isDead = std::stoi(followUpCommand[0][0]);
+        int placeRemaining = std::stoi(followUpCommand[0][0]);
+
+        if (placeRemaining > 0)
+            sendSIGUSR1(getppid());
 
         Data::i().mapX = std::stoi(followUpCommand[1][0]);
         Data::i().mapY = std::stoi(followUpCommand[1][1]);

@@ -7,6 +7,7 @@
 #include "Interface/Interface.hpp"
 #include "Exceptions/Factory.hpp"
 #include "Exceptions/Commands.hpp"
+#include "Data/Data.hpp"
 
 namespace AI {
 
@@ -48,10 +49,13 @@ void Interface::run() {
             "Error running socket in child process: " + std::string(e.what()));
     }
     auto outputs = socket.getListOutputs();
-    if (outputs.empty()) {
-        return;
-    }
+
+    if (outputs.empty()) return;
+
     for (const auto &output : outputs) {
+        if (output[0] == "DEAD") {
+            Data::i().isDead = true;
+        }
         outputQueue.push(output);
     }
     try {
@@ -93,18 +97,42 @@ void Interface::commandWELCOME(std::vector<std::string> &args) {
             "Expected no arguments, got " +
             std::to_string(args.size() - 1));
     }
+
     socket.sendDatasToServer(name + "\n");
+
     std::vector<std::vector<std::string>> followUpCommand;
     while (followUpCommand.size() < 2) {
+        socket.run();
         auto output = socket.getListOutputs();
-        if (output.empty()) continue;
-        if (output[0][0] == "ko") {
+
+        if (output.empty()) {
+            continue;
+        }
+
+        if (output[0][0] == "KO") {
             std::cerr << "Too much players connected, try again later."
                 << std::endl;
+            return;
         }
+
         for (const auto &line : output) {
             followUpCommand.push_back(line);
         }
+    }
+
+    try {
+        if (followUpCommand[0].size() < 1 || followUpCommand[1].size() < 2) {
+            throw AI::CommandArgumentsException("WELCOME",
+                "Invalid response format");
+        }
+
+        Data::i().isDead = std::stoi(followUpCommand[0][0]);
+
+        Data::i().mapX = std::stoi(followUpCommand[1][0]);
+        Data::i().mapY = std::stoi(followUpCommand[1][1]);
+    } catch (const std::invalid_argument& e) {
+        throw AI::CommandArgumentsException("WELCOME",
+            "Failed to parse numeric values");
     }
 }
 

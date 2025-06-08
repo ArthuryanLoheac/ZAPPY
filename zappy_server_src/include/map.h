@@ -18,11 +18,16 @@ enum resource_type {
     MENDIANE,
     PHIRAS,
     THYSTAME,
-    EGG
+    EGG,
 };
 
+typedef struct coord_s {
+    int x;
+    int y;
+} coord_t;
+
 typedef struct cell_s {
-    int nb_egg;
+    coord_t coord;
     int nb_food;
     int nb_linemate;
     int nb_deraumere;
@@ -30,6 +35,8 @@ typedef struct cell_s {
     int nb_mendiane;
     int nb_phiras;
     int nb_thystame;
+    int nb_egg;
+    int nb_players;
 } cell_t;
 
 cell_t **create_map(parser_t *parser);

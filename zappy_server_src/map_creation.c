@@ -24,9 +24,11 @@ static void distr_res(cell_t **grid, parser_t *parser,
     }
 }
 
-static void add_egg(starting_map_t *map, int id, const char *team_name, zappy_t *zappy)
+static void add_egg(starting_map_t *map, int id, const char *team_name,
+    zappy_t *zappy)
 {
     egg_t *new_egg = malloc(sizeof(egg_t));
+
     if (!new_egg)
         return;
     new_egg->x = rand() % zappy->parser->width;
@@ -40,9 +42,9 @@ static void add_egg(starting_map_t *map, int id, const char *team_name, zappy_t 
 static void do_distrib(starting_map_t *map, zappy_t *zappy, int num_teams)
 {
     int grid_size = zappy->parser->width * zappy->parser->height;
+    int a = 0;
 
     map->eggs = NULL;
-    int a = 0;
     for (int i = 0; i < num_teams; ++i) {
         for (int j = 0; j < zappy->parser->clients_per_team; ++j)
             add_egg(map, a++, zappy->parser->team_names[i], zappy);
@@ -54,6 +56,14 @@ static void do_distrib(starting_map_t *map, zappy_t *zappy, int num_teams)
     distr_res(map->grid, zappy->parser, grid_size * 0.1, incr_mendiane);
     distr_res(map->grid, zappy->parser, grid_size * 0.08, incr_phiras);
     distr_res(map->grid, zappy->parser, grid_size * 0.05, incr_thystame);
+}
+
+static void init_line(zappy_t *zappy, starting_map_t *map, int y)
+{
+    for (int x = 0; x < zappy->parser->width; ++x) {
+        map->grid[y][x].x = y;
+        map->grid[y][x].y = x;
+    }
 }
 
 starting_map_t *init_starting_map(zappy_t *zappy, int num_teams)
@@ -73,10 +83,7 @@ starting_map_t *init_starting_map(zappy_t *zappy, int num_teams)
             free_starting_map(map, y);
             return NULL;
         }
-        for (int x = 0; x < zappy->parser->width; ++x) {
-            map->grid[y][x].x = y;
-            map->grid[y][x].y = x;
-        }
+        init_line(zappy, map, y);
     }
     do_distrib(map, zappy, num_teams);
     return (map);

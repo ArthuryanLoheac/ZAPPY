@@ -46,6 +46,10 @@ void ServerAI::execCommand(std::map<std::string, void(AI::ServerAI::*)
                     args[0].c_str());
             (AI::ServerAI::i().*(it->second))(args);
         } catch (const std::exception &e) {
+            if (waitingPos || waitingId) {
+                parseWaintingPos(args);
+                return;
+            }
             if (AI::DataManager::i().getErrors()) {
                 printf("\033[1;31m[ERROR]\033[0m %s : ", e.what());
                 for (size_t i = 0; i < args.size(); i++)
@@ -53,16 +57,18 @@ void ServerAI::execCommand(std::map<std::string, void(AI::ServerAI::*)
                 printf("\n");
             }
         }
-    } else if (AI::DataManager::i().getErrors()) {
+    } else  {
         if (waitingPos || waitingId) {
             parseWaintingPos(args);
             return;
         }
-        // Error
-        printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
-        for (size_t i = 0; i < args.size(); i++)
-            printf(" %s", args[i].c_str());
-        printf("\n");
+        if (AI::DataManager::i().getErrors()) {
+            // Error
+            printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
+            for (size_t i = 0; i < args.size(); i++)
+                printf(" %s", args[i].c_str());
+            printf("\n");
+        }
     }
 }
 
@@ -118,6 +124,7 @@ void ServerAI::sendDatasToServer(const std::string &message) {
         }
         if (AI::DataManager::i().getDebug())
             printf("[OK] Sent data: %s\n", message.c_str());
+        lastCommand = message;
     }
 }
 

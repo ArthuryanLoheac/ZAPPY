@@ -13,7 +13,7 @@ class ServerAI {
     int nb_fds;
     struct pollfd fd;
     std::string buffer;
-    int updateMapTime = 30;
+    int updateMapTime = 3;
     bool waitingPos = false;
     bool waitingId = false;
 
@@ -23,6 +23,8 @@ class ServerAI {
         return i;
     }
     void startServer();
+
+    std::string lastCommand;
 
  private:
     void handleCommand();
@@ -36,11 +38,13 @@ class ServerAI {
 
     void welcomeCommand(std::vector<std::string> &args);
     void koCommand(std::vector<std::string> &args);
+    void okCommand(std::vector<std::string> &args);
 
     std::map<std::string,
      void(ServerAI::*)(std::vector<std::string> &)> commands = {
         {"WELCOME", &ServerAI::welcomeCommand},
         {"KO", &ServerAI::koCommand},
+        {"OK", &ServerAI::okCommand},
     };
 };
 

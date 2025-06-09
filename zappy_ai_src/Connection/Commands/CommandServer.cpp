@@ -34,6 +34,9 @@ void ServerAI::parseWaintingPos(std::vector<std::string> &args) {
         DataManager::i().id = id;
         waitingId = false;
     }
+    if (waitingPos == false && waitingId == false) {
+        sendDatasToServer("Forward\n");
+    }
 }
 
 void ServerAI::welcomeCommand(std::vector<std::string> &args) {
@@ -45,7 +48,18 @@ void ServerAI::welcomeCommand(std::vector<std::string> &args) {
 
 void ServerAI::koCommand(std::vector<std::string> &args) {
     (void) args;
-    std::cerr << "\033[31mKO\033[0m" << std::endl;
+    if (lastCommand == "Take food\n") {
+        sendDatasToServer("Forward\n");
+    }
+}
+
+void ServerAI::okCommand(std::vector<std::string> &args) {
+    (void) args;
+    if (lastCommand == "Forward\n") {
+        sendDatasToServer("Take food\n");
+    } else if (lastCommand == "Take food\n") {
+        sendDatasToServer("Forward\n");
+    }
 }
 
 }  // namespace AI

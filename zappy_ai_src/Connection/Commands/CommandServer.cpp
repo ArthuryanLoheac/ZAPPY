@@ -51,13 +51,95 @@ void ServerAI::returnWelcomeCommand(std::vector<std::string> &args)
 void ServerAI::takeFoodCommand(std::vector<std::string> &args)
 {
     (void) args;
-    sendDatasToServer("Forward\n");
+    sendDatasToServer("Look\n");
 }
 
-void ServerAI::forwardCommand(std::vector<std::string> &args)
+void ServerAI::LookCommand(std::vector<std::string> &args)
+{
+    std::vector<std::vector<std::string>> looks = getLook(args);
+
+    int i = 0;
+
+    for (const auto &look : looks) {
+        for (const auto &item : look) {
+            if (!item.empty() && item == "food") {
+                computePathTo(i);
+                break;
+            }
+        }
+        i++;
+    }
+    if (!executeNextPathCommand())
+        sendDatasToServer("Forward\n");
+}
+
+void ServerAI::computePathTo(int i)
+{
+    if (i == -1)
+        return;
+    if (i == 1) {
+        path.push_back("Forward\n");
+        path.push_back("Right\n");
+        path.push_back("Forward\n");
+    } else if (i == 2) {
+        path.push_back("Forward\n");
+    } else if (i == 3) {
+        path.push_back("Forward\n");
+        path.push_back("Left\n");
+        path.push_back("Forward\n");
+    }
+    path.push_back("Take food\n");
+}
+
+bool ServerAI::executeNextPathCommand() {
+    if (path.empty())
+        return false;
+    sendDatasToServer(path.front());
+    path.erase(path.begin());
+    return true;
+}
+
+void ServerAI::depileOrLookCommand(std::vector<std::string> &args)
 {
     (void) args;
-    sendDatasToServer("Take food\n");
+    if (!executeNextPathCommand())
+        sendDatasToServer("Look\n");
+}
+
+std::vector<std::vector<std::string>> ServerAI::getLook(std::vector<std::string> &args)
+{
+    std::string all;
+    std::vector<std::string> looks;
+    std::string delimiter = ",";
+    std::vector<std::vector<std::string>> looksItem;
+    std::string delimiterItem = " ";
+    size_t pos = 0;
+
+    for (const auto &arg : args)
+        all += arg + " ";
+    for (size_t i = 0; i < all.size(); ++i) {
+        if (all[i] == '[' || all[i] == ']')
+            all[i] = ' ';
+    }
+    while ((pos = all.find(delimiter)) != std::string::npos) {
+        looks.push_back(all.substr(0, pos));
+        all.erase(0, pos + delimiter.length());
+    }
+    if (!all.empty())
+        looks.push_back(all);
+    for (const auto &look : looks) {
+        std::vector<std::string> items;
+        size_t posItem = 0;
+        std::string lookItem = look;
+        while ((posItem = lookItem.find(delimiterItem)) != std::string::npos) {
+            items.push_back(lookItem.substr(0, posItem));
+            lookItem.erase(0, posItem + delimiterItem.length());
+        }
+        if (!lookItem.empty())
+            items.push_back(lookItem);
+        looksItem.push_back(items);
+    }
+    return looksItem;
 }
 
 }  // namespace AI

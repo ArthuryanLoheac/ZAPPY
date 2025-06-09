@@ -25,6 +25,7 @@ class ServerAI {
     void startServer();
 
     std::string lastCommand;
+    std::vector<std::string> path;
 
  private:
     void handleCommand();
@@ -40,7 +41,13 @@ class ServerAI {
     void welcomeCommand(std::vector<std::string> &args);
     void returnWelcomeCommand(std::vector<std::string> &args);
     void takeFoodCommand(std::vector<std::string> &args);
-    void forwardCommand(std::vector<std::string> &args);
+    void depileOrLookCommand(std::vector<std::string> &args);
+
+    std::vector<std::vector<std::string>> getLook(std::vector<std::string> &args);
+
+    void LookCommand(std::vector<std::string> &args);
+    void computePathTo(int i);
+    bool executeNextPathCommand();
 
     std::map<std::string,
      void(ServerAI::*)(std::vector<std::string> &)> commands = {
@@ -48,7 +55,10 @@ class ServerAI {
     };
     std::map<std::string,
      void(ServerAI::*)(std::vector<std::string> &)> LastCommands = {
-        {"Forward\n", &ServerAI::forwardCommand},
+        {"Forward\n", &ServerAI::depileOrLookCommand},
+        {"Right\n", &ServerAI::depileOrLookCommand},
+        {"Left\n", &ServerAI::depileOrLookCommand},
+        {"Look\n", &ServerAI::LookCommand},
         {"Take food\n", &ServerAI::takeFoodCommand},
     };
 };

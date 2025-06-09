@@ -56,13 +56,6 @@ void ServerAI::execCommand(std::map<std::string, void(AI::ServerAI::*)
         }
     } else  {
         handleReturnValue(args);
-        if (AI::DataManager::i().getErrors()) {
-            // Error
-            printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
-            for (size_t i = 0; i < args.size(); i++)
-                printf(" %s", args[i].c_str());
-            printf("\n");
-        }
     }
 }
 

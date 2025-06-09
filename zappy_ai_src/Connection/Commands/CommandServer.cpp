@@ -63,7 +63,7 @@ void ServerAI::LookCommand(std::vector<std::string> &args)
     for (const auto &look : looks) {
         for (const auto &item : look) {
             if (!item.empty() && item == "food") {
-                computePathTo(i);
+                computePathTo(i, "Take food\n");
                 break;
             }
         }
@@ -73,7 +73,7 @@ void ServerAI::LookCommand(std::vector<std::string> &args)
         sendDatasToServer("Forward\n");
 }
 
-void ServerAI::computePathTo(int i)
+void ServerAI::computePathTo(int i, std::string lastCommand)
 {
     if (i == -1)
         return;
@@ -87,8 +87,80 @@ void ServerAI::computePathTo(int i)
         path.push_back("Forward\n");
         path.push_back("Left\n");
         path.push_back("Forward\n");
+    } else if (i == 4) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Right\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+    } else if (i == 5) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Right\n");
+        path.push_back("Forward\n");
+    } else if (i == 6) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+    } else if (i == 7) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Left\n");
+        path.push_back("Forward\n");
+    } else if (i == 8) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Left\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+    } else if (i == 9) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Right\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+    } else if (i == 10) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Right\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+    } else if (i == 11) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Right\n");
+        path.push_back("Forward\n");
+    } else if (i == 12) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+    } else if (i == 13) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Left\n");
+        path.push_back("Forward\n");
+    } else if (i == 14) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Left\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+    } else if (i == 15) {
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Left\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
+        path.push_back("Forward\n");
     }
-    path.push_back("Take food\n");
+    if (!lastCommand.empty() && lastCommand != "Look\n")
+        path.push_back(lastCommand);
 }
 
 bool ServerAI::executeNextPathCommand() {

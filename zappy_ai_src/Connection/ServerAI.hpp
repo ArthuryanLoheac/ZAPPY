@@ -46,7 +46,7 @@ class ServerAI {
     std::vector<std::vector<std::string>> getLook(std::vector<std::string> &args);
 
     void LookCommand(std::vector<std::string> &args);
-    void computePathTo(int i);
+    void computePathTo(int i, std::string lastCommand = "");
     bool executeNextPathCommand();
 
     std::map<std::string,

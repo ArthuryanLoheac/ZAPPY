@@ -12,6 +12,12 @@
 
 #include "../include/client.h"
 
+static void look_command(zappy_t *zappy, client_t *client)
+{
+    (void) zappy;
+    add_to_buffer(&client->out_buffer, "[player, food,,,]\n");
+}
+
 static void update_pos_player(zappy_t *zappy, client_t *client)
 {
     char buffer[256];
@@ -26,7 +32,7 @@ static void forward_command(zappy_t *zappy, client_t *client)
     if (client->orientation == 3)
         client->y = (client->y + 1) % zappy->parser->height;
     if (client->orientation == 2)
-        client->x += (client->x + 1) % zappy->parser->width;
+        client->x = (client->x + 1) % zappy->parser->width;
     if (client->orientation == 1) {
         client->y -= 1;
         if (client->y < 0)
@@ -44,6 +50,10 @@ static void forward_command(zappy_t *zappy, client_t *client)
 static void rotate_command(zappy_t *zappy, client_t *client, int i)
 {
     client->orientation += i;
+    if (client->orientation < 1)
+        client->orientation = 4;
+    if (client->orientation > 4)
+        client->orientation = 1;
     update_pos_player(zappy, client);
     add_to_buffer(&client->out_buffer, "ok\n");
 }
@@ -61,6 +71,8 @@ static void exec_command_tick(zappy_t *zappy, client_t *client,
         rotate_command(zappy, client, 1);
     } else if (strcmp(command->command[0], "LEFT") == 0) {
         rotate_command(zappy, client, -1);
+    } else if (strcmp(command->command[0], "LOOK") == 0) {
+        look_command(zappy, client);
     } else {
         add_to_buffer(&client->out_buffer, "ko\n");
     }

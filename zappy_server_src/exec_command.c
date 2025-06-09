@@ -51,6 +51,12 @@ void exec_command(char **args, client_t *client, zappy_t *zappy_ptr)
     set_upper(args);
     if (strcmp(args[0], "FORWARD") == 0) {
         add_command(7, args, client);
+    } else if (strcmp(args[0], "RIGHT") == 0) {
+        add_command(7, args, client);
+    } else if (strcmp(args[0], "LEFT") == 0) {
+        add_command(7, args, client);
+    } else if (strcmp(args[0], "LOOK") == 0) {
+        add_command(7, args, client);
     } else {
         printf("UNKNOWN command %s\n", args[0]);
         client->out_buffer = realloc_strcat(client->out_buffer, "ko\n");

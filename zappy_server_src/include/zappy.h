@@ -34,6 +34,7 @@ typedef struct zappy_s {
     server_t *server;
     client_t *clients;
     starting_map_t *map;
+    int idNextClient;
 } zappy_t;
 
 typedef void (*incr_func_t)(cell_t *);

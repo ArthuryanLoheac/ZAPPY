@@ -23,6 +23,13 @@ static bool is_in_teams(char *get, char **teams)
     return false;
 }
 
+static void handleCommand(char **args, client_t *client, zappy_t *zappy_ptr)
+{
+    if (client == NULL || zappy_ptr == NULL)
+        return;
+    printf("Processing command: %s\n", args[0]);
+}
+
 void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
 {
     if (client == NULL || args == NULL || args[0] == NULL)
@@ -30,8 +37,11 @@ void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
     if (client->is_waiting_id) {
         if (is_in_teams(args[0], zappy_ptr->parser->team_names)){
             client->is_waiting_id = false;
-            client->out_buffer = strdup("ok\n");
-            printf("WAIT| Command received from client %d: %s\n", client->fd, args[0]);
+            client->team_name = strdup(args[0]);
+            char buffer[256];
+            sprintf(buffer, "%d\n%d %d\n", zappy_ptr->idNextClient,
+                    zappy_ptr->parser->width, zappy_ptr->parser->height);
+            client->out_buffer = strdup(buffer);
             return;
         }
         if (strcmp(args[0], "GRAPHIC") == 0){
@@ -40,6 +50,6 @@ void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
         }
         client->out_buffer = strdup("ko\n");
     } else {
-        printf("Command received from client %d: %s\n", client->fd, args[0]);
+        handleCommand(args, client, zappy_ptr);
     }
 }

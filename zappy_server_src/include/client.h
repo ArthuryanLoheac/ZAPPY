@@ -19,6 +19,10 @@ typedef struct client_s {
     bool is_connected;
     bool is_waiting_id;
     struct client_s *next;
+    int id;
+    int x;
+    int y;
+    char *team_name;
 } client_t;
 
 void add_client(zappy_t *zappy, int fd);

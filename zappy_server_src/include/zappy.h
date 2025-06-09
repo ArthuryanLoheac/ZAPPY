@@ -17,7 +17,6 @@ typedef struct cell_s {
     int x;
     int y;
 
-    int nbr_egg;
     int nbr_food;
     int nbr_linemate;
     int nbr_deraumere;
@@ -27,8 +26,17 @@ typedef struct cell_s {
     int nbr_thystame;
 } cell_t;
 
+typedef struct egg_s {
+    int x;
+    int y;
+    int id;
+    char *team_name;
+    struct egg_s *next;
+} egg_t;
+
 typedef struct starting_map_s {
     cell_t **grid;
+    egg_t *eggs;
 } starting_map_t;
 
 typedef struct zappy_s {

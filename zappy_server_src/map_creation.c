@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "include/zappy.h"
 
@@ -23,11 +24,29 @@ static void distr_res(cell_t **grid, parser_t *parser,
     }
 }
 
+static void add_egg(starting_map_t *map, int id, const char *team_name)
+{
+    egg_t *new_egg = malloc(sizeof(egg_t));
+    if (!new_egg)
+        return;
+    new_egg->x = rand() % map->grid[0]->y;
+    new_egg->y = rand() % map->grid[0]->x;
+    new_egg->id = id;
+    new_egg->team_name = strdup(team_name);
+    new_egg->next = map->eggs;
+    map->eggs = new_egg;
+}
+
 static void do_distrib(starting_map_t *map, zappy_t *zappy, int num_teams)
 {
     int grid_size = zappy->parser->width * zappy->parser->height;
 
-    distr_res(map->grid, zappy->parser, 3 * num_teams, incr_egg);
+    map->eggs = NULL;
+    int a = 0;
+    for (int i = 0; i < num_teams; ++i) {
+        for (int j = 0; j < zappy->parser->clients_per_team; ++j)
+            add_egg(map, a++, zappy->parser->team_names[i]);
+    }
     distr_res(map->grid, zappy->parser, grid_size * 0.5, incr_food);
     distr_res(map->grid, zappy->parser, grid_size * 0.3, incr_linemate);
     distr_res(map->grid, zappy->parser, grid_size * 0.15, incr_deraumere);
@@ -70,5 +89,7 @@ void free_starting_map(starting_map_t *map, int height)
     for (int y = 0; y < height; ++y)
         free(map->grid[y]);
     free(map->grid);
+    if (map->eggs)
+        free(map->eggs);
     free(map);
 }

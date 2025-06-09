@@ -59,21 +59,15 @@ static void handleCommand(char **args, client_t *client, zappy_t *zappy_ptr)
     printf("Processing command: %s\n", args[0]);
 }
 
-cell_t *get_next_egg(zappy_t *zappy_ptr)
+static egg_t *return_egg(zappy_t *zappy)
 {
-    for (int i = 0; i < zappy_ptr->parser->height; i++) {
-        for (int j = 0; j < zappy_ptr->parser->width; j++) {
-            if (zappy_ptr->map->grid[i][j].nbr_egg > 0) {
-                return &zappy_ptr->map->grid[i][j];
-            }
-        }
-    }
-    return NULL;
+    return zappy->map->eggs;
 }
+
 
 static void newConnectionPlayer(char **args, client_t *client, zappy_t *zappy_ptr)
 {
-    cell_t *egg = get_next_egg(zappy_ptr);
+    egg_t *egg = return_egg(zappy_ptr);
     char buffer1[1000];
     char buffer2[2000];
 
@@ -84,7 +78,7 @@ static void newConnectionPlayer(char **args, client_t *client, zappy_t *zappy_pt
     client->y = egg->y;
     client->orientation = (rand() % 4) + 1;
     client->team_name = strdup(args[0]);
-    egg->nbr_egg--;
+    zappy_ptr->map->eggs = egg->next;
     client->id = zappy_ptr->idNextClient++;
 
     printf("New player connected: %s (ID: %d)\n", client->team_name, client->id);

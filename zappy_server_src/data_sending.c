@@ -63,13 +63,18 @@ static void send_tna(int fd, char *name)
     write(fd, tna_data, strlen(tna_data));
 }
 
-static int return_coordinate(cell_t cell, int *egg_encoutered,
-    int nbr_egg, int coord)
+static int return_coordinate_egg(starting_map_t *map, cell_t cell,
+    int *egg_encoutered, int nbr_egg, int coord)
 {
-    if (cell.nbr_egg > 0)
-        *egg_encoutered += 1;
-    if (*egg_encoutered == nbr_egg)
-        return (coord);
+    egg_t *current_egg = map->eggs;
+    while (current_egg != NULL) {
+        if (current_egg->x == cell.x && current_egg->y == cell.y) {
+            (*egg_encoutered)++;
+            if (*egg_encoutered == nbr_egg)
+                return (coord);
+        }
+        current_egg = current_egg->next;
+    }
     return (-1);
 }
 
@@ -82,7 +87,7 @@ static int find_x_egg(zappy_t *zappy, int nbr_egg)
     for (int i = 0; i < zappy->parser->height && loop == -1; i++) {
         for (int j = 0; j < zappy->parser->width && loop == -1; j++) {
             cell = zappy->map->grid[i][j];
-            loop = return_coordinate(cell, &egg_encoutered,
+            loop = return_coordinate_egg(zappy->map, cell, &egg_encoutered,
                 nbr_egg, i);
         }
     }
@@ -98,7 +103,7 @@ static int find_y_egg(zappy_t *zappy, int nbr_egg)
     for (int i = 0; i < zappy->parser->height && loop == -1; i++) {
         for (int j = 0; j < zappy->parser->width && loop == -1; j++) {
             cell = zappy->map->grid[i][j];
-            loop = return_coordinate(cell, &egg_encoutered,
+            loop = return_coordinate_egg(zappy->map, cell, &egg_encoutered,
                 nbr_egg, j);
         }
     }

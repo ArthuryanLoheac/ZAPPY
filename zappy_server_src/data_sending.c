@@ -72,6 +72,35 @@ static void send_enw(egg_t *egg, int fd)
     write(fd, enw_data, strlen(enw_data));
 }
 
+static void send_pnw(client_t *c, int fd)
+{
+    char enw_data[256];
+
+    snprintf(enw_data, sizeof(enw_data), "pnw #%d %d %d %d %d %s\n",
+        c->id, c->x, c->y, c->orientation, c->level, c->team_name);
+    write(fd, enw_data, strlen(enw_data));
+}
+
+static void send_pin(client_t *c, int fd)
+{
+    char enw_data[256];
+
+    snprintf(enw_data, sizeof(enw_data), "pin #%d %d %d %d %d %d %d %d %d %d\n",
+        c->id, c->x, c->y, c->nbr_food, c->nbr_linemate,
+        c->nbr_deraumere, c->nbr_sibur, c->nbr_mendiane,
+        c->nbr_phiras, c->nbr_thystame);
+    write(fd, enw_data, strlen(enw_data));
+}
+
+static void send_plv(client_t *c, int fd)
+{
+    char enw_data[256];
+
+    snprintf(enw_data, sizeof(enw_data), "plv #%d %d\n",
+        c->id, c->level);
+    write(fd, enw_data, strlen(enw_data));
+}
+
 void send_data(zappy_t *zappy, int fd)
 {
     send_msz(zappy, fd);
@@ -88,5 +117,12 @@ void send_data(zappy_t *zappy, int fd)
     while (current_egg != NULL) {
         send_enw(current_egg, fd);
         current_egg = current_egg->next;
+    }
+    client_t *current_player = zappy->clients;
+    while (current_player != NULL) {
+        send_pnw(current_player, fd);
+        send_pin(current_player, fd);
+        send_plv(current_player, fd);
+        current_player = current_player->next;
     }
 }

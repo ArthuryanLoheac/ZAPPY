@@ -41,15 +41,12 @@ void ServerAI::execCommand(std::map<std::string, void(AI::ServerAI::*)
 (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
     if (it != commands.end()) {
         try {
-            if (AI::DataManager::i().getDebug() && args[0] != "KO")
+            if (AI::DataManager::i().getDebug())
                 printf("\033[1;32m[OK]\033[0m Received Command: %s\n",
                     args[0].c_str());
             (AI::ServerAI::i().*(it->second))(args);
         } catch (const std::exception &e) {
-            if (waitingPos || waitingId) {
-                parseWaintingPos(args);
-                return;
-            }
+            handleReturnValue(args);
             if (AI::DataManager::i().getErrors()) {
                 printf("\033[1;31m[ERROR]\033[0m %s : ", e.what());
                 for (size_t i = 0; i < args.size(); i++)
@@ -58,10 +55,7 @@ void ServerAI::execCommand(std::map<std::string, void(AI::ServerAI::*)
             }
         }
     } else  {
-        if (waitingPos || waitingId) {
-            parseWaintingPos(args);
-            return;
-        }
+        handleReturnValue(args);
         if (AI::DataManager::i().getErrors()) {
             // Error
             printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
@@ -69,6 +63,17 @@ void ServerAI::execCommand(std::map<std::string, void(AI::ServerAI::*)
                 printf(" %s", args[i].c_str());
             printf("\n");
         }
+    }
+}
+
+void ServerAI::execReturnCommand(std::map<std::string, void(AI::ServerAI::*)
+(std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
+    if (it != LastCommands.end()) {
+        try {
+            (AI::ServerAI::i().*(it->second))(args);
+        } catch (const std::exception &e) {}
+    } else {
+        returnWelcomeCommand(args);
     }
 }
 
@@ -126,6 +131,13 @@ void ServerAI::sendDatasToServer(const std::string &message) {
             printf("[OK] Sent data: %s\n", message.c_str());
         lastCommand = message;
     }
+}
+
+void ServerAI::handleReturnValue(std::vector<std::string> &args)
+{
+    if (args.empty()) return;
+    auto it = LastCommands.find(lastCommand);
+    execReturnCommand(it, args);
 }
 
 } // namespace AI

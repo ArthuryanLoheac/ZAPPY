@@ -31,6 +31,7 @@ void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
         if (is_in_teams(args[0], zappy_ptr->parser->team_names)){
             client->is_waiting_id = false;
             client->out_buffer = strdup("ok\n");
+            printf("WAIT| Command received from client %d: %s\n", client->fd, args[0]);
             return;
         }
         if (strcmp(args[0], "GRAPHIC") == 0){

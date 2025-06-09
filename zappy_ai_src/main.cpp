@@ -1,104 +1,65 @@
+#include <string.h>
+#include <thread>
+#include <cstdio>
 #include <iostream>
 #include <string>
 
-#include "Exceptions/Factory.hpp"
-#include "ForkWrapper/Fork.hpp"
-#include "Socket/Socket.hpp"
-#include "Interface/Interface.hpp"
+#include "DataManager/DataManager.hpp"
+#include "include/AIConnection.hpp"
+#include "Exceptions/DataManagerExceptions.hpp"
 
-void printHelp() {
-    std::cout << "USAGE: ./zappy_ai -p port -n name -h machine" << std::endl <<
-        "  -n name:    name of the team of the AI" << std::endl <<
-        "  -p port:    port number of the zappy server" << std::endl <<
-        "  -h machine: machine name or IP address of the zappy server"
-        << std::endl;
-}
+int checkArgs(int ac, char **av) {
+    int i = 1;
 
-void parseArgs(int argc, char **argv, std::string &ip, int &port,
-    std::string &name) {
-    if (argc < 2) {
-        throw AI::ArgumentsException("Invalid number of arguments.");
-    }
-
-    if (argc == 2 && std::string(argv[1]) == "--help") {
-        printHelp();
-        exit(0);
-    }
-
-    for (int i = 1; i < argc; ++i) {
-        if (std::string(argv[i]) == "-p" && i + 1 < argc) {
-            port = std::stoi(argv[++i]);
-        } else if (std::string(argv[i]) == "-n" && i + 1 < argc) {
-            name = argv[++i];
-        } else if (std::string(argv[i]) == "-h" && i + 1 < argc) {
-            ip = argv[++i];
+    while (i < ac) {
+        if (std::string(av[i]) == "-d") {
+            AI::DataManager::i().setDebug(AI::DataManager::ALL_DEBUG);
+            i++;
+        } else if (std::string(av[i]) == "-e") {
+            AI::DataManager::i().setDebug(AI::DataManager::ERRORS);
+            i++;
+        } else if (std::string(av[i]) == "-p") {
+            AI::DataManager::i().setPort(atoi(av[i + 1]));
+            if (AI::DataManager::i().getPort() < 0 ||
+                AI::DataManager::i().getPort() > 65535)
+                return 84;
+            i+= 2;
+        } else if (std::string(av[i]) == "-h") {
+            AI::DataManager::i().setIp(av[i + 1]);
+            i+= 2;
         } else {
-            throw AI::ArgumentsException("Unknown argument: " +
-                std::string(argv[i]));
-        }
-    }
-
-    if (port <= 0 || port > 65535) {
-        throw
-            AI::ArgumentsException("Port number must be between 1 and 65535.");
-    }
-
-    if (name.empty()) {
-        throw AI::ArgumentsException("Team name cannot be empty.");
-    }
-}
-
-int initChildProcess(int port, const std::string &ip,
-    const std::string &name) {
-    Network::Socket socket;
-    try {
-        socket.startSocket(port, ip);
-    } catch (const std::exception &e) {
-        std::cerr << "Child PID " << getpid() << " error: " << e.what()
-            << std::endl;
-        return 84;
-    }
-    initSocketCommands(socket);
-    while (true) {
-        try {
-            socket.run();
-            auto outputs = socket.getListOutputs();
-            for (const auto &output : outputs) {
-                if (!output.empty()) {
-                    std::cout << "Received command: ";
-                    for (const auto &arg : output) {
-                        std::cout << arg << " ";
-                    }
-                    std::cout << std::endl;
-                    if (output[0] == "WELCOME") {
-                        socket.sendDatasToServer(name + "\n");
-                    }
-                    outputs.clear();
-                }
-            }
-        } catch (const std::exception &e) {
-            std::cerr << "Child PID " << getpid() << " error: " << e.what()
-                << std::endl;
             return 84;
         }
     }
-    (void)name;
     return 0;
 }
 
-int main(int argc, char **argv) {
-    std::string ip = "localhost";
-    std::string name = "";
-    int port = 0;
+int returnHelp() {
+    std::cout << "Usage: ./zappy_ai -h <ip> -p <port> -n <teamName> [-d]\n"
+              << "Options:\n"
+              << "  -h <ip>   : Set the server IP address\n"
+              << "  -p <port> : Set the server port (0-65535)\n"
+              << "  -n <teamName> : Set the team name\n"
+              << "  -d        : Enable debug mode\n";
+    return 84;
+}
+
+int main(int ac, char **av) {
+    int sockfd;
+    AI::DataManager::i();
 
     try {
-        parseArgs(argc, argv, ip, port, name);
-    } catch (const std::exception &e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        if (!(ac == 5 || ac == 6))
+            return returnHelp();
+        if (checkArgs(ac, av) == 84)
+            return returnHelp();
+        if (client_connection(sockfd) == 84)
+            throw AI::ConnectionException("Failed to connect to server");
+    } catch (std::exception &e) {
+        fprintf(stderr, "Error: %s\n", e.what());
         return 84;
     }
-    std::cout << "Zappy AI started with team name: " << name
-        << ", port: " << port << ", IP: " << ip << std::endl;
-    Fork(initChildProcess, port, ip, name);
+    loopClient(sockfd);
+    AI::DataManager::i().setRunning(false);
     return 0;
 }

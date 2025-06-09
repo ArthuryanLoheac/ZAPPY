@@ -9,14 +9,14 @@
 #include <map>
 #include <cstdio>
 
-#include "Connection/ServerGUI.hpp"
+#include "Connection/ServerAI.hpp"
 #include "DataManager/DataManager.hpp"
 
-namespace GUI {
-ServerGUI::ServerGUI() {
+namespace AI {
+ServerAI::ServerAI() {
 }
 
-void GUI::ServerGUI::handleCommand() {
+void AI::ServerAI::handleCommand() {
     while (buffer.find("\n") != std::string::npos) {
         size_t pos = buffer.find("\n");
         std::string command = buffer.substr(0, pos);
@@ -36,23 +36,23 @@ void GUI::ServerGUI::handleCommand() {
     }
 }
 
-void ServerGUI::execCommand(std::map<std::string, void(GUI::ServerGUI::*)
+void ServerAI::execCommand(std::map<std::string, void(AI::ServerAI::*)
 (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
     if (it != commands.end()) {
         try {
-            (GUI::ServerGUI::i().*(it->second))(args);
-            if (GUI::DataManager::i().getDebug())
+            (AI::ServerAI::i().*(it->second))(args);
+            if (AI::DataManager::i().getDebug())
                 printf("\033[1;32m[OK]\033[0m Received Command: %s\n",
                     args[0].c_str());
         } catch (const std::exception &e) {
-            if (GUI::DataManager::i().getErrors()) {
+            if (AI::DataManager::i().getErrors()) {
                 printf("\033[1;31m[ERROR]\033[0m %s : ", e.what());
                 for (size_t i = 0; i < args.size(); i++)
                     printf(" %s", args[i].c_str());
                 printf("\n");
             }
         }
-    } else if (GUI::DataManager::i().getErrors()) {
+    } else if (AI::DataManager::i().getErrors()) {
         // Error
         printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
         for (size_t i = 0; i < args.size(); i++)
@@ -61,7 +61,7 @@ void ServerGUI::execCommand(std::map<std::string, void(GUI::ServerGUI::*)
     }
 }
 
-void ServerGUI::readDatasFromServer() {
+void ServerAI::readDatasFromServer() {
     char bufferTemp[1024];
     ssize_t bytes_read = 0;
 
@@ -74,7 +74,7 @@ void ServerGUI::readDatasFromServer() {
     handleCommand();
 }
 
-void ServerGUI::clockUpdate(std::chrono::_V2::system_clock::time_point &time,
+void ServerAI::clockUpdate(std::chrono::_V2::system_clock::time_point &time,
 std::chrono::_V2::system_clock::time_point &timeNext) {
     time = std::chrono::system_clock::now();
     if (time >= timeNext) {
@@ -83,7 +83,7 @@ std::chrono::_V2::system_clock::time_point &timeNext) {
     }
 }
 
-void ServerGUI::startServer() {
+void ServerAI::startServer() {
     auto time = std::chrono::system_clock::now();
     auto timeNext = time + std::chrono::seconds(updateMapTime);
     int ready = 0;
@@ -92,7 +92,7 @@ void ServerGUI::startServer() {
         clockUpdate(time, timeNext);
 
         ready = poll(
-            &GUI::ServerGUI::i().fd, 1, -1);
+            &AI::ServerAI::i().fd, 1, -1);
         if (ready == -1)
             throw std::runtime_error("Poll error occurred");
         if (fd.revents & POLLIN)
@@ -100,7 +100,7 @@ void ServerGUI::startServer() {
     }
 }
 
-std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
+std::vector<std::string> ServerAI::parseCommands(std::string &command) {
     std::vector<std::string> args;
     size_t pos = 0;
 
@@ -117,16 +117,16 @@ std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
 }
 
 
-void ServerGUI::sendDatasToServer(const std::string &message) {
+void ServerAI::sendDatasToServer(const std::string &message) {
     if (fd.revents & POLLOUT) {
         ssize_t bytes_sent = write(server_fd,
             message.c_str(), message.size());
         if (bytes_sent == -1) {
             throw std::runtime_error("Error sending data to server");
         }
-        if (GUI::DataManager::i().getDebug())
-            printf("Sent data 1: %s\n", message.c_str());
+        if (AI::DataManager::i().getDebug())
+            printf("Sent data 2: %s\n", message.c_str());
     }
 }
 
-}  // namespace GUI
+}  // namespace AI

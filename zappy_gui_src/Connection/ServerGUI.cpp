@@ -125,7 +125,7 @@ void ServerGUI::sendDatasToServer(const std::string &message) {
             throw std::runtime_error("Error sending data to server");
         }
         if (GUI::DataManager::i().getDebug())
-            printf("Sent data 1: %s\n", message.c_str());
+            printf("[OK] Sent data: %s\n", message.c_str());
     }
 }
 

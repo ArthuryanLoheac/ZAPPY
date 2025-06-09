@@ -74,23 +74,10 @@ void ServerAI::readDatasFromServer() {
     handleCommand();
 }
 
-void ServerAI::clockUpdate(std::chrono::_V2::system_clock::time_point &time,
-std::chrono::_V2::system_clock::time_point &timeNext) {
-    time = std::chrono::system_clock::now();
-    if (time >= timeNext) {
-        timeNext = timeNext + std::chrono::seconds(updateMapTime);
-        sendDatasToServer("mct\n");
-    }
-}
-
 void ServerAI::startServer() {
-    auto time = std::chrono::system_clock::now();
-    auto timeNext = time + std::chrono::seconds(updateMapTime);
     int ready = 0;
 
     while (DataManager::i().running) {
-        clockUpdate(time, timeNext);
-
         ready = poll(
             &AI::ServerAI::i().fd, 1, -1);
         if (ready == -1)
@@ -125,7 +112,7 @@ void ServerAI::sendDatasToServer(const std::string &message) {
             throw std::runtime_error("Error sending data to server");
         }
         if (AI::DataManager::i().getDebug())
-            printf("Sent data 2: %s\n", message.c_str());
+            printf("[OK] Sent data: %s\n", message.c_str());
     }
 }
 

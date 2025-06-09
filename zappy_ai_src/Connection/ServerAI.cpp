@@ -11,6 +11,7 @@
 
 #include "Connection/ServerAI.hpp"
 #include "DataManager/DataManager.hpp"
+#include "ServerAI.hpp"
 
 namespace AI {
 ServerAI::ServerAI() {
@@ -53,6 +54,10 @@ void ServerAI::execCommand(std::map<std::string, void(AI::ServerAI::*)
             }
         }
     } else if (AI::DataManager::i().getErrors()) {
+        if (waitingPos || waitingId) {
+            parseWaintingPos(args);
+            return;
+        }
         // Error
         printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
         for (size_t i = 0; i < args.size(); i++)
@@ -116,4 +121,4 @@ void ServerAI::sendDatasToServer(const std::string &message) {
     }
 }
 
-}  // namespace AI
+} // namespace AI

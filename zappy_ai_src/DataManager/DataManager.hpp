@@ -16,15 +16,17 @@ class DataManager {
         ERRORS
     };
 
- private:
     debugMode debug = NO_DEBUG;
 
     int port;
     std::string ip;
-    std::string team;
     int frequency = 0;
 
- public:
+    std::string team;
+    int id;
+    int xMap = 0;
+    int yMap = 0;
+
     bool running = true;
     static DataManager &i() {
         static DataManager i;

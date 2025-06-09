@@ -15,6 +15,7 @@ class ServerAI {
     std::string buffer;
     int updateMapTime = 30;
     bool waitingPos = false;
+    bool waitingId = false;
 
     ServerAI();
     static ServerAI &i() {
@@ -30,6 +31,8 @@ class ServerAI {
     void execCommand(std::map<std::string, void(AI::ServerAI::*)
     (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args);
     void sendDatasToServer(const std::string &message);
+
+    void parseWaintingPos(std::vector<std::string> &args);
 
     void welcomeCommand(std::vector<std::string> &args);
     void koCommand(std::vector<std::string> &args);

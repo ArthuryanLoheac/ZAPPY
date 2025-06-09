@@ -63,68 +63,17 @@ static void send_tna(int fd, char *name)
     write(fd, tna_data, strlen(tna_data));
 }
 
-static int return_coordinate_egg(starting_map_t *map, cell_t cell,
-    int *egg_encoutered, int nbr_egg, int coord)
+static void send_enw(egg_t *egg, int fd)
 {
-    egg_t *current_egg = map->eggs;
-    while (current_egg != NULL) {
-        if (current_egg->x == cell.x && current_egg->y == cell.y) {
-            (*egg_encoutered)++;
-            if (*egg_encoutered == nbr_egg)
-                return (coord);
-        }
-        current_egg = current_egg->next;
-    }
-    return (-1);
-}
-
-static int find_x_egg(zappy_t *zappy, int nbr_egg)
-{
-    cell_t cell;
-    int egg_encoutered = 0;
-    int loop = -1;
-
-    for (int i = 0; i < zappy->parser->height && loop == -1; i++) {
-        for (int j = 0; j < zappy->parser->width && loop == -1; j++) {
-            cell = zappy->map->grid[i][j];
-            loop = return_coordinate_egg(zappy->map, cell, &egg_encoutered,
-                nbr_egg, i);
-        }
-    }
-    return (loop);
-}
-
-static int find_y_egg(zappy_t *zappy, int nbr_egg)
-{
-    cell_t cell;
-    int egg_encoutered = 0;
-    int loop = -1;
-
-    for (int i = 0; i < zappy->parser->height && loop == -1; i++) {
-        for (int j = 0; j < zappy->parser->width && loop == -1; j++) {
-            cell = zappy->map->grid[i][j];
-            loop = return_coordinate_egg(zappy->map, cell, &egg_encoutered,
-                nbr_egg, j);
-        }
-    }
-    return (loop);
-}
-
-static void send_enw(zappy_t *zappy, int fd, int nbr_egg)
-{
-    int x = find_x_egg(zappy, nbr_egg);
-    int y = find_y_egg(zappy, nbr_egg);
-    char enw_data[13 + get_size(nbr_egg) + get_size(x) + get_size(y)];
+    char enw_data[13 + get_size(egg->id) + get_size(egg->x) + get_size(egg->y)];
 
     snprintf(enw_data, sizeof(enw_data), "enw #%d #-1 %d %d\n",
-        nbr_egg - 1, x, y);
+        egg->id, egg->x, egg->y);
     write(fd, enw_data, strlen(enw_data));
 }
 
 void send_data(zappy_t *zappy, int fd)
 {
-    int nbr_egg = 1;
-
     send_msz(zappy, fd);
     send_sgt(zappy, fd);
     for (int i = 0; i < zappy->parser->width; i++) {
@@ -134,9 +83,10 @@ void send_data(zappy_t *zappy, int fd)
     }
     for (int i = 0; zappy->parser->team_names[i] != NULL; i++) {
         send_tna(fd, zappy->parser->team_names[i]);
-        for (int j = 0; j < 3; j++) {
-            send_enw(zappy, fd, nbr_egg);
-            nbr_egg += 1;
-        }
+    }
+    egg_t *current_egg = zappy->map->eggs;
+    while (current_egg != NULL) {
+        send_enw(current_egg, fd);
+        current_egg = current_egg->next;
     }
 }

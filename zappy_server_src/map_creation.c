@@ -24,13 +24,13 @@ static void distr_res(cell_t **grid, parser_t *parser,
     }
 }
 
-static void add_egg(starting_map_t *map, int id, const char *team_name)
+static void add_egg(starting_map_t *map, int id, const char *team_name, zappy_t *zappy)
 {
     egg_t *new_egg = malloc(sizeof(egg_t));
     if (!new_egg)
         return;
-    new_egg->x = rand() % map->grid[0]->y;
-    new_egg->y = rand() % map->grid[0]->x;
+    new_egg->x = rand() % zappy->parser->width;
+    new_egg->y = rand() % zappy->parser->height;
     new_egg->id = id;
     new_egg->team_name = strdup(team_name);
     new_egg->next = map->eggs;
@@ -45,7 +45,7 @@ static void do_distrib(starting_map_t *map, zappy_t *zappy, int num_teams)
     int a = 0;
     for (int i = 0; i < num_teams; ++i) {
         for (int j = 0; j < zappy->parser->clients_per_team; ++j)
-            add_egg(map, a++, zappy->parser->team_names[i]);
+            add_egg(map, a++, zappy->parser->team_names[i], zappy);
     }
     distr_res(map->grid, zappy->parser, grid_size * 0.5, incr_food);
     distr_res(map->grid, zappy->parser, grid_size * 0.3, incr_linemate);

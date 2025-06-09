@@ -68,8 +68,9 @@ static egg_t *return_egg(zappy_t *zappy)
 static void newConnectionPlayer(char **args, client_t *client, zappy_t *zappy_ptr)
 {
     egg_t *egg = return_egg(zappy_ptr);
-    char buffer1[1000];
-    char buffer2[2000];
+    char buffer1[256];
+    char buffer2[256*2];
+    char buffer3[256*3];
 
     if (client == NULL || args == NULL || zappy_ptr == NULL || egg == NULL)
         return;
@@ -83,14 +84,14 @@ static void newConnectionPlayer(char **args, client_t *client, zappy_t *zappy_pt
 
     printf("New player connected: %s (ID: %d)\n", client->team_name, client->id);
 
-    sprintf(buffer1, "pnw #%d %d %d %d %d %s\n", client->id, client->x,
+    sprintf(buffer1, "\npnw #%d %d %d %d %d %s\n", client->id, client->x,
         client->y, client->orientation, client->level, client->team_name);
     sprintf(buffer2, "%spin #%d %d %d %d %d %d %d %d %d %d\n", buffer1,
         client->id, client->x, client->y, client->nbr_food,
         client->nbr_linemate, client->nbr_deraumere, client->nbr_sibur,
         client->nbr_mendiane, client->nbr_phiras, client->nbr_thystame);
-    //sprintf(buffer, "ebo #e\n");
-    send_data_to_graphics(zappy_ptr, buffer2);
+    sprintf(buffer3, "%sebo #%d\n", buffer2, egg->id);
+    send_data_to_graphics(zappy_ptr, buffer3);
 }
 
 void process_command(char **args, client_t *client, zappy_t *zappy_ptr)

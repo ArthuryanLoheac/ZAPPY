@@ -12,6 +12,12 @@
 
     #include "zappy.h"
 
+typedef struct waitingCommands_s {
+    struct waitingCommands_s *next;
+    char **command;
+    int ticksLeft;
+} waitingCommands_t;
+
 typedef struct client_s {
     struct client_s *next;
     // Client information
@@ -21,6 +27,7 @@ typedef struct client_s {
     bool is_connected;
     bool is_waiting_id;
     bool is_graphic;
+    waitingCommands_t *waiting_commands;
 
     // Datas game
     int id;
@@ -40,12 +47,18 @@ typedef struct client_s {
     int nbr_thystame;
 } client_t;
 
+
+void check_ticks(zappy_t *zappy);
+
 void add_client(zappy_t *zappy, int fd);
 void remove_client(zappy_t *zappy, int fd);
 void destroy_clients(client_t *clients);
 void send_data(zappy_t *zappy, client_t *c);
+void send_data_to_graphics(zappy_t *zappy, char *data);
 void add_to_buffer(char **buffer, const char *data);
 int get_size(int nbr);
+void exec_command(char **args, client_t *client, zappy_t *zappy_ptr);
+char *realloc_strcat(char *dest, const char *src);
 
 void send_players_data(zappy_t *zappy, client_t *c);
 void send_eggs_data(zappy_t *zappy, client_t *c);

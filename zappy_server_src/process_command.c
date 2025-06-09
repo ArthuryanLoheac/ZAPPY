@@ -23,7 +23,7 @@ static bool is_in_teams(char *get, char **teams)
     return false;
 }
 
-static char *realloc_strcat(char *dest, const char *src)
+char *realloc_strcat(char *dest, const char *src)
 {
     size_t dest_len = dest ? strlen(dest) : 0;
     size_t src_len = src ? strlen(src) : 0;
@@ -44,20 +44,10 @@ void send_data_to_graphics(zappy_t *zappy, char *data)
     client_t *current_client = zappy->clients;
 
     while (current_client != NULL) {
-        if (current_client->is_graphic) {
-            current_client->out_buffer = current_client->out_buffer ?
-                realloc_strcat(current_client->out_buffer, data) :
-                    strdup(data);
-        }
+        if (current_client->is_graphic)
+            add_to_buffer(&current_client->out_buffer, data);
         current_client = current_client->next;
     }
-}
-
-static void handle_command(char **args, client_t *client, zappy_t *zappy_ptr)
-{
-    if (client == NULL || zappy_ptr == NULL)
-        return;
-    printf("Processing command: %s\n", args[0]);
 }
 
 static egg_t *return_egg(zappy_t *zappy)
@@ -94,19 +84,21 @@ static void new_connection_player(char **args, client_t *client,
     client->y = egg->y;
     client->orientation = (rand() % 4) + 1;
     client->team_name = strdup(args[0]);
+    client->waiting_commands = NULL;
     zappy_ptr->map->eggs = egg->next;
     client->id = zappy_ptr->idNextClient;
     zappy_ptr->idNextClient++;
     send_datas_new_player(client, zappy_ptr, egg);
 }
 
-static void check_graphic(char **args, client_t *client, zappy_t *zappy_ptr)
+static bool check_graphic(char **args, client_t *client, zappy_t *zappy_ptr)
 {
     if (strcmp(args[0], "GRAPHIC") == 0) {
         client->is_graphic = true;
         send_data(zappy_ptr, client);
-        return;
+        return true;
     }
+    return false;
 }
 
 void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
@@ -125,8 +117,9 @@ void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
             new_connection_player(args, client, zappy_ptr);
             return;
         }
-        check_graphic(args, client, zappy_ptr);
+        if (check_graphic(args, client, zappy_ptr))
+            return;
         client->out_buffer = strdup("ko\n");
     } else
-        handle_command(args, client, zappy_ptr);
+        exec_command(args, client, zappy_ptr);
 }

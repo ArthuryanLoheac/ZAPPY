@@ -129,6 +129,7 @@ void ServerAI::sendDatasToServer(const std::string &message) {
 void ServerAI::handleReturnValue(std::vector<std::string> &args)
 {
     if (args.empty()) return;
+    printf("RECEIVED RETURN : %s\n", args[0].c_str());
     auto it = LastCommands.find(lastCommand);
     execReturnCommand(it, args);
 }

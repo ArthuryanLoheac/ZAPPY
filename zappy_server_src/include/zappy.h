@@ -8,6 +8,7 @@
 #ifndef ZAPPY_H
     #define ZAPPY_H
 
+    #include <sys/time.h>
     #include "parser.h"
     #include "server.h"
 
@@ -46,6 +47,10 @@ typedef struct zappy_s {
     client_t *clients;
     starting_map_t *map;
     int idNextClient;
+    float durationTickLeft;
+    float durationTick;
+
+    struct timeval last_time;
 } zappy_t;
 
 typedef void (*incr_func_t)(cell_t *);

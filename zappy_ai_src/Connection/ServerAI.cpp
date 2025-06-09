@@ -40,10 +40,10 @@ void ServerAI::execCommand(std::map<std::string, void(AI::ServerAI::*)
 (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
     if (it != commands.end()) {
         try {
-            (AI::ServerAI::i().*(it->second))(args);
-            if (AI::DataManager::i().getDebug())
+            if (AI::DataManager::i().getDebug() && args[0] != "KO")
                 printf("\033[1;32m[OK]\033[0m Received Command: %s\n",
                     args[0].c_str());
+            (AI::ServerAI::i().*(it->second))(args);
         } catch (const std::exception &e) {
             if (AI::DataManager::i().getErrors()) {
                 printf("\033[1;31m[ERROR]\033[0m %s : ", e.what());

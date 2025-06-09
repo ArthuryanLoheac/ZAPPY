@@ -18,13 +18,16 @@ int checkArgs(int ac, char **av) {
         } else if (std::string(av[i]) == "-e") {
             AI::DataManager::i().setDebug(AI::DataManager::ERRORS);
             i++;
-        } else if (std::string(av[i]) == "-p") {
+        }  else if (std::string(av[i]) == "-n" && i + 1 < ac) {
+            AI::DataManager::i().setTeam(av[i + 1]);
+            i+= 2;
+        } else if (std::string(av[i]) == "-p" && i + 1 < ac) {
             AI::DataManager::i().setPort(atoi(av[i + 1]));
             if (AI::DataManager::i().getPort() < 0 ||
                 AI::DataManager::i().getPort() > 65535)
                 return 84;
             i+= 2;
-        } else if (std::string(av[i]) == "-h") {
+        } else if (std::string(av[i]) == "-h" && i + 1 < ac) {
             AI::DataManager::i().setIp(av[i + 1]);
             i+= 2;
         } else {
@@ -49,7 +52,7 @@ int main(int ac, char **av) {
     AI::DataManager::i();
 
     try {
-        if (!(ac == 5 || ac == 6))
+        if (!(ac == 7 || ac == 8))
             return returnHelp();
         if (checkArgs(ac, av) == 84)
             return returnHelp();

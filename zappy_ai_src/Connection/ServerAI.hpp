@@ -14,6 +14,7 @@ class ServerAI {
     struct pollfd fd;
     std::string buffer;
     int updateMapTime = 30;
+    bool waitingPos = false;
 
     ServerAI();
     static ServerAI &i() {
@@ -31,10 +32,12 @@ class ServerAI {
     void sendDatasToServer(const std::string &message);
 
     void welcomeCommand(std::vector<std::string> &args);
+    void koCommand(std::vector<std::string> &args);
 
     std::map<std::string,
      void(ServerAI::*)(std::vector<std::string> &)> commands = {
-        {"WELCOME", &ServerAI::welcomeCommand}
+        {"WELCOME", &ServerAI::welcomeCommand},
+        {"KO", &ServerAI::koCommand},
     };
 };
 

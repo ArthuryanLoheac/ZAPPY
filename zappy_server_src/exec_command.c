@@ -42,7 +42,7 @@ static void add_command(int duration, char **args, client_t *client, bool *b)
     new_command->ticksLeft = duration;
     new_command->next = client->waiting_commands;
     client->waiting_commands = new_command;
-    b = true;
+    *b = true;
 }
 
 void exec_command(char **args, client_t *client, zappy_t *zappy_ptr)
@@ -53,13 +53,13 @@ void exec_command(char **args, client_t *client, zappy_t *zappy_ptr)
         return;
     set_upper(args);
     if (strcmp(args[0], "FORWARD") == 0)
-        add_command(7, args, client, b);
+        add_command(7, args, client, &b);
     if (strcmp(args[0], "RIGHT") == 0)
-        add_command(7, args, client, b);
+        add_command(7, args, client, &b);
     if (strcmp(args[0], "LEFT") == 0)
-        add_command(7, args, client, b);
+        add_command(7, args, client, &b);
     if (strcmp(args[0], "LOOK") == 0)
-        add_command(7, args, client, b);
+        add_command(7, args, client, &b);
     if (!b) {
         printf("UNKNOWN command %s\n", args[0]);
         client->out_buffer = realloc_strcat(client->out_buffer, "ko\n");

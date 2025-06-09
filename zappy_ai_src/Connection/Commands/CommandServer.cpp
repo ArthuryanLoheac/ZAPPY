@@ -5,7 +5,6 @@
 #include "Connection/ServerAI.hpp"
 #include "Exceptions/ServerAIExceptions.hpp"
 #include "DataManager/DataManager.hpp"
-#include "ServerAI.hpp"
 
 void printError(const std::exception &e, std::vector<std::string> &args) {
     std::cerr << "Error: " << e.what() << std::endl;
@@ -25,14 +24,13 @@ void ServerAI::welcomeCommand(std::vector<std::string> &args) {
     waitingId = true;
 }
 
-void ServerAI::returnWelcomeCommand(std::vector<std::string> &args)
-{
+void ServerAI::returnWelcomeCommand(std::vector<std::string> &args) {
     try {
         if (args.size() == 2 && waitingPos) {
             int xMap = std::stoi(args[0]);
             int yMap = std::stoi(args[1]);
             if (xMap < 0 || yMap < 0)
-                throw AI::CommandParsingException("Invalid position coordinates");
+                throw AI::CommandParsingException("Invalid position coord");
             DataManager::i().xMap = xMap;
             DataManager::i().yMap = yMap;
             waitingPos = false;
@@ -53,14 +51,12 @@ void ServerAI::returnWelcomeCommand(std::vector<std::string> &args)
     }
 }
 
-void ServerAI::takeFoodCommand(std::vector<std::string> &args)
-{
+void ServerAI::takeFoodCommand(std::vector<std::string> &args) {
     (void) args;
     sendDatasToServer("Look\n");
 }
 
-void ServerAI::LookCommand(std::vector<std::string> &args)
-{
+void ServerAI::LookCommand(std::vector<std::string> &args) {
     std::vector<std::vector<std::string>> looks = getLook(args);
 
     int i = 0;
@@ -78,8 +74,7 @@ void ServerAI::LookCommand(std::vector<std::string> &args)
         sendDatasToServer("Forward\n");
 }
 
-void ServerAI::computePathTo(int i, std::string lastCommand)
-{
+void ServerAI::computePathTo(int i, std::string lastCommand) {
     if (i == -1)
         return;
     if (i == 1) {
@@ -176,15 +171,14 @@ bool ServerAI::executeNextPathCommand() {
     return true;
 }
 
-void ServerAI::depileOrLookCommand(std::vector<std::string> &args)
-{
+void ServerAI::depileOrLookCommand(std::vector<std::string> &args) {
     (void) args;
     if (!executeNextPathCommand())
         sendDatasToServer("Look\n");
 }
 
-std::vector<std::vector<std::string>> ServerAI::getLook(std::vector<std::string> &args)
-{
+std::vector<std::vector<std::string>> ServerAI::getLook(
+std::vector<std::string> &args) {
     std::string all;
     std::vector<std::string> looks;
     std::string delimiter = ",";

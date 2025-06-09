@@ -11,7 +11,6 @@
 
 #include "Connection/ServerAI.hpp"
 #include "DataManager/DataManager.hpp"
-#include "ServerAI.hpp"
 
 namespace AI {
 ServerAI::ServerAI() {
@@ -126,12 +125,11 @@ void ServerAI::sendDatasToServer(const std::string &message) {
     }
 }
 
-void ServerAI::handleReturnValue(std::vector<std::string> &args)
-{
+void ServerAI::handleReturnValue(std::vector<std::string> &args) {
     if (args.empty()) return;
     printf("RECEIVED RETURN : %s\n", args[0].c_str());
     auto it = LastCommands.find(lastCommand);
     execReturnCommand(it, args);
 }
 
-} // namespace AI
+}  // namespace AI

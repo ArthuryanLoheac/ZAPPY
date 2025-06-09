@@ -37,6 +37,7 @@ class Socket {
     std::vector<std::vector<std::string>> getListOutputs();
 
     void handleCommand();
+
  private:
     void readDatasFromServer();
 

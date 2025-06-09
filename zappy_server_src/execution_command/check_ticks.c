@@ -61,21 +61,25 @@ static void rotate_command(zappy_t *zappy, client_t *client, int i)
 static void exec_command_tick(zappy_t *zappy, client_t *client,
     waitingCommands_t *command)
 {
-    (void) zappy;
-    (void) client;
     if (!command || command->command == NULL || command->command[0] == NULL)
         return;
     if (strcmp(command->command[0], "FORWARD") == 0) {
         forward_command(zappy, client);
-    } else if (strcmp(command->command[0], "RIGHT") == 0) {
-        rotate_command(zappy, client, 1);
-    } else if (strcmp(command->command[0], "LEFT") == 0) {
-        rotate_command(zappy, client, -1);
-    } else if (strcmp(command->command[0], "LOOK") == 0) {
-        look_command(zappy, client);
-    } else {
-        add_to_buffer(&client->out_buffer, "ko\n");
+        return;
     }
+    if (strcmp(command->command[0], "RIGHT") == 0) {
+        rotate_command(zappy, client, 1);
+        return;
+    }
+    if (strcmp(command->command[0], "LEFT") == 0) {
+        rotate_command(zappy, client, -1);
+        return;
+    }
+    if (strcmp(command->command[0], "LOOK") == 0) {
+        look_command(zappy, client);
+        return;
+    }
+    add_to_buffer(&client->out_buffer, "ko\n");
 }
 
 static void reduce_tick_all(zappy_t *zappy)

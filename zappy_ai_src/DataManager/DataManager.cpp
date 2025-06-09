@@ -1,7 +1,6 @@
 #include <string>
 
 #include "DataManager/DataManager.hpp"
-#include "DataManager.hpp"
 
 namespace AI {
 DataManager::DataManager() {
@@ -34,8 +33,7 @@ std::string DataManager::getTeam() const {
     return team;
 }
 
-void DataManager::setDebug(debugMode isDebug)
-{
+void DataManager::setDebug(debugMode isDebug) {
     debug = isDebug;
 }
 

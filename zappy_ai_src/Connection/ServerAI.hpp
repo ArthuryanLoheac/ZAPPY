@@ -43,7 +43,8 @@ class ServerAI {
     void takeFoodCommand(std::vector<std::string> &args);
     void depileOrLookCommand(std::vector<std::string> &args);
 
-    std::vector<std::vector<std::string>> getLook(std::vector<std::string> &args);
+    std::vector<std::vector<std::string>> getLook(
+        std::vector<std::string> &args);
 
     void LookCommand(std::vector<std::string> &args);
     void computePathTo(int i, std::string lastCommand = "");

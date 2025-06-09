@@ -81,9 +81,6 @@ static void newConnectionPlayer(char **args, client_t *client, zappy_t *zappy_pt
     client->team_name = strdup(args[0]);
     zappy_ptr->map->eggs = egg->next;
     client->id = zappy_ptr->idNextClient++;
-
-    printf("New player connected: %s (ID: %d)\n", client->team_name, client->id);
-
     sprintf(buffer1, "\npnw #%d %d %d %d %d %s\n", client->id, client->x,
         client->y, client->orientation, client->level, client->team_name);
     sprintf(buffer2, "%spin #%d %d %d %d %d %d %d %d %d %d\n", buffer1,
@@ -111,7 +108,7 @@ void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
         }
         if (strcmp(args[0], "GRAPHIC") == 0) {
             client->is_graphic = true;
-            send_data(zappy_ptr, client->fd);
+            send_data(zappy_ptr, client);
             return;
         }
         client->out_buffer = strdup("ko\n");

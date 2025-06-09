@@ -23,7 +23,21 @@ static int get_size(int nbr)
     return (1);
 }
 
-static void send_msz(zappy_t *zappy, int fd)
+static void add_to_buffer(char **buffer, const char *data)
+{
+    size_t old_size = *buffer ? strlen(*buffer) : 0;
+    size_t new_size = old_size + strlen(data) + 1; // +1 for null terminator
+    char *new_buffer = realloc(*buffer, new_size);
+
+    if (new_buffer == NULL) {
+        perror("realloc");
+        exit(EXIT_FAILURE);
+    }
+    *buffer = new_buffer;
+    strcpy(*buffer + old_size, data);
+}
+
+static void send_msz(zappy_t *zappy, client_t *send)
 {
     char msz_data[7 + strlen(zappy->parser_str->width)
         + strlen(zappy->parser_str->height)];
@@ -31,19 +45,19 @@ static void send_msz(zappy_t *zappy, int fd)
     snprintf(msz_data, sizeof(msz_data), "msz %s %s\n",
         zappy->parser_str->width,
         zappy->parser_str->height);
-    write(fd, msz_data, strlen(msz_data));
+    add_to_buffer(&send->out_buffer, msz_data);
 }
 
-static void send_sgt(zappy_t *zappy, int fd)
+static void send_sgt(zappy_t *zappy, client_t *send)
 {
     char sgt_data[6 + strlen(zappy->parser_str->freq)];
 
     snprintf(sgt_data, sizeof(sgt_data), "sgt %s\n",
         zappy->parser_str->freq);
-    write(fd, sgt_data, strlen(sgt_data));
+    add_to_buffer(&send->out_buffer, sgt_data);
 }
 
-static void send_bct(starting_map_t *map, int fd, int x, int y)
+static void send_bct(starting_map_t *map, int x, int y, client_t *send)
 {
     char bct_data[21 + get_size(x) + get_size(y)];
     cell_t cell = map->grid[y][x];
@@ -52,77 +66,79 @@ static void send_bct(starting_map_t *map, int fd, int x, int y)
         x, y, cell.nbr_food, cell.nbr_linemate,
                 cell.nbr_deraumere, cell.nbr_sibur, cell.nbr_mendiane,
                 cell.nbr_phiras, cell.nbr_thystame);
-    write(fd, bct_data, strlen(bct_data));
+    add_to_buffer(&send->out_buffer, bct_data);
 }
 
-static void send_tna(int fd, char *name)
+static void send_tna(char *name, client_t *send)
 {
     char tna_data[6 + strlen(name)];
 
     snprintf(tna_data, sizeof(tna_data), "tna %s\n", name);
-    write(fd, tna_data, strlen(tna_data));
+    add_to_buffer(&send->out_buffer, tna_data);
 }
 
-static void send_enw(egg_t *egg, int fd)
+static void send_enw(egg_t *egg, client_t *send)
 {
     char enw_data[13 + get_size(egg->id) + get_size(egg->x) + get_size(egg->y)];
 
     snprintf(enw_data, sizeof(enw_data), "enw #%d #-1 %d %d\n",
         egg->id, egg->x, egg->y);
-    write(fd, enw_data, strlen(enw_data));
+    add_to_buffer(&send->out_buffer, enw_data);
 }
 
-static void send_pnw(client_t *c, int fd)
+static void send_pnw(client_t *c, client_t *send)
 {
-    char enw_data[256];
+    char pnw_data[256];
 
-    snprintf(enw_data, sizeof(enw_data), "pnw #%d %d %d %d %d %s\n",
+    snprintf(pnw_data, sizeof(pnw_data), "pnw #%d %d %d %d %d %s\n",
         c->id, c->x, c->y, c->orientation, c->level, c->team_name);
-    write(fd, enw_data, strlen(enw_data));
+    add_to_buffer(&send->out_buffer, pnw_data);
 }
 
-static void send_pin(client_t *c, int fd)
+static void send_pin(client_t *c, client_t *send)
 {
-    char enw_data[256];
+    char pin_data[256];
 
-    snprintf(enw_data, sizeof(enw_data), "pin #%d %d %d %d %d %d %d %d %d %d\n",
+    snprintf(pin_data, sizeof(pin_data), "pin #%d %d %d %d %d %d %d %d %d %d\n",
         c->id, c->x, c->y, c->nbr_food, c->nbr_linemate,
         c->nbr_deraumere, c->nbr_sibur, c->nbr_mendiane,
         c->nbr_phiras, c->nbr_thystame);
-    write(fd, enw_data, strlen(enw_data));
+    add_to_buffer(&send->out_buffer, pin_data);
 }
 
-static void send_plv(client_t *c, int fd)
+static void send_plv(client_t *c, client_t *send)
 {
-    char enw_data[256];
+    char plv_data[256];
 
-    snprintf(enw_data, sizeof(enw_data), "plv #%d %d\n",
+    snprintf(plv_data, sizeof(plv_data), "plv #%d %d\n",
         c->id, c->level);
-    write(fd, enw_data, strlen(enw_data));
+    add_to_buffer(&send->out_buffer, plv_data);
 }
 
-void send_data(zappy_t *zappy, int fd)
+void send_data(zappy_t *zappy, client_t *c)
 {
-    send_msz(zappy, fd);
-    send_sgt(zappy, fd);
+    send_msz(zappy, c);
+    send_sgt(zappy, c);
     for (int i = 0; i < zappy->parser->width; i++) {
         for (int j = 0; j < zappy->parser->height; j++) {
-            send_bct(zappy->map, fd, i, j);
+            send_bct(zappy->map, i, j, c);
         }
     }
     for (int i = 0; zappy->parser->team_names[i] != NULL; i++) {
-        send_tna(fd, zappy->parser->team_names[i]);
+        send_tna(zappy->parser->team_names[i], c);
     }
     egg_t *current_egg = zappy->map->eggs;
     while (current_egg != NULL) {
-        send_enw(current_egg, fd);
+        send_enw(current_egg, c);
         current_egg = current_egg->next;
     }
     client_t *current_player = zappy->clients;
     while (current_player != NULL) {
-        send_pnw(current_player, fd);
-        send_pin(current_player, fd);
-        send_plv(current_player, fd);
+        if (!current_player->is_graphic) {
+            send_pnw(current_player, c);
+            send_pin(current_player, c);
+            send_plv(current_player, c);
+        }
         current_player = current_player->next;
     }
 }

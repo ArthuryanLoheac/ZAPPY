@@ -45,9 +45,12 @@ void start_server(zappy_t *zappy)
     server_t *server = zappy->server;
     int ready = 0;
 
+    zappy->durationTick = 1.0 / zappy->parser->freq;
+    zappy->durationTickLeft = zappy->durationTick;
     while (1) {
+        check_ticks(zappy);
         ready = poll(server->fds, server->nb_fds,
-            zappy->parser->freq * 1000);
+            (1.0 / zappy->parser->freq) * 1000);
         if (ready == -1)
             display_error("Poll error occurred");
         check_for_new_client(zappy);

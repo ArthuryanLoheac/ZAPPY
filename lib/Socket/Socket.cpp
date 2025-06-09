@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <string>
+#include <cstdio>
 #include <stdexcept>
 #include <iostream>
 
@@ -15,7 +16,7 @@ Socket::Socket(): port(0), ip(), server_fd(0), nb_fds(0), fd(), running(false) {
 }
 
 Socket::Socket(const int port, const std::string &ip) : port(port), ip(ip),
-    server_fd(0), nb_fds(0), fd(), running(false) {
+server_fd(0), nb_fds(0), fd(), running(false) {
 }
 
 Socket::~Socket() {
@@ -86,6 +87,8 @@ void Socket::handleCommand() {
         for (size_t i = 0; i < args[0].length(); ++i)
             args[0][i] = toupper(args[0][i]);
 
+        printf("C : %s\n", args[0].c_str());
+
         listOuputs.push_back(args);
     }
 }
@@ -99,8 +102,8 @@ void Socket::readDatasFromServer() {
     if (bytes_read <= 0)
         throw std::runtime_error("Error reading from server");
     bufferTemp[bytes_read] = '\0';
+    printf("Received data: %s\n", bufferTemp);
     buffer.append(bufferTemp);
-    handleCommand();
 }
 
 std::vector<std::string> Socket::parseCommands(std::string &command) {
@@ -120,6 +123,7 @@ void Socket::sendDatasToServer(const std::string &message) const {
         const ssize_t bytes_sent = write(server_fd,
             message.c_str(), message.size());
         if (bytes_sent == -1) {
+            printf("ERROR Sending message\n");
             throw std::runtime_error("Error sending data to server");
         }
     }

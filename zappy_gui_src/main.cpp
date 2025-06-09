@@ -19,13 +19,13 @@ int checkArgs(int ac, char **av) {
         } else if (std::string(av[i]) == "-e") {
             GUI::DataManager::i().setDebug(GUI::DataManager::ERRORS);
             i++;
-        } else if (std::string(av[i]) == "-p") {
+        } else if (std::string(av[i]) == "-p" && i + 1 < ac) {
             GUI::DataManager::i().setPort(atoi(av[i + 1]));
             if (GUI::DataManager::i().getPort() < 0 ||
                 GUI::DataManager::i().getPort() > 65535)
                 return 84;
             i+= 2;
-        } else if (std::string(av[i]) == "-h") {
+        } else if (std::string(av[i]) == "-h" && i + 1 < ac) {
             GUI::DataManager::i().setIp(av[i + 1]);
             i+= 2;
         } else {

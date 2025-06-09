@@ -14,6 +14,9 @@
 typedef struct client_s client_t;
 
 typedef struct cell_s {
+    int x;
+    int y;
+
     int nbr_egg;
     int nbr_food;
     int nbr_linemate;

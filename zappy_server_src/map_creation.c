@@ -54,6 +54,10 @@ starting_map_t *init_starting_map(zappy_t *zappy, int num_teams)
             free_starting_map(map, y);
             return NULL;
         }
+        for (int x = 0; x < zappy->parser->width; ++x) {
+            map->grid[y][x].x = y;
+            map->grid[y][x].y = x;
+        }
     }
     do_distrib(map, zappy, num_teams);
     return (map);

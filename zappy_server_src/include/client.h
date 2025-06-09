@@ -13,16 +13,31 @@
     #include "zappy.h"
 
 typedef struct client_s {
+    struct client_s *next;
+    // Client information
     int fd;
     char *in_buffer;
     char *out_buffer;
     bool is_connected;
     bool is_waiting_id;
-    struct client_s *next;
+    bool is_graphic;
+
+    // Datas game
     int id;
     int x;
     int y;
+    int orientation;
+    int level;
     char *team_name;
+
+    // Inventory
+    int nbr_food;
+    int nbr_linemate;
+    int nbr_deraumere;
+    int nbr_sibur;
+    int nbr_mendiane;
+    int nbr_phiras;
+    int nbr_thystame;
 } client_t;
 
 void add_client(zappy_t *zappy, int fd);

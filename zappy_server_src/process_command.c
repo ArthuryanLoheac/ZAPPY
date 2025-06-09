@@ -65,7 +65,7 @@ static egg_t *return_egg(zappy_t *zappy)
     return zappy->map->eggs;
 }
 
-static void send_datas_new_player(char **args, client_t *client,
+static void send_datas_new_player(client_t *client,
     zappy_t *zappy_ptr, egg_t *egg)
 {
     char buffer1[256];
@@ -97,7 +97,7 @@ static void new_connection_player(char **args, client_t *client,
     zappy_ptr->map->eggs = egg->next;
     client->id = zappy_ptr->idNextClient;
     zappy_ptr->idNextClient++;
-    send_datas_new_player(args, client, zappy_ptr, egg);
+    send_datas_new_player(client, zappy_ptr, egg);
 }
 
 static void check_graphic(char **args, client_t *client, zappy_t *zappy_ptr)

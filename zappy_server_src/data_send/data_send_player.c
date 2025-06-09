@@ -9,8 +9,8 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "include/client.h"
-#include "include/command.h"
+#include "../include/client.h"
+#include "../include/command.h"
 
 static void send_pnw(client_t *c, client_t *send)
 {

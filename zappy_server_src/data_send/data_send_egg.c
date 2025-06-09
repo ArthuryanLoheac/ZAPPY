@@ -9,8 +9,8 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "include/client.h"
-#include "include/command.h"
+#include "../include/client.h"
+#include "../include/command.h"
 
 static void send_enw(egg_t *egg, client_t *send)
 {
@@ -22,7 +22,7 @@ static void send_enw(egg_t *egg, client_t *send)
     add_to_buffer(&send->out_buffer, enw_data);
 }
 
-static void send_eggs_data(zappy_t *zappy, client_t *c)
+void send_eggs_data(zappy_t *zappy, client_t *c)
 {
     egg_t *current_egg = zappy->map->eggs;
 

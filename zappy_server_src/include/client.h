@@ -44,8 +44,10 @@ void add_client(zappy_t *zappy, int fd);
 void remove_client(zappy_t *zappy, int fd);
 void destroy_clients(client_t *clients);
 void send_data(zappy_t *zappy, client_t *c);
+void add_to_buffer(char **buffer, const char *data);
+int get_size(int nbr);
 
 void send_players_data(zappy_t *zappy, client_t *c);
-static void send_eggs_data(zappy_t *zappy, client_t *c);
+void send_eggs_data(zappy_t *zappy, client_t *c);
 
 #endif /* !CLIENT_H */

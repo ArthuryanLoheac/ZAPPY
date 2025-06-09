@@ -9,33 +9,8 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "include/client.h"
-#include "include/command.h"
-
-static int get_size(int nbr)
-{
-    if (nbr >= 1000)
-        return (4);
-    if (nbr >= 100)
-        return (3);
-    if (nbr >= 10)
-        return (2);
-    return (1);
-}
-
-static void add_to_buffer(char **buffer, const char *data)
-{
-    size_t old_size = *buffer ? strlen(*buffer) : 0;
-    size_t new_size = old_size + strlen(data) + 1;
-    char *new_buffer = realloc(*buffer, new_size);
-
-    if (new_buffer == NULL) {
-        perror("realloc");
-        exit(EXIT_FAILURE);
-    }
-    *buffer = new_buffer;
-    strcpy(*buffer + old_size, data);
-}
+#include "../include/client.h"
+#include "../include/command.h"
 
 static void send_msz(zappy_t *zappy, client_t *send)
 {
@@ -91,4 +66,29 @@ void send_data(zappy_t *zappy, client_t *c)
     }
     send_eggs_data(zappy, c);
     send_players_data(zappy, c);
+}
+
+void add_to_buffer(char **buffer, const char *data)
+{
+    size_t old_size = *buffer ? strlen(*buffer) : 0;
+    size_t new_size = old_size + strlen(data) + 1;
+    char *new_buffer = realloc(*buffer, new_size);
+
+    if (new_buffer == NULL) {
+        perror("realloc");
+        exit(EXIT_FAILURE);
+    }
+    *buffer = new_buffer;
+    strcpy(*buffer + old_size, data);
+}
+
+int get_size(int nbr)
+{
+    if (nbr >= 1000)
+        return (4);
+    if (nbr >= 100)
+        return (3);
+    if (nbr >= 10)
+        return (2);
+    return (1);
 }

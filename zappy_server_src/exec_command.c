@@ -45,20 +45,28 @@ static void add_command(int duration, char **args, client_t *client, bool *b)
     *b = true;
 }
 
+int get_size_commands(waitingCommands_t *commands)
+{
+    int size = 0;
+
+    while (commands) {
+        size++;
+        commands = commands->next;
+    }
+    return size;
+}
+
 void exec_command(char **args, client_t *client, zappy_t *zappy_ptr)
 {
     bool b = false;
 
     if (client == NULL || zappy_ptr == NULL)
         return;
+    if (get_size_commands(client->waiting_commands) >= 10)
+        return;
     set_upper(args);
-    if (strcmp(args[0], "FORWARD") == 0)
-        add_command(7, args, client, &b);
-    if (strcmp(args[0], "RIGHT") == 0)
-        add_command(7, args, client, &b);
-    if (strcmp(args[0], "LEFT") == 0)
-        add_command(7, args, client, &b);
-    if (strcmp(args[0], "LOOK") == 0)
+    if (strcmp(args[0], "FORWARD") == 0 || strcmp(args[0], "RIGHT") == 0 ||
+        strcmp(args[0], "LEFT") == 0 || strcmp(args[0], "LOOK") == 0)
         add_command(7, args, client, &b);
     if (!b) {
         printf("UNKNOWN command %s\n", args[0]);

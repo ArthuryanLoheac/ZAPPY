@@ -154,6 +154,9 @@ coding_style: fclean
 	cat coding-style-reports.log
 	rm -f coding-style-reports.log
 
+doxygen:
+	doxygen Doxyfile
+
 # ============= TESTS ============= #
 
 unit_tests:

@@ -1,0 +1,18 @@
+var searchData=
+[
+  ['ic_20unit_0',['Changes to PostCSS IC Unit',['../md_docs_2node__modules_2_0dcsstools_2postcss-ic-unit_2CHANGELOG.html',1,'']]],
+  ['image_20set_20function_1',['Changes to PostCSS image-set() Function',['../md_docs_2node__modules_2postcss-image-set-function_2CHANGELOG.html',1,'']]],
+  ['img_20src_20https_3a_20versionbadg_20es_20browserify_20resolve_20svg_20alt_20version_20badge_20a_20sup_2',['resolve &lt;sup&gt;&lt;a href=&quot;https://npmjs.org/package/resolve&quot; &gt;&lt;img src=&quot;https://versionbadg.es/browserify/resolve.svg&quot; alt=&quot;Version Badge&quot;/&gt;&lt;/a&gt;&lt;/sup&gt;',['../md_docs_2node__modules_2resolve_2readme.html',1,'']]],
+  ['img_20src_20https_3a_20versionbadg_20es_20inspect_20js_20object_20inspect_20svg_20alt_20version_20badge_20a_20sup_3',['object-inspect &lt;sup&gt;&lt;a href=&quot;https://npmjs.org/package/object-inspect&quot; &gt;&lt;img src=&quot;https://versionbadg.es/inspect-js/object-inspect.svg&quot; alt=&quot;Version Badge&quot;/&gt;&lt;/a&gt;&lt;/sup&gt;',['../md_docs_2node__modules_2object-inspect_2readme.html',1,'']]],
+  ['initial_4',['Changes to PostCSS Initial',['../md_docs_2node__modules_2_0dcsstools_2postcss-initial_2CHANGELOG.html',1,'']]],
+  ['insensitive_5',['Changes to PostCSS Attribute Case Insensitive',['../md_docs_2node__modules_2postcss-attribute-case-insensitive_2CHANGELOG.html',1,'']]],
+  ['inspect_20img_20src_20https_3a_20versionbadg_20es_20inspect_20js_20object_20inspect_20svg_20alt_20version_20badge_20a_20sup_6',['object-inspect &lt;sup&gt;&lt;a href=&quot;https://npmjs.org/package/object-inspect&quot; &gt;&lt;img src=&quot;https://versionbadg.es/inspect-js/object-inspect.svg&quot; alt=&quot;Version Badge&quot;/&gt;&lt;/a&gt;&lt;/sup&gt;',['../md_docs_2node__modules_2object-inspect_2readme.html',1,'']]],
+  ['inspect_20js_20object_20inspect_20svg_20alt_20version_20badge_20a_20sup_7',['object-inspect &lt;sup&gt;&lt;a href=&quot;https://npmjs.org/package/object-inspect&quot; &gt;&lt;img src=&quot;https://versionbadg.es/inspect-js/object-inspect.svg&quot; alt=&quot;Version Badge&quot;/&gt;&lt;/a&gt;&lt;/sup&gt;',['../md_docs_2node__modules_2object-inspect_2readme.html',1,'']]],
+  ['inspect_20sup_20a_20href_20https_3a_20npmjs_20org_20package_20object_20inspect_20img_20src_20https_3a_20versionbadg_20es_20inspect_20js_20object_20inspect_20svg_20alt_20version_20badge_20a_20sup_8',['object-inspect &lt;sup&gt;&lt;a href=&quot;https://npmjs.org/package/object-inspect&quot; &gt;&lt;img src=&quot;https://versionbadg.es/inspect-js/object-inspect.svg&quot; alt=&quot;Version Badge&quot;/&gt;&lt;/a&gt;&lt;/sup&gt;',['../md_docs_2node__modules_2object-inspect_2readme.html',1,'']]],
+  ['inspect_20svg_20alt_20version_20badge_20a_20sup_9',['object-inspect &lt;sup&gt;&lt;a href=&quot;https://npmjs.org/package/object-inspect&quot; &gt;&lt;img src=&quot;https://versionbadg.es/inspect-js/object-inspect.svg&quot; alt=&quot;Version Badge&quot;/&gt;&lt;/a&gt;&lt;/sup&gt;',['../md_docs_2node__modules_2object-inspect_2readme.html',1,'']]],
+  ['installing_20postcss_20clamp_10',['Installing PostCSS Clamp',['../md_docs_2node__modules_2postcss-clamp_2INSTALL.html',1,'']]],
+  ['interpolation_20method_11',['Changes to PostCSS Gradients Interpolation Method',['../md_docs_2node__modules_2_0dcsstools_2postcss-gradients-interpolation-method_2CHANGELOG.html',1,'']]],
+  ['intro_12',['intro',['../md_docs_2docs_2tutorial_2intro.html',1,'']]],
+  ['is_20pseudo_20class_13',['Changes to PostCSS Is Pseudo Class',['../md_docs_2node__modules_2_0dcsstools_2postcss-is-pseudo-class_2CHANGELOG.html',1,'']]],
+  ['issues_14',['Reporting Security Issues',['../md_docs_2node__modules_2webpack_2SECURITY.html',1,'']]]
+];

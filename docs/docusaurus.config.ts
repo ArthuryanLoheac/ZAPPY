@@ -77,7 +77,13 @@ const config: Config = {
           sidebarId: 'zappySidebar',
           position: 'left',
           label: "Zappy docs"
-        }
+        },
+        {
+          href: '/doxygen/html/index.html',
+          label: 'Doxygen API',
+          target: '_blank',
+          position: 'right',
+        },
       ],
     },
     footer: {

@@ -9,7 +9,19 @@
 #include <string.h>
 #include "client.h"
 
-static bool is_in_teams(char *get, char **teams)
+static bool check_enough_space(char *get, zappy_t *zappy)
+{
+    egg_t *egg = zappy->map->eggs;
+
+    while (egg) {
+        if (strcmp(get, egg->team_name) == 0)
+            return true;
+        egg = egg->next;
+    }
+    return false;
+}
+
+static bool is_in_teams(char *get, char **teams, zappy_t *zappy)
 {
     char **team_ptr = teams;
 
@@ -17,7 +29,7 @@ static bool is_in_teams(char *get, char **teams)
         return false;
     while (*team_ptr != NULL) {
         if (strcmp(get, *team_ptr) == 0)
-            return true;
+            return check_enough_space(get, zappy);
         team_ptr++;
     }
     return false;
@@ -50,9 +62,16 @@ void send_data_to_graphics(zappy_t *zappy, char *data)
     }
 }
 
-static egg_t *return_egg(zappy_t *zappy)
+static egg_t *return_egg(zappy_t *zappy, char *team_name)
 {
-    return zappy->map->eggs;
+    egg_t *current = zappy->map->eggs;
+
+    while (current) {
+        if (strcmp(current->team_name, team_name) == 0)
+            return current;
+        current = current->next;
+    }
+    return NULL;
 }
 
 static void send_datas_new_player(client_t *client,
@@ -75,7 +94,7 @@ static void send_datas_new_player(client_t *client,
 static void new_connection_player(char **args, client_t *client,
     zappy_t *zappy_ptr)
 {
-    egg_t *egg = return_egg(zappy_ptr);
+    egg_t *egg = return_egg(zappy_ptr, args[0]);
 
     if (client == NULL || args == NULL || zappy_ptr == NULL || egg == NULL)
         return;
@@ -85,7 +104,7 @@ static void new_connection_player(char **args, client_t *client,
     client->orientation = (rand() % 4) + 1;
     client->team_name = strdup(args[0]);
     client->waiting_commands = NULL;
-    zappy_ptr->map->eggs = egg->next;
+    delete_egg_team_name(zappy_ptr, args[0]);
     client->id = zappy_ptr->idNextClient;
     zappy_ptr->idNextClient++;
     send_datas_new_player(client, zappy_ptr, egg);
@@ -108,7 +127,7 @@ void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
     if (client == NULL || args == NULL || args[0] == NULL)
         return;
     if (client->is_waiting_id) {
-        if (is_in_teams(args[0], zappy_ptr->parser->team_names)){
+        if (is_in_teams(args[0], zappy_ptr->parser->team_names, zappy_ptr)){
             client->is_graphic = false;
             client->is_waiting_id = false;
             sprintf(buffer, "%d\n%d %d\n", zappy_ptr->idNextClient,

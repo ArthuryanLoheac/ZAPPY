@@ -5,6 +5,7 @@
 
 #include "DataManager/Player.hpp"
 #include "DataManager/GameDataManager.hpp"
+#include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
 
 namespace GUI {
@@ -16,31 +17,52 @@ const std::string &team, const std::shared_ptr<Mesh> &pMesh)
 }
 
 Player::Player(Player &&other) noexcept
-: id(other.id), x(other.x), y(other.y), o(other.o), level(other.level),
-teamName(std::move(other.teamName)), PlayerMesh(std::move(other.PlayerMesh))  {
-    Init(other.teamName, other.level);
-}
+: id(other.id), x(other.x), y(other.y),
+posTarget(std::move(other.posTarget)),
+rotationTarget(std::move(other.rotationTarget)),
+speedMove(other.speedMove),
+baseSpeedMove(other.baseSpeedMove),
+o(other.o), level(other.level),
+teamName(std::move(other.teamName)),
+PlayerMesh(std::move(other.PlayerMesh)),
+PlayerMeshesCylinder(std::move(other.PlayerMeshesCylinder)),
+PlayerMeshesCylinderRotation(std::move(other.PlayerMeshesCylinderRotation)),
+ressources(std::move(other.ressources)) {}
 
 Player &Player::operator=(Player &&other) noexcept {
     if (this != &other) {
+        std::lock_guard<std::mutex> lock(mutexDatas);
         id = other.id;
         x = other.x;
         y = other.y;
+        posTarget = std::move(other.posTarget);
+        rotationTarget = std::move(other.rotationTarget);
+        speedMove = other.speedMove;
+        baseSpeedMove = other.baseSpeedMove;
         o = other.o;
-        setLevel(other.level);
+        level = other.level;
         teamName = std::move(other.teamName);
         PlayerMesh = std::move(other.PlayerMesh);
+        PlayerMeshesCylinder = std::move(other.PlayerMeshesCylinder);
+        PlayerMeshesCylinderRotation =
+            std::move(other.PlayerMeshesCylinderRotation);
+        ressources = std::move(other.ressources);
     }
     return *this;
 }
 
+float randRotation(int i) {
+    i++;
+    float r = random() % static_cast<int>(360 / i);
+    return r * 2;
+}
+
 void Player::Init(std::string team, int level) {
     for (int i = 0; i < maxLevel; i++) {
-        PlayerMeshesCylinder.push_back(
-            std::shared_ptr<Mesh>(MeshImporter::i().importMesh("Cylinder",
-                team)));
-        PlayerMeshesCylinderRotation.push_back(Vec3d(random() % 360,
-            random() % 360, random() % 360));
+        PlayerMeshesCylinder.push_back(std::shared_ptr<Mesh>(
+            MeshImporter::i().importMesh("Cylinder", team)));
+        PlayerMeshesCylinderRotation.push_back(Vec3d(randRotation(i),
+            randRotation(i), randRotation(i)));
         PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
         PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);
     }
@@ -105,16 +127,29 @@ const std::string &Player::getTeamName() const {
 
 void Player::setPosition(int newX, int newY, Orientation new0) {
     std::lock_guard<std::mutex> lock(mutexDatas);
+    bool tp = false;
+    if ((x == 0 && newX == GameDataManager::i().getWidth() - 1) ||
+        (y == 0 && newY == GameDataManager::i().getHeight() - 1) ||
+        (x == GameDataManager::i().getWidth() - 1 && newX == 0) ||
+        (y == GameDataManager::i().getHeight() - 1 && newY == 0))
+        tp = true;
     x = newX;
     y = newY;
     o = new0;
     if (PlayerMesh) {
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
         position.Y += 0.5f;
-        PlayerMesh->setPosition(position);
-        PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
-        for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++)
-            PlayerMeshesCylinder[i]->setPosition(position);
+        posTarget = position;
+        speedMove = baseSpeedMove * DataManager::i().getFrequency() *
+            (posTarget - PlayerMesh->getPosition()).getLength();
+        rotationTarget = Vec3d(0, o * 90, 0);
+        // check first set
+        if (PlayerMesh->getPosition().Y == 0 || tp) {
+            PlayerMesh->setPosition(position);
+            PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
+            for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++)
+                PlayerMeshesCylinder[i]->setPosition(position);
+        }
     }
 }
 
@@ -158,8 +193,19 @@ void Player::destroy() {
     }
 }
 
+bool Player::checkAngleDiff(irr::core::vector3df a, irr::core::vector3df b) {
+    float angleDiff = std::abs(a.Y - b.Y);
+    if (angleDiff > 180.0f)
+        angleDiff = 360.0f - angleDiff;
+    return angleDiff > 5.0f;
+}
+
 void Player::Update(float deltaTime) {
-    // Rotation animation
+    updateRotation(deltaTime);
+    updatePosition(deltaTime);
+}
+
+void Player::updateRotation(float deltaTime) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
         if (PlayerMeshesCylinder[i]) {
@@ -169,6 +215,43 @@ void Player::Update(float deltaTime) {
                       rot.Y + PlayerMeshesCylinderRotation[i].Y * deltaTime,
                       rot.Z + PlayerMeshesCylinderRotation[i].Z * deltaTime));
         }
+    }
+}
+
+void Player::updatePosition(float deltaTime) {
+    float speedRotate = 15 * DataManager::i().getFrequency();
+
+    if (posTarget.getDistanceFrom(PlayerMesh->getPosition()) > 0.1f) {
+        // new pos
+        Vec3d direction = posTarget - PlayerMesh->getPosition();
+        direction.normalize();
+        Vec3d newPos = PlayerMesh->getPosition() +
+            (direction * speedMove * deltaTime);
+        PlayerMesh->setPosition(newPos);
+        // ring update
+        for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
+            if (PlayerMeshesCylinder[i])
+                PlayerMeshesCylinder[i]->setPosition(newPos);
+        }
+    }
+    if (checkAngleDiff(PlayerMesh->getRotation(), rotationTarget)) {
+        float currentY = fmod(PlayerMesh->getRotation().Y, 360.0f);
+        if (currentY < 0) currentY += 360.0f;
+
+        float targetY = fmod(rotationTarget.Y, 360.0f);
+        if (targetY < 0) targetY += 360.0f;
+
+        // Determine the shortest rotation direction
+        float diff = targetY - currentY;
+        if (diff > 180.0f) diff -= 360.0f;
+        if (diff < -180.0f) diff += 360.0f;
+
+        float step = speedRotate * deltaTime;
+        if (abs(diff) < step) step = abs(diff);
+
+        Vec3d currentRotation = PlayerMesh->getRotation();
+        currentRotation.Y += diff > 0 ? step : -step;
+        PlayerMesh->setRotation(currentRotation);
     }
 }
 

@@ -11,6 +11,7 @@
 #include <stdlib.h>
 
 #include "include/parser.h"
+#include "pointlen.h"
 
 void display_help(void)
 {
@@ -79,19 +80,6 @@ static parser_t *init_parser(void)
     parser->freq = 100;
     parser->nb_teams = 0;
     return parser;
-}
-
-static int pointlen(char **str)
-{
-    int i = 0;
-
-    i = 0;
-    if (str == NULL)
-        return (0);
-    while (str[i] != NULL) {
-        i++;
-    }
-    return (i);
 }
 
 parser_t *parse_arguments(int ac, char **av)

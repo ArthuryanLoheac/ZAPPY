@@ -62,5 +62,6 @@ char *realloc_strcat(char *dest, const char *src);
 
 void send_players_data(zappy_t *zappy, client_t *c);
 void send_eggs_data(zappy_t *zappy, client_t *c);
+void delete_egg_team_name(zappy_t *zappy_ptr, char *team_name);
 
 #endif /* !CLIENT_H */

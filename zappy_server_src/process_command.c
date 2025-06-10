@@ -91,27 +91,6 @@ static void send_datas_new_player(client_t *client,
     send_data_to_graphics(zappy_ptr, buffer3);
 }
 
-static void delete_egg_team_name(zappy_t *zappy_ptr, char *team_name)
-{
-    egg_t *current = zappy_ptr->map->eggs;
-    egg_t *prev = NULL;
-
-    while (current) {
-        if (strcmp(current->team_name, team_name) == 0) {
-            if (prev == NULL) {
-                zappy_ptr->map->eggs = current->next;
-            } else {
-                prev->next = current->next;
-            }
-            free(current->team_name);
-            free(current);
-            return;
-        }
-        prev = current;
-        current = current->next;
-    }
-}
-
 static void new_connection_player(char **args, client_t *client,
     zappy_t *zappy_ptr)
 {

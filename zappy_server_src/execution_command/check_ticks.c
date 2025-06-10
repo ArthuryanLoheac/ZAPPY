@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <time.h>
+#include <stdio.h>
 
 #include "../include/client.h"
 #include "command.h"

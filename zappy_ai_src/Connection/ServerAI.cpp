@@ -20,7 +20,6 @@ void AI::ServerAI::handleCommand() {
     while (buffer.find("\n") != std::string::npos) {
         size_t pos = buffer.find("\n");
         std::string command = buffer.substr(0, pos);
-        std::cout << "Received command: " << command << std::endl;
         buffer.erase(0, pos + 1);
 
         if (command.empty()) continue;

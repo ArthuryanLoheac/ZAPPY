@@ -217,10 +217,22 @@ void Player::updatePosition(float deltaTime) {
         }
     }
     if (checkAngleDiff(PlayerMesh->getRotation(), rotationTarget)) {
-        Vec3d newRotation = rotationTarget - PlayerMesh->getRotation();
-        newRotation.normalize();
-        newRotation *= speedRotate * deltaTime;
-        Vec3d currentRotation = PlayerMesh->getRotation() + newRotation;
+        float currentY = fmod(PlayerMesh->getRotation().Y, 360.0f);
+        if (currentY < 0) currentY += 360.0f;
+
+        float targetY = fmod(rotationTarget.Y, 360.0f);
+        if (targetY < 0) targetY += 360.0f;
+
+        // Determine the shortest rotation direction
+        float diff = targetY - currentY;
+        if (diff > 180.0f) diff -= 360.0f;
+        if (diff < -180.0f) diff += 360.0f;
+
+        float step = speedRotate * deltaTime;
+        if (abs(diff) < step) step = abs(diff);
+
+        Vec3d currentRotation = PlayerMesh->getRotation();
+        currentRotation.Y += diff > 0 ? step : -step;
         PlayerMesh->setRotation(currentRotation);
     }
 }

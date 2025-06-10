@@ -28,4 +28,3 @@ void forward_command(zappy_t *zappy, client_t *client, char **args)
     update_pos_player(zappy, client);
     add_to_buffer(&client->out_buffer, "ok\n");
 }
-

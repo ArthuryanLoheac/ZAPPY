@@ -24,6 +24,8 @@ static void add_client_data(zappy_t *zappy, int fd)
     client->out_buffer = NULL;
     client->is_connected = true;
     client->is_waiting_id = true;
+    client->waiting_commands = NULL;
+    client->team_name = NULL;
     client->next = zappy->clients;
     zappy->clients = client;
     append_client_out_buffer(client, "WELCOME\n");

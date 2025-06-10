@@ -94,24 +94,28 @@ static parser_t *init_parser(void)
     return parser;
 }
 
+static void parse_one_arg(int ac, char **av, parser_t *parser, int i)
+{
+    if (strcmp(av[i], "-p") == 0 && i + 1 < ac)
+        parser->port = parse_int(av[i + 1], 1024, 65535);
+    if (strcmp(av[i], "-x") == 0 && i + 1 < ac)
+        parser->width = parse_int(av[i + 1], 10, 42);
+    if (strcmp(av[i], "-y") == 0 && i + 1 < ac)
+        parser->height = parse_int(av[i + 1], 10, 42);
+    if (strcmp(av[i], "-n") == 0)
+        parser->team_names = parse_teams(av, &i, ac, &parser->nb_teams);
+    if (strcmp(av[i], "-c") == 0 && i + 1 < ac)
+        parser->clients_per_team = parse_int(av[i + 1], 1, 200);
+    if (strcmp(av[i], "-f") == 0 && i + 1 < ac)
+        parser->freq = parse_int(av[i + 1], 1, 10000);
+}
+
 parser_t *parse_arguments(int ac, char **av)
 {
     parser_t *parser = init_parser();
 
-    for (int i = 1; i < ac; i++) {
-        if (strcmp(av[i], "-p") == 0 && i + 1 < ac)
-            parser->port = parse_int(av[i + 1], 1024, 65535);
-        if (strcmp(av[i], "-x") == 0 && i + 1 < ac)
-            parser->width = parse_int(av[i + 1], 10, 42);
-        if (strcmp(av[i], "-y") == 0 && i + 1 < ac)
-            parser->height = parse_int(av[i + 1], 10, 42);
-        if (strcmp(av[i], "-n") == 0)
-            parser->team_names = parse_teams(av, &i, ac, &parser->nb_teams);
-        if (strcmp(av[i], "-c") == 0 && i + 1 < ac)
-            parser->clients_per_team = parse_int(av[i + 1], 1, 200);
-        if (strcmp(av[i], "-f") == 0 && i + 1 < ac)
-            parser->freq = parse_int(av[i + 1], 1, 10000);
-    }
+    for (int i = 1; i < ac; i++)
+        parse_one_arg(ac, av, parser, i);
     if (parser->port == 0 || parser->width == 0 || parser->height == 0 ||
         parser->team_names == NULL || parser->clients_per_team == 0)
         display_help();

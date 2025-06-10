@@ -52,6 +52,7 @@ class Player {
 
     void destroy();
 
+    bool checkAngleDiff(Vec3d a, Vec3d b);
     void Update(float deltaTime);
     void updateRotation(float deltaTime);
     void updatePosition(float deltaTime);
@@ -62,6 +63,8 @@ class Player {
     int y;
     Vec3d posTarget;
     Vec3d rotationTarget;
+    float speedMove = 1;
+    float baseSpeedMove = 1.f / 7.f;
 
     Orientation o;
     int level;

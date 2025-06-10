@@ -5,7 +5,9 @@
 
 #include "DataManager/Player.hpp"
 #include "DataManager/GameDataManager.hpp"
+#include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
+#include "Player.hpp"
 
 namespace GUI {
 
@@ -105,6 +107,12 @@ const std::string &Player::getTeamName() const {
 
 void Player::setPosition(int newX, int newY, Orientation new0) {
     std::lock_guard<std::mutex> lock(mutexDatas);
+    bool tp = false;
+    if ((x == 0 && newX == GameDataManager::i().getWidth() - 1) ||
+        (y == 0 && newY == GameDataManager::i().getHeight() - 1) ||
+        (x == GameDataManager::i().getWidth() - 1 && newX == 0) ||
+        (y == GameDataManager::i().getHeight() - 1 && newY == 0))
+        tp = true;
     x = newX;
     y = newY;
     o = new0;
@@ -112,9 +120,11 @@ void Player::setPosition(int newX, int newY, Orientation new0) {
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
         position.Y += 0.5f;
         posTarget = position;
+        speedMove = baseSpeedMove * DataManager::i().getFrequency() *
+            (posTarget - PlayerMesh->getPosition()).getLength();
         rotationTarget = Vec3d(0, o * 90, 0);
         // check first set
-        if (PlayerMesh->getPosition().Y == 0) {
+        if (PlayerMesh->getPosition().Y == 0 || tp) {
             PlayerMesh->setPosition(position);
             PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
             for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++)
@@ -163,7 +173,15 @@ void Player::destroy() {
     }
 }
 
+bool Player::checkAngleDiff(irr::core::vector3df a, irr::core::vector3df b) {
+    float angleDiff = std::abs(a.Y - b.Y);
+    if (angleDiff > 180.0f)
+        angleDiff = 360.0f - angleDiff;
+    return angleDiff > 5.0f;
+}
+
 void Player::Update(float deltaTime) {
+
     updateRotation(deltaTime);
     updatePosition(deltaTime);
 }
@@ -181,20 +199,29 @@ void Player::updateRotation(float deltaTime) {
     }
 }
 
+
+
 void Player::updatePosition(float deltaTime) {
-    float speed = 1;
+    float speedRotate = 15 * DataManager::i().getFrequency();
 
     if (posTarget.getDistanceFrom(PlayerMesh->getPosition()) > 0.1f) {
         // new pos
         Vec3d direction = posTarget - PlayerMesh->getPosition();
         direction.normalize();
-        Vec3d newPos = PlayerMesh->getPosition() + (direction * speed * deltaTime);
+        Vec3d newPos = PlayerMesh->getPosition() + (direction * speedMove * deltaTime);
         PlayerMesh->setPosition(newPos);
-        // ring updaate
+        // ring update
         for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
             if (PlayerMeshesCylinder[i])
                 PlayerMeshesCylinder[i]->setPosition(newPos);
         }
+    }
+    if (checkAngleDiff(PlayerMesh->getRotation(), rotationTarget)) {
+        Vec3d newRotation = rotationTarget - PlayerMesh->getRotation();
+        newRotation.normalize();
+        newRotation *= speedRotate * deltaTime;
+        Vec3d currentRotation = PlayerMesh->getRotation() + newRotation;
+        PlayerMesh->setRotation(currentRotation);
     }
 }
 

@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2025
 ** ZAPPY
 ** File description:
-** List/map of all zappy core command handlers 
+** List/map of all zappy core command handlers
 */
 
 #ifndef COMMAND_HANDLER_H_
@@ -11,7 +11,8 @@
     #include "zappy.h"
     #include "client.h"
 
-typedef void (*command_handler_t)(zappy_t *zappy, client_t *client, char **args);
+typedef void (*command_handler_t)
+(zappy_t *zappy, client_t *client, char **args);
 
 void update_pos_player(zappy_t *zappy, client_t *client);
 

@@ -10,9 +10,10 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-#include "logs.h"
+#include "include/logs.h"
 
-log_level_e actual_log_level = Info;
+// Global var used here to save the log level between each log calls
+enum log_level_e actual_log_level = INFO;
 
 static char *get_timestamp(void)
 {
@@ -24,7 +25,7 @@ static char *get_timestamp(void)
     return timestamp;
 }
 
-void log_internal(log_level_e level, char *level_str, char *color,
+void log_internal(enum log_level_e level, char *level_str, char *color,
     const char *format, ...)
 {
     char *timestamp;
@@ -42,7 +43,7 @@ void log_internal(log_level_e level, char *level_str, char *color,
     free(timestamp);
 }
 
-void set_log_level(log_level_e level)
+void set_log_level(enum log_level_e level)
 {
     actual_log_level = level;
 }

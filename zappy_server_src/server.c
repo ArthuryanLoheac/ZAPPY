@@ -14,7 +14,7 @@
 
 #include "include/server.h"
 #include "include/parser.h"
-#include "include/logs.h"
+#include "logs.h"
 
 static void listen_socket(int server_fd)
 {

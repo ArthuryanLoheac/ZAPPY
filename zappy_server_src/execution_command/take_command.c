@@ -8,7 +8,7 @@
 #include <string.h>
 #include "command_handler.h"
 
-bool cmp_cell(cell_t one, cell_t two)
+static bool cmp_cell(cell_t one, cell_t two)
 {
     if (one.nbr_food == two.nbr_food &&
         one.nbr_linemate == two.nbr_linemate &&
@@ -22,8 +22,7 @@ bool cmp_cell(cell_t one, cell_t two)
     return (false);
 }
 
-bool take_object(zappy_t *zappy, client_t *client,
-    cell_t cell, char *object)
+static bool take_object(zappy_t *zappy, cell_t cell, char *object)
 {
     cell_t comp_cell = cell;
 
@@ -41,14 +40,32 @@ bool take_object(zappy_t *zappy, client_t *client,
         cell.nbr_phiras -= 1;
     if (strcmp("thystame", object) == 0 && cell.nbr_thystame > 0)
         cell.nbr_thystame -= 1;
-    update_cell(zappy, client, cell);
+    update_cell(zappy, cell);
     return (cmp_cell(cell, comp_cell));
+}
+
+static void put_object_inventory(client_t *client, char *object)
+{
+    if (strcmp("food", object))
+        client->nbr_food += 1;
+    if (strcmp("linemate", object))
+        client->nbr_linemate += 1;
+    if (strcmp("deraumere", object))
+        client->nbr_deraumere += 1;
+    if (strcmp("sibur", object))
+        client->nbr_sibur += 1;
+    if (strcmp("mendiane", object))
+        client->nbr_mendiane += 1;
+    if (strcmp("phiras", object))
+        client->nbr_phiras += 1;
+    if (strcmp("thystame", object))
+        client->nbr_thystame += 1;
 }
 
 void take_command(zappy_t *zappy, client_t *client, char **args)
 {
-    if (take_object(zappy, client,
-        zappy->map->grid[client->x][client->y], args[0])){
+    if (take_object(zappy, zappy->map->grid[client->x][client->y], args[0])) {
+        put_object_inventory(client, args[0]);
         add_to_buffer(&client->out_buffer, "ok\n");
     } else {
         add_to_buffer(&client->out_buffer, "ko\n");

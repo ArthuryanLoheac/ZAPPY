@@ -4,82 +4,27 @@
 ** File description:
 ** check_ticks
 */
-#include <stdio.h>
+
 #include <stdlib.h>
 #include <signal.h>
-#include <string.h>
 #include <time.h>
 
 #include "../include/client.h"
-
-static void look_command(zappy_t *zappy, client_t *client)
-{
-    (void) zappy;
-    add_to_buffer(&client->out_buffer, "[player, food,,,]\n");
-}
-
-static void update_pos_player(zappy_t *zappy, client_t *client)
-{
-    char buffer[256];
-
-    sprintf(buffer, "ppo #%d %d %d %d\n", client->id, client->x, client->y,
-        client->orientation);
-    send_data_to_graphics(zappy, buffer);
-}
-
-static void forward_command(zappy_t *zappy, client_t *client)
-{
-    if (client->orientation == 3)
-        client->y = (client->y + 1) % zappy->parser->height;
-    if (client->orientation == 2)
-        client->x = (client->x + 1) % zappy->parser->width;
-    if (client->orientation == 1) {
-        client->y -= 1;
-        if (client->y < 0)
-            client->y = zappy->parser->height - 1;
-    }
-    if (client->orientation == 4) {
-        client->x -= 1;
-        if (client->x < 0)
-            client->x = zappy->parser->width - 1;
-    }
-    update_pos_player(zappy, client);
-    add_to_buffer(&client->out_buffer, "ok\n");
-}
-
-static void rotate_command(zappy_t *zappy, client_t *client, int i)
-{
-    client->orientation += i;
-    if (client->orientation < 1)
-        client->orientation = 4;
-    if (client->orientation > 4)
-        client->orientation = 1;
-    update_pos_player(zappy, client);
-    add_to_buffer(&client->out_buffer, "ok\n");
-}
+#include "command.h"
+#include "command_handler.h"
 
 static void exec_command_tick(zappy_t *zappy, client_t *client,
     waitingCommands_t *command)
 {
+    command_handler_t handler;
+
     if (!command || command->command == NULL || command->command[0] == NULL)
         return;
-    if (strcmp(command->command[0], "FORWARD") == 0) {
-        forward_command(zappy, client);
-        return;
-    }
-    if (strcmp(command->command[0], "RIGHT") == 0) {
-        rotate_command(zappy, client, 1);
-        return;
-    }
-    if (strcmp(command->command[0], "LEFT") == 0) {
-        rotate_command(zappy, client, -1);
-        return;
-    }
-    if (strcmp(command->command[0], "LOOK") == 0) {
-        look_command(zappy, client);
-        return;
-    }
-    add_to_buffer(&client->out_buffer, "ko\n");
+    handler = get_command_handler(command->command[0]);
+    if (handler == NULL)
+        add_to_buffer(&client->out_buffer, "ko\n");
+    else
+        handler(zappy, client, &command->command[1]);
 }
 
 static void reduce_tick_all(zappy_t *zappy)

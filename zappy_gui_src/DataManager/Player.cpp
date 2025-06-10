@@ -18,31 +18,55 @@ const std::string &team, const std::shared_ptr<Mesh> &pMesh)
 }
 
 Player::Player(Player &&other) noexcept
-: id(other.id), x(other.x), y(other.y), o(other.o), level(other.level),
-teamName(std::move(other.teamName)), PlayerMesh(std::move(other.PlayerMesh))  {
-    Init(other.teamName, other.level);
-}
+    : id(other.id),
+      x(other.x),
+      y(other.y),
+      posTarget(std::move(other.posTarget)),
+      rotationTarget(std::move(other.rotationTarget)),
+      speedMove(other.speedMove),
+      baseSpeedMove(other.baseSpeedMove),
+      o(other.o),
+      level(other.level),
+      teamName(std::move(other.teamName)),
+      PlayerMesh(std::move(other.PlayerMesh)),
+      PlayerMeshesCylinder(std::move(other.PlayerMeshesCylinder)),
+      PlayerMeshesCylinderRotation(std::move(other.PlayerMeshesCylinderRotation)),
+      ressources(std::move(other.ressources)) {}
 
 Player &Player::operator=(Player &&other) noexcept {
     if (this != &other) {
+        std::lock_guard<std::mutex> lock(mutexDatas);
         id = other.id;
         x = other.x;
         y = other.y;
+        posTarget = std::move(other.posTarget);
+        rotationTarget = std::move(other.rotationTarget);
+        speedMove = other.speedMove;
+        baseSpeedMove = other.baseSpeedMove;
         o = other.o;
-        setLevel(other.level);
+        level = other.level;
         teamName = std::move(other.teamName);
         PlayerMesh = std::move(other.PlayerMesh);
+        PlayerMeshesCylinder = std::move(other.PlayerMeshesCylinder);
+        PlayerMeshesCylinderRotation = std::move(other.PlayerMeshesCylinderRotation);
+        ressources = std::move(other.ressources);
     }
     return *this;
 }
 
+float randRotation(int i)
+{
+    i++;
+    float r = random() % static_cast<int>(360 / i);
+    return r * 2;
+}
+
 void Player::Init(std::string team, int level) {
     for (int i = 0; i < maxLevel; i++) {
-        PlayerMeshesCylinder.push_back(
-            std::shared_ptr<Mesh>(MeshImporter::i().importMesh("Cylinder",
-                team)));
-        PlayerMeshesCylinderRotation.push_back(Vec3d(random() % 360,
-            random() % 360, random() % 360));
+        PlayerMeshesCylinder.push_back(std::shared_ptr<Mesh>(
+            MeshImporter::i().importMesh("Cylinder", team)));
+        PlayerMeshesCylinderRotation.push_back(Vec3d(randRotation(i),
+            randRotation(i), randRotation(i)));
         PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
         PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);
     }
@@ -198,8 +222,6 @@ void Player::updateRotation(float deltaTime) {
         }
     }
 }
-
-
 
 void Player::updatePosition(float deltaTime) {
     float speedRotate = 15 * DataManager::i().getFrequency();

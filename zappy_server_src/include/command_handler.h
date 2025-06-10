@@ -15,7 +15,6 @@ typedef void (*command_handler_t)(zappy_t *zappy,
     client_t *client, char **args);
 
 void update_pos_player(zappy_t *zappy, client_t *client);
-void update_cell(zappy_t *zappy, client_t *client, cell_t cell);
 
 void look_command(zappy_t *zappy, client_t *client, char **args);
 void forward_command(zappy_t *zappy, client_t *client, char **args);

@@ -14,6 +14,22 @@
 
 typedef struct client_s client_t;
 
+enum resource_type {
+    FOOD,
+    LINEMATE,
+    DERAUMERE,
+    SIBUR,
+    MENDIANE,
+    PHIRAS,
+    THYSTAME,
+    EGG,
+};
+
+typedef struct coord_s {
+    int x;
+    int y;
+} coord_t;
+
 typedef struct cell_s {
     int x;
     int y;
@@ -65,7 +81,9 @@ void incr_phiras(cell_t *cell);
 void incr_thystame(cell_t *cell);
 
 starting_map_t *init_starting_map(zappy_t *zappy);
-void free_starting_map(starting_map_t *map, int height);
+void free_starting_map(starting_map_t *map);
+cell_t **create_map(parser_t *parser);
+void destroy_map(cell_t **map);
 
 void start_server(zappy_t *zappy);
 void down_server(zappy_t *zappy);

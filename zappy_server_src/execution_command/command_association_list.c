@@ -8,9 +8,9 @@
 #include "command_handler.h"
 
 const command_func_t command_association_list[] = {
-    {"look", look_command},
-    {"forward", forward_command},
-    {"right", right_command},
-    {"left", left_command},
+    {"LOOK", look_command},
+    {"FORWARD", forward_command},
+    {"RIGHT", right_command},
+    {"LEFT", left_command},
     {NULL, NULL}
 };

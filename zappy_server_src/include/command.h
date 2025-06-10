@@ -9,6 +9,7 @@
     #define COMMAND_H
 
     #include "zappy.h"
+    #include "client.h"
 
 void handle_client_command(zappy_t *zappy, int fd);
 void send_client_command(zappy_t *zappy, int fd);

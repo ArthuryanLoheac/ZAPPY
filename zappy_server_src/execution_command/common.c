@@ -17,3 +17,14 @@ void update_pos_player(zappy_t *zappy, client_t *client)
         client->orientation);
     send_data_to_graphics(zappy, buffer);
 }
+
+void update_cell(zappy_t *zappy, client_t *client, cell_t cell)
+{
+    char buffer[256];
+
+    snprintf(buffer, "bct %d %d %d %d %d %d %d %d %d\n",
+        cell.x, cell.y, cell.nbr_food,
+        cell.nbr_linemate, cell.nbr_deraumere, cell.nbr_sibur,
+        cell.nbr_mendiane, cell.nbr_phiras, cell.nbr_thystame);
+    send_data_to_graphics(zappy, buffer);
+}

@@ -6,6 +6,7 @@ Data::Data() {
     mapX = 0;
     mapY = 0;
     isDead = false;
+    isRunning = false;
 }
 
 Data::~Data() {

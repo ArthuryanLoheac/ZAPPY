@@ -8,6 +8,16 @@
 
 namespace AI {
 
+#define FORWARD "Forward\n"
+#define LEFT "Left\n"
+#define RIGHT "Right\n"
+#define LOOK "Look\n"
+#define INVENTORY "Inventory\n"
+#define CONNECT_NBR "Connect_nbr\n"
+#define FORK "Fork\n"
+#define EJECT "Eject\n"
+#define INCANTATION "Incantation\n"
+
 class Interface {
  public:
     Interface();
@@ -21,6 +31,7 @@ class Interface {
     void start(int port, const std::string &ip, const std::string &name);
     void run();
     void stop();
+    void sendCommand(const std::string &command);
 
  private:
     void handleQueues();
@@ -36,10 +47,16 @@ class Interface {
     std::map<std::string, void(Interface::*)(std::vector<std::string> &)>
         commands;
 
-    // Commands
+    // Receiving commands
     void factoryCommands();
 
     void commandWELCOME(std::vector<std::string> &args);
+    void commandFORWARD(std::vector<std::string> &args);
+    void commandLEFT(std::vector<std::string> &args);
+    void commandRIGHT(std::vector<std::string> &args);
+
+    // Sending commands
+    std::queue<std::string> commandBuffer;
 };
 
 }  // namespace AI

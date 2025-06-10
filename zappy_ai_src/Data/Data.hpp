@@ -12,6 +12,7 @@ class Data {
         return instance;
     }
 
+    bool isRunning;
     bool isDead;
     int mapX;
     int mapY;

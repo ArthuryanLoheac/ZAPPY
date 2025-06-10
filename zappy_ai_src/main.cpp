@@ -10,6 +10,15 @@
 #include "ForkWrapper/Fork.hpp"
 #include "Socket/Socket.hpp"
 #include "Interface/Interface.hpp"
+#include "Data/Data.hpp"
+
+bool sigintReceived = false;
+bool usr1Received = false;
+
+void setupSignalHandlers() {
+    std::signal(SIGINT, [](int) { sigintReceived = true; });
+    std::signal(SIGUSR1, [](int) { usr1Received = true; });
+}
 
 void printHelp() {
     std::cout << "USAGE: ./zappy_ai -p port -n name -h machine" << std::endl <<
@@ -63,7 +72,7 @@ int initChildProcess(int port, const std::string &ip,
         return 84;
     }
 
-    while (true) {
+    while (AI::Data::i().isDead == false) {
         try {
             interface.run();
         } catch (const AI::ChildProcessException &e) {
@@ -73,6 +82,9 @@ int initChildProcess(int port, const std::string &ip,
             std::cerr << "Factory error: " << e.what() << std::endl;
             return 84;
         }
+        if (AI::Data::i().isRunning) {
+            interface.sendCommand(FORWARD);
+        }
     }
     return 0;
 }
@@ -80,14 +92,16 @@ int initChildProcess(int port, const std::string &ip,
 int mainLoop(int port, const std::string &ip,
     const std::string &name) {
     std::vector<std::unique_ptr<Fork>> childs;
-    int countForForks = 0;
+
+    setupSignalHandlers();
 
     childs.push_back(std::make_unique<Fork>(initChildProcess, port, ip, name));
 
-    while (true) {
+    while (!sigintReceived) {
         for (auto it = childs.begin(); it != childs.end();) {
             if ((*it)->waitNoHang()) {
-                std::cout << "Child process exited with status: "
+                std::cout << "Child process PID " << (*it)->getPid()
+                    << " has exited with status "
                     << (*it)->getExitStatus() << std::endl;
                 it = childs.erase(it);
             } else {
@@ -95,18 +109,26 @@ int mainLoop(int port, const std::string &ip,
             }
         }
 
-        if (countForForks >= 10) {
+        if (usr1Received) {
             childs.push_back(
                 std::make_unique<Fork>(initChildProcess, port, ip, name));
+            usr1Received = false;
         }
 
+        // if (countForForks >= 2) {
+        //     childs.push_back(
+        //         std::make_unique<Fork>(initChildProcess, port, ip, name));
+        //     countForForks = 0;
+        // }
+
         if (childs.empty()) {
+            std::cout << "No child processes running, exiting." << std::endl;
             return 0;
         }
 
-        countForForks++;
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+    return 0;
 }
 
 int main(int argc, char **argv) {

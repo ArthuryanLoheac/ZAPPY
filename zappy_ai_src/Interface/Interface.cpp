@@ -88,9 +88,13 @@ void Interface::handleQueues() {
     }
 }
 
+// ————————————————————————— END OF INIT CLASS ————————————————————————
+
 void Interface::factoryCommands() {
     commands["WELCOME"] = &Interface::commandWELCOME;
 }
+
+// ————————————————————————— END OF FACTORY ————————————————————————
 
 void Interface::commandWELCOME(std::vector<std::string> &args) {
     if (args.size() != 1) {

@@ -2,7 +2,10 @@
 
 namespace AI {
 
-Data::Data() : isDead(false), mapX(0), mapY(0) {
+Data::Data() {
+    mapX = 0;
+    mapY = 0;
+    isDead = false;
 }
 
 Data::~Data() {

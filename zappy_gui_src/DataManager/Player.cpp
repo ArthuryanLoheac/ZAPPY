@@ -111,10 +111,15 @@ void Player::setPosition(int newX, int newY, Orientation new0) {
     if (PlayerMesh) {
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
         position.Y += 0.5f;
-        PlayerMesh->setPosition(position);
-        PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
-        for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++)
-            PlayerMeshesCylinder[i]->setPosition(position);
+        posTarget = position;
+        rotationTarget = Vec3d(0, o * 90, 0);
+        // check first set
+        if (PlayerMesh->getPosition().Y == 0) {
+            PlayerMesh->setPosition(position);
+            PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
+            for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++)
+                PlayerMeshesCylinder[i]->setPosition(position);
+        }
     }
 }
 
@@ -159,7 +164,11 @@ void Player::destroy() {
 }
 
 void Player::Update(float deltaTime) {
-    // Rotation animation
+    updateRotation(deltaTime);
+    updatePosition(deltaTime);
+}
+
+void Player::updateRotation(float deltaTime) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
         if (PlayerMeshesCylinder[i]) {
@@ -168,6 +177,23 @@ void Player::Update(float deltaTime) {
                 Vec3d(rot.X + PlayerMeshesCylinderRotation[i].X * deltaTime,
                       rot.Y + PlayerMeshesCylinderRotation[i].Y * deltaTime,
                       rot.Z + PlayerMeshesCylinderRotation[i].Z * deltaTime));
+        }
+    }
+}
+
+void Player::updatePosition(float deltaTime) {
+    float speed = 1;
+
+    if (posTarget.getDistanceFrom(PlayerMesh->getPosition()) > 0.1f) {
+        // new pos
+        Vec3d direction = posTarget - PlayerMesh->getPosition();
+        direction.normalize();
+        Vec3d newPos = PlayerMesh->getPosition() + (direction * speed * deltaTime);
+        PlayerMesh->setPosition(newPos);
+        // ring updaate
+        for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
+            if (PlayerMeshesCylinder[i])
+                PlayerMeshesCylinder[i]->setPosition(newPos);
         }
     }
 }

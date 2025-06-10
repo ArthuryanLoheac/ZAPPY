@@ -53,11 +53,16 @@ class Player {
     void destroy();
 
     void Update(float deltaTime);
+    void updateRotation(float deltaTime);
+    void updatePosition(float deltaTime);
 
  private:
     int id;
     int x;
     int y;
+    Vec3d posTarget;
+    Vec3d rotationTarget;
+
     Orientation o;
     int level;
     std::string teamName;

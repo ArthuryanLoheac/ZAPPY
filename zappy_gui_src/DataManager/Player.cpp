@@ -7,7 +7,6 @@
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
-#include "Player.hpp"
 
 namespace GUI {
 
@@ -18,20 +17,17 @@ const std::string &team, const std::shared_ptr<Mesh> &pMesh)
 }
 
 Player::Player(Player &&other) noexcept
-    : id(other.id),
-      x(other.x),
-      y(other.y),
-      posTarget(std::move(other.posTarget)),
-      rotationTarget(std::move(other.rotationTarget)),
-      speedMove(other.speedMove),
-      baseSpeedMove(other.baseSpeedMove),
-      o(other.o),
-      level(other.level),
-      teamName(std::move(other.teamName)),
-      PlayerMesh(std::move(other.PlayerMesh)),
-      PlayerMeshesCylinder(std::move(other.PlayerMeshesCylinder)),
-      PlayerMeshesCylinderRotation(std::move(other.PlayerMeshesCylinderRotation)),
-      ressources(std::move(other.ressources)) {}
+: id(other.id), x(other.x), y(other.y),
+posTarget(std::move(other.posTarget)),
+rotationTarget(std::move(other.rotationTarget)),
+speedMove(other.speedMove),
+baseSpeedMove(other.baseSpeedMove),
+o(other.o), level(other.level),
+teamName(std::move(other.teamName)),
+PlayerMesh(std::move(other.PlayerMesh)),
+PlayerMeshesCylinder(std::move(other.PlayerMeshesCylinder)),
+PlayerMeshesCylinderRotation(std::move(other.PlayerMeshesCylinderRotation)),
+ressources(std::move(other.ressources)) {}
 
 Player &Player::operator=(Player &&other) noexcept {
     if (this != &other) {
@@ -48,14 +44,14 @@ Player &Player::operator=(Player &&other) noexcept {
         teamName = std::move(other.teamName);
         PlayerMesh = std::move(other.PlayerMesh);
         PlayerMeshesCylinder = std::move(other.PlayerMeshesCylinder);
-        PlayerMeshesCylinderRotation = std::move(other.PlayerMeshesCylinderRotation);
+        PlayerMeshesCylinderRotation =
+            std::move(other.PlayerMeshesCylinderRotation);
         ressources = std::move(other.ressources);
     }
     return *this;
 }
 
-float randRotation(int i)
-{
+float randRotation(int i) {
     i++;
     float r = random() % static_cast<int>(360 / i);
     return r * 2;
@@ -205,7 +201,6 @@ bool Player::checkAngleDiff(irr::core::vector3df a, irr::core::vector3df b) {
 }
 
 void Player::Update(float deltaTime) {
-
     updateRotation(deltaTime);
     updatePosition(deltaTime);
 }
@@ -230,7 +225,8 @@ void Player::updatePosition(float deltaTime) {
         // new pos
         Vec3d direction = posTarget - PlayerMesh->getPosition();
         direction.normalize();
-        Vec3d newPos = PlayerMesh->getPosition() + (direction * speedMove * deltaTime);
+        Vec3d newPos = PlayerMesh->getPosition() +
+            (direction * speedMove * deltaTime);
         PlayerMesh->setPosition(newPos);
         // ring update
         for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {

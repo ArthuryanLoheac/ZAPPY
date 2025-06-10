@@ -26,13 +26,10 @@ static char *sanitize_name(const char* str)
     return sanitized;
 }
 
-#include <stdio.h>
-
 command_handler_t get_command_handler(const char *name)
 {
     char *sanitized_name = sanitize_name(name);
 
-    printf("Sanitized: '%s' => '%s'\n", name, sanitized_name);
     for (int i = 0; command_association_list[i].name != NULL; i++) {
         if (strcmp(sanitized_name, command_association_list[i].name) == 0)
             return command_association_list[i].func;

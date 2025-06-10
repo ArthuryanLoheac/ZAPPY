@@ -12,7 +12,7 @@
 
 #include "command_handler.h"
 
-static char *sanitize_name(const char* str)
+static char *sanitize_name(const char *str)
 {
     char *sanitized = malloc((strlen(str) + 1) * sizeof(char));
 

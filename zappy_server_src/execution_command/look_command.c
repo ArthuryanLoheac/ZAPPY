@@ -85,17 +85,17 @@ static void move_forward_x(client_t *client, int *x, int *y, zappy_t *zappy)
 static void move_forward_side(client_t *client, int *xyi, zappy_t *zappy,
     char **buffer)
 {
-    int or = (client->orientation + 1);
+    int ori = (client->orientation + 1);
 
-    if (or > 4)
-        or = 1;
-    if (or == 3)
+    if (ori > 4)
+        ori = 1;
+    if (ori == 3)
         xyi[1] += xyi[2];
-    if (or == 2)
+    if (ori == 2)
         xyi[0] += xyi[2];
-    if (or == 1)
+    if (ori == 1)
         xyi[1] -= xyi[2];
-    if (or == 4)
+    if (ori == 4)
         xyi[0] -= xyi[2];
     if (xyi[1] < 0)
         xyi[1] = zappy->parser->height - 1;
@@ -104,6 +104,13 @@ static void move_forward_side(client_t *client, int *xyi, zappy_t *zappy,
     xyi[1] = xyi[1] % zappy->parser->height;
     xyi[0] = xyi[0] % zappy->parser->width;
     add_to_buffer_tile(buffer, zappy, xyi[0], xyi[1]);
+}
+
+static void init_buffer(char *buffer)
+{
+    for (int i = 0; i < 2; i++)
+        buffer[i] = '\0';
+    add_to_buffer(&buffer, "[");
 }
 
 void look_command(zappy_t *zappy, client_t *client, char **args)
@@ -115,9 +122,7 @@ void look_command(zappy_t *zappy, client_t *client, char **args)
     char *buffer = malloc(2 * sizeof(char));
 
     (void) args;
-    for (int i = 0; i < 2; i++)
-        buffer[i] = '\0';
-    add_to_buffer(&buffer, "[");
+    init_buffer(buffer);
     for (int i = 0; i <= level; i++) {
         for (int j = -i; j <= i; j++) {
             xyi_cpy[0] = x;

@@ -39,13 +39,13 @@ static void add_egg(starting_map_t *map, int id, const char *team_name,
     map->eggs = new_egg;
 }
 
-static void do_distrib(starting_map_t *map, zappy_t *zappy, int num_teams)
+static void do_distrib(starting_map_t *map, zappy_t *zappy)
 {
     int grid_size = zappy->parser->width * zappy->parser->height;
     int a = 0;
 
     map->eggs = NULL;
-    for (int i = 0; i < num_teams; ++i) {
+    for (int i = 0; i < zappy->parser->nb_teams; ++i) {
         for (int j = 0; j < zappy->parser->clients_per_team; ++j)
             add_egg(map, a++, zappy->parser->team_names[i], zappy);
     }
@@ -66,7 +66,7 @@ static void init_line(zappy_t *zappy, starting_map_t *map, int y)
     }
 }
 
-starting_map_t *init_starting_map(zappy_t *zappy, int num_teams)
+starting_map_t *init_starting_map(zappy_t *zappy)
 {
     starting_map_t *map = malloc(sizeof(starting_map_t));
 
@@ -85,7 +85,7 @@ starting_map_t *init_starting_map(zappy_t *zappy, int num_teams)
         }
         init_line(zappy, map, y);
     }
-    do_distrib(map, zappy, num_teams);
+    do_distrib(map, zappy);
     return (map);
 }
 

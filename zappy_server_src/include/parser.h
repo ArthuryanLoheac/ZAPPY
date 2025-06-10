@@ -15,6 +15,7 @@ typedef struct parser_s {
     char **team_names;
     int clients_per_team;
     int freq;
+    int nb_teams;
 } parser_t;
 
 typedef struct parser_str_s {

@@ -64,7 +64,7 @@ void incr_mendiane(cell_t *cell);
 void incr_phiras(cell_t *cell);
 void incr_thystame(cell_t *cell);
 
-starting_map_t *init_starting_map(zappy_t *zappy, int num_teams);
+starting_map_t *init_starting_map(zappy_t *zappy);
 void free_starting_map(starting_map_t *map, int height);
 
 void start_server(zappy_t *zappy);

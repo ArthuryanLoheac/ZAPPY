@@ -92,7 +92,7 @@ void Interface::handleQueues() {
             throw AI::CommandNotFoundException(input[0]);
         }
         try {
-            (this->*(commands[input[0]]))(output);
+            (this->*(commands[input[0]]))(output, input);
         } catch (const std::exception &e) {
             std::cerr << "Error handling command '" << input[0]
                 << "': " << e.what() << std::endl;
@@ -143,11 +143,14 @@ void Interface::factoryCommands() {
     commands["RIGHT"] = &Interface::commandRIGHT;
     commands["LOOK"] = &Interface::commandLOOK;
     commands["INVENTORY"] = &Interface::commandINVENTORY;
+    commands["TAKE"] = &Interface::commandTAKE;
 }
 
 // ————————————————————————— END OF FACTORY ————————————————————————
 
-void Interface::commandWELCOME(std::vector<std::string> &args) {
+void Interface::commandWELCOME(std::vector<std::string> &args,
+    std::vector<std::string> &command) {
+    (void)command;
     if (args.size() != 1) {
         throw AI::CommandArgumentsException("WELCOME",
             "Expected no arguments, got " +

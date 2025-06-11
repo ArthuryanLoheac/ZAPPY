@@ -83,9 +83,12 @@ int initChildProcess(int port, const std::string &ip,
             return 84;
         }
         if (AI::Data::i().isRunning) {
-            interface.sendCommand(FORWARD);
-            interface.sendCommand(LOOK);
-            interface.sendCommand(INVENTORY);
+            try {
+                interface.sendCommand(FORWARD);
+                interface.sendCommand("Take food\n");
+            } catch (const std::exception &e) {
+                std::cerr << "Error sending command: " << e.what() << std::endl;
+            }
         }
     }
     return 0;

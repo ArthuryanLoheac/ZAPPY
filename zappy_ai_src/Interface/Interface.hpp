@@ -3,6 +3,7 @@
 #include <queue>
 #include <string>
 #include <map>
+#include <vector>
 
 #include "Socket/Socket.hpp"
 
@@ -44,18 +45,26 @@ class Interface {
 
     std::queue<std::vector<std::string>> inputQueue;
     std::queue<std::vector<std::string>> outputQueue;
-    std::map<std::string, void(Interface::*)(std::vector<std::string> &)>
-        commands;
+    std::map<std::string, void(Interface::*)(std::vector<std::string> &,
+        std::vector<std::string> &)> commands;
 
     // Receiving commands
     void factoryCommands();
 
-    void commandWELCOME(std::vector<std::string> &args);
-    void commandFORWARD(std::vector<std::string> &args);
-    void commandLEFT(std::vector<std::string> &args);
-    void commandRIGHT(std::vector<std::string> &args);
-    void commandLOOK(std::vector<std::string> &args);
-    void commandINVENTORY(std::vector<std::string> &args);
+    void commandWELCOME(std::vector<std::string> &args,
+        std::vector<std::string> &command);
+    void commandFORWARD(std::vector<std::string> &args,
+        std::vector<std::string> &command);
+    void commandLEFT(std::vector<std::string> &args,
+        std::vector<std::string> &command);
+    void commandRIGHT(std::vector<std::string> &args,
+        std::vector<std::string> &command);
+    void commandLOOK(std::vector<std::string> &args,
+        std::vector<std::string> &command);
+    void commandINVENTORY(std::vector<std::string> &args,
+        std::vector<std::string> &command);
+    void commandTAKE(std::vector<std::string> &args,
+        std::vector<std::string> &command);
 
     // Sending commands
     std::queue<std::string> commandBuffer;

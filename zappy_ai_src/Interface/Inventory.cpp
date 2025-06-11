@@ -9,7 +9,9 @@
 
 namespace AI {
 
-void Interface::commandLOOK(std::vector<std::string> &args) {
+void Interface::commandLOOK(std::vector<std::string> &args,
+    std::vector<std::string> &command) {
+    (void)command;
     if (args.size() < 2) {
         throw CommandArgumentsException("LOOK",
             "Expected at least one argument, got " +
@@ -73,7 +75,9 @@ void Interface::commandLOOK(std::vector<std::string> &args) {
     }
 }
 
-void Interface::commandINVENTORY(std::vector<std::string> &args) {
+void Interface::commandINVENTORY(std::vector<std::string> &args,
+    std::vector<std::string> &command) {
+    (void)command;
     if (args.size() < 2) {
         throw CommandArgumentsException("INVENTORY",
             "Expected at least one argument, got " +
@@ -97,6 +101,21 @@ void Interface::commandINVENTORY(std::vector<std::string> &args) {
         int quantity = std::stoi(args[i + 1]);
         Data::i().inventory[item] += quantity;
     }
+}
+
+void Interface::commandTAKE(std::vector<std::string> &args,
+    std::vector<std::string> &command) {
+    if (args.size() != 1) {
+        throw CommandArgumentsException("TAKE",
+            "Expected one argument, got " +
+            std::to_string(args.size()));
+    }
+
+    const std::string &status = args[0];
+
+    if (status == "KO") return;
+
+    Data::i().inventory[command[1]]++;
 }
 
 }  // namespace AI

@@ -34,7 +34,7 @@ jobs:
           fetch-depth: 0
       - name: "Check the coding style"
         run: |
-          check.sh "$(pwd)" "$(pwd)"
+          check.sh "$(pwd)/zappy_server_src" "$(pwd)"
           tmpfile=$(mktemp)
 
           echo "0" > "$tmpfile"

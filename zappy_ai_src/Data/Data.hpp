@@ -22,6 +22,9 @@ class Data {
     int mapX;
     int mapY;
 
+    // Inventory
+    std::unordered_map<std::string, int> inventory;
+
     // representation of the vision given by the LOOK command, first vector for
     // depth, second for the direction and third is the objects and the number
     // of this object

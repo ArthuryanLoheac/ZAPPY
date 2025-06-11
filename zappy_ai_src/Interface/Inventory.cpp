@@ -73,4 +73,30 @@ void Interface::commandLOOK(std::vector<std::string> &args) {
     }
 }
 
+void Interface::commandINVENTORY(std::vector<std::string> &args) {
+    if (args.size() < 2) {
+        throw CommandArgumentsException("INVENTORY",
+            "Expected at least one argument, got " +
+            std::to_string(args.size() - 1));
+    }
+
+    if (args[0] == "[")
+        args.erase(args.begin());
+
+    if (args.back() == "]")
+        args.pop_back();
+
+    Data::i().inventory.clear();
+    for (size_t i = 0; i < args.size(); i += 2) {
+        if (i + 1 >= args.size()) {
+            throw CommandArgumentsException("INVENTORY",
+                "Expected an even number of arguments, got " +
+                std::to_string(args.size() - 1));
+        }
+        const std::string &item = args[i];
+        int quantity = std::stoi(args[i + 1]);
+        Data::i().inventory[item] += quantity;
+    }
+}
+
 }  // namespace AI

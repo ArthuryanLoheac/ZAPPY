@@ -55,6 +55,7 @@ class Interface {
     void commandLEFT(std::vector<std::string> &args);
     void commandRIGHT(std::vector<std::string> &args);
     void commandLOOK(std::vector<std::string> &args);
+    void commandINVENTORY(std::vector<std::string> &args);
 
     // Sending commands
     std::queue<std::string> commandBuffer;

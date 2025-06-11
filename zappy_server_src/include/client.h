@@ -58,7 +58,6 @@ void send_data_to_graphics(zappy_t *zappy, char *data);
 void add_to_buffer(char **buffer, const char *data);
 int get_size(int nbr);
 void push_command_to_queue(char **args, client_t *client, zappy_t *zappy_ptr);
-char *realloc_strcat(char *dest, const char *src);
 
 void send_players_data(zappy_t *zappy, client_t *c);
 void send_eggs_data(zappy_t *zappy, client_t *c);

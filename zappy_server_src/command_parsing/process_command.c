@@ -35,22 +35,6 @@ static bool is_in_teams(char *get, char **teams, zappy_t *zappy)
     return false;
 }
 
-char *realloc_strcat(char *dest, const char *src)
-{
-    size_t dest_len = dest ? strlen(dest) : 0;
-    size_t src_len = src ? strlen(src) : 0;
-    char *new_str = realloc(dest, dest_len + src_len + 1);
-
-    if (new_str == NULL) {
-        free(dest);
-        return NULL;
-    }
-    if (src) {
-        strcpy(new_str + dest_len, src);
-    }
-    return new_str;
-}
-
 void send_data_to_graphics(zappy_t *zappy, char *data)
 {
     client_t *current_client = zappy->clients;

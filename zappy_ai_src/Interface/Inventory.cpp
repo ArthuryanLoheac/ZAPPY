@@ -75,7 +75,7 @@ void Interface::commandLOOK(std::vector<std::string> &args) {
 
 void Interface::commandINVENTORY(std::vector<std::string> &args) {
     if (args.size() < 2) {
-        throw CommandArgumentsException("LOOK",
+        throw CommandArgumentsException("INVENTORY",
             "Expected at least one argument, got " +
             std::to_string(args.size() - 1));
     }

@@ -16,6 +16,7 @@ const command_name_size_t command_name_size_list[] = {
     {"LOOK", 7},
     {"INVENTORY", 1},
     {"BROADCAST", 7},
+    {"CONNECT_NBR", 0},
     {"FORK", 42},
     {"EJECT", 7},
     {"TAKE", 7},

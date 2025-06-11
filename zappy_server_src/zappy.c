@@ -14,6 +14,7 @@
 #include "include/zappy.h"
 #include "include/client.h"
 #include "include/command.h"
+#include "logs.h"
 
 static void check_for_new_client(zappy_t *zappy)
 {

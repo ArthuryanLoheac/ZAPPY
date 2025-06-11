@@ -10,6 +10,7 @@
 #include <string.h>
 
 #include "include/zappy.h"
+#include "logs.h"
 
 static void add_egg(starting_map_t *map, int id, const char *team_name,
     zappy_t *zappy)
@@ -31,6 +32,7 @@ starting_map_t *init_starting_map(zappy_t *zappy)
     starting_map_t *map = malloc(sizeof(starting_map_t));
     int a = 0;
 
+    LOG_DEBUG("Initializing map");
     if (!map)
         return NULL;
     map->grid = create_map(zappy->parser);

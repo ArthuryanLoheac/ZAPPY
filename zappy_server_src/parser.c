@@ -11,6 +11,7 @@
 #include <stdlib.h>
 
 #include "include/parser.h"
+#include "logs.h"
 
 void display_help(void)
 {
@@ -82,6 +83,7 @@ static parser_t *init_parser(void)
 {
     parser_t *parser = malloc(sizeof(parser_t));
 
+    LOG_DEBUG("Parsing arguments");
     if (!parser)
         display_error("Failed to allocate memory for parser");
     parser->port = 0;

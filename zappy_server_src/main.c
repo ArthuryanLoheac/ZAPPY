@@ -16,6 +16,7 @@
 #include "include/zappy.h"
 #include "include/parser.h"
 #include "include/server.h"
+#include "logs.h"
 
 static zappy_t zappy = {0};
 
@@ -39,6 +40,7 @@ int main(int ac, char **av)
 {
     zappy_t *zappy_ptr = &zappy;
 
+    set_log_level(DEBUG);
     srand(time(NULL));
     zappy_ptr->parser = parse_arguments(ac, av);
     zappy_ptr->parser_str = parse_str_arguments(ac, av);

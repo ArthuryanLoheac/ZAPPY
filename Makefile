@@ -29,18 +29,19 @@ DEPS = $(OBJ_DIR)/*.d
 FLAGS_SERVER = -MMD -MP \
 	-I./zappy_server_src/include \
 	-I./libc/include \
+	-I./lib	\
 	-std=gnu17 -Wall -Wextra -Werror \
 
 FLAGS_GUI =	-MMD -MP \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
-	-Ilib -std=c++17 -Wall -Wextra -Werror
+	-I./libcpp -I./lib -std=c++17 -Wall -Wextra -Werror
 LDFLAGS_GUI = -lIrrlicht
 
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
-	-Ilib -std=c++20 -Wall -Wextra -Werror
+	-I./libcpp -I./lib -std=c++20 -Wall -Wextra -Werror
 
-FLAGS_COMMON = -MMD -MP \
+FLAGS_CPP_COMMON = -MMD -MP \
 	$(shell find lib -type d -exec echo -I{} \;) \
 	-std=c++20 -Wall -Wextra -Werror
 
@@ -63,7 +64,7 @@ FLAGS_LINTER =	\
 ZAPPY_SERVER = zappy_server
 ZAPPY_GUI = zappy_gui
 ZAPPY_AI = zappy_ai
-COMMON_LIB = lib/libcommon.a
+COMMON_CPP_LIB = libcpp/libcommon.a
 COMMON_C_LIB = libc/libcommon.a
 
 # ============= SOURCES ============= #
@@ -72,7 +73,7 @@ SRC_MAIN_SERVER	= zappy_server_src/main.c
 SRC_MAIN_GUI = zappy_gui_src/main.cpp
 SRC_MAIN_AI	= zappy_ai_src/main.cpp
 
-SRC_CPP_COMMON = $(shell find lib -type f -name "*.cpp")
+SRC_CPP_COMMON = $(shell find libcpp -type f -name "*.cpp")
 SRC_C_COMMON = $(shell find libc -type f -name "*.c")
 SRC_SERVER = $(shell find zappy_server_src -type f -name "*.c" ! -name \
 	"main.c")
@@ -84,10 +85,10 @@ SRC_TESTS = tests/test_1.cpp \
 
 all: $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI)
 
-$(COMMON_LIB): $(OBJ_CPP_COMMON)
+$(COMMON_CPP_LIB): $(OBJ_CPP_COMMON)
 	@mkdir -p $(dir $@)
-	ar rc $(COMMON_LIB) $(OBJ_CPP_COMMON)
-	ranlib $(COMMON_LIB)
+	ar rc $(COMMON_CPP_LIB) $(OBJ_CPP_COMMON)
+	ranlib $(COMMON_CPP_LIB)
 
 $(COMMON_C_LIB): $(OBJ_C_COMMON)
 	@mkdir -p $(dir $@)
@@ -98,12 +99,12 @@ $(ZAPPY_SERVER): $(COMMON_C_LIB) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER)
 	gcc -o $(ZAPPY_SERVER) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER) \
 	$(FLAGS_SERVER) -Llibc -lcommon
 
-$(ZAPPY_GUI): $(COMMON_LIB) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI)
-	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) -Llib -lcommon \
+$(ZAPPY_GUI): $(COMMON_CPP_LIB) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI)
+	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) -Llibcpp -lcommon \
 	$(LDFLAGS_GUI)
 
-$(ZAPPY_AI): $(COMMON_LIB) $(OBJ_SRC_AI) $(OBJ_MAIN_AI)
-	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) -Llib -lcommon \
+$(ZAPPY_AI): $(COMMON_CPP_LIB) $(OBJ_SRC_AI) $(OBJ_MAIN_AI)
+	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) -Llibcpp -lcommon \
 	$(FLAGS_AI)
 
 # ============= CLEANS ============= #
@@ -130,9 +131,9 @@ $(OBJ_DIR)/zappy_ai_src/%.o: zappy_ai_src/%.cpp
 	@mkdir -p $(dir $@)
 	g++ -c $(FLAGS_AI) $< -o $@
 
-$(OBJ_DIR)/lib/%.o: lib/%.cpp
+$(OBJ_DIR)/libcpp/%.o: libcpp/%.cpp
 	@mkdir -p $(dir $@)
-	g++ -c $(FLAGS_COMMON) $< -o $@
+	g++ -c $(FLAGS_CPP_COMMON) $< -o $@
 
 $(OBJ_DIR)/libc/%.o: libc/%.c
 	@mkdir -p $(dir $@)

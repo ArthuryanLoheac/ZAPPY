@@ -16,9 +16,11 @@ typedef struct command_name_size_s {
     unsigned int duration; 
 } command_name_size_t;
 
-extern const command_name_size_t command_name_size_list[];
+extern const command_name_size_t player_command_name_size_list[];
+extern const command_name_size_t gui_command_name_size_list[];
 
-int get_command_duration(const char *name);
+int get_gui_command_duration(const char *name);
+int get_player_command_duration(const char *name);
 
 void handle_client_command(zappy_t *zappy, int fd);
 void send_client_command(zappy_t *zappy, int fd);

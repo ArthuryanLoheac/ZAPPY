@@ -23,22 +23,36 @@ jobs:
         python-version: 3.x
     - run: pip install cpplint
     - run: make style_check
-  check_epitech_coding_style:
+check_epitech_coding_style:
+    if: github.repository != 'EpitechPromo2028/B-OOP-400-NAN-4-1-arcade-arthuryan.loheac-de-sainte-marie'
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/epitech/coding-style-checker:latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Check coding style
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: "Check the coding style"
         run: |
-          cd zappy_server_src
-          check.sh . .
-          # Allow 1 error
-          if [ "$(cat coding-style-reports.log | wc -l)" -gt 1 ]; then
-            cat coding-style-reports.log
+          check.sh "$(pwd)" "$(pwd)"
+          tmpfile=$(mktemp)
+
+          echo "0" > "$tmpfile"
+          cat coding-style-reports.log | while read -r line; do
+            file=$(echo "$line" | cut -d':' -f1 | cut -d'/' -f 2-)
+            nbline=$(echo "$line" | cut -d':' -f2)
+            title=$(echo "$line" | cut -d':' -f3)" coding style error"
+            code=$(echo "$line" | cut -d':' -f4)
+            echo "::error title=$title,file=$file,line=$nbline,col=0::$code"
+            echo "1" > "$tmpfile"
+          done
+
+          if [ "$(cat "$tmpfile")" = "1" ]; then
+            rm "$tmpfile"
             exit 1
           fi
-          cat coding-style-reports.log || true
+          rm "$tmpfile"
   check_program_compilation:
     runs-on: ubuntu-latest
     container:

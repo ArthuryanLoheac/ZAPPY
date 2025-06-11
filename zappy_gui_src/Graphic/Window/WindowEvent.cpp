@@ -4,8 +4,13 @@
 
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "Graphic/Window/window.hpp"
+#include "window.hpp"
+#include <iostream>
 
 namespace GUI {
+
+
+
 void Window::handleEvent() {
     int xMoveCam = receiver.getValBetween(irr::KEY_KEY_E, irr::KEY_KEY_A);
     int yMoveCenterCam = receiver.getValBetween(irr::KEY_KEY_D, irr::KEY_KEY_Q);
@@ -16,6 +21,9 @@ void Window::handleEvent() {
         device->closeDevice();
     zoom = -receiver.ConsumeWheelDelta();
     moveCamera(xMoveCam, zoom, xMoveCenterCam, yMoveCenterCam);
+    if (receiver.IsMouseDown())
+        handleCLick();
+    receiver.updateLastPressed();
 }
 
 void Window::updateDeltaTime() {
@@ -68,4 +76,31 @@ void Window::updateRotation(float x) {
     if (angleXCamera > 360.f) angleXCamera -= 360.f;
     if (angleXCamera < 0.f) angleXCamera += 360.f;
 }
+
+void GUI::Window::handleCLick() {
+    irr::core::position2d<irr::s32> mousePos = device->getCursorControl()->getPosition();
+    irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()->getRayFromScreenCoordinates(mousePos, cam);
+
+    irr::core::plane3d<irr::f32> groundPlane(irr::core::vector3df(0, -2, 0),
+        irr::core::vector3df(0, 1, 0));
+    irr::core::vector3df worldPos;
+
+    if (groundPlane.getIntersectionWithLine(ray.start, ray.getVector(), worldPos)) {
+        worldPos.X += GameDataManager::i().getWidth() / 2.f;
+        worldPos.Z += GameDataManager::i().getHeight() / 2.f;
+        int x = static_cast<int>(worldPos.X);
+        int y = static_cast<int>(worldPos.Z);
+        if (x < 0 || x >= GameDataManager::i().getWidth() ||
+            y < 0 || y >= GameDataManager::i().getHeight())
+            return;
+        GameTile &tile = GameDataManager::i().getTile(x, y);
+        printf("Clicked on tile (%d, %d) : "
+               "Food: %d, R1: %d, R2: %d, R3: %d, R4: %d, R5: %d, R6: %d\n",
+               x, y, tile.getRessource(0), tile.getRessource(1),
+               tile.getRessource(2), tile.getRessource(3),
+               tile.getRessource(4), tile.getRessource(5), tile.getRessource(6));
+    }
+}
+
 }  // namespace GUI
+

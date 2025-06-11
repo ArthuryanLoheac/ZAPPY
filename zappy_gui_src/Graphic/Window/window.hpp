@@ -42,6 +42,8 @@ class Window {
     void updateMoveOrigin(float xMove, float yMove, float radX, float radZ);
     void updateRotation(float x);
 
+    void handleCLick();
+
     static Window &i() {
         static Window instance;
         return instance;

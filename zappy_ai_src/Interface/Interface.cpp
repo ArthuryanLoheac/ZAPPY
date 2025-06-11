@@ -145,6 +145,7 @@ void Interface::factoryCommands() {
     commands["INVENTORY"] = &Interface::commandINVENTORY;
     commands["TAKE"] = &Interface::commandTAKE;
     commands["SET"] = &Interface::commandSET;
+    commands["EJECT"] = &Interface::commandEJECT;
 }
 
 // ————————————————————————— END OF FACTORY ————————————————————————

@@ -31,7 +31,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check coding style
         run: |
-          check.sh ./zappy_server_src
+          cd zappy_server_src
+          check.sh . .
           # Allow 1 error
           if [ "$(cat coding-style-reports.log | wc -l)" -gt 1 ]; then
             cat coding-style-reports.log

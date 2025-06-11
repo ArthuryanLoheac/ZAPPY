@@ -29,7 +29,7 @@ void display_help(void)
 
 void display_error(const char *message)
 {
-    fprintf(stderr, "Error: %s\n", message);
+    LOG_FATAL("%s", message);
     exit(84);
 }
 

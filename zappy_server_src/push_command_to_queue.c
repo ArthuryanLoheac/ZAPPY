@@ -7,7 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "client.h"
+#include "logs.h"
 
 static void set_upper(char **args)
 {
@@ -69,7 +71,10 @@ void push_command_to_queue(char **args, client_t *client, zappy_t *zappy_ptr)
         strcmp(args[0], "LEFT") == 0 || strcmp(args[0], "LOOK") == 0)
         add_command(7, args, client, &b);
     if (!b) {
-        printf("UNKNOWN command %s\n", args[0]);
+        LOG_WARNING("[%i]: Received unknown command: %s\n",
+            client->fd, args[0]);
         client->out_buffer = realloc_strcat(client->out_buffer, "ko\n");
+    } else {
+        LOG_INFO("[%i]: Received %s", client->fd, args[0]);
     }
 }

@@ -25,7 +25,7 @@ static void check_for_new_client(zappy_t *zappy)
         LOG_DEBUG("Connection attempt from a client");
         new_fd = accept(server->fds[0].fd, NULL, NULL);
         if (new_fd == -1) {
-            LOG_ERROR("Connection attempt from client failed:"
+            LOG_WARNING("Connection attempt from client failed:"
                 " accept syscall failed");
             return;
         }

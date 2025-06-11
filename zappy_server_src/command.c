@@ -13,6 +13,7 @@
 
 #include "include/command.h"
 #include "include/client.h"
+#include "logs.h"
 
 void append_client_out_buffer(client_t *client, const char *format, ...)
 {
@@ -76,7 +77,10 @@ void send_client_command(zappy_t *zappy, int fd)
     if (current == NULL || current->out_buffer == NULL)
         return;
     if (write(fd, current->out_buffer, strlen(current->out_buffer)) == -1)
-        display_error("Failed to send command to client");
+        LOG_INFO("[%i]: Failed to send command %s",
+            current->fd, current->out_buffer);
+    else
+        LOG_INFO("[%i]: Sent %s", current->fd, current->out_buffer);
     free(current->out_buffer);
     current->out_buffer = NULL;
 }

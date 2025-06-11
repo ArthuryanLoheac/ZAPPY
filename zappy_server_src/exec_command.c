@@ -66,7 +66,8 @@ void exec_command(char **args, client_t *client, zappy_t *zappy_ptr)
         return;
     set_upper(args);
     if (strcmp(args[0], "FORWARD") == 0 || strcmp(args[0], "RIGHT") == 0 ||
-        strcmp(args[0], "LEFT") == 0 || strcmp(args[0], "LOOK") == 0)
+        strcmp(args[0], "LEFT") == 0 || strcmp(args[0], "LOOK") == 0 ||
+        strcmp(args[0], "TAKE") == 0)
         add_command(7, args, client, &b);
     if (!b) {
         printf("UNKNOWN command %s\n", args[0]);

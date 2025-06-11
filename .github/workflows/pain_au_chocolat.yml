@@ -23,7 +23,7 @@ jobs:
         python-version: 3.x
     - run: pip install cpplint
     - run: make style_check
-check_epitech_coding_style:
+  check_epitech_coding_style:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/epitech/coding-style-checker:latest

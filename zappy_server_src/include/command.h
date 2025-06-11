@@ -13,7 +13,7 @@
 
 typedef struct command_name_size_s {
     const char *name;
-    unsigned int duration; 
+    unsigned int duration;
 } command_name_size_t;
 
 extern const command_name_size_t command_name_size_list[];

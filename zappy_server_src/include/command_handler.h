@@ -22,6 +22,7 @@ void forward_command(zappy_t *zappy, client_t *client, char **args);
 void right_command(zappy_t *zappy, client_t *client, char **args);
 void left_command(zappy_t *zappy, client_t *client, char **args);
 void take_command(zappy_t *zappy, client_t *client, char **args);
+void set_command(zappy_t *zappy, client_t *client, char **args);
 
 typedef struct command_func_s {
     char *name;

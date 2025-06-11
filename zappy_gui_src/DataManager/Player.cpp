@@ -201,8 +201,10 @@ bool Player::checkAngleDiff(irr::core::vector3df a, irr::core::vector3df b) {
 }
 
 void Player::Update(float deltaTime) {
+    timeTT += deltaTime;
     updateRotation(deltaTime);
     updatePosition(deltaTime);
+    updtaeIdle(deltaTime);
 }
 
 void Player::updateRotation(float deltaTime) {
@@ -234,14 +236,13 @@ void Player::updatePosition(float deltaTime) {
                 PlayerMeshesCylinder[i]->setPosition(newPos);
         }
     }
+    // Update rotation
     if (checkAngleDiff(PlayerMesh->getRotation(), rotationTarget)) {
         float currentY = fmod(PlayerMesh->getRotation().Y, 360.0f);
         if (currentY < 0) currentY += 360.0f;
-
         float targetY = fmod(rotationTarget.Y, 360.0f);
         if (targetY < 0) targetY += 360.0f;
 
-        // Determine the shortest rotation direction
         float diff = targetY - currentY;
         if (diff > 180.0f) diff -= 360.0f;
         if (diff < -180.0f) diff += 360.0f;
@@ -255,5 +256,22 @@ void Player::updatePosition(float deltaTime) {
     }
 }
 
+void Player::updtaeIdle(float deltaTime) {
+    (void)deltaTime;
+    float Newy = GameDataManager::i().getTile(x, y).getWorldPos().Y;
+    Vec3d pos = PlayerMesh->getPosition();
+
+    idlePosY = std::sin(timeTT * 3) * 0.05f + 0.5f;
+    Newy += idlePosY;
+    pos.Y = Newy;
+    PlayerMesh->setPosition(pos);
+
+    for (int i = 0; i < static_cast<int>(PlayerMeshesCylinder.size()); i++) {
+        if (PlayerMeshesCylinder[i]) {
+            Vec3d posC = PlayerMesh->getPosition();
+            PlayerMeshesCylinder[i]->setPosition(posC);
+        }
+    }
+}
 }  // namespace GUI
 

@@ -84,6 +84,7 @@ int initChildProcess(int port, const std::string &ip,
         }
         if (AI::Data::i().isRunning) {
             interface.sendCommand(FORWARD);
+            interface.sendCommand(LOOK);
         }
     }
     return 0;
@@ -127,6 +128,10 @@ int mainLoop(int port, const std::string &ip,
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    for (auto &child : childs) {
+        child->terminateChild();
+        child->wait();
     }
     return 0;
 }

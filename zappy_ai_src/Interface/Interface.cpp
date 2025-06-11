@@ -142,6 +142,7 @@ void Interface::factoryCommands() {
     commands["LEFT"] = &Interface::commandLEFT;
     commands["RIGHT"] = &Interface::commandRIGHT;
     commands["LOOK"] = &Interface::commandLOOK;
+    commands["INVENTORY"] = &Interface::commandINVENTORY;
 }
 
 // ————————————————————————— END OF FACTORY ————————————————————————

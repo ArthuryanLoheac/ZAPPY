@@ -85,6 +85,7 @@ int initChildProcess(int port, const std::string &ip,
         if (AI::Data::i().isRunning) {
             interface.sendCommand(FORWARD);
             interface.sendCommand(LOOK);
+            interface.sendCommand(INVENTORY);
         }
     }
     return 0;

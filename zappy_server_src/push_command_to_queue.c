@@ -56,7 +56,7 @@ int get_size_commands(waitingCommands_t *commands)
     return size;
 }
 
-void exec_command(char **args, client_t *client, zappy_t *zappy_ptr)
+void push_command_to_queue(char **args, client_t *client, zappy_t *zappy_ptr)
 {
     bool b = false;
 

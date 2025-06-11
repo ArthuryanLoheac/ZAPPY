@@ -14,19 +14,6 @@
 #include "include/command.h"
 #include "include/client.h"
 
-static char *append_client_buffer(char *buffer, char *new_buffer)
-{
-    int size = strlen(buffer) + strlen(new_buffer) + 1;
-    char *result = malloc(sizeof(char) * size);
-
-    if (result == NULL)
-        display_error("Memory allocation failed for client buffer");
-    snprintf(result, size, "%s%s", buffer, new_buffer);
-    free(buffer);
-    free(new_buffer);
-    return result;
-}
-
 void append_client_out_buffer(client_t *client, const char *format, ...)
 {
     va_list args;
@@ -45,8 +32,7 @@ void append_client_out_buffer(client_t *client, const char *format, ...)
     if (client->out_buffer == NULL)
         client->out_buffer = new_buffer;
     else
-        client->out_buffer = append_client_buffer(client->out_buffer,
-            new_buffer);
+        add_to_buffer(&client->out_buffer, new_buffer);
 }
 
 static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
@@ -66,8 +52,8 @@ static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
     if (client->in_buffer == NULL)
         client->in_buffer = buffer;
     else
-        client->in_buffer = append_client_buffer(client->in_buffer, buffer);
-    execute_command(client, zappy);
+        add_to_buffer(&client->in_buffer, buffer);
+    extract_commands(client, zappy);
     return true;
 }
 

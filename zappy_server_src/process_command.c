@@ -140,5 +140,5 @@ void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
             return;
         client->out_buffer = strdup("ko\n");
     } else
-        exec_command(args, client, zappy_ptr);
+        push_command_to_queue(args, client, zappy_ptr);
 }

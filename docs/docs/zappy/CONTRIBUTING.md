@@ -22,6 +22,7 @@ Example:
 |-----------------------|----------------------------------------|
 | :sparkles:            | New feature                            |
 | :bug:                 | Bug fix                                |
+| :art:                 | Fix coding style                                |
 | :recycle:             | Code refactor (no new features/fixes)  |
 | :lipstick:            | UI/style changes                       |
 | :rotating_light:      | Fix compilation errors                 |

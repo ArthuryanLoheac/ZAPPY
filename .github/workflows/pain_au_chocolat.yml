@@ -38,16 +38,17 @@ jobs:
           tmpfile=$(mktemp)
 
           echo "0" > "$tmpfile"
+          error_count=0
           cat coding-style-reports.log | while read -r line; do
             file=$(echo "$line" | cut -d':' -f1 | cut -d'/' -f 2-)
             nbline=$(echo "$line" | cut -d':' -f2)
             title=$(echo "$line" | cut -d':' -f3)" coding style error"
             code=$(echo "$line" | cut -d':' -f4)
             echo "::error title=$title,file=$file,line=$nbline,col=0::$code"
-            echo "1" > "$tmpfile"
+            error_count=$((error_count + 1))
           done
 
-          if [ "$(cat "$tmpfile")" = "1" ]; then
+          if [ "$error_count" -gt 1 ]; then
             rm "$tmpfile"
             exit 1
           fi

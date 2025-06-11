@@ -64,7 +64,7 @@ static void put_object_inventory(client_t *client, char *object)
 
 void take_command(zappy_t *zappy, client_t *client, char **args)
 {
-    if (take_object(zappy, zappy->map->grid[client->x][client->y], args[0])) {
+    if (!take_object(zappy, zappy->map->grid[client->x][client->y], args[0])) {
         put_object_inventory(client, args[0]);
         add_to_buffer(&client->out_buffer, "ok\n");
     } else {

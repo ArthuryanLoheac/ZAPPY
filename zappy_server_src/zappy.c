@@ -14,6 +14,7 @@
 #include "include/zappy.h"
 #include "include/client.h"
 #include "include/command.h"
+#include "logs.h"
 
 static void check_for_new_client(zappy_t *zappy)
 {
@@ -21,9 +22,13 @@ static void check_for_new_client(zappy_t *zappy)
     int new_fd = 0;
 
     if (server->fds[0].revents & POLLIN) {
+        LOG_DEBUG("Connection attempt from a client");
         new_fd = accept(server->fds[0].fd, NULL, NULL);
-        if (new_fd == -1)
-            display_error("Failed to accept new client connection");
+        if (new_fd == -1) {
+            LOG_WARNING("Connection attempt from client failed:"
+                " accept syscall failed");
+            return;
+        }
         add_client(zappy, new_fd);
     }
 }

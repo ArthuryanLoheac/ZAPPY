@@ -11,6 +11,7 @@
 #include <stdlib.h>
 
 #include "include/parser.h"
+#include "logs.h"
 
 void display_help(void)
 {
@@ -28,7 +29,7 @@ void display_help(void)
 
 void display_error(const char *message)
 {
-    fprintf(stderr, "Error: %s\n", message);
+    LOG_FATAL("%s", message);
     exit(84);
 }
 
@@ -82,6 +83,7 @@ static parser_t *init_parser(void)
 {
     parser_t *parser = malloc(sizeof(parser_t));
 
+    LOG_DEBUG("Parsing arguments");
     if (!parser)
         display_error("Failed to allocate memory for parser");
     parser->port = 0;
@@ -108,6 +110,8 @@ static void parse_one_arg(int ac, char **av, parser_t *parser, int i)
         parser->clients_per_team = parse_int(av[i + 1], 1, 200);
     if (strcmp(av[i], "-f") == 0 && i + 1 < ac)
         parser->freq = parse_int(av[i + 1], 1, 10000);
+    if (strcmp(av[i], "-d") == 0)
+        set_log_level(DEBUG);
 }
 
 parser_t *parse_arguments(int ac, char **av)

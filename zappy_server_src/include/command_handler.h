@@ -11,8 +11,8 @@
     #include "zappy.h"
     #include "client.h"
 
-typedef void (*command_handler_t)(zappy_t *zappy, client_t *client,
-    char **args);
+typedef void (*command_handler_t)
+(zappy_t *zappy, client_t *client, char **args);
 
 void update_pos_player(zappy_t *zappy, client_t *client);
 void update_cell(zappy_t *zappy, cell_t cell);

@@ -16,6 +16,7 @@
 #include "include/zappy.h"
 #include "include/parser.h"
 #include "include/server.h"
+#include "logs.h"
 
 static zappy_t zappy = {0};
 

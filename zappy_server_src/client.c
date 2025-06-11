@@ -12,6 +12,7 @@
 
 #include "include/client.h"
 #include "include/command.h"
+#include "logs.h"
 
 static void add_client_data(zappy_t *zappy, int fd)
 {
@@ -44,6 +45,7 @@ void add_client(zappy_t *zappy, int fd)
     server->fds[server->nb_fds].revents = 0;
     add_client_data(zappy, fd);
     server->nb_fds++;
+    LOG_DEBUG("Added new client(%i) to the server", fd);
 }
 
 static void remove_client_data(client_t **clients, int fd)

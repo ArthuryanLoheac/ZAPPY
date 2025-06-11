@@ -1,9 +1,0 @@
-<map id="parse_command" name="parse_command">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,56,123,83"/>
-<area shape="rect" id="Node000002" href="$handle__commands_8c.html#a34c78653d61ed2d1f44d247e98b3f7eb" title=" " alt="" coords="171,5,305,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,53,174,34,176,39,113,58"/>
-<area shape="rect" id="Node000003" href="$handle__commands_8c.html#aa03c5d2f29891c89c666b5c1ecb84c04" title=" " alt="" coords="188,56,288,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="123,67,173,67,173,72,123,72"/>
-<area shape="rect" id="Node000004" href="$handle__commands_8c.html#a3eee1a837bff9d2627a44999f62bb963" title=" " alt="" coords="187,107,289,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="113,81,176,99,174,104,112,86"/>
-</map>

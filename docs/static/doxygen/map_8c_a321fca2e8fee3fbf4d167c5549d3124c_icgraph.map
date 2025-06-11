@@ -1,9 +1,0 @@
-<map id="init_cell" name="init_cell">
-<area shape="rect" id="Node000001" title=" " alt="" coords="408,5,474,32"/>
-<area shape="rect" id="Node000002" href="$map_8c.html#acdb03c9bf45ccd4d204290cab62f576e" title=" " alt="" coords="271,5,360,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="393,21,361,21,361,16,393,16"/>
-<area shape="rect" id="Node000003" href="$map__creation_8c.html#a7b73cf4e94bbefdc0dae0891a2120e0f" title=" " alt="" coords="103,5,223,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="255,21,223,21,223,16,255,16"/>
-<area shape="rect" id="Node000004" href="$main_8c.html#a0c99d968a34e803d378692bde2e3f18f" title=" " alt="" coords="5,5,55,32"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,21,55,21,55,16,87,16"/>
-</map>

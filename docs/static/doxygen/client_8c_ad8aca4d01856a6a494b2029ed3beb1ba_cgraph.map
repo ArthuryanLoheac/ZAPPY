@@ -1,7 +1,0 @@
-<map id="remove_client" name="remove_client">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,108,57"/>
-<area shape="rect" id="Node000002" href="$parser_8c.html#a3fd716b111caa8f93098f7e5070fd0bb" title=" " alt="" coords="175,5,270,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,34,159,26,160,31,109,39"/>
-<area shape="rect" id="Node000003" href="$client_8c.html#af5db95d2299064317adeb94cd56501c7" title=" " alt="" coords="156,56,290,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="109,49,141,54,140,59,108,54"/>
-</map>

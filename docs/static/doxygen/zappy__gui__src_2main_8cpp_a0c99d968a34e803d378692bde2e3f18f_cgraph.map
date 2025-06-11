@@ -1,7 +1,0 @@
-<map id="main" name="main">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,55,57"/>
-<area shape="rect" id="Node000002" href="$zappy__ai__src_2main_8cpp.html#a7ca80e50cb0e573c8bda9686224d4106" title=" " alt="" coords="103,5,186,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="54,36,87,29,88,34,56,41"/>
-<area shape="rect" id="Node000003" href="$zappy__ai__src_2main_8cpp.html#ac453596209f36890b5077cff340929c4" title=" " alt="" coords="104,56,185,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="56,47,89,54,88,60,54,52"/>
-</map>

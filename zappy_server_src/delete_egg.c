@@ -17,7 +17,7 @@ static void delete_egg(egg_t *prev, egg_t *current, zappy_t *zappy_ptr)
         prev->next = current->next;
     }
     free(current->team_name);
-    free(current); 
+    free(current);
 }
 
 void delete_egg_team_name(zappy_t *zappy_ptr, char *team_name)

@@ -9,7 +9,7 @@
 
 #include "command.h"
 
-const command_name_size_t command_name_size_list[] = {
+const command_name_size_t player_command_name_size_list[] = {
     {"FORWARD", 7},
     {"RIGHT", 7},
     {"LEFT", 7},
@@ -23,4 +23,13 @@ const command_name_size_t command_name_size_list[] = {
     {"SET", 7},
     {"INCANTATION", 300},
     {NULL, -1}
+};
+
+const command_name_size_t gui_command_name_size_list[] = {
+    {"MSZ", 0},
+    {"BCT", 0},
+    {"MCT", 0},
+    {"TNA", 0},
+    {"SGT", 0},
+    {"SST", 0}
 };

@@ -24,7 +24,6 @@ jobs:
     - run: pip install cpplint
     - run: make style_check
 check_epitech_coding_style:
-    if: github.repository != 'EpitechPromo2028/B-OOP-400-NAN-4-1-arcade-arthuryan.loheac-de-sainte-marie'
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/epitech/coding-style-checker:latest

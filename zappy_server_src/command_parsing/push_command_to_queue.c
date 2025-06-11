@@ -70,7 +70,10 @@ void push_command_to_queue(char **args, client_t *client, zappy_t *zappy_ptr)
     if (get_size_commands(client->waiting_commands) >= 10)
         return;
     set_upper(args);
-    command_duration = get_command_duration(args[0]);
+    if (strcmp(client->team_name, "GRAPHICAL") == 0)
+        command_duration = get_gui_command_duration(args[0]);
+    else
+        command_duration = get_player_command_duration(args[0]);
     if (command_duration != -1) {
         LOG_INFO("[%i]: Received %s", client->fd, args[0]);
         if (!add_command(7, args, client))

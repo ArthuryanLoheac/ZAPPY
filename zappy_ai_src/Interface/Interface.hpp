@@ -65,6 +65,8 @@ class Interface {
         std::vector<std::string> &command);
     void commandTAKE(std::vector<std::string> &args,
         std::vector<std::string> &command);
+    void commandSET(std::vector<std::string> &args,
+        std::vector<std::string> &command);
 
     // Sending commands
     std::queue<std::string> commandBuffer;

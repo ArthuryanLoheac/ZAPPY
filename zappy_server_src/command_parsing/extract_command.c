@@ -100,7 +100,7 @@ static void process_command_line(client_t *client, char *command_line,
     free_command_args(args);
 }
 
-void execute_command(client_t *client, zappy_t *zappy_ptr)
+void extract_commands(client_t *client, zappy_t *zappy_ptr)
 {
     char *newline_pos = NULL;
     char *command_line = NULL;

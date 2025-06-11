@@ -7,7 +7,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "command.h"
 #include "client.h"
+#include "logs.h"
 
 static void set_upper(char **args)
 {
@@ -22,14 +25,16 @@ static void set_upper(char **args)
     }
 }
 
-static void add_command(int duration, char **args, client_t *client, bool *b)
+static bool add_command(int duration, char **args, client_t *client)
 {
     waitingCommands_t *new_command = malloc(sizeof(waitingCommands_t));
     int count = 0;
     int i = 0;
 
-    if (new_command == NULL)
-        return;
+    if (new_command == NULL) {
+        LOG_ERROR("Malloc failed for add_command:new_command");
+        return false;
+    }
     while (args[count])
         count++;
     count++;
@@ -42,7 +47,7 @@ static void add_command(int duration, char **args, client_t *client, bool *b)
     new_command->ticksLeft = duration;
     new_command->next = client->waiting_commands;
     client->waiting_commands = new_command;
-    *b = true;
+    return true;
 }
 
 int get_size_commands(waitingCommands_t *commands)
@@ -56,20 +61,23 @@ int get_size_commands(waitingCommands_t *commands)
     return size;
 }
 
-void exec_command(char **args, client_t *client, zappy_t *zappy_ptr)
+void push_command_to_queue(char **args, client_t *client, zappy_t *zappy_ptr)
 {
-    bool b = false;
+    int command_duration;
 
     if (client == NULL || zappy_ptr == NULL)
         return;
     if (get_size_commands(client->waiting_commands) >= 10)
         return;
     set_upper(args);
-    if (strcmp(args[0], "FORWARD") == 0 || strcmp(args[0], "RIGHT") == 0 ||
-        strcmp(args[0], "LEFT") == 0 || strcmp(args[0], "LOOK") == 0)
-        add_command(7, args, client, &b);
-    if (!b) {
-        printf("UNKNOWN command %s\n", args[0]);
-        client->out_buffer = realloc_strcat(client->out_buffer, "ko\n");
+    command_duration = get_command_duration(args[0]);
+    if (command_duration != -1) {
+        LOG_INFO("[%i]: Received %s", client->fd, args[0]);
+        if (!add_command(7, args, client))
+            add_to_buffer(&client->out_buffer, "ko\n");
+    } else {
+        LOG_WARNING("[%i]: Received unknown command: %s\n",
+            client->fd, args[0]);
+        add_to_buffer(&client->out_buffer, "ko\n");
     }
 }

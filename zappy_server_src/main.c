@@ -40,7 +40,6 @@ int main(int ac, char **av)
 {
     zappy_t *zappy_ptr = &zappy;
 
-    set_log_level(DEBUG);
     srand(time(NULL));
     zappy_ptr->parser = parse_arguments(ac, av);
     zappy_ptr->parser_str = parse_str_arguments(ac, av);

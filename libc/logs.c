@@ -25,6 +25,13 @@ static char *get_timestamp(void)
     return timestamp;
 }
 
+static void remove_newlines(char *str)
+{
+    for (int i = 0; str[i] != '\0'; i++)
+        if (str[i] == '\n')
+            str[i] = '#';
+}
+
 void log_internal(enum log_level_e level, char *level_str, char *color,
     const char *format, ...)
 {
@@ -38,6 +45,7 @@ void log_internal(enum log_level_e level, char *level_str, char *color,
     va_start(args, format);
     vsnprintf(msg, sizeof(msg), format, args);
     va_end(args);
+    remove_newlines(msg);
     printf("%s  [%s%s%s]\t%s\n",
         timestamp, color, level_str, NO_COLOR, msg);
     free(timestamp);

@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2025
 ** ZAPPY
 ** File description:
-** List/map of all zappy core command handlers 
+** List/map of all zappy core command handlers
 */
 
 #ifndef COMMAND_HANDLER_H_

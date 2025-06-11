@@ -29,7 +29,9 @@ jobs:
       
       - name: Generate Doxygen documentation
         run: |
+          mkdir -p docs/static/doxygen
           cd docs
+          doxygen -u Doxyfile
           doxygen Doxyfile
       
       - name: Build website

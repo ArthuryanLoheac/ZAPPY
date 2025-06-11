@@ -3,7 +3,7 @@
 # Project related settings
 PROJECT_NAME           = "Zappy API Reference"
 PROJECT_BRIEF          = "API documentation for the Zappy project"
-OUTPUT_DIRECTORY       = /home/matt/tek2/YEP/ZAPPY/docs/static/doxygen
+OUTPUT_DIRECTORY       = static/doxygen
 CREATE_SUBDIRS         = NO
 ALLOW_UNICODE_NAMES    = YES
 OUTPUT_LANGUAGE        = English
@@ -29,9 +29,9 @@ SORT_GROUP_NAMES       = YES
 SORT_BY_SCOPE_NAME     = NO
 
 # Input related settings
-INPUT                  = /home/matt/tek2/YEP/ZAPPY/zappy_server_src \
-                         /home/matt/tek2/YEP/ZAPPY/zappy_ai_src \
-                         /home/matt/tek2/YEP/ZAPPY/zappy_gui_src
+INPUT                  = ../zappy_server_src \
+                         ../zappy_ai_src \
+                         ../zappy_gui_src
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \
@@ -52,7 +52,6 @@ HTML_STYLESHEET        =
 HTML_COLORSTYLE_HUE    = 220
 HTML_COLORSTYLE_SAT    = 100
 HTML_COLORSTYLE_GAMMA  = 80
-HTML_TIMESTAMP         = YES
 HTML_DYNAMIC_SECTIONS  = NO
 HTML_INDEX_NUM_ENTRIES = 100
 GENERATE_DOCSET        = NO

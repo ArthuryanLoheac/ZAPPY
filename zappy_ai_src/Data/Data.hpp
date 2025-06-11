@@ -26,7 +26,7 @@ class Data {
     // depth, second for the direction and third is the objects and the number
     // of this object
     std::vector<std::vector<std::unordered_map<std::string, int>>> vision;
-    // This method return the objects at the given coordinates in the vision,
+    // This method returns the objects at the given coordinates in the vision,
     // where x is the depth and y is the direction (for the direction, it is
     // a negative number for the left, 0 for the middle and a positive for the
     // right).

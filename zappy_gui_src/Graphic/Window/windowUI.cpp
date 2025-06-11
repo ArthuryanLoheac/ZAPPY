@@ -27,7 +27,7 @@ void Window::drawBackgrounds()
     drawOneBackground(0, 0, 150, height);
     // Draw the Right bar
     if (idPlayer != -1 || xTile != -1 || yTile != -1)
-        drawOneBackground(width - 240, 0, 240, 300);
+        drawOneBackground(width - 240, 0, 240, 400);
 }
 
 void Window::drawUI() {

@@ -74,6 +74,7 @@ void ServerGUI::bctCommand(std::vector<std::string> &args) {
 }
 
 void ServerGUI::sgtCommand(std::vector<std::string> &args) {
+    printf("sgt command received\n");
     if (args.size() != 2)
         throw CommandParsingException("Invalid sgt command format");
     int f = std::stoi(args[1]);

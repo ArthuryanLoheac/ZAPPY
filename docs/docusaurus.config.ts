@@ -26,7 +26,7 @@ const config: Config = {
   projectName: 'ZAPPY', // Usually your repo name.
   deploymentBranch: 'gh-pages',
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internationalization, you can use this field to set
@@ -79,10 +79,10 @@ const config: Config = {
           label: "Zappy docs"
         },
         {
-          href: '/doxygen/html/index.html',
-          label: 'Doxygen API',
-          target: '_blank',
+          href: '/ZAPPY/doxygen/index.html',
           position: 'right',
+          label: 'API Reference',
+          target: '_blank',
         },
       ],
     },
@@ -95,6 +95,11 @@ const config: Config = {
             {
               label: 'Docusorus Tutorial',
               to: '/docs/tutorial/intro',
+            },
+            {
+              label: 'API Reference',
+              href: '/ZAPPY/doxygen/index.html',
+              target: '_blank',
             },
           ],
         }

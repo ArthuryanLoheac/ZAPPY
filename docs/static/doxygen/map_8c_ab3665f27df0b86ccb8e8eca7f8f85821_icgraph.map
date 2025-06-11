@@ -1,0 +1,14 @@
+<map id="destroy_map" name="destroy_map">
+<area shape="rect" id="Node000001" title=" " alt="" coords="790,31,886,57"/>
+<area shape="rect" id="Node000002" href="$map__creation_8c.html#ab496a562cf58d3dbd658cb496a3b1dd3" title=" " alt="" coords="617,31,742,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="774,47,742,47,742,41,774,41"/>
+<area shape="rect" id="Node000003" href="$zappy_8c.html#aa03864dfebbcca5f721765dc4bcd0c0c" title=" " alt="" coords="473,31,569,57"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="601,47,569,47,569,41,601,41"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a12a702ea4c5d44f6062d6e96376e08b6" title=" " alt="" coords="285,5,425,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="458,37,425,32,426,27,458,32"/>
+<area shape="rect" id="Node000006" href="$main_8c.html#a0c99d968a34e803d378692bde2e3f18f" title=" " alt="" coords="5,31,55,57"/>
+<area shape="poly" id="edge6_Node000003_Node000006" title=" " alt="" coords="458,47,55,47,55,41,458,41"/>
+<area shape="rect" id="Node000005" href="$main_8c.html#a2e01f0ba90cd568dbee49bef85ba822a" title=" " alt="" coords="103,5,237,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="270,21,237,21,237,16,270,16"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="88,36,55,42,54,37,87,31"/>
+</map>

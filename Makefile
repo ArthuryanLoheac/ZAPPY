@@ -155,7 +155,8 @@ coding_style: fclean
 	rm -f coding-style-reports.log
 
 doxygen:
-	doxygen Doxyfile
+	cd docs && doxygen Doxyfile
+	cd docs && npm run start -- --port 3001
 
 # ============= TESTS ============= #
 

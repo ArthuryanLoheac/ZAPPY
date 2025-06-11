@@ -1,0 +1,7 @@
+<map id="listen_socket" name="listen_socket">
+<area shape="rect" id="Node000001" title=" " alt="" coords="251,5,349,32"/>
+<area shape="rect" id="Node000002" href="$server_8c.html#a23ab0f3b35622de0123b41ad360ba4d9" title=" " alt="" coords="103,5,203,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,21,204,21,204,16,235,16"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a0c99d968a34e803d378692bde2e3f18f" title=" " alt="" coords="5,5,55,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,21,55,21,55,16,87,16"/>
+</map>

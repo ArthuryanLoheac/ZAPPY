@@ -1,0 +1,13 @@
+<map id="spawn_resources" name="spawn_resources">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,56,129,83"/>
+<area shape="rect" id="Node000002" href="$map_8c.html#a543026bded5864e3c71ab1971a1fb052" title=" " alt="" coords="177,5,312,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,53,180,34,181,39,117,58"/>
+<area shape="rect" id="Node000003" href="$map_8c.html#a84c18178418c93d4e7ea42c163b94159" title=" " alt="" coords="188,56,301,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="129,67,172,67,172,72,129,72"/>
+<area shape="rect" id="Node000006" href="$map_8c.html#a3c9410d7cd1cddb5d9147866ff011f0d" title=" " alt="" coords="190,107,299,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="117,81,181,99,180,105,116,86"/>
+<area shape="rect" id="Node000004" href="$parser_8c.html#a3fd716b111caa8f93098f7e5070fd0bb" title=" " alt="" coords="365,31,460,57"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="301,58,349,51,350,56,302,63"/>
+<area shape="rect" id="Node000005" href="$map_8c.html#a7375bc6cbc0d9178ba6a262131d67f31" title=" " alt="" coords="360,81,465,108"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="302,75,345,82,344,87,301,80"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="parse_teams" name="parse_teams">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,56,102,83"/>
+<area shape="rect" id="Node000002" href="$parser_8c.html#a050b98c4f9faf3268814d25ffb6d29fa" title=" " alt="" coords="150,5,246,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,53,143,35,144,40,95,58"/>
+<area shape="rect" id="Node000003" href="$parser_8c.html#af6e2239bd86c9c8533070687ab8cfbf4" title=" " alt="" coords="294,31,387,57"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="102,62,278,47,279,52,102,68"/>
+<area shape="rect" id="Node000004" href="$parser_8c.html#a3fd716b111caa8f93098f7e5070fd0bb" title=" " alt="" coords="150,107,246,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="95,81,144,99,143,104,93,86"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="247,25,279,30,278,36,246,30"/>
+</map>

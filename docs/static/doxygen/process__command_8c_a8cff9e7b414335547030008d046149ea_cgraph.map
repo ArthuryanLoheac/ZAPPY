@@ -1,0 +1,9 @@
+<map id="new_connection_player" name="new_connection_player">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,163,57"/>
+<area shape="rect" id="Node000002" href="$process__command_8c.html#a8a3b8c540ccb4af605b27bb69c92e02a" title=" " alt="" coords="250,5,332,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,32,235,23,236,28,164,37"/>
+<area shape="rect" id="Node000003" href="$process__command_8c.html#a1f8760aac256de83bf45d6fe94c62cf2" title=" " alt="" coords="211,56,372,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,51,196,55,195,60,163,56"/>
+<area shape="rect" id="Node000004" href="$process__command_8c.html#a08624952cec00b3168e63e05f4203f97" title=" " alt="" coords="420,56,575,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="373,67,405,67,405,72,373,72"/>
+</map>

@@ -1,0 +1,19 @@
+<map id="new_connection_player" name="new_connection_player">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1408,5,1565,32"/>
+<area shape="rect" id="Node000002" href="$process__command_8c.html#ab89f4829cb4a8daff7b88c8c7147c836" title=" " alt="" coords="1229,5,1360,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1392,21,1360,21,1360,16,1392,16"/>
+<area shape="rect" id="Node000003" href="$handle__commands_8c.html#a98cc233ffc0887c9cd54dbc4b4be1381" title=" " alt="" coords="1022,5,1181,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1213,21,1181,21,1181,16,1213,16"/>
+<area shape="rect" id="Node000004" href="$handle__commands_8c.html#a375d7edcc6568dc2e11d1b7e2cff7ba3" title=" " alt="" coords="843,5,974,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1007,21,975,21,975,16,1007,16"/>
+<area shape="rect" id="Node000005" href="$command_8c.html#ad5ab8f8763157c7c6779aefec5223821" title=" " alt="" coords="679,5,795,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="827,21,795,21,795,16,827,16"/>
+<area shape="rect" id="Node000006" href="$command_8c.html#a89c794fd58c4d9f580afb6ecd5e91dc4" title=" " alt="" coords="469,5,631,32"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="663,21,631,21,631,16,663,16"/>
+<area shape="rect" id="Node000007" href="$zappy_8c.html#a546faa7b19427abaa0c156a70b4ff185" title=" " alt="" coords="241,5,421,32"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="454,21,422,21,422,16,454,16"/>
+<area shape="rect" id="Node000008" href="$zappy_8c.html#a9b9af6be5e3898616b325720d9f29dbc" title=" " alt="" coords="103,5,193,32"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="225,21,193,21,193,16,225,16"/>
+<area shape="rect" id="Node000009" href="$main_8c.html#a0c99d968a34e803d378692bde2e3f18f" title=" " alt="" coords="5,5,55,32"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="87,21,55,21,55,16,87,16"/>
+</map>

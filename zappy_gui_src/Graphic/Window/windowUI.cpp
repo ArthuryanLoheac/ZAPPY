@@ -27,7 +27,7 @@ void Window::drawBackgrounds()
     drawOneBackground(0, 0, 150, height);
     // Draw the Right bar
     if (idPlayer != -1 || xTile != -1 || yTile != -1)
-        drawOneBackground(width - 230, 0, 230, 300);
+        drawOneBackground(width - 240, 0, 240, 300);
 }
 
 void Window::drawUI() {
@@ -55,17 +55,17 @@ void Window::drawUI() {
             MeshImporter::i().getColor(team));
     }
 
+    int yR = 20;
     // Tile
     if (xTile != -1 && yTile != -1)
-        drawTileInfo(GUI::GameDataManager::i().getTile(xTile, yTile));
+        drawTileInfo(GUI::GameDataManager::i().getTile(xTile, yTile), yR);
 
     if (idPlayer != -1)
-        drawPlayerInfo(idPlayer);
+        drawPlayerInfo(idPlayer, yR);
 }
 
-void Window::drawTileInfo(GameTile &tile)
+void Window::drawTileInfo(GameTile &tile, int &y)
 {
-    int y = 30;
     int width = driver->getScreenSize().Width;
     std::vector<std::string> lstNames = {
         "Food", "Linemate", "Deraumere", "Sibur", "Mendiane", "Phiras", "Thystame"
@@ -80,7 +80,7 @@ void Window::drawTileInfo(GameTile &tile)
 
     std::string tileInfo = "Tile : " + std::to_string(tile.getX()) +
         ", " + std::to_string(tile.getY()) + " :";
-    font->draw(tileInfo.c_str(), UIRect(width - 200, y, 300, 300),
+    font->draw(tileInfo.c_str(), UIRect(width - 220, y, 300, 300),
         UICol(255, 0, 0, 0));
     y += 20;
     for (int i = 0; i < 7; ++i) {
@@ -88,27 +88,27 @@ void Window::drawTileInfo(GameTile &tile)
             continue;
         tileInfo = "\t - " + lstNames[i] + " : " +
             std::to_string(tile.getRessource(i));
-        font->draw(tileInfo.c_str(), UIRect(1100, y, 300, 300),
+        font->draw(tileInfo.c_str(), UIRect(width - 220, y, 300, 300),
             lstColors[i]);
         y += 20;
     }
+    y += 20;
 }
 
-void Window::drawPlayerInfo(int id)
+void Window::drawPlayerInfo(int id, int &y)
 {
-    int y = xTile == -1 && yTile == -1 ? 30 : 110;
     int width = driver->getScreenSize().Width;
     Player &player = GUI::GameDataManager::i().getPlayer(id);
 
     // Name
     std::string playerInfo = "Player " + std::to_string(id) + " : " +
         player.getTeamName();
-    font->draw(playerInfo.c_str(), UIRect(width - 200, y, 300, 300),
+    font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
         MeshImporter::i().getColor(player.getTeamName()));
     // Level
     y += 20;
     playerInfo = "\tLevel : " + std::to_string(player.getLevel());
-    font->draw(playerInfo.c_str(), UIRect(width - 200, y, 300, 300),
+    font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
         UICol(255, 0, 0, 0));
     // Position
     playerInfo = "\tPos : " + std::to_string(player.getX()) +
@@ -129,7 +129,7 @@ void Window::drawPlayerInfo(int id)
             break;
     }
     y += 20;
-    font->draw(playerInfo.c_str(), UIRect(width - 200, y, 300, 300),
+    font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
         UICol(255, 0, 0, 0));
     // Inventory
     y += 20;
@@ -147,7 +147,7 @@ void Window::drawPlayerInfo(int id)
             continue;
         playerInfo = "\t - " + lstNames[i] + " : " +
             std::to_string(player.getRessource(i));
-        font->draw(playerInfo.c_str(), UIRect(width - 200, y, 300, 300),
+        font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
             lstColors[i]);
         y += 20;
     }

@@ -54,8 +54,8 @@ class Window {
     void drawOneBackground(int x, int y, int sizeX, int sizeY);
     void drawBackgrounds();
     void drawUI();
-    void drawTileInfo(GameTile &tile);
-    void drawPlayerInfo(int id);
+    void drawTileInfo(GameTile &tile, int &y);
+    void drawPlayerInfo(int id, int &y);
     static Window &i() {
         static Window instance;
         return instance;

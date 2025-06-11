@@ -28,7 +28,7 @@ static void set_upper(char **args)
 static bool add_command(int duration, char **args, client_t *client)
 {
     waitingCommands_t *new_command = malloc(sizeof(waitingCommands_t));
-    int count = 0;
+    int count = 1;
     int i = 0;
 
     if (new_command == NULL) {
@@ -37,7 +37,6 @@ static bool add_command(int duration, char **args, client_t *client)
     }
     while (args[count])
         count++;
-    count++;
     new_command->command = malloc(sizeof(char *) * count);
     while (args[i]){
         new_command->command[i] = strdup(args[i]);

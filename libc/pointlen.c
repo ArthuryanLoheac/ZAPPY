@@ -4,9 +4,12 @@
 ** File description:
 ** contain most function that search for things
 */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+
+#include "pointlen.h"
 
 int pointlen(char **str)
 {

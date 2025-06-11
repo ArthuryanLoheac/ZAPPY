@@ -1,16 +1,16 @@
 #include <iostream>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "tools/MeshImporter.hpp"
 #include "DataManager/DataManager.hpp"
-#include "window.hpp"
 
 
 namespace GUI {
-void Window::drawOneBackground(int x, int y, int sizeX, int sizeY)
-{
+void Window::drawOneBackground(int x, int y, int sizeX, int sizeY) {
     irr::video::ITexture* bg = driver->getTexture("assets/Solid_BgUI.png");
     irr::core::rect<irr::s32> sourceRect(0, 0, 1200, 1200);
 
@@ -18,8 +18,7 @@ void Window::drawOneBackground(int x, int y, int sizeX, int sizeY)
     driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
 }
 
-void Window::drawBackgrounds()
-{
+void Window::drawBackgrounds() {
     int height = driver->getScreenSize().Height;
     int width = driver->getScreenSize().Width;
 
@@ -64,12 +63,10 @@ void Window::drawUI() {
         drawPlayerInfo(idPlayer, yR);
 }
 
-void Window::drawTileInfo(GameTile &tile, int &y)
-{
+void Window::drawTileInfo(GameTile &tile, int &y) {
     int width = driver->getScreenSize().Width;
-    std::vector<std::string> lstNames = {
-        "Food", "Linemate", "Deraumere", "Sibur", "Mendiane", "Phiras", "Thystame"
-    };
+    std::vector<std::string> lstNames = {"Food", "Linemate", "Deraumere",
+        "Sibur", "Mendiane", "Phiras", "Thystame"};
     std::vector<UICol> lstColors = {
         UICol(255, 0, 0, 0), UICol(255, 200, 193, 198),
         UICol(255, 55, 55, 55), UICol(255, 71, 73, 116),
@@ -95,8 +92,7 @@ void Window::drawTileInfo(GameTile &tile, int &y)
     y += 20;
 }
 
-void Window::drawPlayerInfo(int id, int &y)
-{
+void Window::drawPlayerInfo(int id, int &y) {
     int width = driver->getScreenSize().Width;
     Player &player = GUI::GameDataManager::i().getPlayer(id);
 
@@ -133,15 +129,13 @@ void Window::drawPlayerInfo(int id, int &y)
         UICol(255, 0, 0, 0));
     // Inventory
     y += 20;
-    std::vector<std::string> lstNames = {
-        "Food", "Linemate", "Deraumere", "Sibur", "Mendiane", "Phiras", "Thystame"
-    };
+    std::vector<std::string> lstNames = {"Food", "Linemate", "Deraumere",
+        "Sibur", "Mendiane", "Phiras", "Thystame"};
     std::vector<UICol> lstColors = {
         UICol(255, 0, 0, 0), UICol(255, 200, 193, 198),
         UICol(255, 55, 55, 55), UICol(255, 71, 73, 116),
         UICol(255, 94, 84, 33), UICol(255, 94, 31, 32),
-        UICol(255, 64, 35, 94)
-    };
+        UICol(255, 64, 35, 94)};
     for (int i = 0; i < 7; ++i) {
         if (player.getRessource(i) == 0)
             continue;

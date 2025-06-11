@@ -1,16 +1,12 @@
 #include <irrlicht/irrlicht.h>
 
 #include <algorithm>
+#include <iostream>
 
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "Graphic/Window/window.hpp"
-#include "window.hpp"
-#include <iostream>
 
 namespace GUI {
-
-
-
 void Window::handleEvent() {
     int xMoveCam = receiver.getValBetween(irr::KEY_KEY_E, irr::KEY_KEY_A);
     int yMoveCenterCam = receiver.getValBetween(irr::KEY_KEY_D, irr::KEY_KEY_Q);
@@ -77,16 +73,18 @@ void Window::updateRotation(float x) {
     if (angleXCamera < 0.f) angleXCamera += 360.f;
 }
 
-bool Window::detectCollisionGround()
-{
-    irr::core::position2d<irr::s32> mousePos = device->getCursorControl()->getPosition();
-    irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()->getRayFromScreenCoordinates(mousePos, cam);
+bool Window::detectCollisionGround() {
+    irr::core::position2d<irr::s32> mousePos =
+        device->getCursorControl()->getPosition();
+    irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()
+        ->getRayFromScreenCoordinates(mousePos, cam);
 
     irr::core::plane3d<irr::f32> groundPlane(irr::core::vector3df(0, -2, 0),
         irr::core::vector3df(0, 1, 0));
     irr::core::vector3df worldPos;
 
-    if (groundPlane.getIntersectionWithLine(ray.start, ray.getVector(), worldPos)) {
+    if (groundPlane.getIntersectionWithLine(
+        ray.start, ray.getVector(), worldPos)) {
         worldPos.X += GameDataManager::i().getWidth() / 2.f;
         worldPos.Z += GameDataManager::i().getHeight() / 2.f;
         int x = static_cast<int>(worldPos.X);
@@ -106,16 +104,16 @@ bool Window::detectCollisionGround()
     return false;
 }
 
-bool Window::detectCollisionPlayer()
-{
-    irr::core::position2d<irr::s32> mousePos = device->getCursorControl()->getPosition();
-    irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()->getRayFromScreenCoordinates(mousePos, cam);
+bool Window::detectCollisionPlayer() {
+    irr::core::position2d<irr::s32> mousePos =
+        device->getCursorControl()->getPosition();
+    irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()
+        ->getRayFromScreenCoordinates(mousePos, cam);
 
     for (auto &player : GameDataManager::i().getPlayers()) {
-        irr::core::vector3df playerPos = player.getMesh()->getPosition();
-        irr::core::aabbox3d<irr::f32> box(playerPos.X - 0.5f, playerPos.Y - 0.5f,
-            playerPos.Z - 0.5f, playerPos.X + 0.5f, playerPos.Y + 0.5f,
-            playerPos.Z + 0.5f);
+        irr::core::vector3df Pos = player.getMesh()->getPosition();
+        irr::core::aabbox3d<irr::f32> box(Pos.X - 0.5f, Pos.Y - 0.5f,
+            Pos.Z - 0.5f, Pos.X + 0.5f, Pos.Y + 0.5f, Pos.Z + 0.5f);
         if (box.intersectsWithLine(ray)) {
             if (idPlayer == player.getId()) {
                 idPlayer = -1;

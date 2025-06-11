@@ -51,6 +51,8 @@ class Window {
     bool detectCollisionGround();
     bool detectCollisionPlayer();
 
+    void drawOneBackground(int x, int y, int sizeX, int sizeY);
+    void drawBackgrounds();
     void drawUI();
     void drawTileInfo(GameTile &tile);
     void drawPlayerInfo(int id);

@@ -9,29 +9,51 @@
 
 
 namespace GUI {
-void Window::drawUI() {
-    int x = 300;
-    int y = 10;
+void Window::drawOneBackground(int x, int y, int sizeX, int sizeY)
+{
+    irr::video::ITexture* bg = driver->getTexture("assets/Solid_BgUI.png");
+    irr::core::rect<irr::s32> sourceRect(0, 0, 1200, 1200);
 
+    irr::core::rect<irr::s32>destRect(x, y, x + sizeX, y + sizeY);
+    driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
+}
+
+void Window::drawBackgrounds()
+{
+    int height = driver->getScreenSize().Height;
+    int width = driver->getScreenSize().Width;
+
+    // Draw the left bar
+    drawOneBackground(0, 0, 150, height);
+    // Draw the Right bar
+    if (idPlayer != -1 || xTile != -1 || yTile != -1)
+        drawOneBackground(width - 230, 0, 230, 300);
+}
+
+void Window::drawUI() {
+    int x = 30;
+    int y = 30;
+    int spaceBetween = 30;
+
+    drawBackgrounds();
     if (!font)
         return;
-    // TEAMS
-    font->draw("TEAMS : ", UIRect(x, y, 300, 500), UICol(255, 255, 255, 255));
-    for (auto &team : GUI::GameDataManager::i().getTeams()) {
-        y += 20;
-        Vec3d pos(x, y, 0);
-        font->draw(("\t" + team).c_str(), UIRect(pos.X, pos.Y, 300, 50),
-            MeshImporter::i().getColor(team));
-    }
-
     // FPS
     font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
-        UIRect(10, 10, 300, 50), UICol(255, 255, 255, 255));
-
+        UIRect(x, y, 300, 50), UICol(255, 0, 0, 0));
     // Frequency
+    y += spaceBetween;
     font->draw(("Freq : " +
         std::to_string(GUI::DataManager::i().getFrequency())).c_str(),
-        UIRect(150, 10, 300, 50), UICol(255, 255, 255, 255));
+        UIRect(x, y, 300, 50), UICol(255, 0, 0, 0));
+    // TEAMS
+    y += spaceBetween;
+    font->draw("TEAMS : ", UIRect(x, y, 300, 50), UICol(255, 0, 0, 0));
+    for (auto &team : GUI::GameDataManager::i().getTeams()) {
+        y += 20;
+        font->draw(("\t" + team).c_str(), UIRect(x, y, 300, 50),
+            MeshImporter::i().getColor(team));
+    }
 
     // Tile
     if (xTile != -1 && yTile != -1)
@@ -43,6 +65,7 @@ void Window::drawUI() {
 
 void Window::drawTileInfo(GameTile &tile)
 {
+    int y = 30;
     int width = driver->getScreenSize().Width;
     std::vector<std::string> lstNames = {
         "Food", "Linemate", "Deraumere", "Sibur", "Mendiane", "Phiras", "Thystame"
@@ -57,9 +80,9 @@ void Window::drawTileInfo(GameTile &tile)
 
     std::string tileInfo = "Tile : " + std::to_string(tile.getX()) +
         ", " + std::to_string(tile.getY()) + " :";
-    font->draw(tileInfo.c_str(), UIRect(width - 200, 10, 300, 300),
+    font->draw(tileInfo.c_str(), UIRect(width - 200, y, 300, 300),
         UICol(255, 0, 0, 0));
-    int y = 30;
+    y += 20;
     for (int i = 0; i < 7; ++i) {
         if (tile.getRessource(i) == 0)
             continue;
@@ -73,17 +96,19 @@ void Window::drawTileInfo(GameTile &tile)
 
 void Window::drawPlayerInfo(int id)
 {
+    int y = xTile == -1 && yTile == -1 ? 30 : 110;
     int width = driver->getScreenSize().Width;
     Player &player = GUI::GameDataManager::i().getPlayer(id);
 
     // Name
     std::string playerInfo = "Player " + std::to_string(id) + " : " +
         player.getTeamName();
-    font->draw(playerInfo.c_str(), UIRect(width - 200, 110, 300, 300),
+    font->draw(playerInfo.c_str(), UIRect(width - 200, y, 300, 300),
         MeshImporter::i().getColor(player.getTeamName()));
     // Level
+    y += 20;
     playerInfo = "\tLevel : " + std::to_string(player.getLevel());
-    font->draw(playerInfo.c_str(), UIRect(width - 200, 130, 300, 300),
+    font->draw(playerInfo.c_str(), UIRect(width - 200, y, 300, 300),
         UICol(255, 0, 0, 0));
     // Position
     playerInfo = "\tPos : " + std::to_string(player.getX()) +
@@ -103,10 +128,11 @@ void Window::drawPlayerInfo(int id)
             playerInfo += "West";
             break;
     }
-    font->draw(playerInfo.c_str(), UIRect(width - 200, 150, 300, 300),
+    y += 20;
+    font->draw(playerInfo.c_str(), UIRect(width - 200, y, 300, 300),
         UICol(255, 0, 0, 0));
     // Inventory
-    int y = 170;
+    y += 20;
     std::vector<std::string> lstNames = {
         "Food", "Linemate", "Deraumere", "Sibur", "Mendiane", "Phiras", "Thystame"
     };

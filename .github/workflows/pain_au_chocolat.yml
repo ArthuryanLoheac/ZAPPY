@@ -23,6 +23,21 @@ jobs:
         python-version: 3.x
     - run: pip install cpplint
     - run: make style_check
+  check_epitech_coding_style:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/epitech/coding-style-checker:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check coding style
+        run: |
+          check.sh ./zappy_server_src
+          # Allow 1 error
+          if [ "$(cat coding-style-reports.log | wc -l)" -gt 1 ]; then
+            cat coding-style-reports.log
+            exit 1
+          fi
+          cat coding-style-reports.log || true
   check_program_compilation:
     runs-on: ubuntu-latest
     container:

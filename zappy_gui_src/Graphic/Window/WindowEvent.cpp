@@ -77,7 +77,8 @@ void Window::updateRotation(float x) {
     if (angleXCamera < 0.f) angleXCamera += 360.f;
 }
 
-void GUI::Window::handleCLick() {
+bool Window::detectCollisionGround()
+{
     irr::core::position2d<irr::s32> mousePos = device->getCursorControl()->getPosition();
     irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()->getRayFromScreenCoordinates(mousePos, cam);
 
@@ -92,14 +93,45 @@ void GUI::Window::handleCLick() {
         int y = static_cast<int>(worldPos.Z);
         if (x < 0 || x >= GameDataManager::i().getWidth() ||
             y < 0 || y >= GameDataManager::i().getHeight())
-            return;
-        GameTile &tile = GameDataManager::i().getTile(x, y);
-        printf("Clicked on tile (%d, %d) : "
-               "Food: %d, R1: %d, R2: %d, R3: %d, R4: %d, R5: %d, R6: %d\n",
-               x, y, tile.getRessource(0), tile.getRessource(1),
-               tile.getRessource(2), tile.getRessource(3),
-               tile.getRessource(4), tile.getRessource(5), tile.getRessource(6));
+            return false;
+        if (xTile == x && yTile == y) {
+            xTile = -1;
+            yTile = -1;
+            return true;
+        }
+        xTile = x;
+        yTile = y;
+        return true;
     }
+    return false;
+}
+
+bool Window::detectCollisionPlayer()
+{
+    irr::core::position2d<irr::s32> mousePos = device->getCursorControl()->getPosition();
+    irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()->getRayFromScreenCoordinates(mousePos, cam);
+
+    for (auto &player : GameDataManager::i().getPlayers()) {
+        irr::core::vector3df playerPos = player.getMesh()->getPosition();
+        irr::core::aabbox3d<irr::f32> box(playerPos.X - 0.5f, playerPos.Y - 0.5f,
+            playerPos.Z - 0.5f, playerPos.X + 0.5f, playerPos.Y + 0.5f,
+            playerPos.Z + 0.5f);
+        if (box.intersectsWithLine(ray)) {
+            if (idPlayer == player.getId()) {
+                idPlayer = -1;
+                return true;
+            }
+            idPlayer = player.getId();
+            return true;
+        }
+    }
+    return false;
+}
+
+void Window::handleCLick() {
+    if (detectCollisionPlayer())
+        return;
+    detectCollisionGround();
 }
 
 }  // namespace GUI

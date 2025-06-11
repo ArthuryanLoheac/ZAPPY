@@ -8,6 +8,8 @@
 #include "DataManager/GameDataManager.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
 
+#define UIRect irr::core::rect<irr::s32>
+#define UICol irr::video::SColor
 namespace GUI {
 class Window {
  public:
@@ -28,11 +30,14 @@ class Window {
     float zoomSpeedCamera = 20.f;
     float moveSpeedCamera = 5.f;
 
+    int xTile = -1;
+    int yTile = -1;
+    int idPlayer = -1;
+
     float angleXCamera = 0;
     float distanceFromCenter = 10.f;
 
     void update();
-    void drawUI();
     void setupWorld();
     void handleEvent();
     void updateDeltaTime();
@@ -43,7 +48,12 @@ class Window {
     void updateRotation(float x);
 
     void handleCLick();
+    bool detectCollisionGround();
+    bool detectCollisionPlayer();
 
+    void drawUI();
+    void drawTileInfo(GameTile &tile);
+    void drawPlayerInfo(int id);
     static Window &i() {
         static Window instance;
         return instance;

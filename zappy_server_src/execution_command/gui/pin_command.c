@@ -20,11 +20,8 @@ void send_player_inventory(zappy_t *zappy, client_t *gui, int id)
         actual = actual->next) {
         if (actual->stats.id == id) {
             snprintf(response, 99, "pin #%i %d %d %i %i %i %i %i %i %i\n",
-                actual->stats.id,
-                actual->stats.x,
-                actual->stats.y,
-                actual->stats.inventory.food,
-                actual->stats.inventory.linemate,
+                actual->stats.id, actual->stats.x, actual->stats.y,
+                actual->stats.inventory.food, actual->stats.inventory.linemate,
                 actual->stats.inventory.deraumere,
                 actual->stats.inventory.sibur,
                 actual->stats.inventory.mendiane,

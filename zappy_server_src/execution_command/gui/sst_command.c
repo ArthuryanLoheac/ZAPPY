@@ -19,6 +19,19 @@ static void send_to_all_gui(zappy_t *zappy, const char *msg)
     }
 }
 
+static bool is_tps_correct(int tps, int client_fd)
+{
+    if (tps < 1) {
+        LOG_WARNING("[%i]: Minimum tps is 1", client_fd);
+        return false;
+    }
+    if (tps > 200) {
+        LOG_WARNING("[%i]: Maximum tps is 200", client_fd);
+        return false;
+    }
+    return true;
+}
+
 void sst_command(zappy_t *zappy, client_t *client, char **args)
 {
     int tps;
@@ -30,14 +43,8 @@ void sst_command(zappy_t *zappy, client_t *client, char **args)
             " Got %i but required %i", client->fd, pointlen(args), 1);
     } else {
         tps = atoi(&args[1][1]);
-        if (tps < 1) {
-            LOG_WARNING("[%i]: Minimum tps is 1", client->fd);
+        if (!is_tps_correct(tps, client->fd))
             return;
-        }
-        if (tps > 200) {
-            LOG_WARNING("[%i]: Maximum tps is 200", client->fd);
-            return;
-        }
         zappy->parser->freq = tps;
         zappy->durationTick = 1.0 / zappy->parser->freq;
         snprintf(response, 19, "sst %i\n", zappy->parser->freq);

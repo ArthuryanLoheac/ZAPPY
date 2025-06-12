@@ -9,12 +9,12 @@
 
 #include "command_handler.h"
 
-void update_pos_player(zappy_t *zappy, client_t *client)
+void update_pos_player(zappy_t *zappy, stats_t *stat)
 {
     char buffer[256];
 
-    sprintf(buffer, "ppo #%d %d %d %d\n", client->stats.id, client->stats.x, client->stats.y,
-        client->stats.orientation);
+    sprintf(buffer, "ppo #%d %d %d %d\n", stat->id, stat->x, stat->y,
+        stat->orientation);
     send_data_to_graphics(zappy, buffer);
 }
 

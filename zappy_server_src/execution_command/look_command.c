@@ -64,18 +64,18 @@ static void add_to_buffer_tile(char **buffer, zappy_t *zappy, int x, int y)
     add_to_buffer(buffer, str);
 }
 
-static void move_forward_x(client_t *client, int *x, int *y, zappy_t *zappy)
+static void move_forward_x(stats_t *stats, int *x, int *y, zappy_t *zappy)
 {
-    if (client->stats.orientation == 3)
+    if (stats->orientation == 3)
         *y = (*y + 1) % zappy->parser->height;
-    if (client->stats.orientation == 2)
+    if (stats->orientation == 2)
         *x = (*x + 1) % zappy->parser->width;
-    if (client->stats.orientation == 1) {
+    if (stats->orientation == 1) {
         *y -= 1;
         if (*y < 0)
             *y = zappy->parser->height - 1;
     }
-    if (client->stats.orientation == 4) {
+    if (stats->orientation == 4) {
         *x -= 1;
         if (*x < 0)
             *x = zappy->parser->width - 1;
@@ -130,7 +130,7 @@ void look_command(zappy_t *zappy, client_t *client, char **args)
             xyi_cpy[2] = j;
             move_forward_side(client, xyi_cpy, zappy, &buffer);
         }
-        move_forward_x(client, &x, &y, zappy);
+        move_forward_x(&client->stats, &x, &y, zappy);
     }
     add_to_buffer(&buffer, "]\n");
     add_to_buffer(&client->out_buffer, buffer);

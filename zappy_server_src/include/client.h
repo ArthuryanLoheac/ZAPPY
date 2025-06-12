@@ -50,6 +50,7 @@ typedef struct client_s {
     bool is_graphic;
     waitingCommands_t *waiting_commands;
 
+    // Game datas
     stats_t stats;
 } client_t;
 

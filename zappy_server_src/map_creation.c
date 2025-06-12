@@ -103,8 +103,8 @@ static void add_egg(starting_map_t *map, const char *team_name,
 starting_map_t *init_starting_map(zappy_t *zappy)
 {
     starting_map_t *map = malloc(sizeof(starting_map_t));
-    map->id_egg = 0;
 
+    map->id_egg = 0;
     LOG_DEBUG("Initializing map");
     if (!map)
         return NULL;

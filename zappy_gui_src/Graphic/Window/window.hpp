@@ -58,8 +58,8 @@ class Window {
     bool detectCollisionGround();
     bool detectCollisionPlayer();
 
-    void drawOneBackground(std::string texture, int x, int y, int sizeX,
-        int sizeY);
+    void drawOneBackground(const std::string &texture, int x, int y,
+        int sizeX, int sizeY);
     void drawBackgrounds();
     void drawUI();
     void drawTileInfo(GameTile &tile, int &y);

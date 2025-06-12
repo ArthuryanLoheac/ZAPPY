@@ -10,12 +10,16 @@
 
 
 namespace GUI {
-void Window::drawOneBackground(std::string texture, int x, int y, int sizeX,
-int sizeY) {
+void Window::drawOneBackground(const std::string &texture, int x, int y,
+int sizeX, int sizeY) {
     irr::video::ITexture* bg = driver->getTexture(texture.c_str());
     irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
 
     irr::core::rect<irr::s32>destRect(x, y, x + sizeX, y + sizeY);
+    if (!bg) {
+        std::cerr << "Error: Texture not found: " << texture << std::endl;
+        return;
+    }
     driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
 }
 

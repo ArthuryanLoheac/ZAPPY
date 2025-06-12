@@ -91,6 +91,7 @@ USAGE: ./zappy_ai -p port -n name -h machine
 | -p | port | port number |
 | -n | name | name of the team |
 | -h | machine | name of the machine; localhost by default |
+| -v, -vv, -vvv | ---- | set verbose level (WARNINGS, INFOS, DEBUGS) |
 
 > The team name GRAPHIC is reserved for the GUI to authenticate itself as such to the server.
 

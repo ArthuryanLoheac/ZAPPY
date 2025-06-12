@@ -71,5 +71,10 @@ void check_ticks(zappy_t *zappy)
     if (zappy->durationTickLeft <= 0) {
         reduce_tick_all(zappy);
         zappy->durationTickLeft = zappy->durationTick;
+        zappy->tickCount++;
+        if (zappy->tickCount == 20) {
+            update_map(zappy->map->grid, zappy->parser);
+            zappy->tickCount = 0;
+        }
     }
 }

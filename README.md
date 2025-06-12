@@ -60,7 +60,7 @@ USAGE: ./zappy_server -p port -x width -y height -n name1 name2 ... -c clientsNb
 | -n | name1 name2 ... | name of the team |
 | -c | clientsNb | number of authorized clients per team |
 | -f | freq | reciprocal of time unit for execution of actions |
-| -v, -vv, -vvv | ---- | set verbose level (WARNINGS, INFOS, DEBUG) |
+| -v, -vv, -vvv | ---- | set verbose level (WARNINGS, INFOS, DEBUGS) |
 
 > The team name GRAPHIC is reserved for the GUI to authenticate itself as such to the server.
 
@@ -76,6 +76,7 @@ USAGE: ./zappy_gui -p port -h machine
 |--------|-----------|-------------|
 | -p | port | port number |
 | -h | machine | hostname of the server |
+| -v, -vv, -vvv | ---- | set verbose level (WARNINGS, INFOS, DEBUGS) |
 
 </details>
 

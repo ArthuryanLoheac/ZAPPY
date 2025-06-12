@@ -23,7 +23,8 @@ void display_help(void)
         "-y height\theight of the world\n"
         "-n name1 name2 ...\tnames of the teams\n"
         "-c clientsNb\tnumber of authorized clients per team\n"
-        "-f freq\treciprocal of time unit for execution of actions\n");
+        "-f freq\treciprocal of time unit for execution of actions\n"
+        "-v, -vv, -vvv\tverbose level of the logs\n");
     exit(84);
 }
 

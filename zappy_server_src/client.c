@@ -14,6 +14,17 @@
 #include "include/command.h"
 #include "logs.h"
 
+static void set_client_ressources(client_t *client)
+{
+    client->nbr_food = 10;
+    client->nbr_linemate = 0;
+    client->nbr_deraumere = 0;
+    client->nbr_sibur = 0;
+    client->nbr_mendiane = 0;
+    client->nbr_phiras = 0;
+    client->nbr_thystame = 0;
+}
+
 static void add_client_data(zappy_t *zappy, int fd)
 {
     client_t *client = malloc(sizeof(client_t));
@@ -27,6 +38,7 @@ static void add_client_data(zappy_t *zappy, int fd)
     client->is_waiting_id = true;
     client->waiting_commands = NULL;
     client->team_name = NULL;
+    set_client_ressources(client);
     client->next = zappy->clients;
     zappy->clients = client;
     append_client_out_buffer(client, "WELCOME\n");

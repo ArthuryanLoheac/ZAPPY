@@ -56,6 +56,7 @@ class Player {
     void Update(float deltaTime);
     void updateRotation(float deltaTime);
     void updatePosition(float deltaTime);
+    void updtaeIdle(float deltaTime);
 
  private:
     int id;
@@ -65,6 +66,8 @@ class Player {
     Vec3d rotationTarget;
     float speedMove = 1;
     float baseSpeedMove = 1.f / 7.f;
+    float idlePosY = 0.5f;
+    float timeTT = 0;
 
     Orientation o;
     int level;

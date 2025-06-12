@@ -155,6 +155,10 @@ coding_style: fclean
 	cat coding-style-reports.log
 	rm -f coding-style-reports.log
 
+doxygen:
+	cd docs && doxygen Doxyfile
+	cd docs && npm run start -- --port 3001
+
 # ============= TESTS ============= #
 
 unit_tests:

@@ -53,34 +53,6 @@ void Window::update() {
     device->drop();
 }
 
-void Window::drawUI() {
-    int x = 300;
-    int y = 10;
-
-    if (font) {
-        // TEAMS
-        font->draw("TEAMS : ", irr::core::rect<irr::s32>(x, y, 300, 500),
-            irr::video::SColor(255, 255, 255, 255));
-        for (auto &team : GUI::GameDataManager::i().getTeams()) {
-            y += 20;
-            Vec3d pos(x, y, 0);
-            font->draw(("\t" + team).c_str(),
-                irr::core::rect<irr::s32>(pos.X, pos.Y, 300, 50),
-                MeshImporter::i().getColor(team));
-        }
-
-        // FPS
-        font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
-            irr::core::rect<irr::s32>(10, 10, 300, 50),
-            irr::video::SColor(255, 255, 255, 255));
-
-        // Frequency
-        font->draw(("Freq : " +
-            std::to_string(GUI::DataManager::i().getFrequency())).c_str(),
-            irr::core::rect<irr::s32>(150, 10, 300, 50),
-            irr::video::SColor(255, 255, 255, 255));
-    }
-}
 void Window::setupWorld() {
     if (cubes.size() > 0) {
         for (auto &cube : cubes) {

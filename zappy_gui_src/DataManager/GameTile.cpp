@@ -72,6 +72,20 @@ int r5, int r6) {
     updateMeshesRessources();
 }
 
+int GameTile::getRessource(int id) const {
+    switch (id) {
+        case 0: return food;
+        case 1: return r1;
+        case 2: return r2;
+        case 3: return r3;
+        case 4: return r4;
+        case 5: return r5;
+        case 6: return r6;
+        default:
+            throw std::out_of_range("Invalid resource ID");
+    }
+}
+
 void GameTile::updateMeshesRessources() {
     updateMesh("Battery", food, meshesFood, 0.05f, 0.35f, 0.3f, 0.35f);
     updateMesh("Mat1", r1, meshesR1, 0.1f, -0.35f, 0.15f, 0.35f);

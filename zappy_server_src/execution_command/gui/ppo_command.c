@@ -34,9 +34,9 @@ void ppo_command(zappy_t *zappy, client_t *client, char **args)
     int id;
 
     (void) client;
-    if (pointlen(args) != 2) {
+    if (pointlen(args) != 1) {
         LOG_WARNING("[%i]: Wrong amount of arguments for command ppo."
-            " Got %i but required %i", client->fd, pointlen(args), 2);
+            " Got %i but required %i", client->fd, pointlen(args), 1);
     } else {
         id = atoi(&args[1][1]);
         send_player_pos(zappy, client, id);

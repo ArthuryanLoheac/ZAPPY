@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
@@ -14,6 +15,7 @@ namespace GUI {
 class Window {
  private:
     void SetupSkybox();
+
  public:
     Window();
     irr::IrrlichtDevice *device;
@@ -56,8 +58,8 @@ class Window {
     bool detectCollisionGround();
     bool detectCollisionPlayer();
 
-    void drawOneBackground(int x, int y, int sizeX, int sizeY,
-        std::string texture);
+    void drawOneBackground(std::string texture, int x, int y, int sizeX,
+        int sizeY);
     void drawBackgrounds();
     void drawUI();
     void drawTileInfo(GameTile &tile, int &y);

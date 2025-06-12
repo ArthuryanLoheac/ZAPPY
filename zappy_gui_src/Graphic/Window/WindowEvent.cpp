@@ -5,7 +5,6 @@
 
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "Graphic/Window/window.hpp"
-#include "window.hpp"
 
 namespace GUI {
 void Window::handleEvent() {
@@ -74,8 +73,7 @@ void Window::updateRotation(float x) {
     if (angleXCamera < 0.f) angleXCamera += 360.f;
 }
 
-bool Window::detectCollisionGround()
-{
+bool Window::detectCollisionGround() {
     irr::core::position2d<irr::s32> mousePos =
         device->getCursorControl()->getPosition();
     irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()

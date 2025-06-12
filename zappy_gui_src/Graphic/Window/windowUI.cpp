@@ -10,7 +10,8 @@
 
 
 namespace GUI {
-void Window::drawOneBackground(int x, int y, int sizeX, int sizeY, std::string texture) {
+void Window::drawOneBackground(std::string texture, int x, int y, int sizeX,
+int sizeY) {
     irr::video::ITexture* bg = driver->getTexture(texture.c_str());
     irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
 
@@ -22,14 +23,14 @@ void Window::drawBackgrounds() {
     int width = driver->getScreenSize().Width;
 
     // Draw the left bar
-    drawOneBackground(0, 0, 150, 400, "assets/UI/BottomRight.png");
+    drawOneBackground("assets/UI/BottomRight.png", 0, 0, 150, 400);
     // Draw the Right bar
     if (idPlayer != -1 && xTile != -1 && yTile != -1)
-        drawOneBackground(width - 240, 0, 240, 400, "assets/UI/BottomLeft.png");
+        drawOneBackground("assets/UI/BottomLeft.png", width - 240, 0, 240, 400);
     else if (idPlayer != -1)
-        drawOneBackground(width - 240, 0, 240, 200, "assets/UI/BottomLeft.png");
+        drawOneBackground("assets/UI/BottomLeft.png", width - 240, 0, 240, 200);
     else if (xTile != -1 && yTile != -1)
-        drawOneBackground(width - 240, 0, 240, 200, "assets/UI/BottomLeft.png");
+        drawOneBackground("assets/UI/BottomLeft.png", width - 240, 0, 240, 200);
 }
 
 void Window::drawUI() {

@@ -1,14 +1,19 @@
 #include <iostream>
 #include <memory>
+#include <random>
 
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "tools/MeshImporter.hpp"
 #include "DataManager/DataManager.hpp"
-#include "window.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> randRot(0, 359);
+    std::uniform_int_distribution<> randSmall(0, 9);
+
     Skybox = std::shared_ptr<irr::scene::ISceneNode>(
         smgr->addSkyBoxSceneNode(
             driver->getTexture("assets/skybox/top.png"),
@@ -18,13 +23,12 @@ void Window::SetupSkybox() {
             driver->getTexture("assets/skybox/left.png"),
             driver->getTexture("assets/skybox/right.png")),
         [](irr::scene::ISceneNode *) {});
-    rotationSkybox = Vec3d((rand() % 10 - 5.f) / 10.f,
-        (rand() % 10 - 5.f) / 10.f, (rand() % 10 - 5.f) / 10.f);
-    Skybox->setRotation(Vec3d(rand() % 360, rand() % 360, rand() % 360));
+    rotationSkybox = Vec3d((randSmall(gen) - 5.f) / 10.f,
+        (randSmall(gen) - 5.f) / 10.f, (randSmall(gen) - 5.f) / 10.f);
+    Skybox->setRotation(Vec3d(randRot(gen), randRot(gen), randRot(gen)));
 }
 
 Window::Window() {
-
     device = irr::createDevice(irr::video::EDT_BURNINGSVIDEO,
         irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false,
         &receiver);
@@ -50,8 +54,7 @@ Window::Window() {
     SetupSkybox();
 }
 
-void Window::updateSkyBoxRotation()
-{
+void Window::updateSkyBoxRotation() {
     if (!Skybox)
         return;
     irr::core::vector3df rotation = Skybox->getRotation();

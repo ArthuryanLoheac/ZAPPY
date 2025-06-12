@@ -44,7 +44,6 @@ int returnHelp() {
               << "Options:\n"
               << "  -h <ip>       : Set the server IP address\n"
               << "  -p <port>     : Set the server port (0-65535)\n"
-              << "  -d            : Enable debug mode\n"
               << "  -v, -vv, -vvv : Set verbose level (WARNING, INFO, DEBUG\n";
     return 84;
 }

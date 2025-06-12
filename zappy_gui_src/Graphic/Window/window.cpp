@@ -29,7 +29,32 @@ Window::Window() {
 
     font = std::shared_ptr<irr::gui::IGUIFont>(
         guienv->getFont("assets/fonts/DejaVuSansMono.png"),
-        [](irr::gui::IGUIFont *f) { (void) f; });
+        [](irr::gui::IGUIFont *) {});
+    Skybox = std::shared_ptr<irr::scene::ISceneNode>(
+        smgr->addSkyBoxSceneNode(
+            // top
+            driver->getTexture("assets/skybox/top.png"),
+            // bottom
+            driver->getTexture("assets/skybox/bottom.png"),
+            // back
+            driver->getTexture("assets/skybox/back.png"),
+            // front
+            driver->getTexture("assets/skybox/front.png"),
+            // left
+            driver->getTexture("assets/skybox/left.png"),
+            // right
+            driver->getTexture("assets/skybox/right.png")),
+        [](irr::scene::ISceneNode *) {});
+    rotationSkybox = Vec3d((rand() % 10 - 5.f) / 10.f,
+        (rand() % 10 - 5.f) / 10.f, (rand() % 10 - 5.f) / 10.f);
+}
+
+void Window::updateSkyBoxRotation()
+{
+    irr::core::vector3df rotation = Skybox->getRotation();
+    rotation += rotationSkybox * frameDeltaTime;
+    if (rotation.Y > 360.f) rotation.Y -= 360.f;
+    Skybox->setRotation(rotation);
 }
 
 void Window::update() {
@@ -37,6 +62,7 @@ void Window::update() {
         if (device->isWindowActive()) {
             updateDeltaTime();
             handleEvent();
+            updateSkyBoxRotation();
             GameDataManager::i().Update(frameDeltaTime);
             driver->beginScene(true, true,
                 irr::video::SColor(255, 100, 101, 140));

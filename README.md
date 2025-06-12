@@ -15,11 +15,9 @@
     <img src="docs/static/img/trantor.png" alt="Trantor World" width="600"/>
 </p>
 
-Trantor is a donut-shaped world recently discovered by humanity, the different nation on Earth have each sent drones, named trantorians, to the planets to harvest its resources. Due to the weird geography of Trantor, the drones have been broken and unable to contact Earth, but the abundant resources of the planet can be used to repair themselves. The drones have then started to upgrade their body, and the first nations that will repair six of their drones will have the necessary power to contact Earth and end new rockets for extraction.
+Trantor is a donut-shaped world recently discovered by humanity, the different nation on Earth have each sent drones, named trantorians, to the planets to harvest its resources. Due to the weird geography of Trantor, the drones have been broken and unable to contact Earth, but the abundant resources of the planet can be used to repair themselves. The drones have then started to upgrade their body, and the first nations that will repair six of their drones will have the necessary power to contact Earth and send new rockets for extraction.
 
 To survive on Trantor, trantorians must keep their energy levels high by consuming resources. Luckly for them, the world grows batteries in the soil, but also rare stones that can be used to upgrade their modules.
-
-Each kingdom needs 6 trantorians with a mini-gun to win the game. The last team standing wins the game and becomes the ruler of Trantor.
 
 # <p align=center> 🌍 Project Architecture </p>
 

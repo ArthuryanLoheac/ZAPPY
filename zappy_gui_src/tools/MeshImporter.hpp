@@ -32,12 +32,12 @@ class MeshImporter {
     std::map<std::string, irr::video::SColor> colorTeam;
     size_t iColor = 0;
     std::vector<irr::video::SColor> colors = {
-        irr::video::SColor(255, 233, 215, 88),  // Yellow
         irr::video::SColor(255, 41, 115, 115),  // Green/Blue
         irr::video::SColor(255, 255, 133, 82),  // Orange
         irr::video::SColor(255, 167, 212, 155),  // Grreen
         irr::video::SColor(255, 137, 6, 32),  // Red
         irr::video::SColor(255, 255, 159, 229),  // Pink
+        irr::video::SColor(255, 233, 215, 88),  // Yellow
         irr::video::SColor(255, 226, 194, 255)  // Magenta
     };
 };

@@ -21,5 +21,6 @@ const command_func_t gui_command_association_list[] = {
     {"MSZ", msz_command},
     {"BCT", bct_command},
     {"MCT", mct_command},
+    {"TNA", tna_command},
     {NULL, NULL}
 };

@@ -6,6 +6,8 @@
 */
 
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "command_handler.h"
 
 static void lay_egg(zappy_t *zappy, client_t *client)

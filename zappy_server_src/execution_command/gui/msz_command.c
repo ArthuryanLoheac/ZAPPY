@@ -14,7 +14,7 @@ void msz_command(zappy_t *zappy, client_t *client, char **args)
     char response[20];
 
     (void) args;
-    snprintf(response, 20, "msz %i %i\n",
+    snprintf(response, 19, "msz %i %i\n",
         zappy->parser->width, zappy->parser->height);
     add_to_buffer(&client->out_buffer, response);
 }

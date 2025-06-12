@@ -33,7 +33,7 @@ void send_bloc_content(int x, int y, zappy_t *zappy, client_t *client)
 {
     char response[100];
 
-    snprintf(response, 100, "bct %i %i %i %d %d %d %i %i %i\n",
+    snprintf(response, 99, "bct %i %i %i %d %d %d %i %i %i\n",
         x,
         y,
         zappy->map->grid[y][x].nbr_food,

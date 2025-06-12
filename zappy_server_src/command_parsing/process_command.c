@@ -58,8 +58,8 @@ static egg_t *return_egg(zappy_t *zappy, char *team_name)
     return NULL;
 }
 
-static void send_datas_new_player(client_t *client,
-    zappy_t *zappy_ptr, egg_t *egg)
+static void send_datas_new_player(stats_t *client,
+    zappy_t *zappy_ptr, int eggId)
 {
     char buffer1[256];
     char buffer2[256 * 2];
@@ -68,10 +68,11 @@ static void send_datas_new_player(client_t *client,
     sprintf(buffer1, "\npnw #%d %d %d %d %d %s\n", client->id, client->x,
         client->y, client->orientation, client->level, client->team_name);
     sprintf(buffer2, "%spin #%d %d %d %d %d %d %d %d %d %d\n", buffer1,
-        client->id, client->x, client->y, client->nbr_food,
-        client->nbr_linemate, client->nbr_deraumere, client->nbr_sibur,
-        client->nbr_mendiane, client->nbr_phiras, client->nbr_thystame);
-    sprintf(buffer3, "%sebo #%d\n", buffer2, egg->id);
+        client->id, client->x, client->y, client->inventory.food,
+        client->inventory.linemate, client->inventory.deraumere,
+        client->inventory.sibur, client->inventory.mendiane,
+        client->inventory.phiras, client->inventory.thystame);
+    sprintf(buffer3, "%sebo #%d\n", buffer2, eggId);
     send_data_to_graphics(zappy_ptr, buffer3);
 }
 
@@ -79,19 +80,21 @@ static void new_connection_player(char **args, client_t *client,
     zappy_t *zappy_ptr)
 {
     egg_t *egg = return_egg(zappy_ptr, args[0]);
+    int eggId;
 
     if (client == NULL || args == NULL || zappy_ptr == NULL || egg == NULL)
         return;
-    client->level = 1;
-    client->x = egg->x;
-    client->y = egg->y;
-    client->orientation = (rand() % 4) + 1;
-    client->team_name = strdup(args[0]);
+    eggId = egg->id;
+    client->stats.level = 1;
+    client->stats.x = egg->x;
+    client->stats.y = egg->y;
+    client->stats.orientation = (rand() % 4) + 1;
+    client->stats.team_name = strdup(args[0]);
     client->waiting_commands = NULL;
     delete_egg_team_name(zappy_ptr, args[0]);
-    client->id = zappy_ptr->idNextClient;
+    client->stats.id = zappy_ptr->idNextClient;
     zappy_ptr->idNextClient++;
-    send_datas_new_player(client, zappy_ptr, egg);
+    send_datas_new_player(&client->stats, zappy_ptr, eggId);
 }
 
 static bool check_graphic(char **args, client_t *client, zappy_t *zappy_ptr)

@@ -16,6 +16,7 @@ typedef void (*command_handler_t)
 
 void update_pos_player(zappy_t *zappy, client_t *client);
 void update_cell(zappy_t *zappy, cell_t cell);
+void lay_egg(zappy_t *zappy, client_t *client);
 
 void look_command(zappy_t *zappy, client_t *client, char **args);
 void forward_command(zappy_t *zappy, client_t *client, char **args);
@@ -23,6 +24,7 @@ void right_command(zappy_t *zappy, client_t *client, char **args);
 void left_command(zappy_t *zappy, client_t *client, char **args);
 void take_command(zappy_t *zappy, client_t *client, char **args);
 void set_command(zappy_t *zappy, client_t *client, char **args);
+void fork_command(zappy_t *zappy, client_t *client, char **args);
 
 typedef struct command_func_s {
     char *name;

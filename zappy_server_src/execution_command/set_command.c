@@ -23,52 +23,52 @@ static bool cmp_cell(cell_t one, cell_t two)
     return (false);
 }
 
-static bool put_object(zappy_t *zappy, client_t *client,
+static bool put_object(zappy_t *zappy, stats_t *stats,
     cell_t *cell, char *object)
 {
     cell_t comp_cell = *cell;
 
-    if (strcmp("food", object) == 0 && client->inventory.food > 0)
+    if (strcmp("food", object) == 0 && stats->inventory.food > 0)
         cell->nbr_food += 1;
-    if (strcmp("linemate", object) == 0 && client->inventory.linemate > 0)
+    if (strcmp("linemate", object) == 0 && stats->inventory.linemate > 0)
         cell->nbr_linemate += 1;
-    if (strcmp("deraumere", object) == 0 && client->inventory.deraumere > 0)
+    if (strcmp("deraumere", object) == 0 && stats->inventory.deraumere > 0)
         cell->nbr_deraumere += 1;
-    if (strcmp("sibur", object) == 0 && client->inventory.sibur > 0)
+    if (strcmp("sibur", object) == 0 && stats->inventory.sibur > 0)
         cell->nbr_sibur += 1;
-    if (strcmp("mendiane", object) == 0 && client->inventory.mendiane > 0)
+    if (strcmp("mendiane", object) == 0 && stats->inventory.mendiane > 0)
         cell->nbr_mendiane += 1;
-    if (strcmp("phiras", object) == 0 && client->inventory.phiras > 0)
+    if (strcmp("phiras", object) == 0 && stats->inventory.phiras > 0)
         cell->nbr_phiras += 1;
-    if (strcmp("thystame", object) == 0 && client->inventory.thystame > 0)
+    if (strcmp("thystame", object) == 0 && stats->inventory.thystame > 0)
         cell->nbr_thystame += 1;
     update_cell(zappy, *cell);
     return (cmp_cell(*cell, comp_cell));
 }
 
-static void remove_object_inventory(client_t *client, char *object)
+static void remove_object_inventory(stats_t *stats, char *object)
 {
     if (strcmp("food", object) == 0)
-        client->inventory.food -= 1;
+        stats->inventory.food -= 1;
     if (strcmp("linemate", object) == 0)
-        client->inventory.linemate -= 1;
+        stats->inventory.linemate -= 1;
     if (strcmp("deraumere", object) == 0)
-        client->inventory.deraumere -= 1;
+        stats->inventory.deraumere -= 1;
     if (strcmp("sibur", object) == 0)
-        client->inventory.sibur -= 1;
+        stats->inventory.sibur -= 1;
     if (strcmp("mendiane", object) == 0)
-        client->inventory.mendiane -= 1;
+        stats->inventory.mendiane -= 1;
     if (strcmp("phiras", object) == 0)
-        client->inventory.phiras -= 1;
+        stats->inventory.phiras -= 1;
     if (strcmp("thystame", object) == 0)
-        client->inventory.thystame -= 1;
+        stats->inventory.thystame -= 1;
 }
 
 void set_command(zappy_t *zappy, client_t *client, char **args)
 {
-    if (!put_object(zappy, client,
-        &zappy->map->grid[client->y][client->x], args[0])) {
-        remove_object_inventory(client, args[0]);
+    if (!put_object(zappy, &client->stats,
+        &zappy->map->grid[client->stats.y][client->stats.x], args[0])) {
+        remove_object_inventory(&client->stats, args[0]);
         add_to_buffer(&client->out_buffer, "ok\n");
     } else {
         add_to_buffer(&client->out_buffer, "ko\n");

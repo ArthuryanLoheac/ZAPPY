@@ -59,8 +59,12 @@ void Window::drawUI() {
     if (xTile != -1 && yTile != -1)
         drawTileInfo(GUI::GameDataManager::i().getTile(xTile, yTile), yR);
 
-    if (idPlayer != -1)
-        drawPlayerInfo(idPlayer, yR);
+    try {
+        if (idPlayer != -1)
+            drawPlayerInfo(idPlayer, yR);
+    } catch (const std::exception &e) {
+        idPlayer = -1;
+    }
 }
 
 void Window::drawTileInfo(GameTile &tile, int &y) {

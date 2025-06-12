@@ -14,15 +14,16 @@
 #include "include/command.h"
 #include "logs.h"
 
-static void set_client_ressources(client_t *client)
+static void set_client_ressources(stats_t *stat)
 {
-    client->inventory.food = 10;
-    client->inventory.linemate = 0;
-    client->inventory.deraumere = 0;
-    client->inventory.sibur = 0;
-    client->inventory.mendiane = 0;
-    client->inventory.phiras = 0;
-    client->inventory.thystame = 0;
+    stat->tickLife = 0;
+    stat->inventory.food = 10;
+    stat->inventory.linemate = 0;
+    stat->inventory.deraumere = 0;
+    stat->inventory.sibur = 0;
+    stat->inventory.mendiane = 0;
+    stat->inventory.phiras = 0;
+    stat->inventory.thystame = 0;
 }
 
 static void add_client_data(zappy_t *zappy, int fd)
@@ -37,8 +38,13 @@ static void add_client_data(zappy_t *zappy, int fd)
     client->is_connected = true;
     client->is_waiting_id = true;
     client->waiting_commands = NULL;
-    client->team_name = NULL;
-    set_client_ressources(client);
+    client->stats.team_name = NULL;
+    client->stats.orientation = 1;
+    client->stats.id = 0;
+    client->stats.x = 0;
+    client->stats.y = 0;
+    client->stats.level = 1;
+    set_client_ressources(&client->stats);
     client->next = zappy->clients;
     zappy->clients = client;
     append_client_out_buffer(client, "WELCOME\n");

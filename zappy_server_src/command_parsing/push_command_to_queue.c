@@ -69,7 +69,7 @@ void push_command_to_queue(char **args, client_t *client, zappy_t *zappy_ptr)
     if (get_size_commands(client->waiting_commands) >= 10)
         return;
     set_upper(args);
-    if (strcmp(client->team_name, "GRAPHICAL") == 0)
+    if (strcmp(client->stats.team_name, "GRAPHICAL") == 0)
         command_duration = get_gui_command_duration(args[0]);
     else
         command_duration = get_player_command_duration(args[0]);

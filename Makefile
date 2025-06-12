@@ -151,7 +151,7 @@ run: all
 	./$(ZAPPY_SERVER) -p 4242 -x 10 -y 10 -n team1 team2 -c 10
 
 coding_style: fclean
-	coding-style . .
+	coding-style zappy_server_src/ .
 	cat coding-style-reports.log
 	rm -f coding-style-reports.log
 

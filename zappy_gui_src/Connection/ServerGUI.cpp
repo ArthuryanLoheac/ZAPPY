@@ -11,6 +11,7 @@
 
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
+#include "logs.h"
 
 namespace GUI {
 ServerGUI::ServerGUI() {
@@ -38,26 +39,25 @@ void GUI::ServerGUI::handleCommand() {
 
 void ServerGUI::execCommand(std::map<std::string, void(GUI::ServerGUI::*)
 (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
+    std::string errStr;
+
     if (it != commands.end()) {
         try {
             (GUI::ServerGUI::i().*(it->second))(args);
-            if (GUI::DataManager::i().getDebug())
-                printf("\033[1;32m[OK]\033[0m Received Command: %s\n",
-                    args[0].c_str());
+            LOG_DEBUG(("\033[1;32m[OK]\033[0m Received Command: "
+                + args[0]).c_str());
         } catch (const std::exception &e) {
-            if (GUI::DataManager::i().getErrors()) {
-                printf("\033[1;31m[ERROR]\033[0m %s : ", e.what());
-                for (size_t i = 0; i < args.size(); i++)
-                    printf(" %s", args[i].c_str());
-                printf("\n");
-            }
+            errStr += std::string(e.what()) + " : ";
+            for (size_t i = 0; i < args.size(); i++)
+                errStr += " " + args[i];
+            LOG_WARNING(errStr.c_str());
         }
-    } else if (GUI::DataManager::i().getErrors()) {
+    } else {
         // Error
-        printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
+        errStr += "Unknown Command: ";
         for (size_t i = 0; i < args.size(); i++)
-            printf(" %s", args[i].c_str());
-        printf("\n");
+            errStr += " " + args[i];
+        LOG_WARNING(errStr.c_str());
     }
 }
 
@@ -110,7 +110,7 @@ std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
     }
     args.push_back(command);
     if (args.empty()) {
-        std::cerr << "Empty command received." << std::endl;
+        LOG_WARNING("Empty command received.");
         throw std::runtime_error("Empty command received");
     }
     return args;
@@ -124,8 +124,7 @@ void ServerGUI::sendDatasToServer(const std::string &message) {
         if (bytes_sent == -1) {
             throw std::runtime_error("Error sending data to server");
         }
-        if (GUI::DataManager::i().getDebug())
-            printf("[OK] Sent data: %s\n", message.c_str());
+        LOG_DEBUG("[OK] Sent data: %s\n", message.c_str());
     }
 }
 

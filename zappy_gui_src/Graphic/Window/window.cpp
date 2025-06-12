@@ -101,11 +101,14 @@ void Window::setupWorld() {
                 j - (height/2) + deltaHeight);
             float rotation = std::rand() % 4;
             auto cube = MeshImporter::i().importMesh("Plane", "", position,
-                irr::core::vector3df(0.45f),
+                irr::core::vector3df(0.18f),
                 irr::core::vector3df(0, rotation * 90, 0));
             GameTile &tile = GUI::GameDataManager::i().addTile(i, j);
             tile.setTileMesh(cube);
         }
     }
+    smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
+        irr::video::SColorf(1.0f, 1.0f, 1.0f), 100.0f);
+    smgr->setAmbientLight(irr::video::SColorf(0.3f, 0.3f, 0.3f));
 }
 }  // namespace GUI

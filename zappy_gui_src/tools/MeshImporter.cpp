@@ -27,7 +27,7 @@ const Vec3d &rotation) {
         node->setPosition(position);
         node->setMD2Animation(irr::scene::EMAT_STAND);
         setTexture(meshName, teamName, node);
-        node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+        node->setMaterialFlag(irr::video::EMF_LIGHTING, true);
         return node;
     }
     throw GUI::ShaderCompilationException("Error creating mesh node");

@@ -7,13 +7,20 @@
 #include "DataManager/DataManager.hpp"
 #include "include/AIConnection.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
+#include "include/logs.h"
 
 int checkArgs(int ac, char **av) {
     int i = 1;
 
     while (i < ac) {
-        if (std::string(av[i]) == "-d") {
-            AI::DataManager::i().setDebug(AI::DataManager::ALL_DEBUG);
+        if (std::string(av[i]) == "-v") {
+            set_log_level(WARNING);
+            i++;
+        } else if (std::string(av[i]) == "-vv") {
+            set_log_level(INFO);
+            i++;
+        } else if (std::string(av[i]) == "-vvv") {
+            set_log_level(DEBUG);
             i++;
         } else if (std::string(av[i]) == "-e") {
             AI::DataManager::i().setDebug(AI::DataManager::ERRORS);
@@ -40,10 +47,11 @@ int checkArgs(int ac, char **av) {
 int returnHelp() {
     std::cout << "Usage: ./zappy_ai -h <ip> -p <port> -n <teamName> [-d]\n"
               << "Options:\n"
-              << "  -h <ip>   : Set the server IP address\n"
-              << "  -p <port> : Set the server port (0-65535)\n"
+              << "  -h <ip>       : Set the server IP address\n"
+              << "  -p <port>     : Set the server port (0-65535)\n"
               << "  -n <teamName> : Set the team name\n"
-              << "  -d        : Enable debug mode\n";
+              << "  -v, -vv, -vvv : Set verbose level"
+                 "(WARNINGS, INFOS, DEBUGS)\n";
     return 84;
 }
 
@@ -59,7 +67,7 @@ int main(int ac, char **av) {
         if (client_connection(sockfd) == 84)
             throw AI::ConnectionException("Failed to connect to server");
     } catch (std::exception &e) {
-        fprintf(stderr, "Error: %s\n", e.what());
+        LOG_ERROR("Caught exception: %s", e.what());
         return 84;
     }
     loopClient(sockfd);

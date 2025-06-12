@@ -13,7 +13,7 @@
 #include "include/logs.h"
 
 // Global var used here to save the log level between each log calls
-enum log_level_e actual_log_level = INFO;
+enum log_level_e actual_log_level = ERROR;
 
 static char *get_timestamp(void)
 {
@@ -32,8 +32,12 @@ static void remove_newlines(char *str)
             str[i] = '#';
 }
 
-void log_internal(enum log_level_e level, char *level_str, char *color,
-    const char *format, ...)
+// This function has 5 arguments to allow more modularity in the logs
+// messages.
+// If the coding style infraction is that big of an issue, you can get
+// rid of the color.
+void log_internal(enum log_level_e level, const char *level_str,
+    const char *color, const char *format, ...)
 {
     char *timestamp;
     char msg[1024];

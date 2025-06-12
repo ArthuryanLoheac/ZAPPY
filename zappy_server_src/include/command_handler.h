@@ -30,8 +30,10 @@ typedef struct command_func_s {
     command_handler_t func;
 } command_func_t;
 
-extern const command_func_t command_association_list[];;
+extern const command_func_t player_command_association_list[];
+extern const command_func_t gui_command_association_list[];
 
-command_handler_t get_command_handler(const char *name);
+command_handler_t get_player_command_handler(const char *name);
+command_handler_t get_gui_command_handler(const char *name);
 
 #endif /* !COMMAND_HANDLER_H_ */

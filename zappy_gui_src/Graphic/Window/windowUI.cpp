@@ -10,23 +10,26 @@
 
 
 namespace GUI {
-void Window::drawOneBackground(int x, int y, int sizeX, int sizeY) {
-    irr::video::ITexture* bg = driver->getTexture("assets/Solid_BgUI.png");
-    irr::core::rect<irr::s32> sourceRect(0, 0, 1200, 1200);
+void Window::drawOneBackground(int x, int y, int sizeX, int sizeY, std::string texture) {
+    irr::video::ITexture* bg = driver->getTexture(texture.c_str());
+    irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
 
     irr::core::rect<irr::s32>destRect(x, y, x + sizeX, y + sizeY);
     driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
 }
 
 void Window::drawBackgrounds() {
-    int height = driver->getScreenSize().Height;
     int width = driver->getScreenSize().Width;
 
     // Draw the left bar
-    drawOneBackground(0, 0, 150, height);
+    drawOneBackground(0, 0, 150, 400, "assets/UI/BottomRight.png");
     // Draw the Right bar
-    if (idPlayer != -1 || xTile != -1 || yTile != -1)
-        drawOneBackground(width - 240, 0, 240, 400);
+    if (idPlayer != -1 && xTile != -1 && yTile != -1)
+        drawOneBackground(width - 240, 0, 240, 400, "assets/UI/BottomLeft.png");
+    else if (idPlayer != -1)
+        drawOneBackground(width - 240, 0, 240, 200, "assets/UI/BottomLeft.png");
+    else if (xTile != -1 && yTile != -1)
+        drawOneBackground(width - 240, 0, 240, 200, "assets/UI/BottomLeft.png");
 }
 
 void Window::drawUI() {
@@ -39,15 +42,15 @@ void Window::drawUI() {
         return;
     // FPS
     font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
-        UIRect(x, y, 300, 50), UICol(255, 0, 0, 0));
+        UIRect(x, y, 300, 50), UICol(255, 255, 255, 255));
     // Frequency
     y += spaceBetween;
     font->draw(("Freq : " +
         std::to_string(GUI::DataManager::i().getFrequency())).c_str(),
-        UIRect(x, y, 300, 50), UICol(255, 0, 0, 0));
+        UIRect(x, y, 300, 50), UICol(255, 255, 255, 255));
     // TEAMS
     y += spaceBetween;
-    font->draw("TEAMS : ", UIRect(x, y, 300, 50), UICol(255, 0, 0, 0));
+    font->draw("TEAMS : ", UIRect(x, y, 300, 50), UICol(255, 255, 255, 255));
     for (auto &team : GUI::GameDataManager::i().getTeams()) {
         y += 20;
         font->draw(("\t" + team).c_str(), UIRect(x, y, 300, 50),
@@ -72,7 +75,7 @@ void Window::drawTileInfo(GameTile &tile, int &y) {
     std::vector<std::string> lstNames = {"Food", "Linemate", "Deraumere",
         "Sibur", "Mendiane", "Phiras", "Thystame"};
     std::vector<UICol> lstColors = {
-        UICol(255, 0, 0, 0), UICol(255, 200, 193, 198),
+        UICol(255, 255, 255, 255), UICol(255, 200, 193, 198),
         UICol(255, 55, 55, 55), UICol(255, 71, 73, 116),
         UICol(255, 94, 84, 33), UICol(255, 94, 31, 32),
         UICol(255, 64, 35, 94)
@@ -82,7 +85,7 @@ void Window::drawTileInfo(GameTile &tile, int &y) {
     std::string tileInfo = "Tile : " + std::to_string(tile.getX()) +
         ", " + std::to_string(tile.getY()) + " :";
     font->draw(tileInfo.c_str(), UIRect(width - 220, y, 300, 300),
-        UICol(255, 0, 0, 0));
+        UICol(255, 255, 255, 255));
     y += 20;
     for (int i = 0; i < 7; ++i) {
         if (tile.getRessource(i) == 0)
@@ -109,7 +112,7 @@ void Window::drawPlayerInfo(int id, int &y) {
     y += 20;
     playerInfo = "\tLevel : " + std::to_string(player.getLevel());
     font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
-        UICol(255, 0, 0, 0));
+        UICol(255, 255, 255, 255));
     // Position
     playerInfo = "\tPos : " + std::to_string(player.getX()) +
         ", " + std::to_string(player.getY()) + " - ";
@@ -130,13 +133,13 @@ void Window::drawPlayerInfo(int id, int &y) {
     }
     y += 20;
     font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
-        UICol(255, 0, 0, 0));
+        UICol(255, 255, 255, 255));
     // Inventory
     y += 20;
     std::vector<std::string> lstNames = {"Food", "Linemate", "Deraumere",
         "Sibur", "Mendiane", "Phiras", "Thystame"};
     std::vector<UICol> lstColors = {
-        UICol(255, 0, 0, 0), UICol(255, 200, 193, 198),
+        UICol(255, 255, 255, 255), UICol(255, 200, 193, 198),
         UICol(255, 55, 55, 55), UICol(255, 71, 73, 116),
         UICol(255, 94, 84, 33), UICol(255, 94, 31, 32),
         UICol(255, 64, 35, 94)};

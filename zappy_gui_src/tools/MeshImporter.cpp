@@ -74,9 +74,6 @@ void MeshImporter::setTexture(std::string meshName, const std::string &teamName,
         irr::core::position2d<irr::s32>(0, 0), texture->getOriginalSize()),
         [](irr::video::IImage* i) {(void) i;});
     irr::video::SColor newColor = getColor(teamName);
-    printf("Setting color for team %s: (%d, %d, %d)\n",
-        teamName.c_str(), newColor.getRed(), newColor.getGreen(),
-        newColor.getBlue());
 
     for (irr::u32 y = 0; y < image->getDimension().Height; ++y) {
         for (irr::u32 x = 0; x < image->getDimension().Width; ++x) {

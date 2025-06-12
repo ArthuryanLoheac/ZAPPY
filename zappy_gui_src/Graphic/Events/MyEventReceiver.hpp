@@ -13,11 +13,26 @@ class MyEventReceiver : public irr::IEventReceiver {
                 MouseWheelDelta = event.MouseInput.Wheel;
             }
         }
+        if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
+            if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
+                pressed = true;
+            } else if (event.MouseInput.Event == irr::EMIE_LMOUSE_LEFT_UP) {
+                pressed = false;
+            }
+        }
         return false;
     }
 
     virtual bool IsKeyDown(irr::EKEY_CODE keyCode) const {
         return KeyIsDown[keyCode];
+    }
+
+    void updateLastPressed() {
+        Lastpressed = pressed;
+    }
+
+    virtual bool IsMouseDown() const {
+        return pressed && !Lastpressed;
     }
 
     MyEventReceiver() {
@@ -40,5 +55,7 @@ class MyEventReceiver : public irr::IEventReceiver {
 
  private:
     bool KeyIsDown[irr::KEY_KEY_CODES_COUNT];
+    bool Lastpressed = false;
+    bool pressed = false;
     float MouseWheelDelta;
 };

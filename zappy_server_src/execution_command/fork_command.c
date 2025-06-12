@@ -25,7 +25,6 @@ static void lay_egg(zappy_t *zappy, client_t *client)
     send_data_to_graphics(zappy, buffer);
 }
 
-
 void fork_command(zappy_t *zappy, client_t *client, char **args)
 {
     (void) args;

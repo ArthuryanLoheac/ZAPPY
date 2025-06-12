@@ -7,7 +7,7 @@
 #include "DataManager/DataManager.hpp"
 #include "include/AIConnection.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
-#include "logs.h"
+#include "include/logs.h"
 
 int checkArgs(int ac, char **av) {
     int i = 1;

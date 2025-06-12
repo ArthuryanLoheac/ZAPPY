@@ -13,7 +13,7 @@
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
-#include "logs.h"
+#include "include/logs.h"
 
 int loopClient(int sockfd) {
     try {

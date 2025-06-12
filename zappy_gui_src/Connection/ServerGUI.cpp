@@ -11,7 +11,7 @@
 
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
-#include "logs.h"
+#include "include/logs.h"
 
 namespace GUI {
 ServerGUI::ServerGUI() {

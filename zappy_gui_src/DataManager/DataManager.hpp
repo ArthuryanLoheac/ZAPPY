@@ -11,7 +11,6 @@
 namespace GUI {
 class DataManager {
  private:
-
     int port;
     std::string ip;
     int frequency = 0;

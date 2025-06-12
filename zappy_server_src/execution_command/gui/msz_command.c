@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 
-#include "command.h"
+#include "command_handler.h"
 
 void msz_command(zappy_t *zappy, client_t *client, char **args)
 {

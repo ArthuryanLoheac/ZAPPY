@@ -28,6 +28,7 @@ void connect_nbr_command(zappy_t *zappy, client_t *client, char **args);
 
 // GUI commands
 void msz_command(zappy_t *zappy, client_t *client, char **args);
+void bct_command(zappy_t *zappy, client_t *client, char **args);
 
 typedef struct command_func_s {
     char *name;

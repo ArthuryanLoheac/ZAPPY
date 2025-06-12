@@ -20,5 +20,6 @@ const command_func_t player_command_association_list[] = {
 const command_func_t gui_command_association_list[] = {
     {"MSZ", msz_command},
     {"BCT", bct_command},
+    {"MCT", mct_command},
     {NULL, NULL}
 };

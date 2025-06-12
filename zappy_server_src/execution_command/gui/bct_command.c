@@ -19,7 +19,7 @@ void bct_command(zappy_t *zappy, client_t *client, char **args)
         LOG_WARNING("[%i]: Wrong number of args for a bct command",
             client->fd);
     } else {
-        send_bloc_content( atoi(args[1]), atoi(args[2]),
+        send_bloc_content(atoi(args[1]), atoi(args[2]),
             zappy, client);
     }
 }

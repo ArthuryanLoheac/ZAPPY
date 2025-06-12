@@ -18,5 +18,6 @@ const command_func_t player_command_association_list[] = {
 };
 
 const command_func_t gui_command_association_list[] = {
+    {"MSZ", msz_command},
     {NULL, NULL}
 };

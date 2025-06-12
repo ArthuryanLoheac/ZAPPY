@@ -58,7 +58,10 @@ void GameDataManager::addEgg(int id, int team, int x, int y) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getTile(x, y).getWorldPos();
     position.Y += 0.2f;
-    eggs.emplace_back(id, team, MeshImporter::i().importMesh("DroneEgg", "",
+    std::string teamName = "";
+    printf("Adding egg with ID: %d, Team: %d (%s), Position: (%d, %d)\n",
+        id, team, teamName.c_str(), x, y);
+    eggs.emplace_back(id, team, MeshImporter::i().importMesh("DroneEgg", teamName,
         position, Vec3d(0.2f)));
 }
 

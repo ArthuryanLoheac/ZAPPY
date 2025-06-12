@@ -111,9 +111,8 @@ void check_ticks(zappy_t *zappy)
     float delta = get_delta_time(zappy);
 
     zappy->durationTickLeft -= delta;
-    if (zappy->durationTickLeft <= 0) {
+    while (zappy->durationTickLeft <= 0) {
         reduce_tick_all(zappy);
         zappy->durationTickLeft += zappy->durationTick;
-        check_ticks(zappy);
     }
 }

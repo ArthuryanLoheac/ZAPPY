@@ -27,6 +27,17 @@ typedef struct inventory_s {
     int phiras;
     int thystame;
 } inventory_t;
+
+typedef struct stats_s {
+    int id;
+    int x;
+    int y;
+    int level;
+    int orientation;
+    char *team_name;
+    inventory_t inventory;
+} stats_t;
+
 typedef struct client_s {
     struct client_s *next;
     // Client information
@@ -38,16 +49,7 @@ typedef struct client_s {
     bool is_graphic;
     waitingCommands_t *waiting_commands;
 
-    // Datas game
-    int id;
-    int x;
-    int y;
-    int orientation;
-    int level;
-    char *team_name;
-
-    // Inventory
-    inventory_t inventory;
+    stats_t stats;
 } client_t;
 
 

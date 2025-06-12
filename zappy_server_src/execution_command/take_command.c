@@ -47,25 +47,25 @@ static bool take_object(zappy_t *zappy, cell_t *cell, char *object)
 static void put_object_inventory(client_t *client, char *object)
 {
     if (strcmp("food", object) == 0)
-        client->inventory.food += 1;
+        client->stats.inventory.food += 1;
     if (strcmp("linemate", object) == 0)
-        client->inventory.linemate += 1;
+        client->stats.inventory.linemate += 1;
     if (strcmp("deraumere", object) == 0)
-        client->inventory.deraumere += 1;
+        client->stats.inventory.deraumere += 1;
     if (strcmp("sibur", object) == 0)
-        client->inventory.sibur += 1;
+        client->stats.inventory.sibur += 1;
     if (strcmp("mendiane", object) == 0)
-        client->inventory.mendiane += 1;
+        client->stats.inventory.mendiane += 1;
     if (strcmp("phiras", object) == 0)
-        client->inventory.phiras += 1;
+        client->stats.inventory.phiras += 1;
     if (strcmp("thystame", object) == 0)
-        client->inventory.thystame += 1;
+        client->stats.inventory.thystame += 1;
 }
 
 void take_command(zappy_t *zappy, client_t *client, char **args)
 {
     if (!take_object(zappy,
-        &zappy->map->grid[client->y][client->x], args[0])) {
+        &zappy->map->grid[client->stats.y][client->stats.x], args[0])) {
         put_object_inventory(client, args[0]);
         add_to_buffer(&client->out_buffer, "ok\n");
     } else {

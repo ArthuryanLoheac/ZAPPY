@@ -58,7 +58,7 @@ static egg_t *return_egg(zappy_t *zappy, char *team_name)
     return NULL;
 }
 
-static void send_datas_new_player(client_t *client,
+static void send_datas_new_player(stats_t *client,
     zappy_t *zappy_ptr, egg_t *egg)
 {
     char buffer1[256];
@@ -82,16 +82,16 @@ static void new_connection_player(char **args, client_t *client,
 
     if (client == NULL || args == NULL || zappy_ptr == NULL || egg == NULL)
         return;
-    client->level = 1;
-    client->x = egg->x;
-    client->y = egg->y;
-    client->orientation = (rand() % 4) + 1;
-    client->team_name = strdup(args[0]);
+    client->stats.level = 1;
+    client->stats.x = egg->x;
+    client->stats.y = egg->y;
+    client->stats.orientation = (rand() % 4) + 1;
+    client->stats.team_name = strdup(args[0]);
     client->waiting_commands = NULL;
     delete_egg_team_name(zappy_ptr, args[0]);
-    client->id = zappy_ptr->idNextClient;
+    client->stats.id = zappy_ptr->idNextClient;
     zappy_ptr->idNextClient++;
-    send_datas_new_player(client, zappy_ptr, egg);
+    send_datas_new_player(&client->stats, zappy_ptr, egg);
 }
 
 static bool check_graphic(char **args, client_t *client, zappy_t *zappy_ptr)

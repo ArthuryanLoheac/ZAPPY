@@ -29,7 +29,7 @@ static int get_nb_player_at_pos(zappy_t *zappy, int x, int y)
     int count = 0;
 
     while (client != NULL) {
-        if (client->x == x && client->y == y)
+        if (client->stats.x == x && client->stats.y == y)
             count++;
         client = client->next;
     }
@@ -66,16 +66,16 @@ static void add_to_buffer_tile(char **buffer, zappy_t *zappy, int x, int y)
 
 static void move_forward_x(client_t *client, int *x, int *y, zappy_t *zappy)
 {
-    if (client->orientation == 3)
+    if (client->stats.orientation == 3)
         *y = (*y + 1) % zappy->parser->height;
-    if (client->orientation == 2)
+    if (client->stats.orientation == 2)
         *x = (*x + 1) % zappy->parser->width;
-    if (client->orientation == 1) {
+    if (client->stats.orientation == 1) {
         *y -= 1;
         if (*y < 0)
             *y = zappy->parser->height - 1;
     }
-    if (client->orientation == 4) {
+    if (client->stats.orientation == 4) {
         *x -= 1;
         if (*x < 0)
             *x = zappy->parser->width - 1;
@@ -85,7 +85,7 @@ static void move_forward_x(client_t *client, int *x, int *y, zappy_t *zappy)
 static void move_forward_side(client_t *client, int *xyi, zappy_t *zappy,
     char **buffer)
 {
-    int ori = (client->orientation + 1);
+    int ori = (client->stats.orientation + 1);
 
     if (ori > 4)
         ori = 1;
@@ -115,10 +115,10 @@ static void init_buffer(char *buffer)
 
 void look_command(zappy_t *zappy, client_t *client, char **args)
 {
-    int level = client->level;
-    int x = client->x;
-    int y = client->y;
-    int xyi_cpy[3] = {client->x, client->y, 0};
+    int level = client->stats.level;
+    int x = client->stats.x;
+    int y = client->stats.y;
+    int xyi_cpy[3] = {client->stats.x, client->stats.y, 0};
     char *buffer = malloc(2 * sizeof(char));
 
     (void) args;

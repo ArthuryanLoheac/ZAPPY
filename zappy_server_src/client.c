@@ -16,13 +16,13 @@
 
 static void set_client_ressources(client_t *client)
 {
-    client->inventory.food = 10;
-    client->inventory.linemate = 0;
-    client->inventory.deraumere = 0;
-    client->inventory.sibur = 0;
-    client->inventory.mendiane = 0;
-    client->inventory.phiras = 0;
-    client->inventory.thystame = 0;
+    client->stats.inventory.food = 10;
+    client->stats.inventory.linemate = 0;
+    client->stats.inventory.deraumere = 0;
+    client->stats.inventory.sibur = 0;
+    client->stats.inventory.mendiane = 0;
+    client->stats.inventory.phiras = 0;
+    client->stats.inventory.thystame = 0;
 }
 
 static void add_client_data(zappy_t *zappy, int fd)
@@ -37,7 +37,7 @@ static void add_client_data(zappy_t *zappy, int fd)
     client->is_connected = true;
     client->is_waiting_id = true;
     client->waiting_commands = NULL;
-    client->team_name = NULL;
+    client->stats.team_name = NULL;
     set_client_ressources(client);
     client->next = zappy->clients;
     zappy->clients = client;

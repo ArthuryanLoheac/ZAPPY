@@ -13,8 +13,8 @@ void update_pos_player(zappy_t *zappy, client_t *client)
 {
     char buffer[256];
 
-    sprintf(buffer, "ppo #%d %d %d %d\n", client->id, client->x, client->y,
-        client->orientation);
+    sprintf(buffer, "ppo #%d %d %d %d\n", client->stats.id, client->stats.x, client->stats.y,
+        client->stats.orientation);
     send_data_to_graphics(zappy, buffer);
 }
 

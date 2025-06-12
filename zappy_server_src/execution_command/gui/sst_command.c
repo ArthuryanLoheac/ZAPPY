@@ -10,12 +10,13 @@
 
 #include "command_handler.h"
 #include "logs.h"
+#include "pointlen.h"
 
 static void send_to_all_gui(zappy_t *zappy, const char *msg)
 {
     for (client_t *actual = zappy->clients; actual != NULL;
         actual = actual->next) {
-        add_to_buffer(actual->out_buffer, msg);
+        add_to_buffer(&actual->out_buffer, msg);
     }
 }
 

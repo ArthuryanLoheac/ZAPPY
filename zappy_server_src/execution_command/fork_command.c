@@ -18,7 +18,7 @@ static void lay_egg(zappy_t *zappy, client_t *client)
     new_egg->x = client->stats.x;
     new_egg->y = client->stats.y;
     new_egg->id = zappy->map->id_egg;
-    new_egg->team_name = client->stats.team_name;
+    new_egg->team_name = strdup(client->stats.team_name);
     new_egg->next = zappy->map->eggs;
     zappy->map->eggs = new_egg;
     zappy->map->id_egg += 1;

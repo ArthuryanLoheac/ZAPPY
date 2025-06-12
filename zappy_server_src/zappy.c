@@ -52,6 +52,7 @@ void start_server(zappy_t *zappy)
 
     zappy->durationTick = 1.0 / zappy->parser->freq;
     zappy->durationTickLeft = zappy->durationTick;
+    zappy->tickCount = 0;
     while (1) {
         check_ticks(zappy);
         ready = poll(server->fds, server->nb_fds,

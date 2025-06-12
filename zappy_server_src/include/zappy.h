@@ -65,15 +65,18 @@ typedef struct zappy_s {
     int idNextClient;
     float durationTickLeft;
     float durationTick;
+    int tickCount;
 
     struct timeval last_time;
 } zappy_t;
 
-typedef void (*incr_func_t)(cell_t *);
-
 starting_map_t *init_starting_map(zappy_t *zappy);
+int *get_total_resources(parser_t *parser);
+coord_t *init_coord_array(parser_t *parser);
+void place_resource(cell_t **map, coord_t c, int res);
 void free_starting_map(starting_map_t *map);
 cell_t **create_map(parser_t *parser);
+void update_map(cell_t **map, parser_t *parser);
 void destroy_map(cell_t **map);
 
 void start_server(zappy_t *zappy);

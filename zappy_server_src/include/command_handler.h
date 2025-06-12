@@ -35,6 +35,7 @@ void mct_command(zappy_t *zappy, client_t *client, char **args);
 void tna_command(zappy_t *zappy, client_t *client, char **args);
 void ppo_command(zappy_t *zappy, client_t *client, char **args);
 void plv_command(zappy_t *zappy, client_t *client, char **args);
+void pin_command(zappy_t *zappy, client_t *client, char **args);
 
 typedef struct command_func_s {
     char *name;

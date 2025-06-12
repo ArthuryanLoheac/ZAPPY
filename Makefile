@@ -96,14 +96,16 @@ $(COMMON_C_LIB): $(OBJ_C_COMMON)
 
 $(ZAPPY_SERVER): $(COMMON_C_LIB) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER)
 	gcc -o $(ZAPPY_SERVER) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER) \
-	$(FLAGS_SERVER) -Llibc -lcommon
+	$(FLAGS_SERVER) $(COMMON_C_LIB)
 
 $(ZAPPY_GUI): $(COMMON_CPP_LIB) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI)
-	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) -Llibcpp -lcommon \
+	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) \
+	$(COMMON_C_LIB) $(COMMON_CPP_LIB) \
 	$(LDFLAGS_GUI)
 
 $(ZAPPY_AI): $(COMMON_CPP_LIB) $(OBJ_SRC_AI) $(OBJ_MAIN_AI)
-	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) -Llibcpp -lcommon \
+	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) \
+	$(COMMON_C_LIB) $(COMMON_CPP_LIB) \
 	$(FLAGS_AI)
 
 # ============= CLEANS ============= #
@@ -113,7 +115,8 @@ clean:
 	rm -f *.gcda *.gcno
 
 fclean: clean
-	rm -f $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI) $(COMMON_LIB)
+	rm -f $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI) \
+	$(COMMON_C_LIB) $(COMMON_CPP_LIB)
 	rm -f unit_tests
 
 # ============= COMPILATION ============= #

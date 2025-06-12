@@ -23,5 +23,6 @@ const command_func_t gui_command_association_list[] = {
     {"MCT", mct_command},
     {"TNA", tna_command},
     {"PPO", ppo_command},
+    {"PLV", plv_command},
     {NULL, NULL}
 };

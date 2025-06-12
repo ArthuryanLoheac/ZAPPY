@@ -34,6 +34,7 @@ typedef struct stats_s {
     int y;
     int level;
     int orientation;
+    int tickLife;
     char *team_name;
     inventory_t inventory;
 } stats_t;

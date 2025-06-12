@@ -38,6 +38,12 @@ static void add_client_data(zappy_t *zappy, int fd)
     client->is_waiting_id = true;
     client->waiting_commands = NULL;
     client->stats.team_name = NULL;
+    client->stats.orientation = 1;
+    client->stats.tickLife = 0;
+    client->stats.id = 0;
+    client->stats.x = 0;
+    client->stats.y = 0;
+    client->stats.level = 1;
     set_client_ressources(&client->stats);
     client->next = zappy->clients;
     zappy->clients = client;

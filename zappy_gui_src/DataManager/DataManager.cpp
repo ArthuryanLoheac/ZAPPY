@@ -5,17 +5,8 @@
 namespace GUI {
 DataManager::DataManager() {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    debug = NO_DEBUG;
     port = 0;
     ip = "";
-}
-
-bool DataManager::getDebug() const {
-    return debug == ALL_DEBUG;
-}
-
-bool DataManager::getErrors() const {
-    return (debug == ALL_DEBUG) || (debug == ERRORS);
 }
 
 int DataManager::getPort() const {
@@ -28,11 +19,6 @@ int DataManager::getFrequency() const {
 
 std::string DataManager::getIp() const {
     return ip;
-}
-
-void DataManager::setDebug(debugMode isDebug) {
-    std::lock_guard<std::mutex> lock(mutexDatas);
-    debug = isDebug;
 }
 
 void DataManager::setPort(int _port) {

@@ -8,18 +8,13 @@
 #include "DataManager/GameDataManager.hpp"
 #include "include/GuiConnection.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
+#include "include/logs.h"
 
 int checkArgs(int ac, char **av) {
     int i = 1;
 
     while (i < ac) {
-        if (std::string(av[i]) == "-d") {
-            GUI::DataManager::i().setDebug(GUI::DataManager::ALL_DEBUG);
-            i++;
-        } else if (std::string(av[i]) == "-e") {
-            GUI::DataManager::i().setDebug(GUI::DataManager::ERRORS);
-            i++;
-        } else if (std::string(av[i]) == "-p" && i + 1 < ac) {
+        if (std::string(av[i]) == "-p" && i + 1 < ac) {
             GUI::DataManager::i().setPort(atoi(av[i + 1]));
             if (GUI::DataManager::i().getPort() < 0 ||
                 GUI::DataManager::i().getPort() > 65535)
@@ -28,6 +23,15 @@ int checkArgs(int ac, char **av) {
         } else if (std::string(av[i]) == "-h" && i + 1 < ac) {
             GUI::DataManager::i().setIp(av[i + 1]);
             i+= 2;
+        } else if (std::string(av[i]) == "-v") {
+            set_log_level(WARNING);
+            i++;
+        } else if (std::string(av[i]) == "-vv") {
+            set_log_level(INFO);
+            i++;
+        } else if (std::string(av[i]) == "-vvv") {
+            set_log_level(DEBUG);
+            i++;
         } else {
             return 84;
         }
@@ -38,9 +42,10 @@ int checkArgs(int ac, char **av) {
 int returnHelp() {
     std::cout << "Usage: ./zappy_gui -h <ip> -p <port> [-d]\n"
               << "Options:\n"
-              << "  -h <ip>   : Set the server IP address\n"
-              << "  -p <port> : Set the server port (0-65535)\n"
-              << "  -d        : Enable debug mode\n";
+              << "  -h <ip>       : Set the server IP address\n"
+              << "  -p <port>     : Set the server port (0-65535)\n"
+              << "  -d            : Enable debug mode\n"
+              << "  -v, -vv, -vvv : Set verbose level (WARNING, INFO, DEBUG\n";
     return 84;
 }
 

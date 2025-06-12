@@ -54,6 +54,7 @@ typedef struct egg_s {
 typedef struct starting_map_s {
     cell_t **grid;
     egg_t *eggs;
+    int id_egg;
 } starting_map_t;
 
 typedef struct zappy_s {

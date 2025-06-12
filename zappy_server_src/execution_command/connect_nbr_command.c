@@ -18,7 +18,7 @@ void connect_nbr_command(zappy_t *zappy, client_t *client, char **args)
 
     (void)args;
     while (egg != NULL) {
-        if (strcmp(egg->team_name, client->team_name) == 0)
+        if (strcmp(egg->team_name, client->stats.team_name) == 0)
             connect_nbr++;
         egg = egg->next;
     }

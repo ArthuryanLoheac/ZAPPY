@@ -29,17 +29,16 @@ DEPS = $(OBJ_DIR)/*.d
 FLAGS_SERVER = -MMD -MP \
 	-I./zappy_server_src/include \
 	-I./libc/include \
-	-I./lib	\
 	-std=gnu17 -Wall -Wextra -Werror \
 
 FLAGS_GUI =	-MMD -MP \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
-	-I./libcpp -I./lib -std=c++17 -Wall -Wextra -Werror
+	-I./libcpp -I./libc/include -std=c++17 -Wall -Wextra -Werror
 LDFLAGS_GUI = -lIrrlicht
 
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
-	-I./libcpp -I./lib -std=c++20 -Wall -Wextra -Werror
+	-I./libcpp -I./libc/include -std=c++20 -Wall -Wextra -Werror
 
 FLAGS_CPP_COMMON = -MMD -MP \
 	$(shell find lib -type d -exec echo -I{} \;) \

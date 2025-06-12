@@ -18,6 +18,15 @@ typedef struct waitingCommands_s {
     int ticksLeft;
 } waitingCommands_t;
 
+typedef struct inventory_s {
+    int food;
+    int linemate;
+    int deraumere;
+    int sibur;
+    int mendiane;
+    int phiras;
+    int thystame;
+} inventory_t;
 typedef struct client_s {
     struct client_s *next;
     // Client information
@@ -38,14 +47,10 @@ typedef struct client_s {
     char *team_name;
 
     // Inventory
-    int nbr_food;
-    int nbr_linemate;
-    int nbr_deraumere;
-    int nbr_sibur;
-    int nbr_mendiane;
-    int nbr_phiras;
-    int nbr_thystame;
+    inventory_t inventory;
 } client_t;
+
+
 
 
 void check_ticks(zappy_t *zappy);

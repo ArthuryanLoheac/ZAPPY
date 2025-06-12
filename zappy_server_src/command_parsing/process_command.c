@@ -68,9 +68,9 @@ static void send_datas_new_player(client_t *client,
     sprintf(buffer1, "\npnw #%d %d %d %d %d %s\n", client->id, client->x,
         client->y, client->orientation, client->level, client->team_name);
     sprintf(buffer2, "%spin #%d %d %d %d %d %d %d %d %d %d\n", buffer1,
-        client->id, client->x, client->y, client->nbr_food,
-        client->nbr_linemate, client->nbr_deraumere, client->nbr_sibur,
-        client->nbr_mendiane, client->nbr_phiras, client->nbr_thystame);
+        client->id, client->x, client->y, client->inventory.food,
+        client->inventory.linemate, client->inventory.deraumere, client->inventory.sibur,
+        client->inventory.mendiane, client->inventory.phiras, client->inventory.thystame);
     sprintf(buffer3, "%sebo #%d\n", buffer2, egg->id);
     send_data_to_graphics(zappy_ptr, buffer3);
 }

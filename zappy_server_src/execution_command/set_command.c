@@ -28,19 +28,19 @@ static bool put_object(zappy_t *zappy, client_t *client,
 {
     cell_t comp_cell = *cell;
 
-    if (strcmp("food", object) == 0 && client->nbr_food > 0)
+    if (strcmp("food", object) == 0 && client->inventory.food > 0)
         cell->nbr_food += 1;
-    if (strcmp("linemate", object) == 0 && client->nbr_linemate > 0)
+    if (strcmp("linemate", object) == 0 && client->inventory.linemate > 0)
         cell->nbr_linemate += 1;
-    if (strcmp("deraumere", object) == 0 && client->nbr_deraumere > 0)
+    if (strcmp("deraumere", object) == 0 && client->inventory.deraumere > 0)
         cell->nbr_deraumere += 1;
-    if (strcmp("sibur", object) == 0 && client->nbr_sibur > 0)
+    if (strcmp("sibur", object) == 0 && client->inventory.sibur > 0)
         cell->nbr_sibur += 1;
-    if (strcmp("mendiane", object) == 0 && client->nbr_mendiane > 0)
+    if (strcmp("mendiane", object) == 0 && client->inventory.mendiane > 0)
         cell->nbr_mendiane += 1;
-    if (strcmp("phiras", object) == 0 && client->nbr_phiras > 0)
+    if (strcmp("phiras", object) == 0 && client->inventory.phiras > 0)
         cell->nbr_phiras += 1;
-    if (strcmp("thystame", object) == 0 && client->nbr_thystame > 0)
+    if (strcmp("thystame", object) == 0 && client->inventory.thystame > 0)
         cell->nbr_thystame += 1;
     update_cell(zappy, *cell);
     return (cmp_cell(*cell, comp_cell));
@@ -49,19 +49,19 @@ static bool put_object(zappy_t *zappy, client_t *client,
 static void remove_object_inventory(client_t *client, char *object)
 {
     if (strcmp("food", object) == 0)
-        client->nbr_food -= 1;
+        client->inventory.food -= 1;
     if (strcmp("linemate", object) == 0)
-        client->nbr_linemate -= 1;
+        client->inventory.linemate -= 1;
     if (strcmp("deraumere", object) == 0)
-        client->nbr_deraumere -= 1;
+        client->inventory.deraumere -= 1;
     if (strcmp("sibur", object) == 0)
-        client->nbr_sibur -= 1;
+        client->inventory.sibur -= 1;
     if (strcmp("mendiane", object) == 0)
-        client->nbr_mendiane -= 1;
+        client->inventory.mendiane -= 1;
     if (strcmp("phiras", object) == 0)
-        client->nbr_phiras -= 1;
+        client->inventory.phiras -= 1;
     if (strcmp("thystame", object) == 0)
-        client->nbr_thystame -= 1;
+        client->inventory.thystame -= 1;
 }
 
 void set_command(zappy_t *zappy, client_t *client, char **args)

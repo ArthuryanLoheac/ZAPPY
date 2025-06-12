@@ -27,9 +27,9 @@ static void send_pin(client_t *c, client_t *send)
 
     snprintf(pin_data, sizeof(pin_data),
         "pin #%d %d %d %d %d %d %d %d %d %d\n",
-        c->id, c->x, c->y, c->nbr_food, c->nbr_linemate,
-        c->nbr_deraumere, c->nbr_sibur, c->nbr_mendiane,
-        c->nbr_phiras, c->nbr_thystame);
+        c->id, c->x, c->y, c->inventory.food, c->inventory.linemate,
+        c->inventory.deraumere, c->inventory.sibur, c->inventory.mendiane,
+        c->inventory.phiras, c->inventory.thystame);
     add_to_buffer(&send->out_buffer, pin_data);
 }
 

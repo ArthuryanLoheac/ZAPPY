@@ -16,13 +16,13 @@
 
 static void set_client_ressources(client_t *client)
 {
-    client->nbr_food = 10;
-    client->nbr_linemate = 0;
-    client->nbr_deraumere = 0;
-    client->nbr_sibur = 0;
-    client->nbr_mendiane = 0;
-    client->nbr_phiras = 0;
-    client->nbr_thystame = 0;
+    client->inventory.food = 10;
+    client->inventory.linemate = 0;
+    client->inventory.deraumere = 0;
+    client->inventory.sibur = 0;
+    client->inventory.mendiane = 0;
+    client->inventory.phiras = 0;
+    client->inventory.thystame = 0;
 }
 
 static void add_client_data(zappy_t *zappy, int fd)

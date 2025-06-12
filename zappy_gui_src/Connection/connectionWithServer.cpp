@@ -13,6 +13,7 @@
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
+#include "include/logs.h"
 
 int loopClient(int sockfd) {
     try {
@@ -21,7 +22,7 @@ int loopClient(int sockfd) {
 
         GUI::ServerGUI::i().startServer();
     } catch (const std::exception &e) {
-        std::cerr << "Server Closed: " << e.what() << std::endl;
+        LOG_WARNING("Server closed");
         close(sockfd);
     }
     return 0;

@@ -28,13 +28,56 @@ static void exec_command_tick(zappy_t *zappy, client_t *client,
         handler(zappy, client, &command->command[1]);
 }
 
+static void send_pdi_graphic(client_t *c, zappy_t *zappy)
+{
+    char pdi_data[256];
+
+    snprintf(pdi_data, sizeof(pdi_data),
+        "pdi #%d\n", c->stats.id);
+    send_data_to_graphics(zappy, pdi_data);
+}
+
+static void send_pin_graphic(client_t *c, zappy_t *zappy)
+{
+    char pin_data[256];
+    stats_t s = c->stats;
+
+    snprintf(pin_data, sizeof(pin_data),
+        "pin #%d %d %d %d %d %d %d %d %d %d\n",
+        s.id, s.x, s.y, s.inventory.food, s.inventory.linemate,
+        s.inventory.deraumere, s.inventory.sibur, s.inventory.mendiane,
+        s.inventory.phiras, s.inventory.thystame);
+    send_data_to_graphics(zappy, pin_data);
+}
+
+static void handle_life_tick(client_t *client, zappy_t *zappy)
+{
+    if (!client->is_connected || client->is_waiting_id)
+        return;
+    client->stats.tickLife--;
+    if (client->stats.tickLife <= 0) {
+        if (client->stats.inventory.food > 0) {
+            client->stats.inventory.food--;
+            client->stats.tickLife = 126;
+            send_pin_graphic(client, zappy);
+        } else {
+            add_to_buffer(&client->out_buffer, "dead\n");
+            client->is_connected = false;
+            client->is_waiting_id = false;
+            send_pdi_graphic(client, zappy);
+            client->stats.id = -1;
+        }
+    }
+}
+
 static void reduce_tick_all(zappy_t *zappy)
 {
     client_t *client = zappy->clients;
     waitingCommands_t *command;
 
     while (client) {
-        if (client->waiting_commands == NULL) {
+        handle_life_tick(client, zappy);
+        if (client->waiting_commands == NULL || !client->is_connected) {
             client = client->next;
             continue;
         }
@@ -68,7 +111,7 @@ void check_ticks(zappy_t *zappy)
     float delta = get_delta_time(zappy);
 
     zappy->durationTickLeft -= delta;
-    if (zappy->durationTickLeft <= 0) {
+    while (zappy->durationTickLeft <= 0) {
         reduce_tick_all(zappy);
         zappy->durationTickLeft = zappy->durationTick;
         zappy->tickCount++;

@@ -71,15 +71,6 @@ typedef struct zappy_s {
 
 typedef void (*incr_func_t)(cell_t *);
 
-void incr_egg(cell_t *cell);
-void incr_food(cell_t *cell);
-void incr_linemate(cell_t *cell);
-void incr_deraumere(cell_t *cell);
-void incr_sibur(cell_t *cell);
-void incr_mendiane(cell_t *cell);
-void incr_phiras(cell_t *cell);
-void incr_thystame(cell_t *cell);
-
 starting_map_t *init_starting_map(zappy_t *zappy);
 void free_starting_map(starting_map_t *map);
 cell_t **create_map(parser_t *parser);

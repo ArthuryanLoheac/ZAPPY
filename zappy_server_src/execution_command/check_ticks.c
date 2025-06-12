@@ -55,7 +55,6 @@ static void handle_life_tick(client_t *client, zappy_t *zappy)
     if (!client->is_connected || client->is_waiting_id)
         return;
     client->stats.tickLife--;
-    printf("Client %d tickLife: %d\n", client->stats.id, client->stats.tickLife);
     if (client->stats.tickLife <= 0) {
         if (client->stats.inventory.food > 0) {
             client->stats.inventory.food--;

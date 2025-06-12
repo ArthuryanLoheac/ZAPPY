@@ -49,7 +49,7 @@ void send_players_data(zappy_t *zappy, client_t *c)
     client_t *current_player = zappy->clients;
 
     while (current_player != NULL) {
-        if (!current_player->is_graphic) {
+        if (!current_player->is_graphic && current_player->is_connected && !current_player->is_waiting_id) {
             send_pnw(current_player, c);
             send_pin(current_player, c);
             send_plv(current_player, c);

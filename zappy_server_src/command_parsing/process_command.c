@@ -59,7 +59,7 @@ static egg_t *return_egg(zappy_t *zappy, char *team_name)
 }
 
 static void send_datas_new_player(stats_t *client,
-    zappy_t *zappy_ptr, egg_t *egg)
+    zappy_t *zappy_ptr, int eggId)
 {
     char buffer1[256];
     char buffer2[256 * 2];
@@ -71,7 +71,7 @@ static void send_datas_new_player(stats_t *client,
         client->id, client->x, client->y, client->inventory.food,
         client->inventory.linemate, client->inventory.deraumere, client->inventory.sibur,
         client->inventory.mendiane, client->inventory.phiras, client->inventory.thystame);
-    sprintf(buffer3, "%sebo #%d\n", buffer2, egg->id);
+    sprintf(buffer3, "%sebo #%d\n", buffer2, eggId);
     send_data_to_graphics(zappy_ptr, buffer3);
 }
 
@@ -79,9 +79,11 @@ static void new_connection_player(char **args, client_t *client,
     zappy_t *zappy_ptr)
 {
     egg_t *egg = return_egg(zappy_ptr, args[0]);
+    int eggId;
 
     if (client == NULL || args == NULL || zappy_ptr == NULL || egg == NULL)
         return;
+    eggId = egg->id;
     client->stats.level = 1;
     client->stats.x = egg->x;
     client->stats.y = egg->y;
@@ -91,7 +93,7 @@ static void new_connection_player(char **args, client_t *client,
     delete_egg_team_name(zappy_ptr, args[0]);
     client->stats.id = zappy_ptr->idNextClient;
     zappy_ptr->idNextClient++;
-    send_datas_new_player(&client->stats, zappy_ptr, egg);
+    send_datas_new_player(&client->stats, zappy_ptr, eggId);
 }
 
 static bool check_graphic(char **args, client_t *client, zappy_t *zappy_ptr)

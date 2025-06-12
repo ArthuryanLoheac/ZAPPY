@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2025
 ** ZAPPY
 ** File description:
-** Utility functions used by multiple comands handlers
+** Utility functions used by multiple commands handlers
 */
 
 #include <stdio.h>

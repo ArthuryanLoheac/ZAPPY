@@ -14,6 +14,8 @@ const command_func_t player_command_association_list[] = {
     {"LEFT", left_command},
     {"TAKE", take_command},
     {"SET", set_command},
+    {"CONNECT_NBR", connect_nbr_command},
+    {"FORK", fork_command},
     {NULL, NULL}
 };
 

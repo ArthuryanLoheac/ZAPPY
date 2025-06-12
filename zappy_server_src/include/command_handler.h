@@ -27,6 +27,7 @@ void left_command(zappy_t *zappy, client_t *client, char **args);
 void take_command(zappy_t *zappy, client_t *client, char **args);
 void set_command(zappy_t *zappy, client_t *client, char **args);
 void connect_nbr_command(zappy_t *zappy, client_t *client, char **args);
+void fork_command(zappy_t *zappy, client_t *client, char **args);
 
 // GUI commands
 void msz_command(zappy_t *zappy, client_t *client, char **args);

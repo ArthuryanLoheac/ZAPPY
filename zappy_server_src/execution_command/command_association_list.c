@@ -14,5 +14,6 @@ const command_func_t command_association_list[] = {
     {"LEFT", left_command},
     {"TAKE", take_command},
     {"SET", set_command},
+    {"FORK", fork_command},
     {NULL, NULL}
 };

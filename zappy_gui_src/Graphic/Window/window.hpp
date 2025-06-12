@@ -12,6 +12,8 @@
 #define UICol irr::video::SColor
 namespace GUI {
 class Window {
+ private:
+    void SetupSkybox();
  public:
     Window();
     irr::IrrlichtDevice *device;

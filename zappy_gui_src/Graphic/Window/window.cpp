@@ -5,9 +5,26 @@
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "tools/MeshImporter.hpp"
 #include "DataManager/DataManager.hpp"
+#include "window.hpp"
 
 namespace GUI {
+void Window::SetupSkybox() {
+    Skybox = std::shared_ptr<irr::scene::ISceneNode>(
+        smgr->addSkyBoxSceneNode(
+            driver->getTexture("assets/skybox/top.png"),
+            driver->getTexture("assets/skybox/bottom.png"),
+            driver->getTexture("assets/skybox/back.png"),
+            driver->getTexture("assets/skybox/front.png"),
+            driver->getTexture("assets/skybox/left.png"),
+            driver->getTexture("assets/skybox/right.png")),
+        [](irr::scene::ISceneNode *) {});
+    rotationSkybox = Vec3d((rand() % 10 - 5.f) / 10.f,
+        (rand() % 10 - 5.f) / 10.f, (rand() % 10 - 5.f) / 10.f);
+    Skybox->setRotation(Vec3d(rand() % 360, rand() % 360, rand() % 360));
+}
+
 Window::Window() {
+
     device = irr::createDevice(irr::video::EDT_BURNINGSVIDEO,
         irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false,
         &receiver);
@@ -30,27 +47,13 @@ Window::Window() {
     font = std::shared_ptr<irr::gui::IGUIFont>(
         guienv->getFont("assets/fonts/DejaVuSansMono.png"),
         [](irr::gui::IGUIFont *) {});
-    Skybox = std::shared_ptr<irr::scene::ISceneNode>(
-        smgr->addSkyBoxSceneNode(
-            // top
-            driver->getTexture("assets/skybox/top.png"),
-            // bottom
-            driver->getTexture("assets/skybox/bottom.png"),
-            // back
-            driver->getTexture("assets/skybox/back.png"),
-            // front
-            driver->getTexture("assets/skybox/front.png"),
-            // left
-            driver->getTexture("assets/skybox/left.png"),
-            // right
-            driver->getTexture("assets/skybox/right.png")),
-        [](irr::scene::ISceneNode *) {});
-    rotationSkybox = Vec3d((rand() % 10 - 5.f) / 10.f,
-        (rand() % 10 - 5.f) / 10.f, (rand() % 10 - 5.f) / 10.f);
+    SetupSkybox();
 }
 
 void Window::updateSkyBoxRotation()
 {
+    if (!Skybox)
+        return;
     irr::core::vector3df rotation = Skybox->getRotation();
     rotation += rotationSkybox * frameDeltaTime;
     if (rotation.Y > 360.f) rotation.Y -= 360.f;

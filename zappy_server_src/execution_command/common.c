@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2025
 ** ZAPPY
 ** File description:
-** Utility functions used by multiple comands handlers
+** Utility functions used by multiple commands handlers
 */
 
 #include <stdio.h>
@@ -27,4 +27,22 @@ void update_cell(zappy_t *zappy, cell_t cell)
         cell.nbr_linemate, cell.nbr_deraumere, cell.nbr_sibur,
         cell.nbr_mendiane, cell.nbr_phiras, cell.nbr_thystame);
     send_data_to_graphics(zappy, buffer);
+}
+
+void send_bloc_content(int x, int y, zappy_t *zappy, client_t *client)
+{
+    char response[100];
+
+    snprintf(response, 99, "bct %i %i %i %d %d %d %i %i %i\n",
+        x,
+        y,
+        zappy->map->grid[y][x].nbr_food,
+        zappy->map->grid[y][x].nbr_linemate,
+        zappy->map->grid[y][x].nbr_deraumere,
+        zappy->map->grid[y][x].nbr_sibur,
+        zappy->map->grid[y][x].nbr_mendiane,
+        zappy->map->grid[y][x].nbr_phiras,
+        zappy->map->grid[y][x].nbr_thystame
+    );
+    add_to_buffer(&client->out_buffer, response);
 }

@@ -9,6 +9,7 @@
 #include <signal.h>
 #include <time.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "../include/client.h"
 #include "command.h"
@@ -21,7 +22,10 @@ static void exec_command_tick(zappy_t *zappy, client_t *client,
 
     if (!command || command->command == NULL || command->command[0] == NULL)
         return;
-    handler = get_command_handler(command->command[0]);
+    if (strcmp(client->stats.team_name, "GRAPHICAL") == 0)
+        handler = get_gui_command_handler(command->command[0]);
+    else
+        handler = get_player_command_handler(command->command[0]);
     if (handler == NULL)
         add_to_buffer(&client->out_buffer, "ko\n");
     else

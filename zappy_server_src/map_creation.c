@@ -84,7 +84,7 @@ void place_resource(cell_t **map, coord_t c, int res)
         map[c.y][c.x].nbr_thystame += 1;
 }
 
-static void add_egg(starting_map_t *map, int id, const char *team_name,
+static void add_egg(starting_map_t *map, const char *team_name,
     zappy_t *zappy)
 {
     egg_t *new_egg = malloc(sizeof(egg_t));
@@ -93,7 +93,8 @@ static void add_egg(starting_map_t *map, int id, const char *team_name,
         return;
     new_egg->x = rand() % zappy->parser->width;
     new_egg->y = rand() % zappy->parser->height;
-    new_egg->id = id;
+    new_egg->id = map->id_egg;
+    map->id_egg += 1;
     new_egg->team_name = strdup(team_name);
     new_egg->next = map->eggs;
     map->eggs = new_egg;
@@ -102,15 +103,15 @@ static void add_egg(starting_map_t *map, int id, const char *team_name,
 starting_map_t *init_starting_map(zappy_t *zappy)
 {
     starting_map_t *map = malloc(sizeof(starting_map_t));
-    int a = 0;
 
+    map->id_egg = 0;
     LOG_DEBUG("Initializing map");
     if (!map)
         return NULL;
     map->grid = create_map(zappy->parser);
     for (int i = 0; i < zappy->parser->nb_teams; ++i) {
         for (int j = 0; j < zappy->parser->clients_per_team; ++j)
-            add_egg(map, a++, zappy->parser->team_names[i], zappy);
+            add_egg(map, zappy->parser->team_names[i], zappy);
     }
     return map;
 }

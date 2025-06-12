@@ -33,8 +33,8 @@ void set_log_level(enum log_level_e level);
 
 // If I reduce the number of arguments, the complexity of the function
 // may increase significally
-void log_internal(enum log_level_e level, char *level_str, char *color,
-    const char *format, ...);
+void log_internal(enum log_level_e level, const char *level_str,
+    const char *color, const char *format, ...);
 
 // These debug macros functions are too long for the coding style ToT
 // There seems to be now way to legally respect the 80chars rule & no \ at

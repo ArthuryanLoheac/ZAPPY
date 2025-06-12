@@ -36,8 +36,8 @@ static void remove_newlines(char *str)
 // messages.
 // If the coding style infraction is that big of an issue, you can get
 // rid of the color.
-void log_internal(enum log_level_e level, char *level_str, char *color,
-    const char *format, ...)
+void log_internal(enum log_level_e level, const char *level_str,
+    const char *color, const char *format, ...)
 {
     char *timestamp;
     char msg[1024];

@@ -16,6 +16,7 @@
 
 static void set_client_ressources(stats_t *stat)
 {
+    stat->tickLife = 0;
     stat->inventory.food = 10;
     stat->inventory.linemate = 0;
     stat->inventory.deraumere = 0;
@@ -39,7 +40,6 @@ static void add_client_data(zappy_t *zappy, int fd)
     client->waiting_commands = NULL;
     client->stats.team_name = NULL;
     client->stats.orientation = 1;
-    client->stats.tickLife = 0;
     client->stats.id = 0;
     client->stats.x = 0;
     client->stats.y = 0;

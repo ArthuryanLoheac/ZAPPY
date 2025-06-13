@@ -62,6 +62,24 @@ static void add_pos_elevation(zappy_t *zappy, int x, int y, int level)
     zappy->pos_elevations = new_pos;
 }
 
+static void add_pos_elevation_failed(zappy_t *zappy, int x, int y, int level)
+{
+    pos_elevation_t *poses = zappy->pos_elevationsFail;
+    pos_elevation_t *new_pos;
+
+    while (poses) {
+        if (poses->x == x && poses->y == y)
+            return;
+        poses = poses->next;
+    }
+    new_pos = malloc(sizeof(pos_elevation_t));
+    new_pos->x = x;
+    new_pos->y = y;
+    new_pos->level = level;
+    new_pos->next = zappy->pos_elevationsFail;
+    zappy->pos_elevationsFail = new_pos;
+}
+
 void incantation_command(zappy_t *zappy, client_t *client, char **args)
 {
     char buffer[256];
@@ -75,6 +93,9 @@ void incantation_command(zappy_t *zappy, client_t *client, char **args)
         add_to_buffer(&client->out_buffer, buffer);
         sprintf(buffer2, "plv #%d %d\n", client->stats.id, client->stats.level);
         send_data_to_graphics(zappy, buffer2);
-    } else
+    } else {
+        add_pos_elevation_failed(zappy, client->stats.x, client->stats.y,
+            client->stats.level);
         add_to_buffer(&client->out_buffer, "ko\n");
+    }
 }

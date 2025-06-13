@@ -78,6 +78,7 @@ typedef struct zappy_s {
 
     struct timeval last_time;
     pos_elevation_t *pos_elevations;
+    pos_elevation_t *pos_elevationsFail;
 } zappy_t;
 
 starting_map_t *init_starting_map(zappy_t *zappy);

@@ -78,9 +78,13 @@ static void check_consume(zappy_t *zappy)
 {
     pos_elevation_t *poses = zappy->pos_elevations;
     pos_elevation_t *prev = NULL;
+    char buffer[256];
 
     while (poses) {
         consume_incantation(zappy, poses->x, poses->y, poses->level);
+        sprintf(buffer, "pie %d %d Current level: %d\n", poses->x, poses->y,
+            poses->level + 1);
+        send_data_to_graphics(zappy, buffer);
         prev = poses;
         poses = poses->next;
         free(prev);
@@ -89,6 +93,25 @@ static void check_consume(zappy_t *zappy)
     if (prev)
         free(prev);
     zappy->pos_elevations = NULL;
+}
+
+static void check_fail(zappy_t *zappy)
+{
+    pos_elevation_t *poses = zappy->pos_elevationsFail;
+    pos_elevation_t *prev = NULL;
+    char buffer[256];
+
+    while (poses) {
+        sprintf(buffer, "pie %d %d ko\n", poses->x, poses->y);
+        send_data_to_graphics(zappy, buffer);
+        prev = poses;
+        poses = poses->next;
+        free(prev);
+        prev = NULL;
+    }
+    if (prev)
+        free(prev);
+    zappy->pos_elevationsFail = NULL;
 }
 
 static void reduce_tick_all(zappy_t *zappy)
@@ -115,6 +138,7 @@ static void reduce_tick_all(zappy_t *zappy)
         client = client->next;
     }
     check_consume(zappy);
+    check_fail(zappy);
 }
 
 static float get_delta_time(zappy_t *zappy)

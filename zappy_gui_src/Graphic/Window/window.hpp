@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
@@ -12,6 +13,9 @@
 #define UICol irr::video::SColor
 namespace GUI {
 class Window {
+ private:
+    void SetupSkybox();
+
  public:
     Window();
     irr::IrrlichtDevice *device;
@@ -23,8 +27,10 @@ class Window {
     irr::u32 then;
     irr::f32 frameDeltaTime;
     std::shared_ptr<irr::gui::IGUIFont> font;
-
     std::vector<irr::scene::ISceneNode*> cubes;
+
+    std::shared_ptr<irr::scene::ISceneNode> Skybox;
+    Vec3d rotationSkybox;
 
     float rotationSpeedCamera = 100.f;
     float zoomSpeedCamera = 20.f;
@@ -46,16 +52,19 @@ class Window {
     void updateZoomCamera(float zoom);
     void updateMoveOrigin(float xMove, float yMove, float radX, float radZ);
     void updateRotation(float x);
+    void updateSkyBoxRotation();
 
     void handleCLick();
     bool detectCollisionGround();
     bool detectCollisionPlayer();
 
-    void drawOneBackground(int x, int y, int sizeX, int sizeY);
+    void drawOneBackground(const std::string &texture, int x, int y,
+        int sizeX, int sizeY);
     void drawBackgrounds();
     void drawUI();
     void drawTileInfo(GameTile &tile, int &y);
     void drawPlayerInfo(int id, int &y);
+
     static Window &i() {
         static Window instance;
         return instance;

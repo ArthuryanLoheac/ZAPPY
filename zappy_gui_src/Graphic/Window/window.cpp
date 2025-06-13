@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <random>
 
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
@@ -7,6 +8,26 @@
 #include "DataManager/DataManager.hpp"
 
 namespace GUI {
+void Window::SetupSkybox() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> randRot(0, 359);
+    std::uniform_int_distribution<> randSmall(0, 9);
+
+    Skybox = std::shared_ptr<irr::scene::ISceneNode>(
+        smgr->addSkyBoxSceneNode(
+            driver->getTexture("assets/skybox/top.png"),
+            driver->getTexture("assets/skybox/bottom.png"),
+            driver->getTexture("assets/skybox/back.png"),
+            driver->getTexture("assets/skybox/front.png"),
+            driver->getTexture("assets/skybox/left.png"),
+            driver->getTexture("assets/skybox/right.png")),
+        [](irr::scene::ISceneNode *) {});
+    rotationSkybox = Vec3d((randSmall(gen) - 5.f) / 10.f,
+        (randSmall(gen) - 5.f) / 10.f, (randSmall(gen) - 5.f) / 10.f);
+    Skybox->setRotation(Vec3d(randRot(gen), randRot(gen), randRot(gen)));
+}
+
 Window::Window() {
     device = irr::createDevice(irr::video::EDT_BURNINGSVIDEO,
         irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false,
@@ -29,7 +50,17 @@ Window::Window() {
 
     font = std::shared_ptr<irr::gui::IGUIFont>(
         guienv->getFont("assets/fonts/DejaVuSansMono.png"),
-        [](irr::gui::IGUIFont *f) { (void) f; });
+        [](irr::gui::IGUIFont *) {});
+    SetupSkybox();
+}
+
+void Window::updateSkyBoxRotation() {
+    if (!Skybox)
+        return;
+    irr::core::vector3df rotation = Skybox->getRotation();
+    rotation += rotationSkybox * frameDeltaTime;
+    if (rotation.Y > 360.f) rotation.Y -= 360.f;
+    Skybox->setRotation(rotation);
 }
 
 void Window::update() {
@@ -37,6 +68,7 @@ void Window::update() {
         if (device->isWindowActive()) {
             updateDeltaTime();
             handleEvent();
+            updateSkyBoxRotation();
             GameDataManager::i().Update(frameDeltaTime);
             driver->beginScene(true, true,
                 irr::video::SColor(255, 100, 101, 140));
@@ -72,11 +104,14 @@ void Window::setupWorld() {
                 j - (height/2) + deltaHeight);
             float rotation = std::rand() % 4;
             auto cube = MeshImporter::i().importMesh("Plane", "", position,
-                irr::core::vector3df(0.45f),
+                irr::core::vector3df(0.18f),
                 irr::core::vector3df(0, rotation * 90, 0));
             GameTile &tile = GUI::GameDataManager::i().addTile(i, j);
             tile.setTileMesh(cube);
         }
     }
+    smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
+        irr::video::SColorf(1.5f, 1.5f, 2.f), 2000.0f);
+    smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
 }
 }  // namespace GUI

@@ -44,8 +44,11 @@ void ServerGUI::execCommand(std::map<std::string, void(GUI::ServerGUI::*)
     if (it != commands.end()) {
         try {
             (GUI::ServerGUI::i().*(it->second))(args);
-            LOG_DEBUG(("\033[1;32m[OK]\033[0m Received Command: "
-                + args[0]).c_str());
+            std::string logMessage = "\033[1;32m[OK]\033[0m Received Command: "
+                + args[0];
+            for (size_t i = 1; i < args.size(); i++)
+                logMessage += " " + args[i];
+            LOG_DEBUG(logMessage.c_str());
         } catch (const std::exception &e) {
             errStr += std::string(e.what()) + " : ";
             for (size_t i = 0; i < args.size(); i++)

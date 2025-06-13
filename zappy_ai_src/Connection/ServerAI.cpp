@@ -40,9 +40,13 @@ void ServerAI::execCommand(std::map<std::string, void(AI::ServerAI::*)
 (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
     if (it != commands.end()) {
         try {
-            if (AI::DataManager::i().getDebug())
-                printf("\033[1;32m[OK]\033[0m Received Command: %s\n",
+            if (AI::DataManager::i().getDebug()) {
+                printf("\033[1;32m[OK]\033[0m Received Command: %s | ",
                     args[0].c_str());
+                for (size_t i = 1; i < args.size(); i++)
+                    printf("%s ", args[i].c_str());
+                printf("\n");
+            }
             (AI::ServerAI::i().*(it->second))(args);
         } catch (const std::exception &e) {
             handleReturnValue(args);

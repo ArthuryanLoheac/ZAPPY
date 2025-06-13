@@ -58,6 +58,31 @@ bool add_command(int duration, char **args, client_t *client)
     return true;
 }
 
+bool add_command_first(int duration, char **args, client_t *client)
+{
+    waitingCommands_t *new_command = malloc(sizeof(waitingCommands_t));
+    int count = 1;
+    int i = 0;
+
+    if (new_command == NULL) {
+        LOG_ERROR("Malloc failed for add_command:new_command");
+        return false;
+    }
+    while (args[count])
+        count++;
+    new_command->command = malloc(sizeof(char *) * count);
+    while (args[i]){
+        new_command->command[i] = strdup(args[i]);
+        i++;
+    }
+    args[i] = NULL;
+    new_command->ticksLeft = duration;
+    new_command->next = client->waiting_commands;
+    client->waiting_commands = new_command;
+    return true;
+}
+
+
 int get_size_commands(waitingCommands_t *commands)
 {
     int size = 0;

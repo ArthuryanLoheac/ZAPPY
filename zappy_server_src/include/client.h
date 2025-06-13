@@ -76,5 +76,6 @@ void delete_egg_team_name(zappy_t *zappy_ptr, char *team_name);
 void handle_incantation(char **args, zappy_t *zappy_ptr, client_t *client);
 int check_incantation_valid(zappy_t *zappy_ptr, client_t *client, int level);
 bool add_command(int duration, char **args, client_t *client);
+bool add_command_first(int duration, char **args, client_t *client);
 
 #endif /* !CLIENT_H */

@@ -12,29 +12,6 @@
 #include "client.h"
 #include "logs.h"
 
-static bool add_command_first(int duration, char **args, client_t *client)
-{
-    waitingCommands_t *new_command = malloc(sizeof(waitingCommands_t));
-    int count = 1;
-    int i = 0;
-
-    if (new_command == NULL) {
-        LOG_ERROR("Malloc failed for add_command:new_command");
-        return false;
-    }
-    while (args[count])
-        count++;
-    new_command->command = malloc(sizeof(char *) * count);
-    while (args[i]){
-        new_command->command[i] = strdup(args[i]);
-        i++;
-    }
-    args[i] = NULL;
-    new_command->ticksLeft = duration;
-    new_command->next = client->waiting_commands;
-    client->waiting_commands = new_command;
-    return true;
-}
 
 static int number_players(int x, int y, zappy_t *zappy_ptr) {
     client_t *client_cur = zappy_ptr->clients;
@@ -75,12 +52,8 @@ void handle_incantation(char **args, zappy_t *zappy_ptr, client_t *client)
     (void) zappy_ptr;
     if (strcmp(args[0], "INCANTATION") != 0)
         return;
-    if (!check_incantation_valid(zappy_ptr, client, client->stats.level)){
-        add_to_buffer(&client->out_buffer, "ko\n");
-        return;
-    }
     command = malloc(sizeof(char *) * 2);
     command[0] = strdup("START_INCANTATION");
     command[1] = NULL;
-    add_command_first(0, command, client);
+    add_command(0, command, client);
 }

@@ -12,7 +12,14 @@
 #include "client.h"
 #include "logs.h"
 
-
+/**
+ * @brief Count the number of players at a specific position and level.
+ * @param x X-coordinate of the position.
+ * @param y Y-coordinate of the position.
+ * @param zappy_ptr Pointer to the zappy server structure.
+ * @param level Level of the players to count.
+ * @return The number of players at the specified position and level.
+ */
 static int number_players(int x, int y, zappy_t *zappy_ptr, int level)
 {
     client_t *client_cur = zappy_ptr->clients;
@@ -27,6 +34,13 @@ static int number_players(int x, int y, zappy_t *zappy_ptr, int level)
     return count;
 }
 
+/**
+ * @brief Check if an incantation is valid for a client.
+ * @param zappy_ptr Pointer to the zappy server structure.
+ * @param client Pointer to the client initiating the incantation.
+ * @param level Level of the incantation.
+ * @return 1 if the incantation is valid, 0 otherwise.
+ */
 int check_incantation_valid(zappy_t *zappy_ptr, client_t *client, int level)
 {
     cell_t cell = zappy_ptr->map->grid[client->stats.y][client->stats.x];
@@ -48,6 +62,13 @@ int check_incantation_valid(zappy_t *zappy_ptr, client_t *client, int level)
     return 0;
 }
 
+/**
+ * @brief Consume resources required for an incantation at a specific position.
+ * @param zappy_ptr Pointer to the zappy server structure.
+ * @param x X-coordinate of the position.
+ * @param y Y-coordinate of the position.
+ * @param level Level of the incantation.
+ */
 void consume_incantation(zappy_t *zappy_ptr, int x, int y, int level)
 {
     cell_t **grid = zappy_ptr->map->grid;
@@ -70,6 +91,13 @@ void consume_incantation(zappy_t *zappy_ptr, int x, int y, int level)
     send_data_to_graphics(zappy_ptr, bct_data);
 }
 
+/**
+ * @brief Handle the start of an incantation command.
+ * @param args Command arguments.
+ * @param zappy_ptr Pointer to the zappy server structure.
+ * @param client Pointer to the client executing the command.
+ * @return 1 if the command was "INCANTATION", 0 otherwise.
+ */
 int handle_incantation(char **args, zappy_t *zappy_ptr, client_t *client)
 {
     char **command;

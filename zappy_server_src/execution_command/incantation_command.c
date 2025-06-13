@@ -10,6 +10,11 @@
 #include <stdlib.h>
 #include "command_handler.h"
 
+/**
+ * @brief Send start elevation message to a client and schedule the command.
+ * @param buffer Buffer to store the command message.
+ * @param c Pointer to the client.
+ */
 static void send_elevation(char *buffer, client_t *c)
 {
     char **command;
@@ -25,6 +30,11 @@ static void send_elevation(char *buffer, client_t *c)
     free(buffercpy);
 }
 
+/**
+ * @brief Inform all clients on the same tile about the start of an incantation
+ * @param zappy Pointer to the zappy server structure.
+ * @param client Pointer to the client initiating the incantation.
+ */
 static void inform_all_clients(zappy_t *zappy, client_t *client)
 {
     client_t *c = zappy->clients;
@@ -44,6 +54,12 @@ static void inform_all_clients(zappy_t *zappy, client_t *client)
     free(buffercpy);
 }
 
+/**
+ * @brief Start the incantation command for a client if valid.
+ * @param zappy Pointer to the zappy server structure.
+ * @param client Pointer to the client initiating the incantation.
+ * @param args Command arguments (unused).
+ */
 void start_incantation_command(zappy_t *zappy, client_t *client, char **args)
 {
     (void) args;
@@ -54,6 +70,13 @@ void start_incantation_command(zappy_t *zappy, client_t *client, char **args)
     }
 }
 
+/**
+ * @brief Add a position to the list of successful elevations.
+ * @param zappy Pointer to the zappy server structure.
+ * @param x X-coordinate of the position.
+ * @param y Y-coordinate of the position.
+ * @param level Level of the elevation.
+ */
 static void add_pos_elevation(zappy_t *zappy, int x, int y, int level)
 {
     pos_elevation_t *poses = zappy->pos_elevations;
@@ -72,6 +95,13 @@ static void add_pos_elevation(zappy_t *zappy, int x, int y, int level)
     zappy->pos_elevations = new_pos;
 }
 
+/**
+ * @brief Add a position to the list of failed elevations.
+ * @param zappy Pointer to the zappy server structure.
+ * @param x X-coordinate of the position.
+ * @param y Y-coordinate of the position.
+ * @param level Level of the elevation.
+ */
 static void add_pos_elevation_failed(zappy_t *zappy, int x, int y, int level)
 {
     pos_elevation_t *poses = zappy->pos_elevationsFail;
@@ -90,6 +120,12 @@ static void add_pos_elevation_failed(zappy_t *zappy, int x, int y, int level)
     zappy->pos_elevationsFail = new_pos;
 }
 
+/**
+ * @brief Execute the incantation command for a client.
+ * @param zappy Pointer to the zappy server structure.
+ * @param client Pointer to the client executing the incantation.
+ * @param args Command arguments (unused).
+ */
 void incantation_command(zappy_t *zappy, client_t *client, char **args)
 {
     char buffer[256];

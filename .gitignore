@@ -14,6 +14,8 @@ unit_tests
 *.gcno
 *.gcov
 
+docs/static/
+
 # Other
 zappy_ref-v3.0.0
 .vscode/

@@ -32,6 +32,7 @@ SORT_BY_SCOPE_NAME     = NO
 INPUT                  = ../zappy_server_src \
                          ../zappy_ai_src \
                          ../zappy_gui_src
+RECURSIVE              = YES
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \

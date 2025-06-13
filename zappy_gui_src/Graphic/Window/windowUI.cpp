@@ -7,6 +7,7 @@
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "tools/MeshImporter.hpp"
 #include "DataManager/DataManager.hpp"
+#include "window.hpp"
 
 
 namespace GUI {
@@ -159,3 +160,4 @@ void Window::drawPlayerInfo(int id, int &y) {
     }
 }
 }  // namespace GUI
+

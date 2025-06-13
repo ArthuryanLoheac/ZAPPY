@@ -136,15 +136,19 @@ void Player::setPosition(int newX, int newY, Orientation new0) {
     x = newX;
     y = newY;
     o = new0;
+    printf("Player %d set position: %d %d %d\n", id, x, y, o);
     if (PlayerMesh) {
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
+        printf("Player %d position: %f %f %f\n", id,
+               position.X, position.Y, position.Z);
         position.Y += 0.5f;
-        posTarget = position;
+        posTarget = Vec3d(position.X, position.Y, position.Z);
         speedMove = baseSpeedMove * DataManager::i().getFrequency() *
             (posTarget - PlayerMesh->getPosition()).getLength();
         rotationTarget = Vec3d(0, o * 90, 0);
         // check first set
         if (PlayerMesh->getPosition().Y == 0 || tp) {
+            printf("Teleporting player %d to %d %d\n", id, newX, newY);
             PlayerMesh->setPosition(position);
             PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
             for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++)
@@ -221,6 +225,7 @@ void Player::updateRotation(float deltaTime) {
 }
 
 void Player::updatePosition(float deltaTime) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
     float speedRotate = 15 * DataManager::i().getFrequency();
 
     if (posTarget.getDistanceFrom(PlayerMesh->getPosition()) > 0.1f) {
@@ -234,6 +239,15 @@ void Player::updatePosition(float deltaTime) {
         for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
             if (PlayerMeshesCylinder[i])
                 PlayerMeshesCylinder[i]->setPosition(newPos);
+        }
+    } else {
+        // close enough to target position
+        Vec3d pos = PlayerMesh->getPosition();
+        pos.Y = GameDataManager::i().getTile(x, y).getWorldPos().Y + 0.5f;
+        PlayerMesh->setPosition(pos);
+        for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
+            if (PlayerMeshesCylinder[i])
+                PlayerMeshesCylinder[i]->setPosition(pos);
         }
     }
     // Update rotation
@@ -257,6 +271,7 @@ void Player::updatePosition(float deltaTime) {
 }
 
 void Player::updtaeIdle(float deltaTime) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
     (void)deltaTime;
     float Newy = GameDataManager::i().getTile(x, y).getWorldPos().Y;
     Vec3d pos = PlayerMesh->getPosition();

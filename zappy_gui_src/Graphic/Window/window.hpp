@@ -174,6 +174,16 @@ class Window {
     void drawPlayerInfo(int id, int &y);
 
     /**
+     * @brief Updates the window when it has focus.
+     */
+    void windowUpdateFocus();
+
+    /**
+     * @brief Updates the window when it does not have focus.
+     */
+    void windowUpdateNoFocus();
+
+    /**
      * @brief Provides a singleton instance of the Window class.
      *
      * @return Window& Reference to the singleton instance.

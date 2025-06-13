@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 #include "Interface/Interface.hpp"
 #include "Exceptions/Commands.hpp"

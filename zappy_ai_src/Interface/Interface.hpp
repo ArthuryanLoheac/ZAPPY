@@ -69,9 +69,18 @@ class Interface {
         std::vector<std::string> &command);
     void commandEJECT(std::vector<std::string> &args,
         std::vector<std::string> &command);
+    void commandFORK(std::vector<std::string> &args,
+        std::vector<std::string> &command);
+    void commandBROADCAST(std::vector<std::string> &args,
+        std::vector<std::string> &command);
 
     // Sending commands
     std::queue<std::string> commandBuffer;
+
+    std::vector<std::string> filteredStrings;
+    void initializeFilteredStrings();
+    bool needFilter(const std::string &arg);
+    void receiveMessage(std::vector<std::string> &args);
 };
 
 }  // namespace AI

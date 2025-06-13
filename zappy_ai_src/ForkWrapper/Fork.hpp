@@ -55,7 +55,7 @@ class Fork {
     void terminateChild();
     bool waitNoHang();
     bool waitTimeout(unsigned int seconds);
-    bool sendSignal(int signal);
+    bool sendSignal(int signal) const;
     bool hasExited() const;
     int getExitStatus() const;
     bool wasSignaled() const;

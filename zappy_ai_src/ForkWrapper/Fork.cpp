@@ -1,14 +1,14 @@
 /*
 ** EPITECH PROJECT, 2025
-** Plazza
+** Zappy
 ** File description:
 ** Fork
 */
 
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <signal.h>
 
+#include <csignal>
 #include <chrono>
 #include <thread>
 #include <stdexcept>
@@ -77,7 +77,7 @@ bool Fork::waitTimeout(unsigned int seconds) {
     return false;
 }
 
-bool Fork::sendSignal(int signal) {
+bool Fork::sendSignal(int signal) const {
     if (_isForked) {
         return (kill(_pid, signal) == 0);
     }

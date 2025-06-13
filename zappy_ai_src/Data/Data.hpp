@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <queue>
 
 namespace AI {
 
@@ -34,6 +35,10 @@ class Data {
     // a negative number for the left, 0 for the middle and a positive for the
     // right).
     std::unordered_map<std::string, int> &mapAt(int x, int y);
+
+    std::queue<std::pair<std::string, int>> messageQueue;
+
+    std::string magicKey;
 
  private:
 };

@@ -39,8 +39,16 @@ void start_incantation_command(zappy_t *zappy, client_t *client, char **args)
 
 void incantation_command(zappy_t *zappy, client_t *client, char **args)
 {
-    (void) zappy;
-    (void) client;
+    char buffer[256];
+    char buffer2[256];
+
     (void) args;
-    add_to_buffer(&client->out_buffer, "Current level : 69\n");
+    if (check_incantation_valid(zappy, client, client->stats.level)) {
+        client->stats.level += 1;
+        sprintf(buffer, "Current level: %d\n", client->stats.level);
+        add_to_buffer(&client->out_buffer, buffer);
+        sprintf(buffer2, "plv #%d %d\n", client->stats.id, client->stats.level);
+        send_data_to_graphics(zappy, buffer2);
+    } else
+        add_to_buffer(&client->out_buffer, "ko\n");
 }

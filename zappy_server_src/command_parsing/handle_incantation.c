@@ -13,12 +13,13 @@
 #include "logs.h"
 
 
-static int number_players(int x, int y, zappy_t *zappy_ptr) {
+static int number_players(int x, int y, zappy_t *zappy_ptr, int level) {
     client_t *client_cur = zappy_ptr->clients;
     int count = 0;
 
     while (client_cur != NULL) {
-        if (client_cur->stats.x == x && client_cur->stats.y == y)
+        if (client_cur->stats.x == x && client_cur->stats.y == y &&
+            client_cur->stats.level == level)
             count++;
         client_cur = client_cur->next;
     }
@@ -28,7 +29,7 @@ static int number_players(int x, int y, zappy_t *zappy_ptr) {
 int check_incantation_valid(zappy_t *zappy_ptr, client_t *client, int level)
 {
     cell_t cell = zappy_ptr->map->grid[client->stats.y][client->stats.x];
-    unsigned int nbPlayer = number_players(client->stats.x, client->stats.y, zappy_ptr);
+    unsigned int nbPlayer = number_players(client->stats.x, client->stats.y, zappy_ptr, level);
     level -= 1;
 
     if (level > 6)

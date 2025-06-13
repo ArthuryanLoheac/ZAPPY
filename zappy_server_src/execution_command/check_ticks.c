@@ -85,11 +85,23 @@ static void reduce_tick_all(zappy_t *zappy)
             client = client->next;
             continue;
         }
+        waitingCommands_t *current_command = client->waiting_commands;
+        while (current_command) {
+            printf("%s:%d | ",
+                current_command->command[0],
+                current_command->ticksLeft);
+            current_command = current_command->next;
+        }
+        printf("\n");
+
         client->waiting_commands->ticksLeft--;
         if (client->waiting_commands->ticksLeft <= 0) {
             exec_command_tick(zappy, client, client->waiting_commands);
             command = client->waiting_commands;
             client->waiting_commands = client->waiting_commands->next;
+            printf("Command %s executed new command is %s\n",
+                command->command[0],
+                (client->waiting_commands) ? client->waiting_commands->command[0] : "NULL");
             free(command);
         }
         client = client->next;

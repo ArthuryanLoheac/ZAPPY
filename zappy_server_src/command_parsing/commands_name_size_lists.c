@@ -22,6 +22,7 @@ const command_name_size_t player_command_name_size_list[] = {
     {"TAKE", 7},
     {"SET", 7},
     {"INCANTATION", 300},
+    {"START_INCANTATION", 0},
     {NULL, -1}
 };
 

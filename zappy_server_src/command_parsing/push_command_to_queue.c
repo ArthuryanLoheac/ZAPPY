@@ -58,7 +58,7 @@ bool add_command(int duration, char **args, client_t *client)
     return true;
 }
 
-bool add_command_first(int duration, char **args, client_t *client)
+bool add_command_second(int duration, char **args, client_t *client)
 {
     waitingCommands_t *new_command = malloc(sizeof(waitingCommands_t));
     int count = 1;
@@ -77,8 +77,13 @@ bool add_command_first(int duration, char **args, client_t *client)
     }
     args[i] = NULL;
     new_command->ticksLeft = duration;
-    new_command->next = client->waiting_commands;
-    client->waiting_commands = new_command;
+    if (client->waiting_commands == NULL) {
+        client->waiting_commands = new_command;
+        new_command->next = NULL;
+        return true;
+    }
+    new_command->next = client->waiting_commands->next;
+    client->waiting_commands->next = new_command;
     return true;
 }
 
@@ -109,7 +114,8 @@ void push_command_to_queue(char **args, client_t *client, zappy_t *zappy_ptr)
         command_duration = get_player_command_duration(args[0]);
     if (command_duration != -1) {
         LOG_INFO("[%i]: Received %s", client->fd, args[0]);
-        handle_incantation(args, zappy_ptr, client);
+        if (handle_incantation(args, zappy_ptr, client) == 1)
+            return;
         if (!add_command(command_duration, args, client))
             add_to_buffer(&client->out_buffer, "ko\n");
     } else {

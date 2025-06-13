@@ -28,6 +28,8 @@ void take_command(zappy_t *zappy, client_t *client, char **args);
 void set_command(zappy_t *zappy, client_t *client, char **args);
 void connect_nbr_command(zappy_t *zappy, client_t *client, char **args);
 void fork_command(zappy_t *zappy, client_t *client, char **args);
+void start_incantation_command(zappy_t *zappy, client_t *client, char **args);
+void incantation_command(zappy_t *zappy, client_t *client, char **args);
 
 // GUI commands
 void msz_command(zappy_t *zappy, client_t *client, char **args);

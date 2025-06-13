@@ -45,15 +45,17 @@ int check_incantation_valid(zappy_t *zappy_ptr, client_t *client, int level)
     return 0;
 }
 
-void handle_incantation(char **args, zappy_t *zappy_ptr, client_t *client)
+int handle_incantation(char **args, zappy_t *zappy_ptr, client_t *client)
 {
     char **command;
 
     (void) zappy_ptr;
     if (strcmp(args[0], "INCANTATION") != 0)
-        return;
+        return 0;
     command = malloc(sizeof(char *) * 2);
-    command[0] = strdup("START_INCANTATION");
+    command[0] = strdup("START");
     command[1] = NULL;
+    printf("ADD START COMMAND\n");
     add_command(0, command, client);
+    return 1;
 }

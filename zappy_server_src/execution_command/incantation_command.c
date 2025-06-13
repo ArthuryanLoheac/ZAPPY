@@ -13,18 +13,25 @@
 static void inform_all_clients(zappy_t *zappy, client_t *client)
 {
     client_t *c = zappy->clients;
+    char buffer[256];
+    char *buffercpy;
 
+    sprintf(buffer, "pic %d %d %d", client->stats.x, client->stats.y, client->stats.level);
     while (c) {
         if (c->stats.x == client->stats.x && c->stats.y == client->stats.y) {
             char **command = malloc(sizeof(char *) * 2);
             command[0] = strdup("INCANTATION");
             command[1] = NULL;
-
+            buffercpy = strdup(buffer);
+            sprintf(buffer, "%s #%d", buffercpy, c->stats.id);
             add_to_buffer(&c->out_buffer, "Elevation underway\n");
             add_command_second(300, command, c);
         }
         c = c->next;
     }
+    buffercpy = strdup(buffer);
+    sprintf(buffer, "%s\n", buffercpy);
+    send_data_to_graphics(zappy, buffer);
 }
 
 void start_incantation_command(zappy_t *zappy, client_t *client, char **args)

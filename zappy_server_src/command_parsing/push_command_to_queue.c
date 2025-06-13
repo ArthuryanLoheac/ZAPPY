@@ -25,10 +25,39 @@ static void set_upper(char **args)
     }
 }
 
+static bool try_add_second_command(int duration, client_t *client,
+    waitingCommands_t *new_command)
+{
+    new_command->ticksLeft = duration;
+    if (client->waiting_commands == NULL) {
+        client->waiting_commands = new_command;
+        new_command->next = NULL;
+        return true;
+    }
+    new_command->next = client->waiting_commands->next;
+    client->waiting_commands->next = new_command;
+    return true;
+}
+
+static bool add_last(waitingCommands_t *new_command, client_t *client)
+{
+    waitingCommands_t *command_cur;
+
+    command_cur = client->waiting_commands;
+    new_command->next = NULL;
+    if (command_cur == NULL)
+        client->waiting_commands = new_command;
+    else {
+        while (command_cur->next != NULL)
+            command_cur = command_cur->next;
+        command_cur->next = new_command;
+    }
+    return true;
+}
+
 bool add_command(int duration, char **args, client_t *client)
 {
     waitingCommands_t *new_command = malloc(sizeof(waitingCommands_t));
-    waitingCommands_t *command_cur;
     int count = 1;
     int i = 0;
 
@@ -45,17 +74,7 @@ bool add_command(int duration, char **args, client_t *client)
     }
     args[i] = NULL;
     new_command->ticksLeft = duration;
-    // push at the end command
-    command_cur = client->waiting_commands;
-    new_command->next = NULL;
-    if (command_cur == NULL)
-        client->waiting_commands = new_command;
-    else {
-        while (command_cur->next != NULL)
-            command_cur = command_cur->next;
-        command_cur->next = new_command;
-    }
-    return true;
+    return add_last(new_command, client);
 }
 
 bool add_command_second(int duration, char **args, client_t *client)
@@ -76,17 +95,8 @@ bool add_command_second(int duration, char **args, client_t *client)
         i++;
     }
     args[i] = NULL;
-    new_command->ticksLeft = duration;
-    if (client->waiting_commands == NULL) {
-        client->waiting_commands = new_command;
-        new_command->next = NULL;
-        return true;
-    }
-    new_command->next = client->waiting_commands->next;
-    client->waiting_commands->next = new_command;
-    return true;
+    return try_add_second_command(duration, client, new_command);
 }
-
 
 int get_size_commands(waitingCommands_t *commands)
 {
@@ -99,19 +109,24 @@ int get_size_commands(waitingCommands_t *commands)
     return size;
 }
 
+static int get_command_duration(client_t *client, char **args)
+{
+    if (client->is_graphic)
+        return get_gui_command_duration(args[0]);
+    else
+        return get_player_command_duration(args[0]);
+    return -1;
+}
+
 void push_command_to_queue(char **args, client_t *client, zappy_t *zappy_ptr)
 {
-    int command_duration;
+    int command_duration = 0;
 
-    if (client == NULL || zappy_ptr == NULL || args == NULL || args[0] == NULL)
-        return;
-    if (get_size_commands(client->waiting_commands) >= 10)
+    if (client == NULL || zappy_ptr == NULL || args == NULL || args[0] == NULL
+        || get_size_commands(client->waiting_commands) >= 10)
         return;
     set_upper(args);
-    if (client->is_graphic)
-        command_duration = get_gui_command_duration(args[0]);
-    else
-        command_duration = get_player_command_duration(args[0]);
+    command_duration = get_command_duration(client, args);
     if (command_duration != -1) {
         LOG_INFO("[%i]: Received %s", client->fd, args[0]);
         if (handle_incantation(args, zappy_ptr, client) == 1)

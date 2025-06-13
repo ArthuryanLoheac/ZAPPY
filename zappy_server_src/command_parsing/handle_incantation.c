@@ -13,7 +13,8 @@
 #include "logs.h"
 
 
-static int number_players(int x, int y, zappy_t *zappy_ptr, int level) {
+static int number_players(int x, int y, zappy_t *zappy_ptr, int level)
+{
     client_t *client_cur = zappy_ptr->clients;
     int count = 0;
 
@@ -29,9 +30,10 @@ static int number_players(int x, int y, zappy_t *zappy_ptr, int level) {
 int check_incantation_valid(zappy_t *zappy_ptr, client_t *client, int level)
 {
     cell_t cell = zappy_ptr->map->grid[client->stats.y][client->stats.x];
-    unsigned int nbPlayer = number_players(client->stats.x, client->stats.y, zappy_ptr, level);
-    level -= 1;
+    unsigned int nbPlayer = number_players(client->stats.x, client->stats.y,
+        zappy_ptr, level);
 
+    level -= 1;
     if (level > 6)
         return 0;
     if (nbPlayer >= requires_elevation_list[level].nb_player &&
@@ -50,8 +52,8 @@ void consume_incantation(zappy_t *zappy_ptr, int x, int y, int level)
 {
     cell_t **grid = zappy_ptr->map->grid;
     char bct_data[256];
-    level -= 1;
 
+    level -= 1;
     if (level > 6)
         return;
     grid[y][x].nbr_linemate -= requires_elevation_list[level].nb_linemate;

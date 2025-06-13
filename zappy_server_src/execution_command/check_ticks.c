@@ -130,9 +130,6 @@ static void reduce_tick_all(zappy_t *zappy)
             exec_command_tick(zappy, client, client->waiting_commands);
             command = client->waiting_commands;
             client->waiting_commands = client->waiting_commands->next;
-            printf("Command %s executed new command is %s\n",
-                command->command[0],
-                (client->waiting_commands) ? client->waiting_commands->command[0] : "NULL");
             free(command);
         }
         client = client->next;

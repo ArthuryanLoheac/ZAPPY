@@ -57,6 +57,14 @@ typedef struct starting_map_s {
     int id_egg;
 } starting_map_t;
 
+typedef struct pos_elevation_s {
+    int x;
+    int y;
+    int level;
+    struct pos_elevation_s *next;
+} pos_elevation_t;
+
+
 typedef struct zappy_s {
     parser_t *parser;
     parser_str_t *parser_str;
@@ -69,6 +77,7 @@ typedef struct zappy_s {
     int tickCount;
 
     struct timeval last_time;
+    pos_elevation_t *pos_elevations;
 } zappy_t;
 
 starting_map_t *init_starting_map(zappy_t *zappy);

@@ -74,6 +74,23 @@ static void handle_life_tick(client_t *client, zappy_t *zappy)
     }
 }
 
+static void check_consume(zappy_t *zappy)
+{
+    pos_elevation_t *poses = zappy->pos_elevations;
+    pos_elevation_t *prev = NULL;
+
+    while (poses) {
+        consume_incantation(zappy, poses->x, poses->y, poses->level);
+        prev = poses;
+        poses = poses->next;
+        free(prev);
+        prev = NULL;
+    }
+    if (prev)
+        free(prev);
+    zappy->pos_elevations = NULL;
+}
+
 static void reduce_tick_all(zappy_t *zappy)
 {
     client_t *client = zappy->clients;
@@ -85,15 +102,6 @@ static void reduce_tick_all(zappy_t *zappy)
             client = client->next;
             continue;
         }
-        waitingCommands_t *current_command = client->waiting_commands;
-        while (current_command) {
-            printf("%s:%d | ",
-                current_command->command[0],
-                current_command->ticksLeft);
-            current_command = current_command->next;
-        }
-        printf("\n");
-
         client->waiting_commands->ticksLeft--;
         if (client->waiting_commands->ticksLeft <= 0) {
             exec_command_tick(zappy, client, client->waiting_commands);
@@ -106,6 +114,7 @@ static void reduce_tick_all(zappy_t *zappy)
         }
         client = client->next;
     }
+    check_consume(zappy);
 }
 
 static float get_delta_time(zappy_t *zappy)

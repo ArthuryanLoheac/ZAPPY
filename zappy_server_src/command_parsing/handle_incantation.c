@@ -46,6 +46,28 @@ int check_incantation_valid(zappy_t *zappy_ptr, client_t *client, int level)
     return 0;
 }
 
+void consume_incantation(zappy_t *zappy_ptr, int x, int y, int level)
+{
+    cell_t **grid = zappy_ptr->map->grid;
+    char bct_data[256];
+    level -= 1;
+
+    if (level > 6)
+        return;
+    grid[y][x].nbr_linemate -= requires_elevation_list[level].nb_linemate;
+    grid[y][x].nbr_deraumere -= requires_elevation_list[level].nb_deraumere;
+    grid[y][x].nbr_sibur -= requires_elevation_list[level].nb_sibur;
+    grid[y][x].nbr_mendiane -= requires_elevation_list[level].nb_mendiane;
+    grid[y][x].nbr_phiras -= requires_elevation_list[level].nb_phiras;
+    grid[y][x].nbr_thystame -= requires_elevation_list[level].nb_thystame;
+    snprintf(bct_data, sizeof(bct_data), "bct %d %d %d %d %d %d %d %d %d\n",
+        x, y, grid[y][x].nbr_food, grid[y][x].nbr_linemate,
+        grid[y][x].nbr_deraumere, grid[y][x].nbr_sibur,
+        grid[y][x].nbr_mendiane, grid[y][x].nbr_phiras,
+        grid[y][x].nbr_thystame);
+    send_data_to_graphics(zappy_ptr, bct_data);
+}
+
 int handle_incantation(char **args, zappy_t *zappy_ptr, client_t *client)
 {
     char **command;

@@ -37,6 +37,24 @@ void start_incantation_command(zappy_t *zappy, client_t *client, char **args)
     }
 }
 
+static void add_pos_elevation(zappy_t *zappy, int x, int y, int level)
+{
+    pos_elevation_t *poses = zappy->pos_elevations;
+    pos_elevation_t *new_pos;
+
+    while (poses) {
+        if (poses->x == x && poses->y == y)
+            return;
+        poses = poses->next;
+    }
+    new_pos = malloc(sizeof(pos_elevation_t));
+    new_pos->x = x;
+    new_pos->y = y;
+    new_pos->level = level;
+    new_pos->next = zappy->pos_elevations;
+    zappy->pos_elevations = new_pos;
+}
+
 void incantation_command(zappy_t *zappy, client_t *client, char **args)
 {
     char buffer[256];
@@ -44,6 +62,7 @@ void incantation_command(zappy_t *zappy, client_t *client, char **args)
 
     (void) args;
     if (check_incantation_valid(zappy, client, client->stats.level)) {
+        add_pos_elevation(zappy, client->stats.x, client->stats.y, client->stats.level);
         client->stats.level += 1;
         sprintf(buffer, "Current level: %d\n", client->stats.level);
         add_to_buffer(&client->out_buffer, buffer);

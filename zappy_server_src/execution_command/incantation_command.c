@@ -22,6 +22,7 @@ static void send_elevation(char *buffer, client_t *c)
     sprintf(buffer, "%s #%d", buffercpy, c->stats.id);
     add_to_buffer(&c->out_buffer, "Elevation underway\n");
     add_command_second(300, command, c);
+    free(buffercpy);
 }
 
 static void inform_all_clients(zappy_t *zappy, client_t *client)
@@ -40,6 +41,7 @@ static void inform_all_clients(zappy_t *zappy, client_t *client)
     buffercpy = strdup(buffer);
     sprintf(buffer, "%s\n", buffercpy);
     send_data_to_graphics(zappy, buffer);
+    free(buffercpy);
 }
 
 void start_incantation_command(zappy_t *zappy, client_t *client, char **args)

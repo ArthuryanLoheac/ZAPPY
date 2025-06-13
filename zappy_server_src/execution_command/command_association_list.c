@@ -16,7 +16,7 @@ const command_func_t player_command_association_list[] = {
     {"SET", set_command},
     {"CONNECT_NBR", connect_nbr_command},
     {"FORK", fork_command},
-    {"START", start_incantation_command},
+    {"START_INCANTATION", start_incantation_command},
     {"INCANTATION", incantation_command},
     {NULL, NULL}
 };

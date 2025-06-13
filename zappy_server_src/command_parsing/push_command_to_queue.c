@@ -72,7 +72,7 @@ bool add_command(int duration, char **args, client_t *client)
         new_command->command[i] = strdup(args[i]);
         i++;
     }
-    args[i] = NULL;
+    new_command->command[i] = NULL;
     new_command->ticksLeft = duration;
     return add_last(new_command, client);
 }
@@ -94,7 +94,7 @@ bool add_command_second(int duration, char **args, client_t *client)
         new_command->command[i] = strdup(args[i]);
         i++;
     }
-    args[i] = NULL;
+    new_command->command[i] = NULL;
     return try_add_second_command(duration, client, new_command);
 }
 

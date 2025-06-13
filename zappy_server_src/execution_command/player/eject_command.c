@@ -13,13 +13,13 @@
 
 /**
  * @brief Computes the new position of a player based on their orientation.
- * This function updates the x and y coordinates based on the player's orientation.
+ * This function updates the xy coordinates based on the player's orientation.
  * To go forward.
  *
  * @param x Pointer to the x coordinate.
  * @param y Pointer to the y coordinate.
  * @param stats Pointer to the player's stats containing orientation.
- * @param zappy Pointer to the zappy server structure containing map dimensions.
+ * @param zappy Pointer to the zappy server structure containing map dimensions
  */
 static void compute_forward_pos(int *x, int *y, stats_t *stats, zappy_t *zappy)
 {
@@ -48,7 +48,8 @@ static void compute_forward_pos(int *x, int *y, stats_t *stats, zappy_t *zappy)
  * @param y New y coordinate of the ejected client.
  * @param zappy Pointer to the zappy server structure.
  */
-static void update_pos_client_ejected(client_t *client, int x, int y, zappy_t *zappy)
+static void update_pos_client_ejected(client_t *client, int x, int y,
+    zappy_t *zappy)
 {
     char buffer[256];
 
@@ -61,7 +62,7 @@ static void update_pos_client_ejected(client_t *client, int x, int y, zappy_t *z
 
 /**
  * @brief Sends a PEX message to the graphics client.
- * This function sends a message to the graphics client indicating that a player has eject.
+ * This sends a message to graphics clients indicating that a player has eject.
  *
  * @param zappy Pointer to the zappy server structure.
  * @param client Pointer to the client that has been ejected.
@@ -76,7 +77,8 @@ static void send_pex_to_graphics(zappy_t *zappy, client_t *client)
 
 /**
  * @brief Checks if a player is in front of the client.
- * This function checks if there is a player in the position where the client is trying to eject.
+ * This function checks if there is a player in the position
+ * where the clientis trying to eject.
  *
  * @param zappy Pointer to the zappy server structure.
  * @param client Pointer to the client executing the eject command.
@@ -84,7 +86,8 @@ static void send_pex_to_graphics(zappy_t *zappy, client_t *client)
  * @param yCheck Y coordinate to check.
  * @return true if there is a player in front, false otherwise.
  */
-static bool is_player_at_pos(zappy_t *zappy, client_t *client, int xCheck, int yCheck)
+static bool is_player_at_pos(zappy_t *zappy, client_t *client, int xCheck,
+    int yCheck)
 {
     client_t *zappyClient = zappy->clients;
 
@@ -98,8 +101,8 @@ static bool is_player_at_pos(zappy_t *zappy, client_t *client, int xCheck, int y
 }
 
 /**
- * @brief Eject command for a client.
- * This function handles the eject command, the player pushes another player in front of him
+ * @brief This function handles the eject command,
+ * The player pushes another player in front of him
  *
  * @param zappy Pointer to the zappy server structure.
  * @param client Pointer to the client executing the eject command.
@@ -108,13 +111,11 @@ static bool is_player_at_pos(zappy_t *zappy, client_t *client, int xCheck, int y
 void eject_command(zappy_t *zappy, client_t *client, char **args)
 {
     stats_t *self = &client->stats;
-    int xFinal;
-    int yFinal;
+    int xFinal = self->x;
+    int yFinal = self->y;
     client_t *zappyClient = zappy->clients;
 
     (void) args;
-    xFinal = self->x;
-    yFinal = self->y;
     compute_forward_pos(&xFinal, &yFinal, self, zappy);
     if (!is_player_at_pos(zappy, client, self->x, self->y)) {
         add_to_buffer(&client->out_buffer, "ko\n");
@@ -123,8 +124,8 @@ void eject_command(zappy_t *zappy, client_t *client, char **args)
     add_to_buffer(&client->out_buffer, "ok\n");
     send_pex_to_graphics(zappy, client);
     while (zappyClient) {
-        if (zappyClient->stats.x == self->x && zappyClient->stats.y == self->y &&
-            zappyClient->stats.id != self->id)
+        if (zappyClient->stats.x == self->x && zappyClient->stats.y == self->y
+            && zappyClient->stats.id != self->id)
             update_pos_client_ejected(zappyClient, xFinal, yFinal, zappy);
         zappyClient = zappyClient->next;
     }

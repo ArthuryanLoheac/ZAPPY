@@ -49,13 +49,4 @@ class ReceivingException : public ServerGUIException {
         : ServerGUIException("Receiving error: " + message) {}
 };
 
-/**
- * @brief Exception thrown when connection to the server fails
- */
-class ConnectionException : public ServerGUIException {
- public:
-    explicit ConnectionException(const std::string& message)
-        : ServerGUIException("Connection error: " + message) {}
-};
-
 }  // namespace GUI

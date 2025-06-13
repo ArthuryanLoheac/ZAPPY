@@ -11,6 +11,7 @@
 #include <stdlib.h>
 
 #include "include/parser.h"
+#include "pointlen.h"
 
 void display_help(void)
 {
@@ -77,6 +78,7 @@ static parser_t *init_parser(void)
     parser->team_names = NULL;
     parser->clients_per_team = 0;
     parser->freq = 100;
+    parser->nb_teams = 0;
     return parser;
 }
 
@@ -91,8 +93,10 @@ parser_t *parse_arguments(int ac, char **av)
             parser->width = parse_int(av[i + 1], 10, 42);
         if (strcmp(av[i], "-y") == 0 && i + 1 < ac)
             parser->height = parse_int(av[i + 1], 10, 42);
-        if (strcmp(av[i], "-n") == 0)
+        if (strcmp(av[i], "-n") == 0) {
             parser->team_names = parse_teams(av, &i, ac);
+            parser->nb_teams = pointlen(parser->team_names);
+        }
         if (strcmp(av[i], "-c") == 0 && i + 1 < ac)
             parser->clients_per_team = parse_int(av[i + 1], 1, 200);
         if (strcmp(av[i], "-f") == 0 && i + 1 < ac)

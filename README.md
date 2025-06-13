@@ -12,7 +12,7 @@
 # <p align=center> 📖 Lore of Trantor </p>
 
 <p align="center">
-    <img src="docs/assets/trantor.png" alt="Trantor World" width="600"/>
+    <img src="docs/static/img/trantor.png" alt="Trantor World" width="600"/>
 </p>
 
 Trantor is a donut-shaped world recently discovered by humanity, the different nation on Earth have each sent drones, named trantorians, to the planets to harvest its resources. Due to the weird geography of Trantor, the drones have been broken and unable to contact Earth, but the abundant resources of the planet can be used to repair themselves. The drones have then started to upgrade their body, and the first nations that will repair six of their drones will have the necessary power to contact Earth and end new rockets for extraction.

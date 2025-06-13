@@ -4,6 +4,7 @@
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "tools/MeshImporter.hpp"
+#include "DataManager/DataManager.hpp"
 
 namespace GUI {
 Window::Window() {
@@ -36,6 +37,7 @@ void Window::update() {
         if (device->isWindowActive()) {
             updateDeltaTime();
             handleEvent();
+            GameDataManager::i().Update(frameDeltaTime);
             driver->beginScene(true, true,
                 irr::video::SColor(255, 100, 101, 140));
 
@@ -64,12 +66,18 @@ void Window::drawUI() {
             Vec3d pos(x, y, 0);
             font->draw(("\t" + team).c_str(),
                 irr::core::rect<irr::s32>(pos.X, pos.Y, 300, 50),
-                irr::video::SColor(255, 255, 255, 255));
+                MeshImporter::i().getColor(team));
         }
 
         // FPS
         font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
             irr::core::rect<irr::s32>(10, 10, 300, 50),
+            irr::video::SColor(255, 255, 255, 255));
+
+        // Frequency
+        font->draw(("Freq : " +
+            std::to_string(GUI::DataManager::i().getFrequency())).c_str(),
+            irr::core::rect<irr::s32>(150, 10, 300, 50),
             irr::video::SColor(255, 255, 255, 255));
     }
 }
@@ -91,7 +99,7 @@ void Window::setupWorld() {
             irr::core::vector3df position(i - (width/2) + deltaWidth, -2,
                 j - (height/2) + deltaHeight);
             float rotation = std::rand() % 4;
-            auto cube = MeshImporter::i().importMesh("Plane", position,
+            auto cube = MeshImporter::i().importMesh("Plane", "", position,
                 irr::core::vector3df(0.45f),
                 irr::core::vector3df(0, rotation * 90, 0));
             GameTile &tile = GUI::GameDataManager::i().addTile(i, j);

@@ -16,6 +16,8 @@ OBJ_MAIN_SERVER = $(SRC_MAIN_SERVER:%.c=$(OBJ_DIR)/%.o)
 OBJ_MAIN_GUI = $(SRC_MAIN_GUI:%.cpp=$(OBJ_DIR)/%.o)
 OBJ_MAIN_AI = $(SRC_MAIN_AI:%.cpp=$(OBJ_DIR)/%.o)
 
+OBJ_CPP_COMMON = $(SRC_CPP_COMMON:%.cpp=$(OBJ_DIR)/%.o)
+OBJ_C_COMMON = $(SRC_C_COMMON:%.c=$(OBJ_DIR)/%.o)
 OBJ_SRC_SERVER = $(SRC_SERVER:%.c=$(OBJ_DIR)/%.o)
 OBJ_SRC_GUI = $(SRC_GUI:%.cpp=$(OBJ_DIR)/%.o)
 OBJ_SRC_AI = $(SRC_AI:%.cpp=$(OBJ_DIR)/%.o)
@@ -26,16 +28,25 @@ DEPS = $(OBJ_DIR)/*.d
 
 FLAGS_SERVER = -MMD -MP \
 	-I./zappy_server_src/include \
+	-I./libc/include \
 	-std=gnu17 -Wall -Wextra -Werror \
 
 FLAGS_GUI =	-MMD -MP \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
-	-std=c++17 -Wall -Wextra -Werror
-
+	-Ilib -std=c++17 -Wall -Wextra -Werror
 LDFLAGS_GUI = -lIrrlicht
+
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
+	-Ilib -std=c++20 -Wall -Wextra -Werror
+
+FLAGS_COMMON = -MMD -MP \
+	$(shell find lib -type d -exec echo -I{} \;) \
 	-std=c++20 -Wall -Wextra -Werror
+
+FLAGS_C_COMMON = -MMD -MP \
+	-I./libc/include \
+	-std=gnu17 -Wall -Wextra -Werror
 
 FLAGS_TEST = -lcriterion --coverage -include cstdint
 
@@ -52,6 +63,8 @@ FLAGS_LINTER =	\
 ZAPPY_SERVER = zappy_server
 ZAPPY_GUI = zappy_gui
 ZAPPY_AI = zappy_ai
+COMMON_LIB = lib/libcommon.a
+COMMON_C_LIB = libc/libcommon.a
 
 # ============= SOURCES ============= #
 
@@ -59,6 +72,8 @@ SRC_MAIN_SERVER	= zappy_server_src/main.c
 SRC_MAIN_GUI = zappy_gui_src/main.cpp
 SRC_MAIN_AI	= zappy_ai_src/main.cpp
 
+SRC_CPP_COMMON = $(shell find lib -type f -name "*.cpp")
+SRC_C_COMMON = $(shell find libc -type f -name "*.c")
 SRC_SERVER = $(shell find zappy_server_src -type f -name "*.c" ! -name \
 	"main.c")
 SRC_GUI	= $(shell find zappy_gui_src -type f -name "*.cpp" ! -name "main.cpp")
@@ -69,14 +84,27 @@ SRC_TESTS = tests/test_1.cpp \
 
 all: $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI)
 
-$(ZAPPY_SERVER): $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER)
-	gcc -o $(ZAPPY_SERVER) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER) $(FLAGS_SERVER)
+$(COMMON_LIB): $(OBJ_CPP_COMMON)
+	@mkdir -p $(dir $@)
+	ar rc $(COMMON_LIB) $(OBJ_CPP_COMMON)
+	ranlib $(COMMON_LIB)
 
-$(ZAPPY_GUI): $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI)
-	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) $(LDFLAGS_GUI)
+$(COMMON_C_LIB): $(OBJ_C_COMMON)
+	@mkdir -p $(dir $@)
+	ar rc $(COMMON_C_LIB) $(OBJ_C_COMMON)
+	ranlib $(COMMON_C_LIB)
 
-$(ZAPPY_AI): $(OBJ_SRC_AI) $(OBJ_MAIN_AI)
-	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) $(FLAGS_AI)
+$(ZAPPY_SERVER): $(COMMON_C_LIB) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER)
+	gcc -o $(ZAPPY_SERVER) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER) \
+	$(FLAGS_SERVER) -Llibc -lcommon
+
+$(ZAPPY_GUI): $(COMMON_LIB) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI)
+	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) -Llib -lcommon \
+	$(LDFLAGS_GUI)
+
+$(ZAPPY_AI): $(COMMON_LIB) $(OBJ_SRC_AI) $(OBJ_MAIN_AI)
+	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) -Llib -lcommon \
+	$(FLAGS_AI)
 
 # ============= CLEANS ============= #
 
@@ -85,7 +113,7 @@ clean:
 	rm -f *.gcda *.gcno
 
 fclean: clean
-	rm -f $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI)
+	rm -f $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI) $(COMMON_LIB)
 	rm -f unit_tests
 
 # ============= COMPILATION ============= #
@@ -102,8 +130,17 @@ $(OBJ_DIR)/zappy_ai_src/%.o: zappy_ai_src/%.cpp
 	@mkdir -p $(dir $@)
 	g++ -c $(FLAGS_AI) $< -o $@
 
+$(OBJ_DIR)/lib/%.o: lib/%.cpp
+	@mkdir -p $(dir $@)
+	g++ -c $(FLAGS_COMMON) $< -o $@
+
+$(OBJ_DIR)/libc/%.o: libc/%.c
+	@mkdir -p $(dir $@)
+	gcc -c $(FLAGS_C_COMMON) $< -o $@
+
 -include $(OBJ_MAIN_SERVER:.o=.d) $(OBJ_MAIN_GUI:.o=.d) $(OBJ_MAIN_AI:.o=.d)
 -include $(OBJ_SRC_SERVER:.o=.d) $(OBJ_SRC_GUI:.o=.d) $(OBJ_SRC_AI:.o=.d)
+-include $(OBJ_CPP_COMMON:.o=.d) $(OBJ_C_COMMON:.o=.d)
 
 # ============= OTHERS ============= #
 

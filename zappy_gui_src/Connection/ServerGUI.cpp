@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <chrono>
+#include <map>
 #include <cstdio>
 
 #include "Connection/ServerGUI.hpp"
@@ -30,11 +32,32 @@ void GUI::ServerGUI::handleCommand() {
             args[0][i] = toupper(args[0][i]);
 
         auto it = commands.find(args[0]);
-        if (it != commands.end())
+        execCommand(it, args);
+    }
+}
+
+void ServerGUI::execCommand(std::map<std::string, void(GUI::ServerGUI::*)
+(std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
+    if (it != commands.end()) {
+        try {
             (GUI::ServerGUI::i().*(it->second))(args);
-        else if (GUI::DataManager::i().getDebug())
-            printf("\033[1;31m[ERROR]\033[0m Unknown Command: %s\n",
-                args[0].c_str());
+            if (GUI::DataManager::i().getDebug())
+                printf("\033[1;32m[OK]\033[0m Received Command: %s\n",
+                    args[0].c_str());
+        } catch (const std::exception &e) {
+            if (GUI::DataManager::i().getErrors()) {
+                printf("\033[1;31m[ERROR]\033[0m %s : ", e.what());
+                for (size_t i = 0; i < args.size(); i++)
+                    printf(" %s", args[i].c_str());
+                printf("\n");
+            }
+        }
+    } else if (GUI::DataManager::i().getErrors()) {
+        // Error
+        printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
+        for (size_t i = 0; i < args.size(); i++)
+            printf(" %s", args[i].c_str());
+        printf("\n");
     }
 }
 
@@ -51,10 +74,23 @@ void ServerGUI::readDatasFromServer() {
     handleCommand();
 }
 
+void ServerGUI::clockUpdate(std::chrono::_V2::system_clock::time_point &time,
+std::chrono::_V2::system_clock::time_point &timeNext) {
+    time = std::chrono::system_clock::now();
+    if (time >= timeNext) {
+        timeNext = timeNext + std::chrono::seconds(updateMapTime);
+        sendDatasToServer("mct\n");
+    }
+}
+
 void ServerGUI::startServer() {
+    auto time = std::chrono::system_clock::now();
+    auto timeNext = time + std::chrono::seconds(updateMapTime);
     int ready = 0;
 
     while (DataManager::i().running) {
+        clockUpdate(time, timeNext);
+
         ready = poll(
             &GUI::ServerGUI::i().fd, 1, -1);
         if (ready == -1)
@@ -80,6 +116,7 @@ std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
     return args;
 }
 
+
 void ServerGUI::sendDatasToServer(const std::string &message) {
     if (fd.revents & POLLOUT) {
         ssize_t bytes_sent = write(server_fd,
@@ -87,7 +124,8 @@ void ServerGUI::sendDatasToServer(const std::string &message) {
         if (bytes_sent == -1) {
             throw std::runtime_error("Error sending data to server");
         }
-        printf("Sent data: %s\n", message.c_str());
+        if (GUI::DataManager::i().getDebug())
+            printf("[OK] Sent data: %s\n", message.c_str());
     }
 }
 

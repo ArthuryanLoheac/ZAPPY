@@ -6,6 +6,11 @@
 #include "Graphic/Window/window.hpp"
 #include "DataManager/DataManager.hpp"
 
+/**
+ * @brief Initializes and runs the graphical interface.
+ *
+ * @return int Returns 0 on success, 84 on failure.
+ */
 int graphic() {
     try {
         GUI::Window::i();

@@ -11,6 +11,16 @@
 
 #define img std::shared_ptr<irr::video::IImage>
 
+/**
+ * @brief Imports a 3D mesh and creates a scene node for it.
+ *
+ * @param meshName Name of the mesh file (without extension).
+ * @param teamName Name of the team (optional).
+ * @param position Initial position of the mesh.
+ * @param scale Scale of the mesh.
+ * @param rotation Rotation of the mesh.
+ * @return std::shared_ptr<Mesh> Shared pointer to the created mesh scene node.
+ */
 std::shared_ptr<Mesh> MeshImporter::importMesh(std::string meshName,
 const std::string &teamName, const Vec3d &position, const Vec3d &scale,
 const Vec3d &rotation) {
@@ -33,6 +43,12 @@ const Vec3d &rotation) {
     throw GUI::ShaderCompilationException("Error creating mesh node");
 }
 
+/**
+ * @brief Retrieves a mesh by its name.
+ *
+ * @param meshName Name of the mesh file (without extension).
+ * @return irr::scene::IAnimatedMesh* Pointer to the loaded mesh.
+ */
 irr::scene::IAnimatedMesh *MeshImporter::getMesh(std::string meshName) {
     irr::io::path pathObj =
         irr::io::path(("assets/" + meshName + ".obj").c_str());
@@ -48,6 +64,12 @@ irr::scene::IAnimatedMesh *MeshImporter::getMesh(std::string meshName) {
     return meshes[meshName];
 }
 
+/**
+ * @brief Retrieves a texture by its name.
+ *
+ * @param textureName Name of the texture file (without extension).
+ * @return irr::video::ITexture* Pointer to the loaded texture.
+ */
 irr::video::ITexture *MeshImporter::getTexture(std::string textureName) {
     irr::io::path pathTexture =
         irr::io::path(("assets/Bake" + textureName + ".png").c_str());
@@ -63,6 +85,13 @@ irr::video::ITexture *MeshImporter::getTexture(std::string textureName) {
     return textures[textureName];
 }
 
+/**
+ * @brief Sets a texture for a mesh node, optionally modifying it based on the team name.
+ *
+ * @param meshName Name of the mesh file.
+ * @param teamName Name of the team (optional).
+ * @param node Shared pointer to the mesh scene node.
+ */
 void MeshImporter::setTexture(std::string meshName, const std::string &teamName,
     std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> node) {
     irr::video::ITexture* texture = getTexture(meshName);
@@ -88,6 +117,12 @@ void MeshImporter::setTexture(std::string meshName, const std::string &teamName,
     image->drop();
 }
 
+/**
+ * @brief Retrieves a color associated with a team name.
+ *
+ * @param teamName Name of the team.
+ * @return irr::video::SColor Color associated with the team.
+ */
 irr::video::SColor MeshImporter::getColor(std::string teamName) {
     if (colorTeam.find(teamName) == colorTeam.end()) {
         if (iColor >= colors.size())

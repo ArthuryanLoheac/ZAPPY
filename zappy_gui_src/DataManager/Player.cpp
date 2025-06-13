@@ -136,11 +136,9 @@ void Player::setPosition(int newX, int newY, Orientation new0) {
     x = newX;
     y = newY;
     o = new0;
-    printf("Player %d set position: %d %d %d\n", id, x, y, o);
+
     if (PlayerMesh) {
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
-        printf("Player %d position: %f %f %f\n", id,
-               position.X, position.Y, position.Z);
         position.Y += 0.5f;
         posTarget = Vec3d(position.X, position.Y, position.Z);
         speedMove = baseSpeedMove * DataManager::i().getFrequency() *
@@ -148,7 +146,6 @@ void Player::setPosition(int newX, int newY, Orientation new0) {
         rotationTarget = Vec3d(0, o * 90, 0);
         // check first set
         if (PlayerMesh->getPosition().Y == 0 || tp) {
-            printf("Teleporting player %d to %d %d\n", id, newX, newY);
             PlayerMesh->setPosition(position);
             PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
             for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++)

@@ -10,6 +10,12 @@
 #include "Exceptions/DataManagerExceptions.hpp"
 #include "include/logs.h"
 
+/**
+ * @brief Checks the command-line arguments and sets the appropriate configurations.
+ * @param ac Argument count.
+ * @param av Argument vector.
+ * @return int Returns 0 on success, 84 on error.
+ */
 int checkArgs(int ac, char **av) {
     int i = 1;
 
@@ -39,6 +45,10 @@ int checkArgs(int ac, char **av) {
     return 0;
 }
 
+/**
+ * @brief Displays the help message for the program usage.
+ * @return int Always returns 84.
+ */
 int returnHelp() {
     std::cout << "Usage: ./zappy_gui -h <ip> -p <port> [-d]\n"
               << "Options:\n"
@@ -48,6 +58,13 @@ int returnHelp() {
     return 84;
 }
 
+/**
+ * @brief Entry point of the program. Initializes the application, processes arguments,
+ *        establishes a connection, and starts the graphical interface.
+ * @param ac Argument count.
+ * @param av Argument vector.
+ * @return int Returns 0 on success, 84 on failure.
+ */
 int main(int ac, char **av) {
     int sockfd;
     GUI::DataManager::i();

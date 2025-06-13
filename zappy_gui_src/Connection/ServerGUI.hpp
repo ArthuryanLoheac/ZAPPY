@@ -23,8 +23,8 @@ class ServerGUI {
     void startServer();
 
  private:
-    void clockUpdate(std::chrono::_V2::system_clock::time_point &time,
-        std::chrono::_V2::system_clock::time_point &timeNext);
+    void clockUpdate(std::chrono::system_clock::time_point &time,
+        std::chrono::system_clock::time_point &timeNext);
     void handleCommand();
     void readDatasFromServer();
     std::vector<std::string> parseCommands(std::string &command);

@@ -14,8 +14,11 @@
 #include "include/command.h"
 #include "logs.h"
 
-static void set_client_ressources(stats_t *stat)
+static void set_client_stat(stats_t *stat)
 {
+    stat->x = 0;
+    stat->y = 0;
+    stat->orientation = 1;
     stat->tickLife = 0;
     stat->inventory.food = 10;
     stat->inventory.linemate = 0;
@@ -39,12 +42,10 @@ static void add_client_data(zappy_t *zappy, int fd)
     client->is_waiting_id = true;
     client->waiting_commands = NULL;
     client->stats.team_name = NULL;
-    client->stats.orientation = 1;
+    client->stats.tickRemainingElevation = -1;
     client->stats.id = 0;
-    client->stats.x = 0;
-    client->stats.y = 0;
     client->stats.level = 1;
-    set_client_ressources(&client->stats);
+    set_client_stat(&client->stats);
     client->next = zappy->clients;
     zappy->clients = client;
     append_client_out_buffer(client, "WELCOME\n");

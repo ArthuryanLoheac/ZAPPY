@@ -12,9 +12,11 @@ CommunicationModule::CommunicationModule() {
     // Initialization code if needed
 }
 
-std::string CommunicationModule::execute() {
+std::string CommunicationModule::execute(const GameData& data) {
     // Logic for broadcasting messages to other players
     std::cout << "Broadcasting message to other players..." << std::endl;
+    std::cout << "Current level: " << data.level << std::endl;
+    
     // Example: return a broadcast command
     return "Broadcast Hello";
 }

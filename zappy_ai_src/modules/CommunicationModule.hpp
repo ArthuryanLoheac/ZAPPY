@@ -14,7 +14,7 @@
 class CommunicationModule : public AIModule {
 public:
     CommunicationModule();
-    std::string execute() override;
+    std::string execute(const GameData& data) override;
     float getPriority() const override;
 };
 

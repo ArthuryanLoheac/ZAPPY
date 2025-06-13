@@ -30,7 +30,10 @@ public:
                 return a->getPriority() < b->getPriority();
             });
 
-        std::string commands = (*highestPriorityModule)->execute();
+        GameData data;
+        std::cout << "(EMPTY) Executing highest priority module with priority: "
+                  << (*highestPriorityModule)->getPriority() << std::endl;
+        std::string commands = (*highestPriorityModule)->execute(data);
         size_t start = 0, end;
         while ((end = commands.find('\n', start)) != std::string::npos) {
             std::string cmd = commands.substr(start, end - start);

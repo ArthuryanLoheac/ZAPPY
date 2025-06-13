@@ -36,6 +36,14 @@ void Logic::addModule(AIModule* module) {
     modules.push_back(module);
 }
 
+GameData Logic::createGameData() const {
+    GameData data;
+    data.level = level;
+    data.inventory = inventory;
+    data.commandHistory = commandHistory.getHistory();
+    return data;
+}
+
 void Logic::executeHighestPriorityModule() {
     if (modules.empty()) return;
 
@@ -44,7 +52,9 @@ void Logic::executeHighestPriorityModule() {
             return a->getPriority() < b->getPriority();
         });
 
-    std::string commands = (*highestPriorityModule)->execute();
+    GameData data = createGameData();
+
+    std::string commands = (*highestPriorityModule)->execute(data);
     size_t start = 0, end;
     while ((end = commands.find('\n', start)) != std::string::npos) {
         std::string cmd = commands.substr(start, end - start);
@@ -74,7 +84,6 @@ void Logic::handleServerResponse(const std::string& response) {
     std::string originalCommand = commandQueue.front();
     commandQueue.pop();
 
-    // Store the command-response pair in history
     addCommandResponse(originalCommand, response);
 }
 
@@ -101,4 +110,36 @@ std::string Logic::extractMessageType(const std::string& command, const std::str
     if (command.find("Incantation") == 0)
         return "Incantation";
     return "Unknown";
+}
+
+const std::vector<std::pair<std::string, std::string>>& Logic::getCommandHistory() const {
+    return commandHistory.getHistory();
+}
+
+std::pair<std::string, std::string> Logic::getLastCommandResponse() const {
+    return commandHistory.getLastCommandResponse();
+}
+
+void Logic::setItemQuantity(const std::string& item, int quantity) {
+    inventory[item] = quantity;
+}
+
+int Logic::getItemQuantity(const std::string& item) const {
+    auto it = inventory.find(item);
+    if (it != inventory.end()) {
+        return it->second;
+    }
+    return 0;
+}
+
+const std::map<std::string, int>& Logic::getInventory() const {
+    return inventory;
+}
+
+void Logic::setLevel(short newLevel) {
+    level = newLevel;
+}
+
+short Logic::getLevel() const {
+    return level;
 }

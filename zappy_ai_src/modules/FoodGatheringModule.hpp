@@ -14,7 +14,7 @@
 class FoodGatheringModule : public AIModule {
 public:
     FoodGatheringModule();
-    std::string execute() override;
+    std::string execute(const GameData& data) override;
     float getPriority() const override;
 
     void updateFoodCount(int count);

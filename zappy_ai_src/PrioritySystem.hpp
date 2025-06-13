@@ -13,8 +13,9 @@
 #include <algorithm>
 #include <queue>
 #include <string>
+#include <iostream>
 #include "../modules/AIModule.hpp"
-#include "ai/AIBase.hpp"
+#include "Logic/AIBase.hpp"
 
 class PrioritySystem : public AIBase {
 public:
@@ -32,8 +33,7 @@ public:
                 highest = mod;
             }
         }
-        if (highest)
-            highest->execute();
+        std::cout << "execute here the highest priority module with priority: " << maxPriority << std::endl;
     }
 
     // Send a command to the server and queue it for response matching
@@ -58,9 +58,8 @@ private:
     std::vector<AIModule*> modules;
     std::queue<std::string> commandQueue;
 
-    // Extracts the message type from the command/response
     std::string extractMessageType(const std::string& command, const std::string& response) {
-        // Simple mapping based on command prefix
+
         if (command.find("Inventory") == 0)
             return "Inventory";
         if (command.find("Look") == 0)

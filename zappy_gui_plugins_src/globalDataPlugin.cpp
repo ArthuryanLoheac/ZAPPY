@@ -1,4 +1,4 @@
-#include "leftDataBarPlugin.hpp"
+#include "globalDataPlugin.hpp"
 
 #include <memory>
 #include <string>
@@ -7,24 +7,24 @@
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
-        return std::make_unique<leftDataBarPlugin>();
+        return std::make_unique<globalDataPlugin>();
     }
 }
 
-bool leftDataBarPlugin::init() {
+bool globalDataPlugin::init() {
     printf("============= Initializing Test Plugin =============\n");
     return true;
 }
 
-const char* leftDataBarPlugin::getName() const {
+const char* globalDataPlugin::getName() const {
     return "Test Plugin";
 }
 
-const char* leftDataBarPlugin::getVersion() const {
+const char* globalDataPlugin::getVersion() const {
     return "1.0.0";
 }
 
-void leftDataBarPlugin::drawOneBackground(const std::string &texture, int x, int y,
+void globalDataPlugin::drawOneBackground(const std::string &texture, int x, int y,
 int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
     irr::video::ITexture* bg = driver->getTexture(texture.c_str());
     irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
@@ -37,7 +37,7 @@ int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
     driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
 }
 
-void leftDataBarPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
+void globalDataPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
 irr::video::IVideoDriver* driver) {
     int x = 30;
     int y = 30;
@@ -66,10 +66,10 @@ irr::video::IVideoDriver* driver) {
     }
 }
 
-void leftDataBarPlugin::onEvent(const irr::SEvent &event) {
+void globalDataPlugin::onEvent(const irr::SEvent &event) {
     (void) event;
 }
 
-void leftDataBarPlugin::update(pluginsData &_data) {
+void globalDataPlugin::update(pluginsData &_data) {
     data = _data;
 }

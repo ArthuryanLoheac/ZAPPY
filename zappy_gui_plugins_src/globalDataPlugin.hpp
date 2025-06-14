@@ -5,7 +5,7 @@
 
 #include "zappy_gui_src/PluginsManagement/pluginsInterface.hpp"
 
-class leftDataBarPlugin : public pluginsInterface {
+class globalDataPlugin : public pluginsInterface {
  private:
     pluginsData data; /**< Data manager for the plugin. */
     bool isActive = true;

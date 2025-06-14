@@ -6,6 +6,13 @@
 
 class pluginsData {
  public:
+    class Tile {
+     public:
+        int x; /**< X-coordinate of the tile. */
+        int y; /**< Y-coordinate of the tile. */
+        std::vector<int> resources; /**< List of resources on the tile. */
+    };
+
     int width; /**< Width of the game map. */
     int height; /**< Height of the game map. */
     int frequency; /**< Frequency of the game. */

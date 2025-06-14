@@ -159,3 +159,4 @@ void Window::drawPlayerInfo(int id, int &y) {
     }
 }
 }  // namespace GUI
+

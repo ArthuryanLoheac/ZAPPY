@@ -1,12 +1,12 @@
 #pragma once
+#include <irrlicht/irrlicht.h>
 
 #include <string>
 #include <vector>
-#include <irrlicht/irrlicht.h>
 #include <memory>
 
 #include "dlLoader/dlLoader.hpp"
-#include "pluginsInterface.hpp"
+#include "PluginsManagement/pluginsInterface.hpp"
 #include "DataManager/GameDataManager.hpp"
 
 class pluginsManager {
@@ -41,5 +41,6 @@ class pluginsManager {
     void update(pluginsData &dataManager);
 
  private:
-    std::vector<std::unique_ptr<pluginsInterface>> _plugins; /** plugins stored */
+    std::vector<std::unique_ptr<pluginsInterface>> _plugins;
+        /**plugins stored */
 };

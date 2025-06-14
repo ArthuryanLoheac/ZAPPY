@@ -8,10 +8,12 @@
 
 
 class pluginsData {
-/** @brief Class representing the data structure for the game to send to the plugins*/
+/** @brief Class representing the data structure
+ * for the game to send to the plugins*/
  public:
     class Tile {
-        /** @brief Represents a tile in the game map, including its coordinates and resources. */
+        /** @brief Represents a tile in the game map,
+         * including its coordinates and resources. */
      public:
         int x; /**< X-coordinate of the tile. */
         int y; /**< Y-coordinate of the tile. */
@@ -19,7 +21,8 @@ class pluginsData {
     };
 
     class Player {
-     /** @brief Represents a player in the game, including position, orientation, level, and resources. */
+     /** @brief Represents a player in the game, including position,
+      * orientation, level, and resources. */
      public:
         enum class Orientation {
             NORTH,
@@ -34,9 +37,12 @@ class pluginsData {
         int y; /**< Y-coordinate of the player. */
         int level; /**< Level of the player. */
         irr::video::SColor color; /**< Color associated with the player. */
-        irr::core::vector3df position; /**< Position of the player in 3D space. */
-        std::vector<int> ressources; /**< List of resources held by the player. */
-        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> PlayerMesh; /**< Mesh associated with the player. */
+        irr::core::vector3df position;
+             /**< Position of the player in 3D space. */
+        std::vector<int> ressources;
+             /**< List of resources held by the player. */
+        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> PlayerMesh;
+            /**< Mesh associated with the player. */
     };
 
     int width; /**< Width of the game map. */

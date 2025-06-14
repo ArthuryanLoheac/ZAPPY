@@ -16,22 +16,25 @@ class PlayerDataPlugin : public pluginsInterface {
     pluginsData data; /**< Data manager for the plugin. */
     int idPlayer = -1; /**< ID of the selected player. */
 
-    irr::scene::ISceneManager* smgr; /**< Pointer to the Irrlicht scene manager. */
+    irr::scene::ISceneManager* smgr;
+      /**< Pointer to the Irrlicht scene manager*/
     irr::IrrlichtDevice *device; /**< Pointer to the Irrlicht device. */
     irr::scene::ICameraSceneNode *cam; /**< Pointer to the Irrlicht camera. */
     irr::video::IVideoDriver* driver; /**< Pointer to the video driver. */
 
     bool pressed = false; /**< Indicates if the mouse is currently pressed. */
-    bool isPressedLastFrame = false; /**< Indicates if the mouse was pressed in the last frame. */
+    bool isPressedLastFrame = false;
+      /**< Indicates if the mouse was pressed in the last frame. */
 
     std::vector<std::string> lstNames = {"Food", "Linemate", "Deraumere",
-        "Sibur", "Mendiane", "Phiras", "Thystame"}; /**< List of resource names. */
+        "Sibur", "Mendiane", "Phiras", "Thystame"};
+        /**< List of resource names. */
 
     std::vector<UICol> lstColors = {
         UICol(255, 255, 255, 255), UICol(255, 200, 193, 198),
         UICol(255, 105, 105, 105), UICol(255, 121, 123, 166),
         UICol(255, 94, 84, 33), UICol(255, 144, 81, 82),
-        UICol(255, 114, 85, 144)}; /**< List of colors representing resources. */
+        UICol(255, 114, 85, 144)}; /**< List of colors representing resources*/
 
     /**
      * @brief Draws a background texture at a specified position and size.

@@ -4,10 +4,11 @@
 #include <memory>
 #include <string>
 #include <vector>
+
 #define UIRect irr::core::rect<irr::s32>
 #define UICol irr::video::SColor
 
-#include "pluginsData.hpp"
+#include "PluginsManagement/pluginsData.hpp"
 
 class pluginsInterface {
 /** @brief Interface for plugins in the Zappy GUI application.

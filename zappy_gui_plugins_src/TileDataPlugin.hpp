@@ -24,14 +24,17 @@ class TileDataPlugin : public pluginsInterface {
     }; /**< List of colors representing resources. */
 
     std::vector<std::string> lstNames = {"Food", "Linemate", "Deraumere",
-            "Sibur", "Mendiane", "Phiras", "Thystame"}; /**< List of resource names. */
+            "Sibur", "Mendiane", "Phiras", "Thystame"};
+      /**< List of resource names. */
 
-    irr::scene::ISceneManager* smgr; /**< Pointer to the Irrlicht scene manager. */
+    irr::scene::ISceneManager* smgr;
+      /**< Pointer to the Irrlicht scene manager. */
     irr::IrrlichtDevice *device; /**< Pointer to the Irrlicht device. */
     irr::scene::ICameraSceneNode *cam; /**< Pointer to the Irrlicht camera. */
 
     bool pressed = false; /**< Indicates if the mouse is currently pressed. */
-    bool isPressedLastFrame = false; /**< Indicates if the mouse was pressed in the last frame. */
+    bool isPressedLastFrame = false;
+      /**< Indicates if the mouse was pressed in the last frame. */
 
     /**
      * @brief Draws a background texture at a specified position and size.

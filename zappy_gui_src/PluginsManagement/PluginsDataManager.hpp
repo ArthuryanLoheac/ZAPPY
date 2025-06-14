@@ -1,12 +1,11 @@
 #pragma once
 #include "PluginsManagement/pluginsData.hpp"
-#include "DataManager.hpp"
-#include "GameDataManager.hpp"
-#include "MeshImporter.hpp"
+#include "DataManager/DataManager.hpp"
+#include "DataManager/GameDataManager.hpp"
+#include "tools/MeshImporter.hpp"
 
-class PluginsDataManager
-{
- /** @brief Singleton class that manages the plugins data for the game. */
+class PluginsDataManager {
+/** @brief Singleton class that manages the plugins data for the game. */
  private:
     pluginsData data;
  public:

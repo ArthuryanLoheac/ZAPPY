@@ -1,9 +1,10 @@
-#include "TileDataPlugin.hpp"
+#include "zappy_gui_plugins_src/TileDataPlugin.hpp"
 
 #include <memory>
 #include <string>
 #include <vector>
 #include <iostream>
+#include <cstdio>
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
@@ -50,16 +51,21 @@ irr::video::IVideoDriver* driver) {
         return;
     try {
         pluginsData::Tile tile = getTile(xTile, yTile);
-        drawOneBackground("assets/UI/BottomLeft.png", width - 240, 0, 240, 200, driver);
+        drawOneBackground("assets/UI/BottomLeft.png", width - 240, 0, 240, 200,
+            driver);
 
-        std::string tileInfo = "Tile : " + std::to_string(tile.x) + ", " + std::to_string(tile.y) + " :";
-        font->draw(tileInfo.c_str(), UIRect(width - 220, y, 300, 300), UICol(255, 255, 255, 255));
+        std::string tileInfo = "Tile : " + std::to_string(tile.x) + ", " +
+            std::to_string(tile.y) + " :";
+        font->draw(tileInfo.c_str(), UIRect(width - 220, y, 300, 300),
+            UICol(255, 255, 255, 255));
         y += 20;
         for (int i = 0; i < 7; ++i) {
             if (tile.resources[i] == 0)
                 continue;
-            tileInfo = "\t - " + lstNames[i] + " : " + std::to_string(tile.resources[i]);
-            font->draw(tileInfo.c_str(), UIRect(width - 220, y, 300, 300), lstColors[i]);
+            tileInfo = "\t - " + lstNames[i] + " : " + std::to_string(
+                tile.resources[i]);
+            font->draw(tileInfo.c_str(), UIRect(width - 220, y, 300, 300),
+                lstColors[i]);
             y += 20;
         }
         y += 20;

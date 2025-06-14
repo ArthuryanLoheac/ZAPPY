@@ -1,9 +1,10 @@
-#include "globalDataPlugin.hpp"
+#include "zappy_gui_plugins_src/globalDataPlugin.hpp"
 
 #include <memory>
 #include <string>
 #include <vector>
 #include <iostream>
+#include <cstdio>
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
@@ -20,8 +21,8 @@ bool globalDataPlugin::init(irr::scene::ISceneManager* smgr,
     return true;
 }
 
-void globalDataPlugin::drawOneBackground(const std::string &texture, int x, int y,
-int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
+void globalDataPlugin::drawOneBackground(const std::string &texture, int x,
+int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
     irr::video::ITexture* bg = driver->getTexture(texture.c_str());
     irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
 

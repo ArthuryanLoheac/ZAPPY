@@ -1,9 +1,10 @@
-#include "PlayerDataPlugin.hpp"
+#include "zappy_gui_plugins_src/PlayerDataPlugin.hpp"
 
 #include <memory>
 #include <string>
 #include <vector>
 #include <iostream>
+#include <cstdio>
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
@@ -21,8 +22,8 @@ bool PlayerDataPlugin::init(irr::scene::ISceneManager* _smgr,
     return true;
 }
 
-void PlayerDataPlugin::drawOneBackground(const std::string &texture, int x, int y,
-int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
+void PlayerDataPlugin::drawOneBackground(const std::string &texture, int x,
+int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
     irr::video::ITexture* bg = driver->getTexture(texture.c_str());
     irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
 
@@ -42,7 +43,8 @@ pluginsData::Tile PlayerDataPlugin::getTile(int x, int y) {
     throw std::out_of_range("Not Exsiting");
 }
 
-void PlayerDataPlugin::drawPlayerInfo(int id, std::shared_ptr<irr::gui::IGUIFont> font) {
+void PlayerDataPlugin::drawPlayerInfo(int id,
+std::shared_ptr<irr::gui::IGUIFont> font) {
     int width = driver->getScreenSize().Width;
     pluginsData::Player player = data.getPlayer(id);
     int y = 330;
@@ -50,7 +52,8 @@ void PlayerDataPlugin::drawPlayerInfo(int id, std::shared_ptr<irr::gui::IGUIFont
     // Name
     std::string playerInfo = "Player " + std::to_string(id) + " : " +
         player.teamName;
-    font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300), player.color);
+    font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
+        player.color);
     // Level
     y += 20;
     playerInfo = "\tLevel : " + std::to_string(player.level);
@@ -98,7 +101,8 @@ irr::video::IVideoDriver* _driver) {
         return;
     int width = driver->getScreenSize().Width;
     try {
-        drawOneBackground("assets/UI/All.png", width - 240, 300, 250, 200, driver);
+        drawOneBackground("assets/UI/All.png", width - 240, 300, 250, 200,
+            driver);
         drawPlayerInfo(idPlayer, font);
     } catch (std::exception &e) {}
 }

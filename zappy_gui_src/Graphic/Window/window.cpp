@@ -6,8 +6,7 @@
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "tools/MeshImporter.hpp"
 #include "DataManager/DataManager.hpp"
-#include <pluginsManager.hpp>
-#include "PluginsDataManager.hpp"
+#include "PluginsManagement/PluginsDataManager.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {

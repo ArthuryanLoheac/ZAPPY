@@ -41,11 +41,12 @@ void pluginsManager::loadPlugin(const std::string &path) {
     }
 }
 
-void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font) const
+void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
+    irr::video::IVideoDriver* driver) const
 {
     for (const auto &plugin : _plugins) {
         if (plugin)
-            plugin->drawUI(font);
+            plugin->drawUI(font, driver);
     }
 }
 

@@ -18,7 +18,8 @@ class pluginsManager {
     void loadPlugins(const std::string &path);
     void loadPlugin(const std::string &path);
 
-    void drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font) const;
+    void drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
+        irr::video::IVideoDriver* driver) const;
     void onEvent(const irr::SEvent &event);
 
  private:

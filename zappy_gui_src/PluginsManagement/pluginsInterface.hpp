@@ -27,7 +27,8 @@ class pluginsInterface {
     */
     virtual const char* getVersion() const = 0;
 
-    virtual void drawUI(std::shared_ptr<irr::gui::IGUIFont> font) = 0;
+    virtual void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
+        irr::video::IVideoDriver* driver) = 0;
 
     virtual void onEvent(const irr::SEvent &event) = 0;
 };

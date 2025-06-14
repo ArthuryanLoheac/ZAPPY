@@ -73,7 +73,7 @@ void Window::windowUpdateFocus() {
 
     smgr->drawAll();
     drawUI();
-    pluginsManager::i().drawPlugins(font);
+    pluginsManager::i().drawPlugins(font, driver);
     guienv->drawAll();
 }
 

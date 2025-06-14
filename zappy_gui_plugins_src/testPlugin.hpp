@@ -13,6 +13,7 @@ class testPlugin : public pluginsInterface {
     bool init() override;
     const char* getName() const override;
     const char* getVersion() const override;
-    void drawUI(std::shared_ptr<irr::gui::IGUIFont> font) override;
+    void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
+      irr::video::IVideoDriver* driver) override;
     void onEvent(const irr::SEvent &event) override;
 };

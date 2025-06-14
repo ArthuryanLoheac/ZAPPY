@@ -24,8 +24,15 @@ const char* testPlugin::getVersion() const {
 }
 
 void testPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font) {
-    if (!font)
+    if (!font || !isActive)
         return;
     font->draw(L"Test Plugin UI", irr::core::rect<irr::s32>(200, 10, 200, 50),
                irr::video::SColor(255, 255, 255, 255));
+}
+
+void testPlugin::onEvent(const irr::SEvent &event) {
+    if (event.EventType == irr::EET_KEY_INPUT_EVENT && event.KeyInput.PressedDown) {
+        if (event.KeyInput.Key == irr::KEY_KEY_T)
+            isActive = !isActive;
+    }
 }

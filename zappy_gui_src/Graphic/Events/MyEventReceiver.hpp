@@ -1,6 +1,7 @@
 #pragma once
 
 #include <irrlicht/irrlicht.h>
+#include "PluginsManagement/pluginsManager.hpp"
 
 /**
  * @brief Handles user input events for the graphical interface.
@@ -29,6 +30,7 @@ class MyEventReceiver : public irr::IEventReceiver {
                 pressed = false;
             }
         }
+        pluginsManager::i().onEvent(event);
         return false;
     }
 

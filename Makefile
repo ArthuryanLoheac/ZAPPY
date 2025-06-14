@@ -185,9 +185,12 @@ FLAGS_SO =  -std=c++20 -Wall -Wextra -Werror -lIrrlicht \
             -I./zappy_gui_src/PluginsManagement \
             -ldl -g
 
-test:
-	@mkdir -p plugins
-	g++ -o plugins/test.so -shared -fPIC $(COMMON_PLUGINS) \
-		zappy_gui_plugins_src/testPlugin.cpp $(FLAGS_SO)
+TEST_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")
 
-plugins: test
+plugins_all:
+	@mkdir -p plugins
+	@for src in $(TEST_SRC); do \
+		plugin_name=$$(basename $$src .cpp); \
+		g++ -o plugins/$$plugin_name.so -shared -fPIC $(COMMON_PLUGINS) \
+			$$src $(FLAGS_SO); \
+	done

@@ -48,3 +48,10 @@ void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font) const
             plugin->drawUI(font);
     }
 }
+
+void pluginsManager::onEvent(const irr::SEvent &event) {
+    for (const auto &plugin : _plugins) {
+        if (plugin)
+            plugin->onEvent(event);
+    }
+}

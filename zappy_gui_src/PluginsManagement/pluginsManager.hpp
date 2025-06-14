@@ -19,6 +19,7 @@ class pluginsManager {
     void loadPlugin(const std::string &path);
 
     void drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font) const;
+    void onEvent(const irr::SEvent &event);
 
  private:
     std::vector<std::unique_ptr<pluginsInterface>> _plugins;

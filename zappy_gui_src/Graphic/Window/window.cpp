@@ -75,7 +75,6 @@ void Window::windowUpdateFocus() {
         irr::video::SColor(255, 100, 101, 140));
 
     smgr->drawAll();
-    drawUI();
     pluginsManager::i().drawPlugins(font, driver);
     guienv->drawAll();
 }

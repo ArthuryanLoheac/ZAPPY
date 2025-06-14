@@ -17,9 +17,6 @@ void Window::handleEvent() {
         device->closeDevice();
     zoom = -receiver.ConsumeWheelDelta();
     moveCamera(xMoveCam, zoom, xMoveCenterCam, yMoveCenterCam);
-    if (receiver.IsMouseDown())
-        handleCLick();
-    receiver.updateLastPressed();
 }
 
 void Window::updateDeltaTime() {
@@ -71,33 +68,6 @@ void Window::updateRotation(float x) {
     angleXCamera += x * frameDeltaTime * rotationSpeedCamera;
     if (angleXCamera > 360.f) angleXCamera -= 360.f;
     if (angleXCamera < 0.f) angleXCamera += 360.f;
-}
-
-bool Window::detectCollisionPlayer() {
-    irr::core::position2d<irr::s32> mousePos =
-        device->getCursorControl()->getPosition();
-    irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()
-        ->getRayFromScreenCoordinates(mousePos, cam);
-
-    for (auto &player : GameDataManager::i().getPlayers()) {
-        irr::core::vector3df Pos = player.getMesh()->getPosition();
-        irr::core::aabbox3d<irr::f32> box(Pos.X - 0.5f, Pos.Y - 0.5f,
-            Pos.Z - 0.5f, Pos.X + 0.5f, Pos.Y + 0.5f, Pos.Z + 0.5f);
-        if (box.intersectsWithLine(ray)) {
-            if (idPlayer == player.getId()) {
-                idPlayer = -1;
-                return true;
-            }
-            idPlayer = player.getId();
-            return true;
-        }
-    }
-    return false;
-}
-
-void Window::handleCLick() {
-    if (detectCollisionPlayer())
-        return;
 }
 
 }  // namespace GUI

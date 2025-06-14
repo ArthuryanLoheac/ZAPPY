@@ -73,7 +73,7 @@ void TileDataPlugin::onEvent(const irr::SEvent &event) {
         } else if (event.MouseInput.Event == irr::EMIE_LMOUSE_LEFT_UP) {
             pressed = false;
         }
-        if (pressed && !isPressedLastFrame)
+        if (pressed && !isPressedLastFrame && !detectCollisionPlayer())
             detectCollisionTile();
         isPressedLastFrame = pressed;
     }
@@ -106,6 +106,26 @@ void TileDataPlugin::detectCollisionTile() {
         xTile = x;
         yTile = y;
     }
+}
+
+bool TileDataPlugin::detectCollisionPlayer() {
+    if (data.players.size() <= 0)
+        return false;
+    irr::core::position2d<irr::s32> mousePos =
+        device->getCursorControl()->getPosition();
+    irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()
+        ->getRayFromScreenCoordinates(mousePos, cam);
+
+    for (auto &player : data.players) {
+        if (!player.PlayerMesh)
+            continue;
+        irr::core::vector3df Pos = player.PlayerMesh->getPosition();
+        irr::core::aabbox3d<irr::f32> box(Pos.X - 0.1f, Pos.Y - 0.1f,
+            Pos.Z - 0.5f, Pos.X + 0.5f, Pos.Y + 0.1f, Pos.Z + 0.5f);
+        if (box.intersectsWithLine(ray))
+            return true;
+    }
+    return false;
 }
 
 void TileDataPlugin::update(pluginsData &_data) {

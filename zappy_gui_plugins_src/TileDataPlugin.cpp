@@ -50,16 +50,7 @@ irr::video::IVideoDriver* driver) {
         return;
     try {
         pluginsData::Tile tile = getTile(xTile, yTile);
-        drawOneBackground("assets/UI/BottomLeft.png", width - 240, 0, 240, 400, driver);
-
-        std::vector<std::string> lstNames = {"Food", "Linemate", "Deraumere",
-            "Sibur", "Mendiane", "Phiras", "Thystame"};
-        std::vector<UICol> lstColors = {
-            UICol(255, 255, 255, 255), UICol(255, 200, 193, 198),
-            UICol(255, 55, 55, 55), UICol(255, 71, 73, 116),
-            UICol(255, 94, 84, 33), UICol(255, 94, 31, 32),
-            UICol(255, 64, 35, 94)
-        };
+        drawOneBackground("assets/UI/BottomLeft.png", width - 240, 0, 240, 200, driver);
 
         std::string tileInfo = "Tile : " + std::to_string(tile.x) + ", " + std::to_string(tile.y) + " :";
         font->draw(tileInfo.c_str(), UIRect(width - 220, y, 300, 300), UICol(255, 255, 255, 255));
@@ -76,7 +67,20 @@ irr::video::IVideoDriver* driver) {
 }
 
 void TileDataPlugin::onEvent(const irr::SEvent &event) {
-    (void) event;
+    if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
+        bool pressed = false;
+        if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
+            pressed = true;
+        } else if (event.MouseInput.Event == irr::EMIE_LMOUSE_LEFT_UP) {
+            pressed = false;
+        }
+        if (pressed && !isPressedLastFrame)
+            detectCollisionTile();
+        isPressedLastFrame = pressed;
+    }
+}
+
+void TileDataPlugin::detectCollisionTile() {
     irr::core::position2d<irr::s32> mousePos =
         device->getCursorControl()->getPosition();
     irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()

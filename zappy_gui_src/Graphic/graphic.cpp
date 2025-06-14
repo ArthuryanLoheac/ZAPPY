@@ -5,6 +5,7 @@
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "Graphic/Window/window.hpp"
 #include "DataManager/DataManager.hpp"
+#include "PluginsManagement/pluginsManager.hpp"
 
 /**
  * @brief Initializes and runs the graphical interface.
@@ -13,6 +14,7 @@
  */
 int graphic() {
     try {
+        pluginsManager::i().loadPlugins("./plugins");
         GUI::Window::i();
         GUI::Window::i().update();
     } catch(const std::exception& e) {

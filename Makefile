@@ -175,3 +175,17 @@ tests_run_coverage: tests_run
 style_check:
 	@cpplint $(FLAGS_LINTER) \
 		$(shell find . -type f \( -name '*.cpp' -o -name '*.hpp' \))
+
+# ============ PLUGINS ============ #
+
+COMMON_PLUGINS = \
+
+FLAGS_SO =  -std=c++20 -Wall -Wextra -Werror -lIrrlicht \
+			-I. -I./zappy_gui_src/include -I./zappy_gui_src/dlLoader/ \
+            -I./zappy_gui_src/PluginsManagement \
+            -ldl -g
+
+test:
+	@mkdir -p plugins
+	g++ -o plugins/test.so -shared -fPIC $(COMMON_PLUGINS) \
+		zappy_gui_plugins_src/testPlugin.cpp $(FLAGS_SO)

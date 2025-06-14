@@ -8,7 +8,7 @@
 #define UIRect irr::core::rect<irr::s32>
 #define UICol irr::video::SColor
 
-#include "PluginsManagement/pluginsData.hpp"
+#include "./pluginsData.hpp"
 
 class pluginsInterface {
 /** @brief Interface for plugins in the Zappy GUI application.

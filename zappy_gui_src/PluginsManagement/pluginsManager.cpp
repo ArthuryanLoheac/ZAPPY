@@ -56,3 +56,10 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
             plugin->onEvent(event);
     }
 }
+
+void pluginsManager::update(pluginsData &dataManager) {
+    for (const auto &plugin : _plugins) {
+        if (plugin)
+            plugin->update(dataManager);
+    }
+}

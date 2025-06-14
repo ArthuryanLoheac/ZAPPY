@@ -26,15 +26,6 @@ const char* testPlugin::getVersion() const {
 
 void testPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
 irr::video::IVideoDriver* driver) {
-    irr::video::ITexture* bg = driver->getTexture("assets/UI/BottomRight.png");
-    irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
-
-    irr::core::rect<irr::s32>destRect(100, 0, 100 + 150, 0 + 400);
-    if (!bg) {
-        std::cerr << "Error: Texture not found: " << "assets/UI/BottomRight.png" << std::endl;
-        return;
-    }
-    driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
     if (!font || !isActive)
         return;
     (void) driver;
@@ -47,4 +38,13 @@ void testPlugin::onEvent(const irr::SEvent &event) {
         if (event.KeyInput.Key == irr::KEY_KEY_T)
             isActive = !isActive;
     }
+}
+
+void testPlugin::update(pluginsData &data) {
+    if (!isActive)
+        return;
+    // Example update logic, can be customized
+    std::cout << "Test Plugin Update: "
+              << "Width: " << data.width
+              << ", Height: " << data.height << std::endl;
 }

@@ -180,9 +180,13 @@ style_check:
 
 COMMON_PLUGINS = \
 
+INCLUDE_SO = -I. \
+	-I./zappy_gui_src/include \
+	-I./zappy_gui_src/dlLoader/ \
+	-I./zappy_gui_src/PluginsManagement \
+
 FLAGS_SO =  -std=c++20 -Wall -Wextra -Werror -lIrrlicht \
-			-I. -I./zappy_gui_src/include -I./zappy_gui_src/dlLoader/ \
-            -I./zappy_gui_src/PluginsManagement \
+			$(INCLUDE_SO) \
             -ldl -g
 
 TEST_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")

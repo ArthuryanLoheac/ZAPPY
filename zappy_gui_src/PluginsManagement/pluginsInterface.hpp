@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "pluginsData.hpp"
+
 class pluginsInterface {
  public:
     virtual ~pluginsInterface() = default;
@@ -26,6 +28,8 @@ class pluginsInterface {
     * @return The version of the plugin.
     */
     virtual const char* getVersion() const = 0;
+
+    virtual void update(pluginsData &dataManager) = 0;
 
     virtual void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
         irr::video::IVideoDriver* driver) = 0;

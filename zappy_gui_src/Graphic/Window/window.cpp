@@ -7,6 +7,7 @@
 #include "tools/MeshImporter.hpp"
 #include "DataManager/DataManager.hpp"
 #include <pluginsManager.hpp>
+#include "PluginsDataManager.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -68,6 +69,8 @@ void Window::windowUpdateFocus() {
     handleEvent();
     updateSkyBoxRotation();
     GameDataManager::i().Update(frameDeltaTime);
+    PluginsDataManager::i().updatePluginsData();
+    pluginsManager::i().update(PluginsDataManager::i().getData());
     driver->beginScene(true, true,
         irr::video::SColor(255, 100, 101, 140));
 

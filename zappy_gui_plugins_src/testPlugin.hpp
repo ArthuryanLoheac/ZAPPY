@@ -16,4 +16,5 @@ class testPlugin : public pluginsInterface {
     void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
       irr::video::IVideoDriver* driver) override;
     void onEvent(const irr::SEvent &event) override;
+    void update(pluginsData &dataManager) override;
 };

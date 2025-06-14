@@ -8,8 +8,10 @@
 
 
 class pluginsData {
+/** @brief Class representing the data structure for the game to send to the plugins*/
  public:
     class Tile {
+        /** @brief Represents a tile in the game map, including its coordinates and resources. */
      public:
         int x; /**< X-coordinate of the tile. */
         int y; /**< Y-coordinate of the tile. */
@@ -17,6 +19,7 @@ class pluginsData {
     };
 
     class Player {
+     /** @brief Represents a player in the game, including position, orientation, level, and resources. */
      public:
         enum class Orientation {
             NORTH,
@@ -44,6 +47,13 @@ class pluginsData {
     std::vector<Tile> tiles; /**< List of tiles in the game map. */
     std::vector<Player> players; /**< List of players in the game. */
 
+    /**
+     * @brief Get the player by ID.
+     *
+     * @param id ID of the player to retrieve.
+     * @return Player object corresponding to the given ID.
+     * @throws std::out_of_range if the player with the given ID is not found.
+     */
     Player getPlayer(int id) const {
         for (const auto &player : players) {
             if (player.id == id)

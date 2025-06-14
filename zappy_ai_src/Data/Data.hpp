@@ -20,8 +20,10 @@ class Data {
     // basics
     bool isRunning;
     bool isDead;
+    bool isInIncantation;
     int mapX;
     int mapY;
+    int level;
 
     // Inventory
     std::unordered_map<std::string, int> inventory;

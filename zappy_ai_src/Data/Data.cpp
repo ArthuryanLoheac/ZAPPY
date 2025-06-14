@@ -11,6 +11,8 @@ Data::Data() {
     mapY = 0;
     isDead = false;
     isRunning = false;
+    isInIncantation = false;
+    level = 1;
     vision = {};
 
     inventory = {

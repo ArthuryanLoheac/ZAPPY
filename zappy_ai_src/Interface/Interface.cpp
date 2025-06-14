@@ -166,6 +166,7 @@ void Interface::factoryCommands() {
     commands["EJECT"] = &Interface::commandEJECT;
     commands["FORK"] = &Interface::commandFORK;
     commands["BROADCAST"] = &Interface::commandBROADCAST;
+    commands["INCANTATION"] = &Interface::commandINCANTATION;
 }
 
 // ————————————————————————— END OF FACTORY ————————————————————————

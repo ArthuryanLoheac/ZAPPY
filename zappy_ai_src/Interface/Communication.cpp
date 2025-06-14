@@ -38,8 +38,7 @@ void Interface::receiveMessage(std::vector<std::string> &args) {
 
 void Interface::initializeFilteredStrings() {
     filteredStrings = {
-        "Salut c'est Frank Leboeuf, vous voulez vendre votre voiture ?",
-        ""
+        "Salut c'est Frank Leboeuf, vous voulez vendre votre voiture ?"
     };
 }
 

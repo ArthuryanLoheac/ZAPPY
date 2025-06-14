@@ -73,6 +73,8 @@ class Interface {
         std::vector<std::string> &command);
     void commandBROADCAST(std::vector<std::string> &args,
         std::vector<std::string> &command);
+    void commandINCANTATION(std::vector<std::string> &args,
+        std::vector<std::string> &command);
 
     // Sending commands
     std::queue<std::string> commandBuffer;
@@ -81,6 +83,8 @@ class Interface {
     void initializeFilteredStrings();
     bool needFilter(const std::string &arg);
     void receiveMessage(std::vector<std::string> &args);
+
+    bool startIncantation();
 };
 
 }  // namespace AI

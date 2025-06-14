@@ -73,37 +73,6 @@ void Window::updateRotation(float x) {
     if (angleXCamera < 0.f) angleXCamera += 360.f;
 }
 
-bool Window::detectCollisionGround() {
-    irr::core::position2d<irr::s32> mousePos =
-        device->getCursorControl()->getPosition();
-    irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()
-        ->getRayFromScreenCoordinates(mousePos, cam);
-
-    irr::core::plane3d<irr::f32> groundPlane(irr::core::vector3df(0, -2, 0),
-        irr::core::vector3df(0, 1, 0));
-    irr::core::vector3df worldPos;
-
-    if (groundPlane.getIntersectionWithLine(
-        ray.start, ray.getVector(), worldPos)) {
-        worldPos.X += GameDataManager::i().getWidth() / 2.f;
-        worldPos.Z += GameDataManager::i().getHeight() / 2.f;
-        int x = static_cast<int>(worldPos.X);
-        int y = static_cast<int>(worldPos.Z);
-        if (x < 0 || x >= GameDataManager::i().getWidth() ||
-            y < 0 || y >= GameDataManager::i().getHeight())
-            return false;
-        if (xTile == x && yTile == y) {
-            xTile = -1;
-            yTile = -1;
-            return true;
-        }
-        xTile = x;
-        yTile = y;
-        return true;
-    }
-    return false;
-}
-
 bool Window::detectCollisionPlayer() {
     irr::core::position2d<irr::s32> mousePos =
         device->getCursorControl()->getPosition();
@@ -129,7 +98,6 @@ bool Window::detectCollisionPlayer() {
 void Window::handleCLick() {
     if (detectCollisionPlayer())
         return;
-    detectCollisionGround();
 }
 
 }  // namespace GUI

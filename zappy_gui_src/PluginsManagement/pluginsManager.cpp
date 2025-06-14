@@ -9,6 +9,8 @@
 
 #include "include/logs.h"
 #include "pluginsManager.hpp"
+#include "window.hpp"
+
 
 void pluginsManager::loadPlugins(const std::string &path) {
     DIR *dir = opendir(path.c_str());
@@ -30,7 +32,7 @@ void pluginsManager::loadPlugin(const std::string &path) {
         try {
             auto plugin = dlLoader<pluginsInterface>::getLib(path, "createPlugin");
             if (plugin) {
-                plugin->init();
+                plugin->init(GUI::Window::i().smgr, GUI::Window::i().device, GUI::Window::i().cam);
                 _plugins.push_back(std::move(plugin));
             }
         } catch (const dlLoader<pluginsInterface>::dlError &e) {

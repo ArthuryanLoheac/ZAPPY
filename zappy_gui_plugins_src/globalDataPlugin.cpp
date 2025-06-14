@@ -11,17 +11,13 @@ extern "C" {
     }
 }
 
-bool globalDataPlugin::init() {
-    printf("============= Initializing Test Plugin =============\n");
+bool globalDataPlugin::init(irr::scene::ISceneManager* smgr,
+    irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) {
+    (void) device;
+    (void) smgr;
+    (void) cam;
+    printf("============= Initializing GlobalData Plugin =============\n");
     return true;
-}
-
-const char* globalDataPlugin::getName() const {
-    return "Test Plugin";
-}
-
-const char* globalDataPlugin::getVersion() const {
-    return "1.0.0";
 }
 
 void globalDataPlugin::drawOneBackground(const std::string &texture, int x, int y,

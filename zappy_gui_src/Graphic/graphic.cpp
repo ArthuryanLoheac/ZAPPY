@@ -14,8 +14,8 @@
  */
 int graphic() {
     try {
-        pluginsManager::i().loadPlugins("./plugins");
         GUI::Window::i();
+        pluginsManager::i().loadPlugins("./plugins");
         GUI::Window::i().update();
     } catch(const std::exception& e) {
         std::cerr << e.what() << '\n';

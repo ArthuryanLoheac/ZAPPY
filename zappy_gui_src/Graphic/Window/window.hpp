@@ -158,14 +158,6 @@ class Window {
     void drawUI();
 
     /**
-     * @brief Draws information about a specific tile in the UI
-     *
-     * @param tile The tile to display information about.
-     * @param y Vertical position for drawing.
-     */
-    void drawTileInfo(GameTile &tile, int &y);
-
-    /**
      * @brief Draws information about a specific player in the UI.
      *
      * @param id The player's ID.

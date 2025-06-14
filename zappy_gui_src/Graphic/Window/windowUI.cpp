@@ -39,48 +39,15 @@ void Window::drawUI() {
     int y = 30;
     int spaceBetween = 30;
 
-    drawBackgrounds();
+    //drawBackgrounds();
     y += spaceBetween * 2;
     int yR = 20;
-    // Tile
-    if (xTile != -1 && yTile != -1)
-        drawTileInfo(GUI::GameDataManager::i().getTile(xTile, yTile), yR);
-
     try {
         if (idPlayer != -1)
             drawPlayerInfo(idPlayer, yR);
     } catch (const std::exception &e) {
         idPlayer = -1;
     }
-}
-
-void Window::drawTileInfo(GameTile &tile, int &y) {
-    int width = driver->getScreenSize().Width;
-    std::vector<std::string> lstNames = {"Food", "Linemate", "Deraumere",
-        "Sibur", "Mendiane", "Phiras", "Thystame"};
-    std::vector<UICol> lstColors = {
-        UICol(255, 255, 255, 255), UICol(255, 200, 193, 198),
-        UICol(255, 55, 55, 55), UICol(255, 71, 73, 116),
-        UICol(255, 94, 84, 33), UICol(255, 94, 31, 32),
-        UICol(255, 64, 35, 94)
-    };
-
-
-    std::string tileInfo = "Tile : " + std::to_string(tile.getX()) +
-        ", " + std::to_string(tile.getY()) + " :";
-    font->draw(tileInfo.c_str(), UIRect(width - 220, y, 300, 300),
-        UICol(255, 255, 255, 255));
-    y += 20;
-    for (int i = 0; i < 7; ++i) {
-        if (tile.getRessource(i) == 0)
-            continue;
-        tileInfo = "\t - " + lstNames[i] + " : " +
-            std::to_string(tile.getRessource(i));
-        font->draw(tileInfo.c_str(), UIRect(width - 220, y, 300, 300),
-            lstColors[i]);
-        y += 20;
-    }
-    y += 20;
 }
 
 void Window::drawPlayerInfo(int id, int &y) {

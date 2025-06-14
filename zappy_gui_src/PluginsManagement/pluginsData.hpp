@@ -18,4 +18,5 @@ class pluginsData {
     int frequency; /**< Frequency of the game. */
     std::vector<std::string> teams; /**< List of team names. */
     std::vector<irr::video::SColor> teamColors; /**< List of team colors. */
+    std::vector<Tile> tiles; /**< List of tiles in the game map. */
 };

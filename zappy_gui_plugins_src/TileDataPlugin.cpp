@@ -68,7 +68,6 @@ irr::video::IVideoDriver* driver) {
 
 void TileDataPlugin::onEvent(const irr::SEvent &event) {
     if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
-        bool pressed = false;
         if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
             pressed = true;
         } else if (event.MouseInput.Event == irr::EMIE_LMOUSE_LEFT_UP) {
@@ -98,9 +97,11 @@ void TileDataPlugin::detectCollisionTile() {
         int y = static_cast<int>(worldPos.Z);
         if (x < 0 || x >= data.width ||
             y < 0 || y >= data.height)
+            return;
         if (xTile == x && yTile == y) {
             xTile = -1;
             yTile = -1;
+            return;
         }
         xTile = x;
         yTile = y;

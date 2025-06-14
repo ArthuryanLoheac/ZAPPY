@@ -25,7 +25,8 @@ class TileDataPlugin : public pluginsInterface {
     irr::IrrlichtDevice *device;
     irr::scene::ICameraSceneNode *cam;
 
-    bool isPressedLastFrame;
+    bool pressed = false;
+    bool isPressedLastFrame = false;
 
    void drawOneBackground(const std::string &texture, int x, int y,
       int sizeX, int sizeY, irr::video::IVideoDriver* driver);

@@ -43,7 +43,8 @@ GameTile &GameDataManager::getTile(int x, int y) {
         if (tile.getX() == x && tile.getY() == y)
             return tile;
     }
-    throw std::runtime_error("Tile not found");
+    throw std::runtime_error("Tile " + std::to_string(x) +
+        "/" + std::to_string(y) + " not found");
 }
 void GameDataManager::addTeam(const std::string &teamName) {
     std::lock_guard<std::mutex> lock(mutexDatas);

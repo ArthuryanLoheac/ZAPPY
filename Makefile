@@ -118,6 +118,7 @@ fclean: clean
 	rm -f $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI) \
 	$(COMMON_C_LIB) $(COMMON_CPP_LIB)
 	rm -f unit_tests
+	rm -f plugins/*.so
 
 # ============= COMPILATION ============= #
 
@@ -185,7 +186,7 @@ INCLUDE_SO = -I. \
 	-I./zappy_gui_src/dlLoader/ \
 	-I./zappy_gui_src/PluginsManagement \
 
-FLAGS_SO =  -std=c++20 -Wall -Wextra -Werror -lIrrlicht \
+FLAGS_SO =  -std=c++17 -Wall -Wextra -Werror -lIrrlicht \
 			$(INCLUDE_SO) \
             -ldl -g
 

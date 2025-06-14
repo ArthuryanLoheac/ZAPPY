@@ -26,8 +26,6 @@ int sizeX, int sizeY) {
 void Window::drawBackgrounds() {
     int width = driver->getScreenSize().Width;
 
-    // Draw the left bar
-    drawOneBackground("assets/UI/BottomRight.png", 0, 0, 150, 400);
     // Draw the Right bar
     if (idPlayer != -1 && xTile != -1 && yTile != -1)
         drawOneBackground("assets/UI/BottomLeft.png", width - 240, 0, 240, 400);
@@ -38,30 +36,11 @@ void Window::drawBackgrounds() {
 }
 
 void Window::drawUI() {
-    int x = 30;
     int y = 30;
     int spaceBetween = 30;
 
     drawBackgrounds();
-    if (!font)
-        return;
-    // FPS
-    font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
-        UIRect(x, y, 300, 50), UICol(255, 255, 255, 255));
-    // Frequency
-    y += spaceBetween;
-    font->draw(("Freq : " +
-        std::to_string(GUI::DataManager::i().getFrequency())).c_str(),
-        UIRect(x, y, 300, 50), UICol(255, 255, 255, 255));
-    // TEAMS
-    y += spaceBetween;
-    font->draw("TEAMS : ", UIRect(x, y, 300, 50), UICol(255, 255, 255, 255));
-    for (auto &team : GUI::GameDataManager::i().getTeams()) {
-        y += 20;
-        font->draw(("\t" + team).c_str(), UIRect(x, y, 300, 50),
-            MeshImporter::i().getColor(team));
-    }
-
+    y += spaceBetween * 2;
     int yR = 20;
     // Tile
     if (xTile != -1 && yTile != -1)

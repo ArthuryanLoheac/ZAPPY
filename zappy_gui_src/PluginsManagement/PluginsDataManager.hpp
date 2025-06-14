@@ -2,6 +2,7 @@
 #include "PluginsManagement/pluginsData.hpp"
 #include "DataManager.hpp"
 #include "GameDataManager.hpp"
+#include "MeshImporter.hpp"
 
 class PluginsDataManager
 {

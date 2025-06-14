@@ -5,9 +5,13 @@
 
 #include "zappy_gui_src/PluginsManagement/pluginsInterface.hpp"
 
-class testPlugin : public pluginsInterface {
+class leftDataBarPlugin : public pluginsInterface {
  private:
+    pluginsData data; /**< Data manager for the plugin. */
     bool isActive = true;
+
+   void drawOneBackground(const std::string &texture, int x, int y,
+      int sizeX, int sizeY, irr::video::IVideoDriver* driver);
 
  public:
     bool init() override;

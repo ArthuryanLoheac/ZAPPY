@@ -1,4 +1,9 @@
 #pragma once
+#include <irrlicht/irrlicht.h>
+
+#include <memory>
+#include <string>
+#include <vector>
 
 class pluginsInterface {
  public:
@@ -21,4 +26,6 @@ class pluginsInterface {
     * @return The version of the plugin.
     */
     virtual const char* getVersion() const = 0;
+
+    virtual void drawUI(std::shared_ptr<irr::gui::IGUIFont> font) = 0;
 };

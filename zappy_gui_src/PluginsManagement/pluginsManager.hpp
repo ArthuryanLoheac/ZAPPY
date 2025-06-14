@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <irrlicht/irrlicht.h>
 #include <memory>
 
 #include "dlLoader/dlLoader.hpp"
@@ -16,6 +17,8 @@ class pluginsManager {
 
     void loadPlugins(const std::string &path);
     void loadPlugin(const std::string &path);
+
+    void drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font) const;
 
  private:
     std::vector<std::unique_ptr<pluginsInterface>> _plugins;

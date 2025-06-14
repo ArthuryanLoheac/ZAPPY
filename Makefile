@@ -189,3 +189,5 @@ test:
 	@mkdir -p plugins
 	g++ -o plugins/test.so -shared -fPIC $(COMMON_PLUGINS) \
 		zappy_gui_plugins_src/testPlugin.cpp $(FLAGS_SO)
+
+plugins: test

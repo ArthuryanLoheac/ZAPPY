@@ -1,6 +1,8 @@
 #include "testPlugin.hpp"
 
 #include <memory>
+#include <string>
+#include <vector>
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
@@ -19,4 +21,11 @@ const char* testPlugin::getName() const {
 
 const char* testPlugin::getVersion() const {
     return "1.0.0";
+}
+
+void testPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font) {
+    if (!font)
+        return;
+    font->draw(L"Test Plugin UI", irr::core::rect<irr::s32>(200, 10, 200, 50),
+               irr::video::SColor(255, 255, 255, 255));
 }

@@ -1,5 +1,6 @@
 #include <dlfcn.h>
 #include <dirent.h>
+#include <irrlicht/irrlicht.h>
 
 #include <iostream>
 #include <memory>
@@ -37,5 +38,13 @@ void pluginsManager::loadPlugin(const std::string &path) {
         }
     } else {
         std::cerr << "Failed to load plugin from: " << path << std::endl;
+    }
+}
+
+void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font) const
+{
+    for (const auto &plugin : _plugins) {
+        if (plugin)
+            plugin->drawUI(font);
     }
 }

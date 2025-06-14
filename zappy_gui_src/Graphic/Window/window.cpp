@@ -6,6 +6,7 @@
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "tools/MeshImporter.hpp"
 #include "DataManager/DataManager.hpp"
+#include <pluginsManager.hpp>
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -72,6 +73,7 @@ void Window::windowUpdateFocus() {
 
     smgr->drawAll();
     drawUI();
+    pluginsManager::i().drawPlugins(font);
     guienv->drawAll();
 }
 

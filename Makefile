@@ -82,7 +82,7 @@ SRC_TESTS = tests/test_1.cpp \
 
 # ============= RULES ============= #
 
-all: $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI)
+all: $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI) plugins_all
 
 $(COMMON_CPP_LIB): $(OBJ_CPP_COMMON)
 	@mkdir -p $(dir $@)
@@ -118,6 +118,7 @@ fclean: clean
 	rm -f $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI) \
 	$(COMMON_C_LIB) $(COMMON_CPP_LIB)
 	rm -f unit_tests
+	rm -f plugins/*.so
 
 # ============= COMPILATION ============= #
 
@@ -175,3 +176,26 @@ tests_run_coverage: tests_run
 style_check:
 	@cpplint $(FLAGS_LINTER) \
 		$(shell find . -type f \( -name '*.cpp' -o -name '*.hpp' \))
+
+# ============ PLUGINS ============ #
+
+COMMON_PLUGINS = \
+
+INCLUDE_SO = -I. \
+	-I./zappy_gui_src/include \
+	-I./zappy_gui_src/dlLoader/ \
+	-I./zappy_gui_src/PluginsManagement \
+
+FLAGS_SO =  -std=c++17 -Wall -Wextra -Werror -lIrrlicht \
+			$(INCLUDE_SO) \
+            -ldl -g
+
+TEST_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")
+
+plugins_all:
+	@mkdir -p plugins
+	@for src in $(TEST_SRC); do \
+		plugin_name=$$(basename $$src .cpp); \
+		g++ -o plugins/$$plugin_name.so -shared -fPIC $(COMMON_PLUGINS) \
+			$$src $(FLAGS_SO); \
+	done

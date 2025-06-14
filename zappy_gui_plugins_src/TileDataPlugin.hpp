@@ -13,9 +13,9 @@ class TileDataPlugin : public pluginsInterface {
 
     std::vector<UICol> lstColors = {
         UICol(255, 255, 255, 255), UICol(255, 200, 193, 198),
-        UICol(255, 55, 55, 55), UICol(255, 71, 73, 116),
-        UICol(255, 94, 84, 33), UICol(255, 94, 31, 32),
-        UICol(255, 64, 35, 94)
+        UICol(255, 105, 105, 105), UICol(255, 121, 123, 166),
+        UICol(255, 94, 84, 33), UICol(255, 144, 81, 82),
+        UICol(255, 114, 85, 144)
     };
 
     std::vector<std::string> lstNames = {"Food", "Linemate", "Deraumere",

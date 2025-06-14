@@ -13,24 +13,11 @@ void PluginsDataManager::updatePluginsData() {
     data.teamColors.clear();
     for (const auto &team : data.teams)
         data.teamColors.push_back(MeshImporter::i().getColor(team));
-    // Tiles
-    try {
-        data.tiles.clear();
-        for (int x = 0; x < data.width; ++x) {
-            for (int y = 0; y < data.height; ++y) {
-                GUI::GameTile &tile = GUI::GameDataManager::i().getTile(x, y);
-                pluginsData::Tile newTile;
-                newTile.x = x;
-                newTile.y = y;
-                for (int i = 0; i < 7; i++)
-                    newTile.resources.push_back(tile.getRessource(i));
-                data.tiles.push_back(newTile);
-            }
-        }
-    } catch (std::exception &e) {
-        LOG_ERROR("ERROR %s\n", e.what());
-    }
+    updatePlayers();
+    updateTiles();
+}
 
+void PluginsDataManager::updatePlayers() {
     // Players
     data.players.clear();
     for (const auto &player : GUI::GameDataManager::i().getPlayers()) {
@@ -62,5 +49,24 @@ void PluginsDataManager::updatePluginsData() {
         for (int i = 0; i < 7; ++i)
             newPlayer.ressources.push_back(player.getRessource(i));
         data.players.push_back(newPlayer);
+    }
+}
+
+void PluginsDataManager::updateTiles() {
+    try {
+        data.tiles.clear();
+        for (int x = 0; x < data.width; ++x) {
+            for (int y = 0; y < data.height; ++y) {
+                GUI::GameTile &tile = GUI::GameDataManager::i().getTile(x, y);
+                pluginsData::Tile newTile;
+                newTile.x = x;
+                newTile.y = y;
+                for (int i = 0; i < 7; i++)
+                    newTile.resources.push_back(tile.getRessource(i));
+                data.tiles.push_back(newTile);
+            }
+        }
+    } catch (std::exception &e) {
+        LOG_ERROR("ERROR %s\n", e.what());
     }
 }

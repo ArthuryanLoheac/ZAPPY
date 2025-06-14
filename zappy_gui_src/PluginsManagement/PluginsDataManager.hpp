@@ -15,7 +15,8 @@ class PluginsDataManager
     }
 
     void updatePluginsData();
-    pluginsData &getData() {
-        return data;
-    }
+    void updatePlayers();
+    void updateTiles();
+
+    pluginsData &getData() { return data; }
 };

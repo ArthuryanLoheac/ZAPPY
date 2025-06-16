@@ -45,8 +45,7 @@ static void check_for_client_command(zappy_t *zappy)
     }
 }
 
-
-/** * @brief Prinyt the server start message with configuration details.
+/** @brief Print the server start message with configuration details.
  * @param zappy Pointer to the zappy_t structure containing server config.
  */
 static void message_start_server(zappy_t *zappy)

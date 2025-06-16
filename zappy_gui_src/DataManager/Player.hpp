@@ -15,6 +15,10 @@ namespace GUI {
  */
 class Player {
  public:
+    enum PlayerState {
+        MOVING,
+    };
+
     /**
      * @brief Enum for player orientation.
      */
@@ -217,12 +221,14 @@ class Player {
      */
     bool checkAngleDiff(Vec3d a, Vec3d b);
 
+    void Update(float deltaTime);
+
     /**
      * @brief Updates the player state based on the elapsed time.
      *
      * @param deltaTime Time elapsed since the last update.
      */
-    void Update(float deltaTime);
+    void UpdateMoving(float deltaTime);
 
     /**
      * @brief Updates the rotation of the player based on the elapsed time.
@@ -265,6 +271,8 @@ class Player {
         /**< Rings meshes associated with the player. */
     std::vector<Vec3d> PlayerMeshesCylinderRotation;
         /**< Rotation vectors for Rings meshes. */
+
+    PlayerState state = MOVING; /**< Current state of the player. */
 
     std::vector<int> ressources = {0, 0, 0, 0, 0, 0, 0};
         /**< Resources held by the player. */

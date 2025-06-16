@@ -27,6 +27,7 @@ teamName(std::move(other.teamName)),
 PlayerMesh(std::move(other.PlayerMesh)),
 PlayerMeshesCylinder(std::move(other.PlayerMeshesCylinder)),
 PlayerMeshesCylinderRotation(std::move(other.PlayerMeshesCylinderRotation)),
+state(other.state),
 ressources(std::move(other.ressources)) {}
 
 Player &Player::operator=(Player &&other) noexcept {
@@ -47,6 +48,8 @@ Player &Player::operator=(Player &&other) noexcept {
         PlayerMeshesCylinderRotation =
             std::move(other.PlayerMeshesCylinderRotation);
         ressources = std::move(other.ressources);
+        timeTT = other.timeTT;
+        state = other.state;
     }
     return *this;
 }
@@ -58,6 +61,8 @@ float randRotation(int i) {
 }
 
 void Player::Init(std::string team, int level) {
+    state = MOVING;
+    timeTT = 0;
     for (int i = 0; i < maxLevel; i++) {
         PlayerMeshesCylinder.push_back(std::shared_ptr<Mesh>(
             MeshImporter::i().importMesh("Cylinder", team)));
@@ -136,6 +141,7 @@ void Player::setPosition(int newX, int newY, Orientation new0) {
     x = newX;
     y = newY;
     o = new0;
+    state = MOVING;
 
     if (PlayerMesh) {
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
@@ -203,6 +209,12 @@ bool Player::checkAngleDiff(irr::core::vector3df a, irr::core::vector3df b) {
 
 void Player::Update(float deltaTime) {
     timeTT += deltaTime;
+    if (state == MOVING) {
+        UpdateMoving(deltaTime);
+    }
+}
+
+void Player::UpdateMoving(float deltaTime) {
     updateRotation(deltaTime);
     updatePosition(deltaTime);
     updtaeIdle(deltaTime);

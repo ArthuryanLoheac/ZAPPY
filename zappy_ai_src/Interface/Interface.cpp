@@ -10,6 +10,15 @@
 #include "Exceptions/Commands.hpp"
 #include "Data/Data.hpp"
 
+/**
+ * @file Interface.cpp
+ * @brief Implementation of the main Interface class methods
+ *
+ * This file contains the core implementation of the Interface class which
+ * handles all communication with the Zappy server and coordinates
+ * the processing of commands and responses.
+ */
+
 namespace AI {
 
 Interface::Interface() : port(0) {

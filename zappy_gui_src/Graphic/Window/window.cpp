@@ -84,6 +84,7 @@ void Window::windowUpdateNoFocus() {
     driver->beginScene(true, true,
         irr::video::SColor(255, 100, 101, 140));
 
+    pluginsManager::i().drawPlugins(font, driver);
     smgr->drawAll();
 }
 

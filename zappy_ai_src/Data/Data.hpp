@@ -21,6 +21,7 @@ class Data {
     bool isDead;
     int mapX;
     int mapY;
+    int level;  // Player level
 
     // Inventory
     std::unordered_map<std::string, int> inventory;

@@ -108,7 +108,6 @@ int handle_incantation(char **args, zappy_t *zappy_ptr, client_t *client)
     command = malloc(sizeof(char *) * 2);
     command[0] = strdup("START_INCANTATION");
     command[1] = NULL;
-    printf("ADD START COMMAND\n");
     add_command(0, command, client);
     return 1;
 }

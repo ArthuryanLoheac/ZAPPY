@@ -5,6 +5,12 @@
     <img src="https://img.shields.io/badge/Status-In%20Development-green" alt="Status"/>
 </p>
 
+<p align="center">
+    <a href="https://arthuryanloheac.github.io/ZAPPY/" target="_blank">
+        <img src="https://img.shields.io/badge/Documentation-Visit%20Here-blue" alt="Documentation" style="transform: scale(1.5);" />
+    </a>
+</p>
+
 # <p align=center> 📜 Overview </p>
 
 #### Zappy is a network game where several teams confront each other on a tile map containing resources. The game simulates a virtual world called Trantor where AI-controlled beings called "trantorians" must evolve and survive.

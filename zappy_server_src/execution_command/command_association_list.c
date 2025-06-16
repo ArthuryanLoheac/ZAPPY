@@ -18,6 +18,7 @@ const command_func_t player_command_association_list[] = {
     {"FORK", fork_command},
     {"START_INCANTATION", start_incantation_command},
     {"INCANTATION", incantation_command},
+    {"EJECT", eject_command},
     {"BROADCAST", broadcast_command},
     {NULL, NULL}
 };

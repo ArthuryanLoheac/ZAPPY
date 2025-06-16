@@ -63,24 +63,35 @@ void Window::updateSkyBoxRotation() {
     Skybox->setRotation(rotation);
 }
 
+void Window::windowUpdateFocus() {
+    handleEvent();
+    updateSkyBoxRotation();
+    GameDataManager::i().Update(frameDeltaTime);
+    driver->beginScene(true, true,
+        irr::video::SColor(255, 100, 101, 140));
+
+    smgr->drawAll();
+    drawUI();
+    guienv->drawAll();
+}
+
+void Window::windowUpdateNoFocus() {
+    updateSkyBoxRotation();
+    GameDataManager::i().Update(frameDeltaTime);
+    driver->beginScene(true, true,
+        irr::video::SColor(255, 100, 101, 140));
+
+    smgr->drawAll();
+}
+
 void Window::update() {
     while (device->run()) {
-        if (device->isWindowActive()) {
-            updateDeltaTime();
-            handleEvent();
-            updateSkyBoxRotation();
-            GameDataManager::i().Update(frameDeltaTime);
-            driver->beginScene(true, true,
-                irr::video::SColor(255, 100, 101, 140));
-
-            smgr->drawAll();
-            drawUI();
-            guienv->drawAll();
-
-            driver->endScene();
-        } else {
-            device->yield();
-        }
+        updateDeltaTime();
+        if (device->isWindowActive())
+            windowUpdateFocus();
+        else
+            windowUpdateNoFocus();
+        driver->endScene();
     }
     device->drop();
 }

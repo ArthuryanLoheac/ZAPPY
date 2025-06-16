@@ -187,4 +187,13 @@ void GameDataManager::setDropping(bool dropping) {
     Dropping = dropping;
 }
 
+bool GameDataManager::isEggSpawned() const {
+    return eggSpawned;
+}
+
+void GameDataManager::setEggSpawned(bool spawned) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    eggSpawned = spawned;
+}
+
 }  // namespace GUI

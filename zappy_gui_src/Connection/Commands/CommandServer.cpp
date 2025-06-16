@@ -68,6 +68,8 @@ void GUI::ServerGUI::enwCommand(std::vector<std::string> &args) {
     int y = std::stoi(args[4]);
 
     GameDataManager::i().addEgg(id, team, x, y);
+    if (team >= 0)
+        GameDataManager::i().setEggAdded(true);
 }
 
 /**

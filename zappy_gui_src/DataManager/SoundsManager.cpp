@@ -80,5 +80,9 @@ void SoundsManager::Update() {
         GameDataManager::i().setEggDead(false);
         playSound("assets/Musics/DeathEgg.wav");
     }
+    if (GameDataManager::i().isEggAdded()) {
+        GameDataManager::i().setEggAdded(false);
+        playSound("assets/Musics/SpawnEgg.wav");
+    }
 }
 }  // namespace GUI

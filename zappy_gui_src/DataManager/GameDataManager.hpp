@@ -29,6 +29,7 @@ class GameDataManager {
     bool elevation = false; /**< Flag to indicate if elevation is active. */
     bool Collecting = false; /**< Flag to indicate if collecting is active. */
     bool Dropping = false; /**< Flag to indicate if dropping is active. */
+    bool eggSpawned = false; /**< Flag to indicate if an egg has spawned. */
 
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
@@ -235,6 +236,8 @@ class GameDataManager {
     void setCollecting(bool collecting);
     bool isDropping() const;
     void setDropping(bool dropping);
+    bool isEggSpawned() const;
+    void setEggSpawned(bool spawned);
 };
 
 }  // namespace GUI

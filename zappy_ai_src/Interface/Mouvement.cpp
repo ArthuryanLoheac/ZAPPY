@@ -75,7 +75,11 @@ void Interface::commandRIGHT(std::vector<std::string> &args,
  * @param y The y-coordinate to move to
  */
 void Interface::goTo(int x, int y) {
-    if (x < 0) return;
+    if (x < 0) {
+        sendCommand("LEFT\n");
+        sendCommand("LEFT\n");
+        x = -x;
+    }
 
     for (int i = 0; i < x; ++i) {
         sendCommand("FORWARD\n");

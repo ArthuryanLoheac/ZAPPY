@@ -59,6 +59,9 @@ void Interface::receiveMessage(std::vector<std::string> &args) {
 
     message = message.substr(Data::i().magicKey.length());
 
+    message.erase(std::remove(message.begin(), message.end(), '\n'),
+        message.end());
+
     message = decrypt(message, Data::i().magicKey);
 
     Data::i().messageQueue.push({message, direction});
@@ -161,7 +164,7 @@ void Interface::sendMessage(const std::string &message) {
 
     std::string encryptedMessage = encrypt(message, Data::i().magicKey);
     encryptedMessage = Data::i().magicKey + encryptedMessage;
-    sendCommand("BROADCAST " + encryptedMessage);
+    sendCommand("BROADCAST " + encryptedMessage + "\n");
 }
 
 }  // namespace AI

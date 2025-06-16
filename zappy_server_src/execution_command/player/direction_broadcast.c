@@ -34,6 +34,8 @@ static int facing_east(int dir)
 
 int calibrating_direction(int dir, int orient)
 {
+    if (dir == 0)
+        return (dir);
     if (orient == 0)
         return (facing_west(dir));
     if (orient == 2)

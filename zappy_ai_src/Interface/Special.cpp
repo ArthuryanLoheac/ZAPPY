@@ -9,8 +9,24 @@
 #include "Exceptions/Commands.hpp"
 #include "Data/Data.hpp"
 
+/**
+ * @file Special.cpp
+ * @brief Implementation of special commands like Fork and Incantation
+ *
+ * This file contains the implementation of commands that have special effects
+ * in the game, such as creating new AI instances or performing level-up rituals.
+ */
+
 namespace AI {
 
+/**
+ * @brief Handles the FORK command response
+ *
+ * When a fork is successful, signals the parent process to create a new AI instance.
+ *
+ * @param args Server response arguments
+ * @param command Original command sent
+ */
 void Interface::commandFORK(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     if (args.size() != 1) {
@@ -25,6 +41,15 @@ void Interface::commandFORK(std::vector<std::string> &args,
     }
 }
 
+/**
+ * @brief Handles the INCANTATION command response
+ *
+ * Processes the result of an incantation ritual, updating the AI's level
+ * if the incantation was successful.
+ *
+ * @param args Server response arguments
+ * @param command Original command sent
+ */
 void Interface::commandINCANTATION(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     if (args.size() < 1) {
@@ -50,6 +75,14 @@ void Interface::commandINCANTATION(std::vector<std::string> &args,
     }
 }
 
+/**
+ * @brief Attempts to start an incantation ritual
+ *
+ * Sends the incantation command to the server and waits for a response.
+ * Updates the AI state if the incantation begins successfully.
+ *
+ * @return true if the incantation started successfully, false otherwise
+ */
 bool Interface::startIncantation() {
     if (Data::i().isInIncantation) {
         return false;

@@ -169,4 +169,22 @@ void GameDataManager::setElevationSound(bool elev) {
     elevation = elev;
 }
 
+bool GameDataManager::isCollecting() const {
+    return Collecting;
+}
+
+void GameDataManager::setCollecting(bool collecting) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    Collecting = collecting;
+}
+
+bool GameDataManager::isDropping() const {
+    return Dropping;
+}
+
+void GameDataManager::setDropping(bool dropping) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    Dropping = dropping;
+}
+
 }  // namespace GUI

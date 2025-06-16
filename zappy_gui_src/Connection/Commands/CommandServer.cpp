@@ -8,6 +8,7 @@
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "DataManager/SoundsManager.hpp"
+#include "ServerGUI.hpp"
 
 /**
  * @brief Prints an error message and the associated arguments.
@@ -298,5 +299,21 @@ void ServerGUI::pieCommand(std::vector<std::string> &args) {
             player.setElevation(false);
     }
     GameDataManager::i().setElevationSound(true);
+}
+
+void ServerGUI::pdrCommand(std::vector<std::string> &args) {
+    if (args.size() != 3)
+        throw CommandParsingException("Invalid pdr command format");
+    if (args[1].size() < 2)
+        throw CommandParsingException("Invalid id name");
+    GameDataManager::i().setDropping(true);
+}
+
+void ServerGUI::pgtCommand(std::vector<std::string> &args) {
+    if (args.size() != 3)
+        throw CommandParsingException("Invalid pgt command format");
+    if (args[1].size() < 2)
+        throw CommandParsingException("Invalid id name");
+    GameDataManager::i().setCollecting(true);
 }
 }  // namespace GUI

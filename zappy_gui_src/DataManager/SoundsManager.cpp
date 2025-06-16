@@ -68,5 +68,13 @@ void SoundsManager::Update() {
         GameDataManager::i().setPlayerDead(false);
         playSound("assets/Musics/Death.mp3");
     }
+    if (GameDataManager::i().isCollecting()) {
+        GameDataManager::i().setCollecting(false);
+        playSound("assets/Musics/Take.wav");
+    }
+    if (GameDataManager::i().isDropping()) {
+        GameDataManager::i().setDropping(false);
+        playSound("assets/Musics/Drop.wav");
+    }
 }
 }  // namespace GUI

@@ -27,6 +27,8 @@ class GameDataManager {
     bool playerDead = false; /**< Flag to indicate if a player has died. */
     bool eggDead = false; /**< Flag to indicate if an egg has died. */
     bool elevation = false; /**< Flag to indicate if elevation is active. */
+    bool Collecting = false; /**< Flag to indicate if collecting is active. */
+    bool Dropping = false; /**< Flag to indicate if dropping is active. */
 
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
@@ -227,6 +229,12 @@ class GameDataManager {
      * @param elev True if elevation is active, false otherwise.
      */
     void setElevationSound(bool elev);
+
+    bool isCollecting() const;
+
+    void setCollecting(bool collecting);
+    bool isDropping() const;
+    void setDropping(bool dropping);
 };
 
 }  // namespace GUI

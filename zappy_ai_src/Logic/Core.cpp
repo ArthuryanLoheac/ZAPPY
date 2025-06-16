@@ -45,6 +45,7 @@ void Logic::executeHighestPriorityModule() {
 }
 
 void Logic::queueCommand(const std::string& command) {
+    std::cout << "Queuing command: " << command << std::endl;
     commandQueue.push(command);
 }
 

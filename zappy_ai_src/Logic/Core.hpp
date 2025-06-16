@@ -48,7 +48,7 @@ public:
     const std::map<std::string, int>& getInventory() const;
     void setLevel(short newLevel);
     short getLevel() const;
-    
+
 private:
     std::vector<std::unique_ptr<AIModule>> modules;
     std::queue<std::string> commandQueue;

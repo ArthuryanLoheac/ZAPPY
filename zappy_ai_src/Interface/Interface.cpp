@@ -51,32 +51,30 @@ void Interface::run() {
     }
     auto outputs = socket.getListOutputs();
 
-    if (outputs.empty()) return;
-
-    for (const auto &output : outputs) {
-        if (output[0] == "DEAD") {
-            Data::i().isDead = true;
+    if (!outputs.empty()) {
+        for (const auto &output : outputs) {
+            if (output[0] == "DEAD") {
+                Data::i().isDead = true;
+            }
+            outputQueue.push(output);
         }
-        outputQueue.push(output);
-    }
-    try {
-        handleQueues();
-    } catch (const AI::CommandNotFoundException &e) {
-        std::cerr << "Command not found: " << e.what() << std::endl;
-    } catch (const AI::CommandArgumentsException &e) {
-        std::cerr << "Invalid command arguments: " << e.what() << std::endl;
-    } catch (const std::exception &e) {
-        std::cerr << "Unexpected error: " << e.what() << std::endl;
-    }
+        try {
+            handleQueues();
+        } catch (const AI::CommandNotFoundException &e) {
+            std::cerr << "Command not found: " << e.what() << std::endl;
+        } catch (const AI::CommandArgumentsException &e) {
+            std::cerr << "Invalid command arguments: " << e.what() << std::endl;
+        } catch (const std::exception &e) {
+            std::cerr << "Unexpected error: " << e.what() << std::endl;
+        }
 
-    if (commandBuffer.empty()) {
-        return;
-    }
-
-    for (size_t i = 0; i < (10 - inputQueue.size()); i++) {
-        auto command = commandBuffer.front();
-        commandBuffer.pop();
-        sendCommand(command);
+        // Only send new commands if we've processed all pending responses
+        if (inputQueue.empty() && !commandBuffer.empty()) {
+            // Send a single command
+            auto command = commandBuffer.front();
+            commandBuffer.pop();
+            sendCommand(command);
+        }
     }
 }
 

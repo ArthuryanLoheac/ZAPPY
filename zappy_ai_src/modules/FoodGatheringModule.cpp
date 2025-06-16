@@ -27,10 +27,10 @@ void FoodGatheringModule::execute() {
     level = AI::Data::i().level;
     
     if (inventoryCheckCount % 10 == 0) {
-        std::cout << "Checking inventory..." << std::endl;
+        // std::cout << "Checking inventory..." << std::endl;
         AI::Interface::i().sendCommand(INVENTORY);
     } else {
-        std::cout << "Current food: " << foodCount << ", level: " << level << std::endl;
+        //std::cout << "Current food: " << foodCount << ", level: " << level << std::endl;
         AI::Interface::i().sendCommand(FORWARD);
     }
 }

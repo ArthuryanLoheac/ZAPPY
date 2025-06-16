@@ -19,7 +19,7 @@ void CommunicationModule::execute() {
     inventoryCheckCount++;
     // Logic for broadcasting messages to other players
     std::cout << "Broadcasting message to other players..." << std::endl;
-    std::cout << "Current level: " << AI::Data::i().level << std::endl;
+    //std::cout << "Current level: " << AI::Data::i().level << std::endl;
     
     if (inventoryCheckCount % 10 == 0) {
         std::cout << "Checking inventory..." << std::endl;
@@ -30,5 +30,5 @@ void CommunicationModule::execute() {
 
 float CommunicationModule::getPriority() {
     // Define the priority for this module (between 0 and 1)
-    return 0.5f; // Example priority value
+    return 0.8f; // Example priority value
 }

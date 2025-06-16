@@ -92,8 +92,9 @@ int initChildProcess(int port, const std::string &ip,
         }
         if (AI::Data::i().isRunning) {
             try {
-                
-                logic.executeHighestPriorityModule();
+                if (!interface.isWaitingForResponse()) {
+                    logic.executeHighestPriorityModule();
+                }
             } catch (const std::exception &e) {
                 std::cerr << "Error sending command: " << e.what() << std::endl;
             }

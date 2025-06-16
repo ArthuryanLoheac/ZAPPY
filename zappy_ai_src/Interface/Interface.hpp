@@ -33,6 +33,9 @@ class Interface {
     void run();
     void stop();
     void sendCommand(const std::string &command);
+    bool isWaitingForResponse() const {
+        return !inputQueue.empty() || !commandBuffer.empty();
+    }
 
  private:
     void handleQueues();

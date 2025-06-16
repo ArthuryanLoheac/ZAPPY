@@ -19,6 +19,9 @@ void update_pos_player(zappy_t *zappy, stats_t *stat);
 void update_cell(zappy_t *zappy, cell_t cell);
 void send_bloc_content(int x, int y, zappy_t *zappy, client_t *client);
 
+// Helper functions
+int calibrating_direction(int dir, int orient);
+
 // Player commands
 void look_command(zappy_t *zappy, client_t *client, char **args);
 void forward_command(zappy_t *zappy, client_t *client, char **args);

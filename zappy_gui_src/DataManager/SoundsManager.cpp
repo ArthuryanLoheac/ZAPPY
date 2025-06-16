@@ -76,5 +76,9 @@ void SoundsManager::Update() {
         GameDataManager::i().setDropping(false);
         playSound("assets/Musics/Drop.wav");
     }
+    if (GameDataManager::i().isEggDead()) {
+        GameDataManager::i().setEggDead(false);
+        playSound("assets/Musics/DeathEgg.wav");
+    }
 }
 }  // namespace GUI

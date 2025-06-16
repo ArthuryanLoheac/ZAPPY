@@ -146,6 +146,7 @@ void ServerGUI::ediCommand(std::vector<std::string> &args) {
     int id = std::stoi(args[1].substr(1));
 
     GameDataManager::i().removeEgg(id);
+    GameDataManager::i().setEggDead(true);
 }
 
 /**

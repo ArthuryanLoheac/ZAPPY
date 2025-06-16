@@ -6,7 +6,6 @@
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
 #include "Window/window.hpp"
-#include "GameDataManager.hpp"
 
 namespace GUI {
 int GameDataManager::getWidth() const {
@@ -87,8 +86,7 @@ void GameDataManager::setPlayerAdded(bool added) {
 }
 
 void GameDataManager::addPlayer(int id, int x, int y,
-                                Player::Orientation o, int level, const std::string &teamName)
-{
+Player::Orientation o, int level, const std::string &teamName) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getTile(x, y).getWorldPos();
     position.Y += 0.5f;
@@ -204,5 +202,4 @@ void GameDataManager::setPushed(bool pushed) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     Pushed = pushed;
 }
-
 }  // namespace GUI

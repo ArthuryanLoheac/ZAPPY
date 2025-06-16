@@ -1,10 +1,12 @@
-#include <vector>
 
-#include "SoundsManager.hpp"
+#include <vector>
+#include <iostream>
+#include <string>
+
+#include "include/logs.h"
+#include "DataManager/SoundsManager.hpp"
 #include "Exceptions/SoundsManagerExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
-#include "include/logs.h"
-#include <iostream>
 
 namespace GUI {
 bool SoundsManager::playMusic(std::string path) {

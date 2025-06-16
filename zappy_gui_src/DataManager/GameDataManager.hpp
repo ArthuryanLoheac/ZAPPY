@@ -22,7 +22,7 @@ class GameDataManager {
     std::vector<Egg> eggs; /**< List of eggs. */
     std::vector<std::string> teams; /**< List of team names. */
     std::vector<Player> players; /**< List of players. */
-    bool playerAdded = false; /**< Flag to indicate if a player has been added. */
+    bool playerAdded = false; /**< Flag to indicate if a player has been add */
     bool eggAdded = false; /**< Flag to indicate if an egg has been added. */
     bool playerDead = false; /**< Flag to indicate if a player has died. */
     bool eggDead = false; /**< Flag to indicate if an egg has died. */

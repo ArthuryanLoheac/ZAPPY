@@ -8,7 +8,6 @@
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "DataManager/SoundsManager.hpp"
-#include "ServerGUI.hpp"
 
 /**
  * @brief Prints an error message and the associated arguments.
@@ -327,4 +326,4 @@ void ServerGUI::pexCommand(std::vector<std::string> &args) {
         throw CommandParsingException("Invalid id name");
     GameDataManager::i().setPushed(true);
 }
-} // namespace GUI
+}  // namespace GUI

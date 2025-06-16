@@ -19,6 +19,7 @@ class Player {
         MOVING,
         START_ELEVATION,
         IDLE_ELEVATION,
+        END_ELEVATION,
     };
 
     /**
@@ -230,6 +231,7 @@ class Player {
 
     void updateStartElevation(float deltaTime);
     void updateElevation(float deltaTime);
+    void updateEndElevation(float deltaTime);
 
     /**
      * @brief Updates the player state based on the elapsed time.

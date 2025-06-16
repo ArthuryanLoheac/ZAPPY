@@ -26,17 +26,24 @@ void Player::Update(float deltaTime) {
         updateStartElevation(deltaTime);
     } else if (state == IDLE_ELEVATION) {
         updateElevation(deltaTime);
+    } else if (state == END_ELEVATION) {
+        updateEndElevation(deltaTime);
     }
 }
 
 void Player::setElevation(bool isStart) {
-    state = START_ELEVATION;
     isElevation = isStart;
-    Vec3d targetRot = Vec3d(90, 0, 0);
-    speed = 0.1f;
-    Vec3d currentRot = PlayerMesh->getRotation();
-    deltaRotPlayer = targetRot - currentRot;
-    (void)isStart;
+    if (isStart) {
+        state = START_ELEVATION;
+        Vec3d targetRot = Vec3d(90, 0, 0);
+        speed = 0.1f;
+        Vec3d currentRot = PlayerMesh->getRotation();
+        deltaRotPlayer = targetRot - currentRot;
+    } else {
+        state = END_ELEVATION;
+        Vec3d targetRot = Vec3d(0, o * 90, 0);
+        deltaRotPlayer = targetRot - PlayerMesh->getRotation();
+    }
 }
 
 void Player::UpdateMoving(float deltaTime)
@@ -70,6 +77,19 @@ void Player::updateElevation(float deltaTime) {
             PlayerMeshesCylinder[i]->setRotation(
                 Vec3d(rotC.X, rotC.Y + 90 * deltaTime * speed, rotC.Z));
         }
+    }
+}
+
+void Player::updateEndElevation(float deltaTime) {
+    Vec3d currentRot = PlayerMesh->getRotation();
+    Vec3d newRot = Vec3d(
+        currentRot.X + deltaRotPlayer.X * deltaTime * 2,
+        currentRot.Y + deltaRotPlayer.Y * deltaTime * 2,
+        currentRot.Z + deltaRotPlayer.Z * deltaTime * 2);
+    PlayerMesh->setRotation(newRot);
+    if (currentRot.X >= -5.f && currentRot.X <= 5.f) {
+        state = MOVING;
+        PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
     }
 }
 

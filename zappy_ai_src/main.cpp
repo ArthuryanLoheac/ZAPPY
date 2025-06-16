@@ -15,6 +15,7 @@
 #include "Logic/Core.hpp"
 #include "modules/FoodGatheringModule.hpp"
 #include "modules/CommunicationModule.hpp"
+#include "modules/ElevationModule.hpp"
 
 bool sigintReceived = false;
 bool usr1Received = false;
@@ -79,6 +80,8 @@ int initChildProcess(int port, const std::string &ip,
     Logic& logic = Logic::getInstance();
     logic.addModule(std::make_unique<FoodGatheringModule>());
     logic.addModule(std::make_unique<CommunicationModule>());
+    logic.addModule(std::make_unique<ElevationModule>());
+
 
     while (AI::Data::i().isDead == false) {
         try {

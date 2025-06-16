@@ -33,9 +33,8 @@ class Interface {
     void run();
     void stop();
     void sendCommand(const std::string &command);
-    bool isWaitingForResponse() const {
-        return !inputQueue.empty() || !commandBuffer.empty();
-    }
+    bool isWaitingForResponse() const;
+    void goTo(int x, int y);
 
  private:
     void handleQueues();

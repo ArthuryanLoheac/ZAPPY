@@ -57,6 +57,13 @@ void Interface::receiveMessage(std::vector<std::string> &args) {
         return;
     }
 
+    message = message.substr(Data::i().magicKey.length());
+
+    message.erase(std::remove(message.begin(), message.end(), '\n'),
+        message.end());
+
+    message = decrypt(message, Data::i().magicKey);
+
     Data::i().messageQueue.push({message, direction});
 }
 
@@ -90,6 +97,74 @@ bool Interface::needFilter(const std::string &arg) {
         return true;
 
     return false;
+}
+
+/**
+ * @brief Encrypts a string using a simple XOR-based method
+ *
+ * This method applies an XOR operation with a key to each character of the input
+ * and maps the result to a printable ASCII range (32-126).
+ *
+ * @param input The string to encrypt
+ * @param key The encryption key
+ * @return The encrypted string
+ */
+std::string Interface::encrypt(const std::string& input,
+    const std::string& key) {
+    std::string output;
+    output.reserve(input.length());
+
+    for (size_t i = 0; i < input.length(); ++i) {
+        unsigned char c = input[i] ^ key[i % key.length()];
+        unsigned char printable = (c % 95) + 32;
+        output.push_back(printable);
+    }
+
+    return output;
+}
+
+/**
+ * @brief Decrypts a string that was encrypted using the encrypt method
+ *
+ * This method reverses the encryption by applying the XOR operation with the key
+ * and normalizing the result back to its original character.
+ *
+ * @param encrypted The encrypted string to decrypt
+ * @param key The decryption key
+ * @return The decrypted string
+ */
+std::string Interface::decrypt(const std::string& encrypted,
+    const std::string& key) {
+    std::string output;
+    output.reserve(encrypted.length());
+
+    for (size_t i = 0; i < encrypted.length(); ++i) {
+        unsigned char c = encrypted[i];
+        unsigned char normalized = c - 32;
+        unsigned char keyChar = key[i % key.length()];
+        unsigned char original = normalized ^ keyChar;
+        output.push_back(original);
+    }
+
+    return output;
+}
+
+/**
+ * @brief Sends a message to the other players by using the broadcast command
+ *
+ * This method encrypts the message and sends it to the server using the
+ * broadcast command.
+ *
+ * @param message The message string to send
+ */
+void Interface::sendMessage(const std::string &message) {
+    if (message.empty()) {
+        return;
+    }
+
+    std::string encryptedMessage = encrypt(message, Data::i().magicKey);
+    encryptedMessage = Data::i().magicKey + encryptedMessage;
+    sendCommand("BROADCAST " + encryptedMessage + "\n");
 }
 
 }  // namespace AI

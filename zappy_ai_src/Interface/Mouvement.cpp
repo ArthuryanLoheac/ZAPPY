@@ -69,4 +69,32 @@ void Interface::commandRIGHT(std::vector<std::string> &args,
     }
 }
 
+/**
+ * @brief Moves the AI to a specific position on the map, based on the system of the inventory direction
+ * @param x The x-coordinate to move to
+ * @param y The y-coordinate to move to
+ */
+void Interface::goTo(int x, int y) {
+    if (x < 0) {
+        sendCommand("LEFT\n");
+        sendCommand("LEFT\n");
+        x = -x;
+    }
+
+    for (int i = 0; i < x; ++i) {
+        sendCommand("FORWARD\n");
+    }
+    if (y < 0) {
+        sendCommand("LEFT\n");
+        for (int i = 0; i < -y; ++i) {
+            sendCommand("FORWARD\n");
+        }
+    } else if (y > 0) {
+        sendCommand("RIGHT\n");
+        for (int i = 0; i < y; ++i) {
+            sendCommand("FORWARD\n");
+        }
+    }
+}
+
 }  // namespace AI

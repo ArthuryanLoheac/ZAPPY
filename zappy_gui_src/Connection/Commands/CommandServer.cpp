@@ -283,11 +283,13 @@ void ServerGUI::picCommand(std::vector<std::string> &args) {
 }
 
 void ServerGUI::pieCommand(std::vector<std::string> &args) {
-    if (args.size() != 4)
+    if (args.size() < 4)
         throw CommandParsingException("Invalid pie command format");
     int x = std::stoi(args[1]);
     int y = std::stoi(args[2]);
-    std::string result = args[3];
+    std::string result = "";
+    for (size_t i = 3; i < args.size(); i++)
+        result += args[i] + " ";
     for (auto &player : GameDataManager::i().getPlayers()) {
         if (player.getX() == x && player.getY() == y)
             player.setElevation(false);

@@ -58,7 +58,7 @@ void Player::updateStartElevation(float deltaTime) {
         currentRot.Y + deltaRotPlayer.Y * deltaTime * 2,
         currentRot.Z + deltaRotPlayer.Z * deltaTime * 2);
     PlayerMesh->setRotation(newRot);
-    if (currentRot.X >= 85.f && currentRot.X <= 95.f) {
+    if (newRot.X >= 85.f && newRot.X <= 95.f) {
         state = IDLE_ELEVATION;
         PlayerMesh->setRotation(Vec3d(90, 0, 0));
     }
@@ -81,11 +81,11 @@ void Player::updateElevation(float deltaTime) {
 void Player::updateEndElevation(float deltaTime) {
     Vec3d currentRot = PlayerMesh->getRotation();
     Vec3d newRot = Vec3d(
-        currentRot.X + deltaRotPlayer.X * deltaTime * 2,
-        currentRot.Y + deltaRotPlayer.Y * deltaTime * 2,
-        currentRot.Z + deltaRotPlayer.Z * deltaTime * 2);
+        currentRot.X + deltaRotPlayer.X * deltaTime * 0.5f,
+        currentRot.Y + deltaRotPlayer.Y * deltaTime * 0.5f,
+        currentRot.Z + deltaRotPlayer.Z * deltaTime * 0.5f);
     PlayerMesh->setRotation(newRot);
-    if (currentRot.X >= -5.f && currentRot.X <= 5.f) {
+    if (newRot.X >= -5.f && newRot.X <= 5.f) {
         state = MOVING;
         PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
     }

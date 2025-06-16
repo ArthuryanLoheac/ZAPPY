@@ -37,7 +37,7 @@ class MeshImporter {
         irr::video::SColor(255, 69, 72, 126),   // Yellow
         irr::video::SColor(255, 119, 106, 42),   // Green
         irr::video::SColor(255, 81, 44, 119),   // Purple
-        irr::video::SColor(255, 55, 55, 55),   // Gray
+        irr::video::SColor(255, 105, 105, 105),   // Gray
     };
 };
 

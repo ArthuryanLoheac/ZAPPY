@@ -164,7 +164,7 @@ bool GameDataManager::isElevation() const {
     return elevation;
 }
 
-void GameDataManager::setElevation(bool elev) {
+void GameDataManager::setElevationSound(bool elev) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     elevation = elev;
 }

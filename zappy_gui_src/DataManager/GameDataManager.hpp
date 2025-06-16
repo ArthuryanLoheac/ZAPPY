@@ -226,7 +226,7 @@ class GameDataManager {
      *
      * @param elev True if elevation is active, false otherwise.
      */
-    void setElevation(bool elev);
+    void setElevationSound(bool elev);
 };
 
 }  // namespace GUI

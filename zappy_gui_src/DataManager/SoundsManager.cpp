@@ -61,8 +61,12 @@ void SoundsManager::Update() {
         playSound("assets/Musics/Spawn.wav");
     }
     if (GameDataManager::i().isElevation()) {
-        GameDataManager::i().setElevation(false);
+        GameDataManager::i().setElevationSound(false);
         playSound("assets/Musics/Elevation.wav");
+    }
+    if (GameDataManager::i().isPlayerDead()) {
+        GameDataManager::i().setPlayerDead(false);
+        playSound("assets/Musics/Death.mp3");
     }
 }
 }  // namespace GUI

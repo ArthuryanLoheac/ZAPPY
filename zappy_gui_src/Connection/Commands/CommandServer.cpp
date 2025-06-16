@@ -248,6 +248,7 @@ void ServerGUI::pdiCommand(std::vector<std::string> &args) {
         throw CommandParsingException("Invalid id name");
     int id = std::stoi(args[1].substr(1));
     GameDataManager::i().removePlayer(id);
+    GameDataManager::i().setPlayerDead(true);
 }
 
 /**
@@ -280,7 +281,7 @@ void ServerGUI::picCommand(std::vector<std::string> &args) {
         GameDataManager::i().getPlayer(id).setPosition(x, y,
             GameDataManager::i().getPlayer(id).getOrientation(), true);
         GameDataManager::i().getPlayer(id).setElevation(true);
-        GameDataManager::i().setElevation(true);
+        GameDataManager::i().setElevationSound(true);
     }
 }
 
@@ -296,5 +297,6 @@ void ServerGUI::pieCommand(std::vector<std::string> &args) {
         if (player.getX() == x && player.getY() == y)
             player.setElevation(false);
     }
+    GameDataManager::i().setElevationSound(true);
 }
 }  // namespace GUI

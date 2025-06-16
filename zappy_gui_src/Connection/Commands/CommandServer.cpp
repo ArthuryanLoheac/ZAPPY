@@ -267,4 +267,32 @@ void ServerGUI::plvCommand(std::vector<std::string> &args) {
     GameDataManager::i().getPlayer(id).setLevel(level);
 }
 
+void ServerGUI::picCommand(std::vector<std::string> &args) {
+    if (args.size() < 5)
+        throw CommandParsingException("Invalid pic command format");
+    for (size_t i = 4; i < args.size(); i++) {
+        if (args[i].size() < 2)
+            throw CommandParsingException("Invalid id name in pic command");
+        int id = std::stoi(args[i].substr(1));
+        int x = std::stoi(args[1]);
+        int y = std::stoi(args[2]);
+        GameDataManager::i().getPlayer(id).setPosition(x, y,
+            GameDataManager::i().getPlayer(id).getOrientation(), true);
+        GameDataManager::i().getPlayer(id).setElevation(true);
+    }
+}
+
+void ServerGUI::pieCommand(std::vector<std::string> &args) {
+    if (args.size() < 4)
+        throw CommandParsingException("Invalid pie command format");
+    int x = std::stoi(args[1]);
+    int y = std::stoi(args[2]);
+    std::string result = "";
+    for (size_t i = 3; i < args.size(); i++)
+        result += args[i] + " ";
+    for (auto &player : GameDataManager::i().getPlayers()) {
+        if (player.getX() == x && player.getY() == y)
+            player.setElevation(false);
+    }
+}
 }  // namespace GUI

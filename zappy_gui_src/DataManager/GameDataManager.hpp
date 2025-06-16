@@ -128,7 +128,7 @@ class GameDataManager {
      *
      * @return const std::vector<Player>& Reference to the list of players.
      */
-    const std::vector<Player> &getPlayers() const;
+    std::vector<Player> &getPlayers();
 
     /**
      * @brief Removes a player from the game map.

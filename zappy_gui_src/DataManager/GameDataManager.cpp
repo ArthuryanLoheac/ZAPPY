@@ -95,7 +95,7 @@ Player &GameDataManager::getPlayer(int id) {
     throw ParseException("Player with this ID not found");
 }
 
-const std::vector<Player> &GameDataManager::getPlayers() const {
+std::vector<Player> &GameDataManager::getPlayers() {
     return players;
 }
 

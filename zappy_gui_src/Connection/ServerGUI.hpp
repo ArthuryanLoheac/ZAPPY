@@ -174,6 +174,10 @@ class ServerGUI {
      */
     void plvCommand(std::vector<std::string> &args);
 
+    void picCommand(std::vector<std::string> &args);
+
+    void pieCommand(std::vector<std::string> &args);
+
     /**
      * @brief Map of server commands to their corresponding handler functions.
      */
@@ -192,6 +196,8 @@ class ServerGUI {
         {"PIN", &ServerGUI::pinCommand},
         {"PDI", &ServerGUI::pdiCommand},
         {"PLV", &ServerGUI::plvCommand},
+        {"PIC", &ServerGUI::picCommand},
+        {"PIE", &ServerGUI::pieCommand},
     };
 };
 

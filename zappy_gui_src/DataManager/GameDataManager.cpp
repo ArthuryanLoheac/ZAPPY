@@ -196,4 +196,13 @@ void GameDataManager::setEggSpawned(bool spawned) {
     eggSpawned = spawned;
 }
 
+bool GameDataManager::isPushed() const {
+    return Pushed;
+}
+
+void GameDataManager::setPushed(bool pushed) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    Pushed = pushed;
+}
+
 }  // namespace GUI

@@ -30,6 +30,7 @@ class GameDataManager {
     bool Collecting = false; /**< Flag to indicate if collecting is active. */
     bool Dropping = false; /**< Flag to indicate if dropping is active. */
     bool eggSpawned = false; /**< Flag to indicate if an egg has spawned. */
+    bool Pushed = false; /**< Flag to indicate if a player has been pushed. */
 
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
@@ -238,6 +239,8 @@ class GameDataManager {
     void setDropping(bool dropping);
     bool isEggSpawned() const;
     void setEggSpawned(bool spawned);
+    bool isPushed() const;
+    void setPushed(bool pushed);
 };
 
 }  // namespace GUI

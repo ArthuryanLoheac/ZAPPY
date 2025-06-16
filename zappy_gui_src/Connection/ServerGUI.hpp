@@ -203,6 +203,13 @@ class ServerGUI {
     void pgtCommand(std::vector<std::string> &args);
 
     /**
+     * @brief Handles the "PEX" command to notify that a player has been ejected.
+     *
+     * @param args Command arguments containing player ID.
+     */
+    void pexCommand(std::vector<std::string> &args);
+
+    /**
      * @brief Map of server commands to their corresponding handler functions.
      */
     std::map<std::string,
@@ -223,7 +230,8 @@ class ServerGUI {
         {"PIC", &ServerGUI::picCommand},
         {"PIE", &ServerGUI::pieCommand},
         {"PDR", &ServerGUI::pdrCommand},
-        {"PGT", &ServerGUI::pgtCommand}
+        {"PGT", &ServerGUI::pgtCommand},
+        {"PEX", &ServerGUI::pexCommand}
     };
 };
 

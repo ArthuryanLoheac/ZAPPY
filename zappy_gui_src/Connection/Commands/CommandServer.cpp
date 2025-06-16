@@ -319,4 +319,12 @@ void ServerGUI::pgtCommand(std::vector<std::string> &args) {
         throw CommandParsingException("Invalid id name");
     GameDataManager::i().setCollecting(true);
 }
-}  // namespace GUI
+
+void ServerGUI::pexCommand(std::vector<std::string> &args) {
+    if (args.size() != 2)
+        throw CommandParsingException("Invalid pgt command format");
+    if (args[1].size() < 2)
+        throw CommandParsingException("Invalid id name");
+    GameDataManager::i().setPushed(true);
+}
+} // namespace GUI

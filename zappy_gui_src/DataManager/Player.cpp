@@ -32,6 +32,7 @@ void Player::Update(float deltaTime) {
 }
 
 void Player::setElevation(bool isStart) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
     isElevation = isStart;
     if (isStart) {
         state = START_ELEVATION;

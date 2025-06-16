@@ -82,7 +82,9 @@ SRC_TESTS = tests/test_1.cpp \
 
 # ============= RULES ============= #
 
-all: $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI) plugins_all
+all: no_plugins plugins_all
+
+no_plugins: $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI)
 
 $(COMMON_CPP_LIB): $(OBJ_CPP_COMMON)
 	@mkdir -p $(dir $@)

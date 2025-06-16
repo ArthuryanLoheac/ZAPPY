@@ -65,24 +65,15 @@ static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
 void handle_client_command(zappy_t *zappy, int fd)
 {
     client_t *current = zappy->clients;
-    client_t *prev = NULL;
 
     while (current != NULL && current->fd != fd) {
-        prev = current;
         current = current->next;
     }
     if (current == NULL)
         return;
     if (get_client_buffer(current, fd, zappy) == false) {
         LOG_INFO("Client with fd %d disconnected", fd);
-        if (prev == NULL)
-            zappy->clients = current->next;
-        else
-            prev->next = current->next;
-        free(current->in_buffer);
-        free(current->out_buffer);
-        free(current);
-        return;
+        remove_client(zappy, fd);
     }
 }
 

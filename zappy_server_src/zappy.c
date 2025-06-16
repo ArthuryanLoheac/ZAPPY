@@ -10,6 +10,7 @@
 #include <signal.h>
 #include <poll.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 #include "include/zappy.h"
 #include "include/client.h"
@@ -24,6 +25,13 @@ static void check_for_new_client(zappy_t *zappy)
     if (server->fds[0].revents & POLLIN) {
         LOG_DEBUG("Connection attempt from a client");
         new_fd = accept(server->fds[0].fd, NULL, NULL);
+        if (server->nb_fds >= 1000) {
+            LOG_WARNING("Connection attempt from client failed:"
+                " maximum number of clients reached");
+            write(new_fd, "ko\n", 3);
+            close(new_fd);
+            return;
+        }
         if (new_fd == -1) {
             LOG_WARNING("Connection attempt from client failed:"
                 " accept syscall failed");

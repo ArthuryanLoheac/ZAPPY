@@ -23,6 +23,10 @@ class GameDataManager {
     std::vector<std::string> teams; /**< List of team names. */
     std::vector<Player> players; /**< List of players. */
     bool playerAdded = false; /**< Flag to indicate if a player has been added. */
+    bool eggAdded = false; /**< Flag to indicate if an egg has been added. */
+    bool playerDead = false; /**< Flag to indicate if a player has died. */
+    bool eggDead = false; /**< Flag to indicate if an egg has died. */
+    bool elevation = false; /**< Flag to indicate if elevation is active. */
 
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
@@ -171,6 +175,58 @@ class GameDataManager {
      * @param deltaTime Time elapsed since the last update.
      */
     void Update(float deltaTime);
+
+    /**
+     * @brief Checks if an egg has been added.
+     * @return bool True if an egg has been added, false otherwise.
+     */
+    bool isEggAdded() const;
+
+    /**
+     * @brief Sets the egg added flag.
+     *
+     * @param added True if an egg has been added, false otherwise.
+     */
+    void setEggAdded(bool added);
+
+    /**
+     * @brief Checks if a player has died.
+     * @return bool True if a player has died, false otherwise.
+     */
+    bool isPlayerDead() const;
+
+    /**
+     * @brief Sets the player dead flag.
+     *
+     * @param dead True if a player has died, false otherwise.
+     */
+    void setPlayerDead(bool dead);
+
+    /**
+     * @brief Checks if an egg has died.
+     * @return bool True if an egg has died, false otherwise.
+     */
+    bool isEggDead() const;
+
+    /**
+     * @brief Sets the egg dead flag.
+     *
+     * @param dead True if an egg has died, false otherwise.
+     */
+    void setEggDead(bool dead);
+
+    /**
+     * @brief Checks if elevation is active.
+     * @return bool True if elevation is active, false otherwise.
+     */
+    bool isElevation() const;
+
+    /**
+     * @brief Sets the elevation flag.
+     *
+     * @param elev True if elevation is active, false otherwise.
+     */
+    void setElevation(bool elev);
 };
 
 }  // namespace GUI

@@ -7,6 +7,7 @@
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
+#include "DataManager/SoundsManager.hpp"
 
 /**
  * @brief Prints an error message and the associated arguments.
@@ -279,6 +280,7 @@ void ServerGUI::picCommand(std::vector<std::string> &args) {
         GameDataManager::i().getPlayer(id).setPosition(x, y,
             GameDataManager::i().getPlayer(id).getOrientation(), true);
         GameDataManager::i().getPlayer(id).setElevation(true);
+        GameDataManager::i().setElevation(true);
     }
 }
 

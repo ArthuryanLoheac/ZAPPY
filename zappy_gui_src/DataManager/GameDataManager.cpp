@@ -132,4 +132,41 @@ void GameDataManager::Update(float deltaTime) {
     for (auto &player : players)
         player.Update(deltaTime);
 }
+
+void GameDataManager::setEggAdded(bool added) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    eggAdded = added;
+}
+
+bool GameDataManager::isEggAdded() const {
+    return eggAdded;
+}
+
+bool GameDataManager::isPlayerDead() const {
+    return playerDead;
+}
+
+void GameDataManager::setPlayerDead(bool dead) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    playerDead = dead;
+}
+
+bool GameDataManager::isEggDead() const {
+    return eggDead;
+}
+
+void GameDataManager::setEggDead(bool dead) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    eggDead = dead;
+}
+
+bool GameDataManager::isElevation() const {
+    return elevation;
+}
+
+void GameDataManager::setElevation(bool elev) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    elevation = elev;
+}
+
 }  // namespace GUI

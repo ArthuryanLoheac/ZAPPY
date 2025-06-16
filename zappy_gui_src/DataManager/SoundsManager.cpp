@@ -14,6 +14,7 @@ bool SoundsManager::playMusic(std::string path) {
         if (!music.openFromFile(path))
             throw MusicLoadingException(path);
         music.setLoop(true);
+        music.setVolume(volumeMusic);
         music.play();
         return true;
     } catch (const std::exception &e) {
@@ -24,7 +25,6 @@ bool SoundsManager::playMusic(std::string path) {
 
 bool SoundsManager::playSound(std::string path) {
     try {
-        printf("------------ Playing sound: %s\n", path.c_str());
         for (size_t i = 0; i < sounds.size(); i++) {
             if (sounds[i].getStatus() == sf::Sound::Stopped) {
                 sounds.erase(sounds.begin() + i);
@@ -36,9 +36,8 @@ bool SoundsManager::playSound(std::string path) {
         if (!soundBuffers.back().loadFromFile(path))
             throw SoundLoadingException(path);
         sounds.push_back(sf::Sound(soundBuffers.back()));
-        sounds.back().setVolume(100);
+        sounds.back().setVolume(volumeSound);
         sounds.back().play();
-        printf("------------ Sound played successfully\n");
         return true;
     } catch (const std::exception &e) {
         LOG_ERROR("Unexpected error: %s", e.what());
@@ -60,6 +59,10 @@ void SoundsManager::Update() {
     if (GameDataManager::i().isPlayerAdded()) {
         GameDataManager::i().setPlayerAdded(false);
         playSound("assets/Musics/Spawn.wav");
+    }
+    if (GameDataManager::i().isElevation()) {
+        GameDataManager::i().setElevation(false);
+        playSound("assets/Musics/Elevation.wav");
     }
 }
 }  // namespace GUI

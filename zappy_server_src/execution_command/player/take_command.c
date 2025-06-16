@@ -6,6 +6,7 @@
 */
 
 #include <string.h>
+#include <stdio.h>
 #include "command_handler.h"
 
 static bool cmp_cell(cell_t one, cell_t two)
@@ -62,12 +63,36 @@ static void put_object_inventory(stats_t *stats, char *object)
         stats->inventory.thystame += 1;
 }
 
+static int get_ressource_id(const char *object)
+{
+    if (strcmp(object, "food") == 0)
+        return 0;
+    if (strcmp(object, "linemate") == 0)
+        return 1;
+    if (strcmp(object, "deraumere") == 0)
+        return 2;
+    if (strcmp(object, "sibur") == 0)
+        return 3;
+    if (strcmp(object, "mendiane") == 0)
+        return 4;
+    if (strcmp(object, "phiras") == 0)
+        return 5;
+    if (strcmp(object, "thystame") == 0)
+        return 6;
+    return -1;
+}
+
 void take_command(zappy_t *zappy, client_t *client, char **args)
 {
+    char buffer[256];
+
     if (!take_object(zappy,
         &zappy->map->grid[client->stats.y][client->stats.x], args[0])) {
         put_object_inventory(&client->stats, args[0]);
         add_to_buffer(&client->out_buffer, "ok\n");
+        sprintf(buffer, "pgt #%d %d\n", client->stats.id,
+            get_ressource_id(args[0]));
+        send_data_to_graphics(zappy, buffer);
     } else {
         add_to_buffer(&client->out_buffer, "ko\n");
     }

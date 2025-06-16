@@ -257,6 +257,35 @@ class Interface {
      * @return true if the incantation started successfully, false otherwise
      */
     bool startIncantation();
+
+    /**
+     * @brief Simple encryption function for command strings
+     * @param input The input string to encrypt
+     * @param key The encryption key
+     * @return The encrypted string
+     */
+    std::string encrypt(const std::string& input, const std::string& key);
+
+    /**
+     * @brief Simple decryption function for command strings
+     * @param encrypted The encrypted string to decrypt
+     * @param key The decryption key
+     * @return The decrypted string
+     */
+    std::string decrypt(const std::string& encrypted, const std::string& key);
+
+    /**
+     * @brief Sends a message to the other players by using the broadcast command
+     * @param message The message string to send
+     */
+    void sendMessage(const std::string &message);
+
+    /**
+     * @brief Moves the AI to a specific position on the map, based on the inventory direction system
+     * @param x The x-coordinate to move to
+     * @param y The y-coordinate to move to
+     */
+    void goTo(int x, int y);
 };
 
 }  // namespace AI

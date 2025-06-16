@@ -232,14 +232,56 @@ class GameDataManager {
      */
     void setElevationSound(bool elev);
 
+    /**
+     * @brief Checks if collecting is active.
+     * @return bool True if collecting is active, false otherwise.
+     */
     bool isCollecting() const;
 
+    /**
+     * @brief Sets the collecting flag.
+     *
+     * @param collecting True if collecting is active, false otherwise.
+     */
     void setCollecting(bool collecting);
+
+    /**
+     * @brief Checks if dropping is active.
+     * @return bool True if dropping is active, false otherwise.
+     */
     bool isDropping() const;
+
+    /**
+     * @brief Sets the dropping flag.
+     *
+     * @param dropping True if dropping is active, false otherwise.
+     */
     void setDropping(bool dropping);
+
+    /**
+     * @brief Checks if an egg has spawned.
+     * @return bool True if an egg has spawned, false otherwise.
+     */
     bool isEggSpawned() const;
+
+    /**
+     * @brief Sets the egg spawned flag.
+     *
+     * @param spawned True if an egg has spawned, false otherwise.
+     */
     void setEggSpawned(bool spawned);
+
+    /**
+     * @brief Checks if a player has been pushed.
+     * @return bool True if a player has been pushed, false otherwise.
+     */
     bool isPushed() const;
+
+    /**
+     * @brief Sets the pushed flag.
+     *
+     * @param pushed True if a player has been pushed, false otherwise.
+     */
     void setPushed(bool pushed);
 };
 

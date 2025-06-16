@@ -17,6 +17,8 @@ class Player {
  public:
     enum PlayerState {
         MOVING,
+        START_ELEVATION,
+        IDLE_ELEVATION,
     };
 
     /**
@@ -168,6 +170,7 @@ class Player {
      * @param newO New orientation.
      */
     void setPosition(int newX, int newY, Orientation newO);
+    void setPosition(int newX, int newY, Orientation newO, bool TP);
 
     /**
      * @brief Sets the position of the player.
@@ -223,6 +226,11 @@ class Player {
 
     void Update(float deltaTime);
 
+    void setElevation(bool isStart);
+
+    void updateStartElevation(float deltaTime);
+    void updateElevation(float deltaTime);
+
     /**
      * @brief Updates the player state based on the elapsed time.
      *
@@ -273,6 +281,9 @@ class Player {
         /**< Rotation vectors for Rings meshes. */
 
     PlayerState state = MOVING; /**< Current state of the player. */
+    bool isElevation = false; /**< Flag indicating if the player is elevating. */
+    Vec3d deltaRotPlayer;
+    float speed = 1;
 
     std::vector<int> ressources = {0, 0, 0, 0, 0, 0, 0};
         /**< Resources held by the player. */

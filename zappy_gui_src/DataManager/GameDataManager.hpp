@@ -29,7 +29,6 @@ class GameDataManager {
     bool elevation = false; /**< Flag to indicate if elevation is active. */
     bool Collecting = false; /**< Flag to indicate if collecting is active. */
     bool Dropping = false; /**< Flag to indicate if dropping is active. */
-    bool eggSpawned = false; /**< Flag to indicate if an egg has spawned. */
     bool Pushed = false; /**< Flag to indicate if a player has been pushed. */
 
  public:
@@ -257,19 +256,6 @@ class GameDataManager {
      * @param dropping True if dropping is active, false otherwise.
      */
     void setDropping(bool dropping);
-
-    /**
-     * @brief Checks if an egg has spawned.
-     * @return bool True if an egg has spawned, false otherwise.
-     */
-    bool isEggSpawned() const;
-
-    /**
-     * @brief Sets the egg spawned flag.
-     *
-     * @param spawned True if an egg has spawned, false otherwise.
-     */
-    void setEggSpawned(bool spawned);
 
     /**
      * @brief Checks if a player has been pushed.

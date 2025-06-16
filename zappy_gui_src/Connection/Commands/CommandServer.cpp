@@ -321,7 +321,7 @@ void ServerGUI::pgtCommand(std::vector<std::string> &args) {
 
 void ServerGUI::pexCommand(std::vector<std::string> &args) {
     if (args.size() != 2)
-        throw CommandParsingException("Invalid pgt command format");
+        throw CommandParsingException("Invalid pex command format");
     if (args[1].size() < 2)
         throw CommandParsingException("Invalid id name");
     GameDataManager::i().setPushed(true);

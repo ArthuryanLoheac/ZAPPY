@@ -29,6 +29,7 @@ void Player::Update(float deltaTime) {
     } else if (state == END_ELEVATION) {
         updateEndElevation(deltaTime);
     }
+    updtaeIdle(deltaTime);
 }
 
 void Player::setElevation(bool isStart) {
@@ -50,7 +51,6 @@ void Player::UpdateMoving(float deltaTime)
 {
     updateRotation(deltaTime);
     updatePosition(deltaTime);
-    updtaeIdle(deltaTime);
 }
 
 void Player::updateStartElevation(float deltaTime) {

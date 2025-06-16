@@ -7,7 +7,6 @@
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
-#include "ServerGUI.hpp"
 
 /**
  * @brief Prints an error message and the associated arguments.
@@ -293,7 +292,5 @@ void ServerGUI::pieCommand(std::vector<std::string> &args) {
         if (player.getX() == x && player.getY() == y)
             player.setElevation(false);
     }
-
 }
-
-} // namespace GUI
+}  // namespace GUI

@@ -7,7 +7,6 @@
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
-#include "Player.hpp"
 
 namespace GUI {
 
@@ -47,8 +46,7 @@ void Player::setElevation(bool isStart) {
     }
 }
 
-void Player::UpdateMoving(float deltaTime)
-{
+void Player::UpdateMoving(float deltaTime) {
     updateRotation(deltaTime);
     updatePosition(deltaTime);
 }

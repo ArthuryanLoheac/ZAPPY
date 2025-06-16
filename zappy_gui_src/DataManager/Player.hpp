@@ -336,7 +336,7 @@ class Player {
         /**< Rotation vectors for Rings meshes. */
 
     PlayerState state = MOVING; /**< Current state of the player. */
-    bool isElevation = false; /**< Flag indicating if the player is elevating. */
+    bool isElevation = false; /**< Flag indicating if the player is elevating*/
     Vec3d deltaRotPlayer; /**< Rotation delta for the player. */
     float speed = 1; /**< Speed of the player during elevation. */
 

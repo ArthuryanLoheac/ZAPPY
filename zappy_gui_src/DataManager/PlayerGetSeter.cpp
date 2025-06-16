@@ -7,7 +7,6 @@
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
-#include "Player.hpp"
 
 namespace GUI {
 Player::Player(int id, int x, int y, Orientation o, int l,
@@ -205,4 +204,4 @@ void Player::destroy() {
             GUI::Window::i().smgr->addToDeletionQueue(sceneNodeC);
     }
 }
-}
+}  // namespace GUI

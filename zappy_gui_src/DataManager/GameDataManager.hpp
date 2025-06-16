@@ -22,6 +22,7 @@ class GameDataManager {
     std::vector<Egg> eggs; /**< List of eggs. */
     std::vector<std::string> teams; /**< List of team names. */
     std::vector<Player> players; /**< List of players. */
+    bool playerAdded = false; /**< Flag to indicate if a player has been added. */
 
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
@@ -101,6 +102,19 @@ class GameDataManager {
      * @param id ID of the egg to remove.
      */
     void removeEgg(int id);
+
+    /**
+     * @brief Checks if a player has been added to the game map.
+     * @return bool True if a player has been added, false otherwise.
+     */
+    bool isPlayerAdded() const;
+
+    /**
+     * @brief Sets the player added flag.
+     *
+     * @param added True if a player has been added, false otherwise.
+     */
+    void setPlayerAdded(bool added);
 
     /**
      * @brief Adds a player to the game map.

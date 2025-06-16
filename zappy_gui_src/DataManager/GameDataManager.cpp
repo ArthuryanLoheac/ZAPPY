@@ -6,6 +6,7 @@
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
 #include "Window/window.hpp"
+#include "GameDataManager.hpp"
 
 namespace GUI {
 int GameDataManager::getWidth() const {
@@ -76,14 +77,25 @@ void GameDataManager::removeEgg(int id) {
     throw ParseException("Invalid ID egg");
 }
 
+bool GameDataManager::isPlayerAdded() const {
+    return playerAdded;
+}
+
+void GameDataManager::setPlayerAdded(bool added) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    playerAdded = added;
+}
+
 void GameDataManager::addPlayer(int id, int x, int y,
-Player::Orientation o, int level, const std::string &teamName) {
+                                Player::Orientation o, int level, const std::string &teamName)
+{
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getTile(x, y).getWorldPos();
     position.Y += 0.5f;
     players.emplace_back(id, x, y, o, level, teamName,
         MeshImporter::i().importMesh("Drone", teamName, position, Vec3d(0.2f),
         Vec3d(0, o * 90, 0)));
+    playerAdded = true;
 }
 
 Player &GameDataManager::getPlayer(int id) {

@@ -14,8 +14,11 @@ class SoundsManager {
     bool playMusic(std::string path);
     bool playSound(std::string path);
 
+    void Update();
+
  private:
     std::vector<sf::Sound> sounds;
+    std::vector<sf::SoundBuffer> soundBuffers;
     sf::Sound musicActual;
     sf::Music music;
 };

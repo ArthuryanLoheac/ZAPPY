@@ -36,6 +36,7 @@ FLAGS_GUI =	-MMD -MP \
 	-I./libcpp -I./libc -std=c++17 -Wall -Wextra -Werror
 LDFLAGS_GUI = -lIrrlicht
 
+
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
 	-I./libcpp -I./libc -std=c++20 -Wall -Wextra -Werror

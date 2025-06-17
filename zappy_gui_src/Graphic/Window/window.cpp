@@ -114,23 +114,24 @@ void Window::setupWorld() {
     int width = GUI::GameDataManager::i().getWidth();
     int height = GUI::GameDataManager::i().getHeight();
 
-    float deltaWidth = (width % 2 == 0) ? 0.5f : 0;
-    float deltaHeight = (height % 2 == 0) ? 0.5f : 0;
+    //float deltaWidth = (width % 2 == 0) ? 0.5f : 0;
+    //float deltaHeight = (height % 2 == 0) ? 0.5f : 0;
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            irr::core::vector3df position(i - (width/2) + deltaWidth, -2,
-                j - (height/2) + deltaHeight);
-            float rotation = std::rand() % 4;
-            auto cube = MeshImporter::i().importMesh("Plane", "", position,
-                irr::core::vector3df(0.18f),
-                irr::core::vector3df(0, rotation * 90, 0));
+            //irr::core::vector3df position(i - (width/2) + deltaWidth, -2,
+            //    j - (height/2) + deltaHeight);
+            //float rotation = std::rand() % 4;
+            //auto cube = MeshImporter::i().importMesh("Plane", "", position,
+            //    irr::core::vector3df(0.18f),
+            //    irr::core::vector3df(0, rotation * 90, 0));
             GameTile &tile = GUI::GameDataManager::i().addTile(i, j);
-            tile.setTileMesh(cube);
+            (void) tile;
+            //tile.setTileMesh(cube);
         }
     }
-    smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
-        irr::video::SColorf(1.5f, 1.5f, 2.f), 2000.0f);
-    smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
+    //smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
+    //    irr::video::SColorf(1.5f, 1.5f, 2.f), 2000.0f);
+    //smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
 }
 }  // namespace GUI

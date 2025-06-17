@@ -69,7 +69,7 @@ int r5, int r6) {
     this->r4 = r4;
     this->r5 = r5;
     this->r6 = r6;
-    updateMeshesRessources();
+    //updateMeshesRessources();
 }
 
 int GameTile::getRessource(int id) const {

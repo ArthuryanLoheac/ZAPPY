@@ -38,12 +38,17 @@ void Player::setElevation(bool isStart) {
         state = START_ELEVATION;
         Vec3d targetRot = Vec3d(90, 0, 0);
         speed = 0.1f;
-        Vec3d currentRot = PlayerMesh->getRotation();
+        Vec3d currentRot = Vec3d(0, 0, 0);
+        if (PlayerMesh)
+            currentRot = PlayerMesh->getRotation();
         deltaRotPlayer = targetRot - currentRot;
     } else {
         state = END_ELEVATION;
         Vec3d targetRot = Vec3d(0, o * 90, 0);
-        deltaRotPlayer = targetRot - PlayerMesh->getRotation();
+        if (PlayerMesh)
+            deltaRotPlayer = targetRot - PlayerMesh->getRotation();
+        else
+            deltaRotPlayer = Vec3d(0, 0, 0);
     }
 }
 
@@ -53,6 +58,10 @@ void Player::UpdateMoving(float deltaTime) {
 }
 
 void Player::updateStartElevation(float deltaTime) {
+    if (!PlayerMesh) {
+        state = IDLE_ELEVATION;
+        return;
+    }
     Vec3d currentRot = PlayerMesh->getRotation();
     Vec3d newRot = Vec3d(
         currentRot.X + deltaRotPlayer.X * deltaTime * 2,
@@ -67,6 +76,8 @@ void Player::updateStartElevation(float deltaTime) {
 
 void Player::updateElevation(float deltaTime) {
     speed += 0.05f * DataManager::i().getFrequency() * deltaTime;
+    if (!PlayerMesh)
+        return;
     Vec3d rot = PlayerMesh->getRotation();
     rot = Vec3d(90, rot.Y + 90 * deltaTime * speed, 0);
     PlayerMesh->setRotation(rot);
@@ -80,6 +91,10 @@ void Player::updateElevation(float deltaTime) {
 }
 
 void Player::updateEndElevation(float deltaTime) {
+    if (!PlayerMesh) {
+        state = MOVING;
+        return;
+    }
     Vec3d currentRot = PlayerMesh->getRotation();
     Vec3d newRot = Vec3d(
         currentRot.X + deltaRotPlayer.X * deltaTime * 0.5f,
@@ -109,6 +124,8 @@ void Player::updatePosition(float deltaTime) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     float speedRotate = 15 * DataManager::i().getFrequency();
 
+    if (!PlayerMesh)
+        return;
     if (posTarget.getDistanceFrom(PlayerMesh->getPosition()) > 0.1f) {
         // new pos
         Vec3d direction = posTarget - PlayerMesh->getPosition();
@@ -155,6 +172,8 @@ void Player::updtaeIdle(float deltaTime) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     (void)deltaTime;
     float Newy = GameDataManager::i().getTile(x, y).getWorldPos().Y;
+    if (!PlayerMesh)
+        return;
     Vec3d pos = PlayerMesh->getPosition();
 
     idlePosY = std::sin(timeTT * 3) * 0.05f + 0.5f;

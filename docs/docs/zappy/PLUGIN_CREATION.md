@@ -26,7 +26,7 @@ class pluginsInterface {
     virtual void update(pluginsData dataManager) = 0;
     virtual void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
         irr::video::IVideoDriver* driver) = 0;
-    virtual pluginsData &onEvent(const irr::SEvent &event) = 0;
+    virtual bool onEvent(const irr::SEvent &event, pluginsData &datas) = 0;
 };
 ```
 
@@ -57,8 +57,10 @@ class MyPlugin : public pluginsInterface {
         // Render additional UI elements
     }
 
-    pluginsData &onEvent(const irr::SEvent &event) override {
+    bool onEvent(const irr::SEvent &event, pluginsData &datas) override {
         // Handle user input or events
+        // return true if the event is consumed
+        // datas is a ref to the structure datas (used for send datas to serv)
     }
 };
 ```

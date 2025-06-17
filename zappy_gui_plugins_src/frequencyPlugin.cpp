@@ -127,30 +127,32 @@ stateButton &buttonState, int x, int y, int width, int height) {
     }
 }
 
-pluginsData &frequencyPlugin::onEvent(const irr::SEvent &event) {
-    if (data.frequency <= 1) {
+bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
+    if (datas.frequency <= 1) {
         minusButtonState = DISABLED;
     } else {
         checkHoverButton(event, minusButtonState, 30, heightSaved - 80, 40, 40);
         if (minusButtonState == CLICKED) {
             if (frequency > 1) {
                 frequency--;
+                datas.frequency = frequency;
                 data.frequency = frequency;
             }
         }
     }
-    if (data.frequency >= 200) {
+    if (datas.frequency >= 200) {
         plusButtonState = DISABLED;
     } else {
         checkHoverButton(event, plusButtonState, 90, heightSaved - 80, 40, 40);
         if (plusButtonState == CLICKED) {
             if (frequency < 200) {
                 frequency++;
+                datas.frequency = frequency;
                 data.frequency = frequency;
             }
         }
     }
-    return data;
+    return false;
 }
 
 void frequencyPlugin::update(pluginsData _data) {

@@ -92,7 +92,7 @@ class frequencyPlugin : public pluginsInterface {
      * @brief Handles events for the plugin.
      * @param event The event to handle.
      */
-    pluginsData &onEvent(const irr::SEvent &event) override;
+    bool onEvent(const irr::SEvent &event, pluginsData &datas) override;
 
     /**
      * @brief Updates the plugin with the latest data.

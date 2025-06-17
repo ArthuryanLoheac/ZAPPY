@@ -43,5 +43,5 @@ class pluginsInterface {
     /** @brief Handle events for the plugin.
      * @param event The event to handle.
      */
-    virtual pluginsData &onEvent(const irr::SEvent &event) = 0;
+    virtual bool onEvent(const irr::SEvent &event, pluginsData &datas) = 0;
 };

@@ -107,7 +107,7 @@ irr::video::IVideoDriver* _driver) {
     } catch (std::exception &e) {}
 }
 
-pluginsData &PlayerDataPlugin::onEvent(const irr::SEvent &event) {
+bool PlayerDataPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
     if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
         if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
             pressed = true;
@@ -118,7 +118,8 @@ pluginsData &PlayerDataPlugin::onEvent(const irr::SEvent &event) {
             detectCollisionPlayer();
         isPressedLastFrame = pressed;
     }
-    return data;
+    (void) datas;
+    return false;
 }
 
 void PlayerDataPlugin::detectCollisionPlayer() {

@@ -59,9 +59,10 @@ irr::video::IVideoDriver* driver) {
     }
 }
 
-pluginsData & globalDataPlugin::onEvent(const irr::SEvent &event) {
+bool globalDataPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
     (void) event;
-    return data;
+    (void) datas;
+    return false;
 }
 
 void globalDataPlugin::update(pluginsData _data) {

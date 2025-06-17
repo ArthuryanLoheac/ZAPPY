@@ -81,6 +81,12 @@ class frequencyPlugin : public pluginsInterface {
     irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) override;
 
     /**
+     * @brief Gets the priority of the plugin.
+     * @return The priority level of the plugin.
+     */
+    int getPriority() const override;
+
+    /**
      * @brief Draws the UI elements for the plugin.
      * @param font Shared pointer to the GUI font.
      * @param driver Pointer to the video driver.

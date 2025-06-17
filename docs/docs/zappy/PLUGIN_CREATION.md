@@ -27,6 +27,7 @@ class pluginsInterface {
     virtual void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
         irr::video::IVideoDriver* driver) = 0;
     virtual bool onEvent(const irr::SEvent &event, pluginsData &datas) = 0;
+    virtual int priority() const = 0; // New method to define plugin priority
 };
 ```
 
@@ -61,6 +62,13 @@ class MyPlugin : public pluginsInterface {
         // Handle user input or events
         // return true if the event is consumed
         // datas is a ref to the structure datas (used for send datas to serv)
+        // Updated logic for handling events
+    }
+
+    int priority() const override {
+        // Return the priority of the plugin
+        // Greater the value faster it will be taken
+        return 10; // Example priority value
     }
 };
 ```
@@ -122,3 +130,4 @@ project/
 - Use the `pluginsData` object to access game data such as players, tiles, and teams.
 - Ensure your plugin adheres to the project's coding standards.
 - Test your plugin thoroughly to ensure it does not interfere with existing UI components.
+- The `priority` method allows the GUI to determine the order in which plugins are processed. Higher priority values are processed first.

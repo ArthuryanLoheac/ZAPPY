@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <utility>
+#include <algorithm>
 
 #include "include/logs.h"
 #include "PluginsManagement/pluginsManager.hpp"
@@ -13,6 +14,7 @@
 #include "Graphic/Window/window.hpp"
 #include "Connection/ServerGUI.hpp"
 #include "PluginsDataManager.hpp"
+#include "pluginsManager.hpp"
 
 
 void pluginsManager::loadPlugins(const std::string &path) {
@@ -78,4 +80,12 @@ void pluginsManager::update(pluginsData dataManager) {
         if (plugin)
             plugin->update(dataManager);
     }
+}
+
+void pluginsManager::sortPlugins() {
+    std::sort(_plugins.begin(), _plugins.end(),
+        [](const std::unique_ptr<pluginsInterface> &a,
+           const std::unique_ptr<pluginsInterface> &b) {
+            return a->getPriority() > b->getPriority();
+        });
 }

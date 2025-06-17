@@ -68,3 +68,7 @@ bool globalDataPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
 void globalDataPlugin::update(pluginsData _data) {
     data = _data;
 }
+
+int globalDataPlugin::getPriority() const {
+    return 0;
+}

@@ -44,4 +44,6 @@ class pluginsInterface {
      * @param event The event to handle.
      */
     virtual bool onEvent(const irr::SEvent &event, pluginsData &datas) = 0;
+
+    virtual int getPriority() const = 0;
 };

@@ -6,12 +6,15 @@
 #include <iostream>
 #include <cstdio>
 #include <unordered_map>
+#include "frequencyPlugin.hpp"
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
         return std::make_unique<frequencyPlugin>();
     }
 }
+
+std::unordered_map<std::string, irr::video::ITexture*> cachedTextures;
 
 bool frequencyPlugin::init(irr::scene::ISceneManager* smgr,
     irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) {
@@ -32,10 +35,10 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
     if (it != cachedTextures.end()) {
         bg = it->second;
     } else {
-        irr::video::ITexture *originalTexture =
-            driver->getTexture(texture.c_str());
+        // Load and modify the texture if not cached
+        irr::video::ITexture* originalTexture = driver->getTexture(texture.c_str());
         if (!originalTexture) {
-            std::cerr << "Error: Can't load texture: " << texture << std::endl;
+            std::cerr << "Error: Could not load texture: " << texture << std::endl;
             return;
         }
 
@@ -50,7 +53,7 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
                 }
             }
             bg = driver->addTexture(cacheKey.c_str(), image);
-            cachedTextures[cacheKey] = bg;
+            cachedTextures[cacheKey] = bg; // Cache the modified texture
             image->drop();
         }
     }
@@ -127,32 +130,30 @@ stateButton &buttonState, int x, int y, int width, int height) {
     }
 }
 
-bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
-    if (datas.frequency <= 1) {
+pluginsData &frequencyPlugin::onEvent(const irr::SEvent &event) {
+    if (data.frequency <= 1) {
         minusButtonState = DISABLED;
     } else {
         checkHoverButton(event, minusButtonState, 30, heightSaved - 80, 40, 40);
         if (minusButtonState == CLICKED) {
             if (frequency > 1) {
                 frequency--;
-                datas.frequency = frequency;
                 data.frequency = frequency;
             }
         }
     }
-    if (datas.frequency >= 200) {
+    if (data.frequency >= 200) {
         plusButtonState = DISABLED;
     } else {
         checkHoverButton(event, plusButtonState, 90, heightSaved - 80, 40, 40);
         if (plusButtonState == CLICKED) {
             if (frequency < 200) {
                 frequency++;
-                datas.frequency = frequency;
                 data.frequency = frequency;
             }
         }
     }
-    return false;
+    return data;
 }
 
 void frequencyPlugin::update(pluginsData _data) {

@@ -151,3 +151,7 @@ void PlayerDataPlugin::detectCollisionPlayer() {
 void PlayerDataPlugin::update(pluginsData _data) {
     data = _data;
 }
+
+int PlayerDataPlugin::getPriority() const {
+    return 0;
+}

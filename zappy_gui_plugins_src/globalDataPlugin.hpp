@@ -53,6 +53,12 @@ class globalDataPlugin : public pluginsInterface {
     bool onEvent(const irr::SEvent &event, pluginsData &datas) override;
 
     /**
+     * @brief Gets the priority of the plugin.
+     * @return The priority level of the plugin.
+     */
+    int getPriority() const override;
+
+    /**
      * @brief Updates the plugin with the latest data.
      * @param dataManager Reference to the data manager.
      */

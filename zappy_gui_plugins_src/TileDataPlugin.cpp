@@ -139,3 +139,7 @@ bool TileDataPlugin::detectCollisionPlayer() {
 void TileDataPlugin::update(pluginsData _data) {
     data = _data;
 }
+
+int TileDataPlugin::getPriority() const {
+    return 0;
+}

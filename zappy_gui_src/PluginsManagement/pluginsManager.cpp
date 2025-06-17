@@ -13,8 +13,7 @@
 #include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
 #include "Connection/ServerGUI.hpp"
-#include "PluginsDataManager.hpp"
-#include "pluginsManager.hpp"
+#include "DataManager/PluginsDataManager.hpp"
 
 
 void pluginsManager::loadPlugins(const std::string &path) {

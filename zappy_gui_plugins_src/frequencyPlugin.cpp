@@ -6,7 +6,6 @@
 #include <iostream>
 #include <cstdio>
 #include <unordered_map>
-#include "frequencyPlugin.hpp"
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
@@ -35,10 +34,10 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
     if (it != cachedTextures.end()) {
         bg = it->second;
     } else {
-        // Load and modify the texture if not cached
-        irr::video::ITexture* originalTexture = driver->getTexture(texture.c_str());
+        irr::video::ITexture* originalTexture =
+            driver->getTexture(texture.c_str());
         if (!originalTexture) {
-            std::cerr << "Error: Could not load texture: " << texture << std::endl;
+            std::cerr << "Error: Cant load texture: " << texture << std::endl;
             return;
         }
 
@@ -53,7 +52,7 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
                 }
             }
             bg = driver->addTexture(cacheKey.c_str(), image);
-            cachedTextures[cacheKey] = bg; // Cache the modified texture
+            cachedTextures[cacheKey] = bg;
             image->drop();
         }
     }

@@ -13,7 +13,14 @@
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
+#include "include/logs.h"
 
+/**
+ * @brief Handles the client-server communication loop.
+ *
+ * @param sockfd The socket file descriptor for the server connection.
+ * @return int Always returns 0.
+ */
 int loopClient(int sockfd) {
     try {
         GUI::ServerGUI::i().server_fd = sockfd;
@@ -21,12 +28,19 @@ int loopClient(int sockfd) {
 
         GUI::ServerGUI::i().startServer();
     } catch (const std::exception &e) {
-        std::cerr << "Server Closed: " << e.what() << std::endl;
+        LOG_WARNING("Server closed");
         close(sockfd);
     }
     return 0;
 }
 
+/**
+ * @brief Establishes a connection to the server.
+ *
+ * @param sockfd Reference to the socket file descriptor to be initialized.
+ * @return int Returns 0 on success.
+ * @throws GUI::InvalidDataException If socket creation, IP address conversion, or connection fails.
+ */
 int client_connection(int &sockfd) {
     struct sockaddr_in serv_addr;
 

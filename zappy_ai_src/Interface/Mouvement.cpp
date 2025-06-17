@@ -5,8 +5,24 @@
 #include "Interface/Interface.hpp"
 #include "Exceptions/Commands.hpp"
 
+/**
+ * @file Mouvement.cpp
+ * @brief Implementation of movement-related command handlers
+ *
+ * This file contains the implementation of commands that control
+ * the AI's movement on the game map, such as moving forward and turning.
+ */
+
 namespace AI {
 
+/**
+ * @brief Handles the FORWARD command response
+ *
+ * Processes the response from the server after attempting to move forward.
+ *
+ * @param args Server response arguments
+ * @param command Original command sent
+ */
 void Interface::commandFORWARD(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     (void)command;
@@ -17,6 +33,14 @@ void Interface::commandFORWARD(std::vector<std::string> &args,
     }
 }
 
+/**
+ * @brief Handles the LEFT command response
+ *
+ * Processes the response from the server after attempting to turn left.
+ *
+ * @param args Server response arguments
+ * @param command Original command sent
+ */
 void Interface::commandLEFT(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     (void)command;
@@ -27,6 +51,14 @@ void Interface::commandLEFT(std::vector<std::string> &args,
     }
 }
 
+/**
+ * @brief Handles the RIGHT command response
+ *
+ * Processes the response from the server after attempting to turn right.
+ *
+ * @param args Server response arguments
+ * @param command Original command sent
+ */
 void Interface::commandRIGHT(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     (void)command;
@@ -37,6 +69,10 @@ void Interface::commandRIGHT(std::vector<std::string> &args,
     }
 }
 
+/**
+ * @brief Checks if the AI is waiting for a response from the server
+ * @return true if waiting for a response, false otherwise
+ */
 bool Interface::isWaitingForResponse() const {
     return !inputQueue.empty() || !commandBuffer.empty();
 }
@@ -46,7 +82,6 @@ bool Interface::isWaitingForResponse() const {
  * @param x The x-coordinate to move to
  * @param y The y-coordinate to move to
  */
-
 void Interface::goTo(int x, int y) {
     if (x < 0) {
         sendCommand(LEFT);

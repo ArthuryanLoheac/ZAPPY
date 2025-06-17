@@ -10,22 +10,12 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <fcntl.h>
 
 #include "include/command.h"
 #include "include/client.h"
-
-static char *append_client_buffer(char *buffer, char *new_buffer)
-{
-    int size = strlen(buffer) + strlen(new_buffer) + 1;
-    char *result = malloc(sizeof(char) * size);
-
-    if (result == NULL)
-        display_error("Memory allocation failed for client buffer");
-    snprintf(result, size, "%s%s", buffer, new_buffer);
-    free(buffer);
-    free(new_buffer);
-    return result;
-}
+#include "logs.h"
+#include <errno.h>
 
 void append_client_out_buffer(client_t *client, const char *format, ...)
 {
@@ -45,11 +35,10 @@ void append_client_out_buffer(client_t *client, const char *format, ...)
     if (client->out_buffer == NULL)
         client->out_buffer = new_buffer;
     else
-        client->out_buffer = append_client_buffer(client->out_buffer,
-            new_buffer);
+        add_to_buffer(&client->out_buffer, new_buffer);
 }
 
-static bool get_client_buffer(client_t *client, int fd)
+static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
 {
     char *buffer = malloc(sizeof(char) * 1024);
     ssize_t bytes_read = 0;
@@ -58,6 +47,8 @@ static bool get_client_buffer(client_t *client, int fd)
         display_error("Memory allocation failed for client buffer");
     bytes_read = read(fd, buffer, 1023);
     if (bytes_read <= 0) {
+        if (bytes_read == -1)
+            perror("Read error");
         free(buffer);
         client->is_connected = false;
         return false;
@@ -66,18 +57,27 @@ static bool get_client_buffer(client_t *client, int fd)
     if (client->in_buffer == NULL)
         client->in_buffer = buffer;
     else
-        client->in_buffer = append_client_buffer(client->in_buffer, buffer);
+        add_to_buffer(&client->in_buffer, buffer);
+    extract_commands(client, zappy);
     return true;
 }
 
 void handle_client_command(zappy_t *zappy, int fd)
 {
     client_t *current = zappy->clients;
+    char buffer[1024];
 
-    while (current != NULL && current->fd != fd)
+    while (current != NULL && current->fd != fd) {
         current = current->next;
-    if (current == NULL || get_client_buffer(current, fd) == false)
+    }
+    if (current == NULL)
         return;
+    if (get_client_buffer(current, fd, zappy) == false) {
+        sprintf(buffer, "pdi #%d\n", current->stats.id);
+        LOG_INFO("Client with fd %d disconnected", fd);
+        send_data_to_graphics(zappy, buffer);
+        remove_client(zappy, fd);
+    }
 }
 
 void send_client_command(zappy_t *zappy, int fd)
@@ -88,8 +88,15 @@ void send_client_command(zappy_t *zappy, int fd)
         current = current->next;
     if (current == NULL || current->out_buffer == NULL)
         return;
-    if (write(fd, current->out_buffer, strlen(current->out_buffer)) == -1)
-        display_error("Failed to send command to client");
+    if (fcntl(fd, F_GETFD) == -1 && errno == EBADF)
+        return;
+    if (write(fd, current->out_buffer, strlen(current->out_buffer)) == -1) {
+        perror("Write error");
+        LOG_INFO("[%i]: Failed to send command %s",
+            current->fd, current->out_buffer);
+    } else {
+        LOG_INFO("[%i]: Sent %s", current->fd, current->out_buffer);
+    }
     free(current->out_buffer);
     current->out_buffer = NULL;
 }

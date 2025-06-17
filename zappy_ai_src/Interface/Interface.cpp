@@ -1,6 +1,6 @@
 #include <unistd.h>
-#include <signal.h>
 
+#include <csignal>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -10,13 +10,34 @@
 #include "Exceptions/Commands.hpp"
 #include "Data/Data.hpp"
 
+/**
+ * @file Interface.cpp
+ * @brief Implementation of the main Interface class methods
+ *
+ * This file contains the core implementation of the Interface class which
+ * handles all communication with the Zappy server and coordinates
+ * the processing of commands and responses.
+ */
+
 namespace AI {
 
-Interface::Interface() {
+Interface::Interface() : port(0) {
     factoryCommands();
+    initializeFilteredStrings();
 }
 
 Interface::~Interface() {
+}
+
+static std::string computeMagicKey(const std::string &name) {
+    int asciiSum = 0;
+
+    for (char c : name) {
+        asciiSum += static_cast<int>(c);
+    }
+    asciiSum = asciiSum % 256;
+
+    return std::to_string(asciiSum);
 }
 
 void Interface::start(int port, const std::string &ip,
@@ -31,6 +52,7 @@ void Interface::start(int port, const std::string &ip,
             "Error starting socket in child process: " + std::string(e.what()));
     }
     inputQueue.push({"WELCOME"});
+    Data::i().magicKey = computeMagicKey(name);
 }
 
 void Interface::stop() {
@@ -51,30 +73,33 @@ void Interface::run() {
     }
     auto outputs = socket.getListOutputs();
 
-    if (!outputs.empty()) {
-        for (const auto &output : outputs) {
-            if (output[0] == "DEAD") {
-                Data::i().isDead = true;
-            }
-            outputQueue.push(output);
-        }
-        try {
-            handleQueues();
-        } catch (const AI::CommandNotFoundException &e) {
-            std::cerr << "Command not found: " << e.what() << std::endl;
-        } catch (const AI::CommandArgumentsException &e) {
-            std::cerr << "Invalid command arguments: " << e.what() << std::endl;
-        } catch (const std::exception &e) {
-            std::cerr << "Unexpected error: " << e.what() << std::endl;
-        }
+    if (outputs.empty()) return;
 
-        // Only send new commands if we've processed all pending responses
-        if (inputQueue.empty() && !commandBuffer.empty()) {
-            // Send a single command
-            auto command = commandBuffer.front();
-            commandBuffer.pop();
-            sendCommand(command);
+    for (const auto &output : outputs) {
+        if (output[0] == "DEAD") {
+            Data::i().isDead = true;
         }
+        if (output[0] == "MESSAGE") {
+            auto outputCopy = output;
+            receiveMessage(outputCopy);
+            continue;
+        }
+        outputQueue.push(output);
+    }
+    try {
+        handleQueues();
+    } catch (const AI::CommandNotFoundException &e) {
+        std::cerr << "Command not found: " << e.what() << std::endl;
+    } catch (const AI::CommandArgumentsException &e) {
+        std::cerr << "Invalid command arguments: " << e.what() << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << "Unexpected error: " << e.what() << std::endl;
+    }
+
+    if (inputQueue.empty() && !commandBuffer.empty()) {
+        auto command = commandBuffer.front();
+        commandBuffer.pop();
+        sendCommand(command);
     }
 }
 
@@ -144,6 +169,9 @@ void Interface::factoryCommands() {
     commands["TAKE"] = &Interface::commandTAKE;
     commands["SET"] = &Interface::commandSET;
     commands["EJECT"] = &Interface::commandEJECT;
+    commands["FORK"] = &Interface::commandFORK;
+    commands["BROADCAST"] = &Interface::commandBROADCAST;
+    commands["INCANTATION"] = &Interface::commandINCANTATION;
 }
 
 // ————————————————————————— END OF FACTORY ————————————————————————

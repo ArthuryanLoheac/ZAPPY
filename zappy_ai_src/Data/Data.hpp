@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <queue>
 
 namespace AI {
 
@@ -19,9 +20,10 @@ class Data {
     // basics
     bool isRunning;
     bool isDead;
+    bool isInIncantation;
     int mapX;
     int mapY;
-    int level;  // Player level
+    int level;
 
     // Inventory
     std::unordered_map<std::string, int> inventory;
@@ -35,6 +37,10 @@ class Data {
     // a negative number for the left, 0 for the middle and a positive for the
     // right).
     std::unordered_map<std::string, int> &mapAt(int x, int y);
+
+    std::queue<std::pair<std::string, int>> messageQueue;
+
+    std::string magicKey;
 
  private:
 };

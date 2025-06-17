@@ -23,6 +23,37 @@ jobs:
         python-version: 3.x
     - run: pip install cpplint
     - run: make style_check
+  check_epitech_coding_style:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/epitech/coding-style-checker:latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: "Check the coding style"
+        run: |
+          check.sh "$(pwd)/zappy_server_src" "$(pwd)"
+          tmpfile=$(mktemp)
+
+          echo "0" > "$tmpfile"
+          error_count=0
+          while read -r line; do
+            file=$(echo "$line" | cut -d':' -f1 | cut -d'/' -f 2-)
+            nbline=$(echo "$line" | cut -d':' -f2)
+            title=$(echo "$line" | cut -d':' -f3)" coding style error"
+            code=$(echo "$line" | cut -d':' -f4)
+            echo "::error title=$title,file=$file,line=$nbline,col=0::$code"
+            error_count=$((error_count + 1))
+          done < coding-style-reports.log
+
+          if [ "$error_count" -gt 1 ]; then
+            echo "More than one coding style error detected. Failing CI."
+            rm "$tmpfile"
+            exit 1
+          fi
+          rm "$tmpfile"
   check_program_compilation:
     runs-on: ubuntu-latest
     container:
@@ -38,7 +69,7 @@ jobs:
           LIST=$(echo $EXECUTABLES | tr ',' ' ')
           find $LIST
   run_tests:
-    needs: [check_program_compilation, check_coding_style]
+    needs: [check_program_compilation, check_coding_style, check_epitech_coding_style]
     runs-on: ubuntu-latest
     container:
       image: epitechcontent/epitest-docker:latest

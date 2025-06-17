@@ -5,114 +5,169 @@
 
 #include "DataManager/Player.hpp"
 #include "DataManager/GameDataManager.hpp"
+#include "DataManager/DataManager.hpp"
+#include "Graphic/Window/window.hpp"
 
 namespace GUI {
 
-Player &Player::operator=(Player &&other) noexcept {
-    if (this != &other) {
-        id = other.id;
-        x = other.x;
-        y = other.y;
-        o = other.o;
-        level = other.level;
-        teamName = std::move(other.teamName);
-        PlayerMesh = std::move(other.PlayerMesh);
+bool Player::checkAngleDiff(irr::core::vector3df a, irr::core::vector3df b) {
+    float angleDiff = std::abs(a.Y - b.Y);
+    if (angleDiff > 180.0f)
+        angleDiff = 360.0f - angleDiff;
+    return angleDiff > 5.0f;
+}
+
+void Player::Update(float deltaTime) {
+    timeTT += deltaTime;
+    if (state == MOVING) {
+        UpdateMoving(deltaTime);
+    } else if (state == START_ELEVATION) {
+        updateStartElevation(deltaTime);
+    } else if (state == IDLE_ELEVATION) {
+        updateElevation(deltaTime);
+    } else if (state == END_ELEVATION) {
+        updateEndElevation(deltaTime);
     }
-    return *this;
+    updtaeIdle(deltaTime);
 }
 
-void Player::setId(int newId) {
+void Player::setElevation(bool isStart) {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    id = newId;
+    isElevation = isStart;
+    if (isStart) {
+        state = START_ELEVATION;
+        Vec3d targetRot = Vec3d(90, 0, 0);
+        speed = 0.1f;
+        Vec3d currentRot = PlayerMesh->getRotation();
+        deltaRotPlayer = targetRot - currentRot;
+    } else {
+        state = END_ELEVATION;
+        Vec3d targetRot = Vec3d(0, o * 90, 0);
+        deltaRotPlayer = targetRot - PlayerMesh->getRotation();
+    }
 }
 
-int Player::getId() const {
-    return id;
+void Player::UpdateMoving(float deltaTime) {
+    updateRotation(deltaTime);
+    updatePosition(deltaTime);
 }
 
-void Player::setX(int newX) {
-    std::lock_guard<std::mutex> lock(mutexDatas);
-    x = newX;
+void Player::updateStartElevation(float deltaTime) {
+    Vec3d currentRot = PlayerMesh->getRotation();
+    Vec3d newRot = Vec3d(
+        currentRot.X + deltaRotPlayer.X * deltaTime * 2,
+        currentRot.Y + deltaRotPlayer.Y * deltaTime * 2,
+        currentRot.Z + deltaRotPlayer.Z * deltaTime * 2);
+    PlayerMesh->setRotation(newRot);
+    if (newRot.X >= 85.f && newRot.X <= 95.f) {
+        state = IDLE_ELEVATION;
+        PlayerMesh->setRotation(Vec3d(90, 0, 0));
+    }
 }
 
-int Player::getX() const {
-    return x;
+void Player::updateElevation(float deltaTime) {
+    speed += 0.05f * DataManager::i().getFrequency() * deltaTime;
+    Vec3d rot = PlayerMesh->getRotation();
+    rot = Vec3d(90, rot.Y + 90 * deltaTime * speed, 0);
+    PlayerMesh->setRotation(rot);
+    for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
+        if (PlayerMeshesCylinder[i]) {
+            Vec3d rotC = PlayerMeshesCylinder[i]->getRotation();
+            PlayerMeshesCylinder[i]->setRotation(
+                Vec3d(rotC.X, rotC.Y + 90 * deltaTime * speed, rotC.Z));
+        }
+    }
 }
 
-void Player::setY(int newY) {
-    std::lock_guard<std::mutex> lock(mutexDatas);
-    y = newY;
-}
-
-int Player::getY() const {
-    return y;
-}
-
-void Player::setOrientation(Orientation newO) {
-    std::lock_guard<std::mutex> lock(mutexDatas);
-    o = newO;
-}
-
-Player::Orientation Player::getOrientation() const {
-    return o;
-}
-
-void Player::setLevel(int newLevel) {
-    std::lock_guard<std::mutex> lock(mutexDatas);
-    level = newLevel;
-}
-
-int Player::getLevel() const {
-    return level;
-}
-
-void Player::setTeamName(const std::string &newTeamName) {
-    std::lock_guard<std::mutex> lock(mutexDatas);
-    teamName = newTeamName;
-}
-
-const std::string &Player::getTeamName() const {
-    return teamName;
-}
-
-void Player::setPosition(int newX, int newY, Orientation new0) {
-    std::lock_guard<std::mutex> lock(mutexDatas);
-    x = newX;
-    y = newY;
-    o = new0;
-    if (PlayerMesh) {
-        Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
-        position.Y += 0.5f;
-        PlayerMesh->setPosition(position);
+void Player::updateEndElevation(float deltaTime) {
+    Vec3d currentRot = PlayerMesh->getRotation();
+    Vec3d newRot = Vec3d(
+        currentRot.X + deltaRotPlayer.X * deltaTime * 0.5f,
+        currentRot.Y + deltaRotPlayer.Y * deltaTime * 0.5f,
+        currentRot.Z + deltaRotPlayer.Z * deltaTime * 0.5f);
+    PlayerMesh->setRotation(newRot);
+    if (newRot.X >= -5.f && newRot.X <= 5.f) {
+        state = MOVING;
         PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
     }
 }
 
-void Player::setPosition(int newX, int newY) {
-    setPosition(newX, newY, o);
-}
-
-void Player::setMesh(const std::shared_ptr<Mesh> &mesh) {
+void Player::updateRotation(float deltaTime) {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    PlayerMesh = mesh;
+    for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
+        if (PlayerMeshesCylinder[i]) {
+            Vec3d rot = PlayerMeshesCylinder[i]->getRotation();
+            PlayerMeshesCylinder[i]->setRotation(
+                Vec3d(rot.X + PlayerMeshesCylinderRotation[i].X * deltaTime,
+                      rot.Y + PlayerMeshesCylinderRotation[i].Y * deltaTime,
+                      rot.Z + PlayerMeshesCylinderRotation[i].Z * deltaTime));
+        }
+    }
 }
 
-std::shared_ptr<Mesh> Player::getMesh() const {
-    return PlayerMesh;
-}
-
-void Player::setRessource(int id, int value) {
+void Player::updatePosition(float deltaTime) {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    if (id < 0 || id >= static_cast<int>(ressources.size()))
-        throw std::out_of_range("Invalid resource ID : " + std::to_string(id));
-    ressources[id] = value;
+    float speedRotate = 15 * DataManager::i().getFrequency();
+
+    if (posTarget.getDistanceFrom(PlayerMesh->getPosition()) > 0.1f) {
+        // new pos
+        Vec3d direction = posTarget - PlayerMesh->getPosition();
+        direction.normalize();
+        Vec3d newPos = PlayerMesh->getPosition() +
+            (direction * speedMove * deltaTime);
+        PlayerMesh->setPosition(newPos);
+        // ring update
+        for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
+            if (PlayerMeshesCylinder[i])
+                PlayerMeshesCylinder[i]->setPosition(newPos);
+        }
+    } else {
+        // close enough to target position
+        Vec3d pos = PlayerMesh->getPosition();
+        pos.Y = GameDataManager::i().getTile(x, y).getWorldPos().Y + 0.5f;
+        PlayerMesh->setPosition(pos);
+        for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
+            if (PlayerMeshesCylinder[i])
+                PlayerMeshesCylinder[i]->setPosition(pos);
+        }
+    }
+    // Update rotation
+    if (checkAngleDiff(PlayerMesh->getRotation(), rotationTarget)) {
+        float currentY = fmod(PlayerMesh->getRotation().Y, 360.0f);
+        if (currentY < 0) currentY += 360.0f;
+        float targetY = fmod(rotationTarget.Y, 360.0f);
+        if (targetY < 0) targetY += 360.0f;
+
+        float diff = targetY - currentY;
+        if (diff > 180.0f) diff -= 360.0f;
+        if (diff < -180.0f) diff += 360.0f;
+
+        float step = speedRotate * deltaTime;
+        if (abs(diff) < step) step = abs(diff);
+
+        Vec3d currentRotation = PlayerMesh->getRotation();
+        currentRotation.Y += diff > 0 ? step : -step;
+        PlayerMesh->setRotation(currentRotation);
+    }
 }
 
-int Player::getRessource(int id) const {
-    if (id < 0 || id >= static_cast<int>(ressources.size()))
-        throw std::out_of_range("Invalid resource ID");
-    return ressources[id];
-}
+void Player::updtaeIdle(float deltaTime) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    (void)deltaTime;
+    float Newy = GameDataManager::i().getTile(x, y).getWorldPos().Y;
+    Vec3d pos = PlayerMesh->getPosition();
 
+    idlePosY = std::sin(timeTT * 3) * 0.05f + 0.5f;
+    Newy += idlePosY;
+    pos.Y = Newy;
+    PlayerMesh->setPosition(pos);
+
+    for (int i = 0; i < static_cast<int>(PlayerMeshesCylinder.size()); i++) {
+        if (PlayerMeshesCylinder[i]) {
+            Vec3d posC = PlayerMesh->getPosition();
+            PlayerMeshesCylinder[i]->setPosition(posC);
+        }
+    }
+}
 }  // namespace GUI
 

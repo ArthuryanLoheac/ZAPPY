@@ -7,8 +7,25 @@
 #include "Exceptions/Commands.hpp"
 #include "Data/Data.hpp"
 
+/**
+ * @file Inventory.cpp
+ * @brief Implementation of inventory and perception-related command handlers
+ *
+ * This file contains the implementation of commands that deal with
+ * the AI's inventory management and perception of the environment.
+ */
+
 namespace AI {
 
+/**
+ * @brief Handles the LOOK command response
+ *
+ * Processes the response from the server after requesting to look around.
+ * Parses the vision data into the AI's structured vision representation.
+ *
+ * @param args Server response arguments containing vision data
+ * @param command Original command sent
+ */
 void Interface::commandLOOK(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     (void)command;
@@ -75,10 +92,18 @@ void Interface::commandLOOK(std::vector<std::string> &args,
     }
 }
 
+/**
+ * @brief Handles the INVENTORY command response
+ *
+ * Processes the response from the server after requesting inventory information.
+ * Parses the inventory data and updates the AI's inventory representation.
+ *
+ * @param args Server response arguments containing inventory data
+ * @param command Original command sent
+ */
 void Interface::commandINVENTORY(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     (void)command;
-
     if (args.size() < 2) {
         throw CommandArgumentsException("INVENTORY",
             "Expected at least one argument, got " +

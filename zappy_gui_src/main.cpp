@@ -8,26 +8,36 @@
 #include "DataManager/GameDataManager.hpp"
 #include "include/GuiConnection.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
+#include "include/logs.h"
 
+/**
+ * @brief Checks the command-line arguments and sets the appropriate configurations.
+ * @param ac Argument count.
+ * @param av Argument vector.
+ * @return int Returns 0 on success, 84 on error.
+ */
 int checkArgs(int ac, char **av) {
     int i = 1;
 
     while (i < ac) {
-        if (std::string(av[i]) == "-d") {
-            GUI::DataManager::i().setDebug(GUI::DataManager::ALL_DEBUG);
-            i++;
-        } else if (std::string(av[i]) == "-e") {
-            GUI::DataManager::i().setDebug(GUI::DataManager::ERRORS);
-            i++;
-        } else if (std::string(av[i]) == "-p") {
+        if (std::string(av[i]) == "-p" && i + 1 < ac) {
             GUI::DataManager::i().setPort(atoi(av[i + 1]));
             if (GUI::DataManager::i().getPort() < 0 ||
                 GUI::DataManager::i().getPort() > 65535)
                 return 84;
             i+= 2;
-        } else if (std::string(av[i]) == "-h") {
+        } else if (std::string(av[i]) == "-h" && i + 1 < ac) {
             GUI::DataManager::i().setIp(av[i + 1]);
             i+= 2;
+        } else if (std::string(av[i]) == "-v") {
+            set_log_level(WARNING);
+            i++;
+        } else if (std::string(av[i]) == "-vv") {
+            set_log_level(INFO);
+            i++;
+        } else if (std::string(av[i]) == "-vvv") {
+            set_log_level(DEBUG);
+            i++;
         } else {
             return 84;
         }
@@ -35,15 +45,26 @@ int checkArgs(int ac, char **av) {
     return 0;
 }
 
+/**
+ * @brief Displays the help message for the program usage.
+ * @return int Always returns 84.
+ */
 int returnHelp() {
     std::cout << "Usage: ./zappy_gui -h <ip> -p <port> [-d]\n"
               << "Options:\n"
-              << "  -h <ip>   : Set the server IP address\n"
-              << "  -p <port> : Set the server port (0-65535)\n"
-              << "  -d        : Enable debug mode\n";
+              << "  -h <ip>       : Set the server IP address\n"
+              << "  -p <port>     : Set the server port (0-65535)\n"
+              << "  -v, -vv, -vvv : Set verbose level (WARNING, INFO, DEBUG\n";
     return 84;
 }
 
+/**
+ * @brief Entry point of the program. Initializes the application, processes arguments,
+ *        establishes a connection, and starts the graphical interface.
+ * @param ac Argument count.
+ * @param av Argument vector.
+ * @return int Returns 0 on success, 84 on failure.
+ */
 int main(int ac, char **av) {
     int sockfd;
     GUI::DataManager::i();

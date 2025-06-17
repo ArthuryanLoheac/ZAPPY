@@ -1,15 +1,38 @@
 #include <iostream>
 #include <memory>
+#include <random>
 
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "tools/MeshImporter.hpp"
 #include "DataManager/DataManager.hpp"
+#include "DataManager/SoundsManager.hpp"
+#include "PluginsManagement/PluginsDataManager.hpp"
 
 namespace GUI {
+void Window::SetupSkybox() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> randRot(0, 359);
+    std::uniform_int_distribution<> randSmall(0, 9);
+
+    Skybox = std::shared_ptr<irr::scene::ISceneNode>(
+        smgr->addSkyBoxSceneNode(
+            driver->getTexture("assets/skybox/top.png"),
+            driver->getTexture("assets/skybox/bottom.png"),
+            driver->getTexture("assets/skybox/back.png"),
+            driver->getTexture("assets/skybox/front.png"),
+            driver->getTexture("assets/skybox/left.png"),
+            driver->getTexture("assets/skybox/right.png")),
+        [](irr::scene::ISceneNode *) {});
+    rotationSkybox = Vec3d((randSmall(gen) - 5.f) / 10.f,
+        (randSmall(gen) - 5.f) / 10.f, (randSmall(gen) - 5.f) / 10.f);
+    Skybox->setRotation(Vec3d(randRot(gen), randRot(gen), randRot(gen)));
+}
+
 Window::Window() {
     device = irr::createDevice(irr::video::EDT_BURNINGSVIDEO,
-        irr::core::dimension2d<irr::u32>(1280, 720), 16, false, true, false,
+        irr::core::dimension2d<irr::u32>(1280, 720), 16, false, false, false,
         &receiver);
 
     if (!device)
@@ -29,57 +52,57 @@ Window::Window() {
 
     font = std::shared_ptr<irr::gui::IGUIFont>(
         guienv->getFont("assets/fonts/DejaVuSansMono.png"),
-        [](irr::gui::IGUIFont *f) { (void) f; });
+        [](irr::gui::IGUIFont *) {});
+    SetupSkybox();
+}
+
+void Window::updateSkyBoxRotation() {
+    if (!Skybox)
+        return;
+    irr::core::vector3df rotation = Skybox->getRotation();
+    rotation += rotationSkybox * frameDeltaTime;
+    if (rotation.Y > 360.f) rotation.Y -= 360.f;
+    Skybox->setRotation(rotation);
+}
+
+void Window::windowUpdateFocus() {
+    handleEvent();
+    updateSkyBoxRotation();
+    GameDataManager::i().Update(frameDeltaTime);
+    PluginsDataManager::i().updatePluginsData();
+    pluginsManager::i().update(PluginsDataManager::i().getData());
+    SoundsManager::i().Update();
+    driver->beginScene(true, true,
+        irr::video::SColor(255, 100, 101, 140));
+
+    smgr->drawAll();
+    pluginsManager::i().drawPlugins(font, driver);
+    guienv->drawAll();
+}
+
+void Window::windowUpdateNoFocus() {
+    updateSkyBoxRotation();
+    GameDataManager::i().Update(frameDeltaTime);
+    SoundsManager::i().Update();
+    driver->beginScene(true, true,
+        irr::video::SColor(255, 100, 101, 140));
+
+    pluginsManager::i().drawPlugins(font, driver);
+    smgr->drawAll();
 }
 
 void Window::update() {
     while (device->run()) {
-        if (device->isWindowActive()) {
-            updateDeltaTime();
-            handleEvent();
-            driver->beginScene(true, true,
-                irr::video::SColor(255, 100, 101, 140));
-
-            smgr->drawAll();
-            drawUI();
-            guienv->drawAll();
-
-            driver->endScene();
-        } else {
-            device->yield();
-        }
+        updateDeltaTime();
+        if (device->isWindowActive())
+            windowUpdateFocus();
+        else
+            windowUpdateNoFocus();
+        driver->endScene();
     }
     device->drop();
 }
 
-void Window::drawUI() {
-    int x = 300;
-    int y = 10;
-
-    if (font) {
-        // TEAMS
-        font->draw("TEAMS : ", irr::core::rect<irr::s32>(x, y, 300, 500),
-            irr::video::SColor(255, 255, 255, 255));
-        for (auto &team : GUI::GameDataManager::i().getTeams()) {
-            y += 20;
-            Vec3d pos(x, y, 0);
-            font->draw(("\t" + team).c_str(),
-                irr::core::rect<irr::s32>(pos.X, pos.Y, 300, 50),
-                MeshImporter::i().getColor(team));
-        }
-
-        // FPS
-        font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
-            irr::core::rect<irr::s32>(10, 10, 300, 50),
-            irr::video::SColor(255, 255, 255, 255));
-
-        // Frequency
-        font->draw(("Freq : " +
-            std::to_string(GUI::DataManager::i().getFrequency())).c_str(),
-            irr::core::rect<irr::s32>(150, 10, 300, 50),
-            irr::video::SColor(255, 255, 255, 255));
-    }
-}
 void Window::setupWorld() {
     if (cubes.size() > 0) {
         for (auto &cube : cubes) {
@@ -99,11 +122,14 @@ void Window::setupWorld() {
                 j - (height/2) + deltaHeight);
             float rotation = std::rand() % 4;
             auto cube = MeshImporter::i().importMesh("Plane", "", position,
-                irr::core::vector3df(0.45f),
+                irr::core::vector3df(0.18f),
                 irr::core::vector3df(0, rotation * 90, 0));
             GameTile &tile = GUI::GameDataManager::i().addTile(i, j);
             tile.setTileMesh(cube);
         }
     }
+    smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
+        irr::video::SColorf(1.5f, 1.5f, 2.f), 2000.0f);
+    smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
 }
 }  // namespace GUI

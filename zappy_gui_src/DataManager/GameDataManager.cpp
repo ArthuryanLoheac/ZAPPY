@@ -43,7 +43,8 @@ GameTile &GameDataManager::getTile(int x, int y) {
         if (tile.getX() == x && tile.getY() == y)
             return tile;
     }
-    throw std::runtime_error("Tile not found");
+    throw std::runtime_error("Tile " + std::to_string(x) +
+        "/" + std::to_string(y) + " not found");
 }
 void GameDataManager::addTeam(const std::string &teamName) {
     std::lock_guard<std::mutex> lock(mutexDatas);
@@ -58,8 +59,8 @@ void GameDataManager::addEgg(int id, int team, int x, int y) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getTile(x, y).getWorldPos();
     position.Y += 0.2f;
-    eggs.emplace_back(id, team, MeshImporter::i().importMesh("DroneEgg", "",
-        position, Vec3d(0.2f)));
+    eggs.emplace_back(id, team, MeshImporter::i().importMesh("DroneEgg",
+        "", position, Vec3d(0.2f)));
 }
 
 void GameDataManager::removeEgg(int id) {
@@ -75,6 +76,15 @@ void GameDataManager::removeEgg(int id) {
     throw ParseException("Invalid ID egg");
 }
 
+bool GameDataManager::isPlayerAdded() const {
+    return playerAdded;
+}
+
+void GameDataManager::setPlayerAdded(bool added) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    playerAdded = added;
+}
+
 void GameDataManager::addPlayer(int id, int x, int y,
 Player::Orientation o, int level, const std::string &teamName) {
     std::lock_guard<std::mutex> lock(mutexDatas);
@@ -83,6 +93,7 @@ Player::Orientation o, int level, const std::string &teamName) {
     players.emplace_back(id, x, y, o, level, teamName,
         MeshImporter::i().importMesh("Drone", teamName, position, Vec3d(0.2f),
         Vec3d(0, o * 90, 0)));
+    playerAdded = true;
 }
 
 Player &GameDataManager::getPlayer(int id) {
@@ -94,7 +105,7 @@ Player &GameDataManager::getPlayer(int id) {
     throw ParseException("Player with this ID not found");
 }
 
-const std::vector<Player> &GameDataManager::getPlayers() const {
+std::vector<Player> &GameDataManager::getPlayers() {
     return players;
 }
 
@@ -102,13 +113,7 @@ void GameDataManager::removePlayer(int id) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     for (size_t i = 0; i < players.size(); i++) {
         if (players[i].getId() == id) {
-            auto mesh = players[i].getMesh();
-            if (mesh) {
-                int idM = mesh->getID();
-                auto sceneNode = GUI::Window::i().smgr->getSceneNodeFromId(idM);
-                if (sceneNode)
-                    GUI::Window::i().smgr->addToDeletionQueue(sceneNode);
-            }
+            players[i].destroy();
             players.erase(players.begin() + i);
             return;
         }
@@ -118,5 +123,74 @@ void GameDataManager::removePlayer(int id) {
 
 const std::vector<std::string> &GameDataManager::getTeams() const {
     return teams;
+}
+
+void GameDataManager::Update(float deltaTime) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    for (auto &player : players)
+        player.Update(deltaTime);
+}
+
+void GameDataManager::setEggAdded(bool added) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    eggAdded = added;
+}
+
+bool GameDataManager::isEggAdded() const {
+    return eggAdded;
+}
+
+bool GameDataManager::isPlayerDead() const {
+    return playerDead;
+}
+
+void GameDataManager::setPlayerDead(bool dead) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    playerDead = dead;
+}
+
+bool GameDataManager::isEggDead() const {
+    return eggDead;
+}
+
+void GameDataManager::setEggDead(bool dead) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    eggDead = dead;
+}
+
+bool GameDataManager::isElevation() const {
+    return elevation;
+}
+
+void GameDataManager::setElevationSound(bool elev) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    elevation = elev;
+}
+
+bool GameDataManager::isCollecting() const {
+    return Collecting;
+}
+
+void GameDataManager::setCollecting(bool collecting) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    Collecting = collecting;
+}
+
+bool GameDataManager::isDropping() const {
+    return Dropping;
+}
+
+void GameDataManager::setDropping(bool dropping) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    Dropping = dropping;
+}
+
+bool GameDataManager::isPushed() const {
+    return Pushed;
+}
+
+void GameDataManager::setPushed(bool pushed) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    Pushed = pushed;
 }
 }  // namespace GUI

@@ -29,8 +29,8 @@ void CommunicationModule::execute() {
 }
 
 float CommunicationModule::getPriority() {
-    if (id == -1) {
-        AI::Interface::i().sendCommand("Broadcast \n");
-    }
+    // if (id == -1) {
+    //     AI::Interface::i().sendCommand("Broadcast \n");
+    // }
     return 1.8f;
 }

@@ -10,9 +10,11 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <poll.h>
+#include <stdio.h>
 
 #include "include/server.h"
 #include "include/parser.h"
+#include "logs.h"
 
 static void listen_socket(int server_fd)
 {
@@ -66,6 +68,7 @@ server_t *create_server(int port)
 {
     server_t *server = malloc(sizeof(server_t));
 
+    LOG_DEBUG("Starting server");
     if (server == NULL)
         display_error("Memory allocation failed for server structure");
     server->port = port;
@@ -75,6 +78,7 @@ server_t *create_server(int port)
     config_socket(server->server_fd);
     bind_socket(server->server_fd, port);
     listen_socket(server->server_fd);
+    LOG_INFO("Server running on %d", port);
     return server;
 }
 

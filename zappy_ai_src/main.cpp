@@ -1,10 +1,10 @@
-#include <iostream>
 #include <string>
 #include <vector>
 #include <csignal>
 #include <chrono>
 #include <thread>
 #include <memory>
+#include <iostream>
 
 #include "Exceptions/Factory.hpp"
 #include "ForkWrapper/Fork.hpp"
@@ -16,6 +16,7 @@
 #include "modules/FoodGatheringModule.hpp"
 #include "modules/CommunicationModule.hpp"
 #include "modules/ElevationModule.hpp"
+
 
 bool sigintReceived = false;
 bool usr1Received = false;
@@ -82,7 +83,6 @@ int initChildProcess(int port, const std::string &ip,
     logic.addModule(std::make_unique<CommunicationModule>());
     logic.addModule(std::make_unique<ElevationModule>());
 
-
     while (AI::Data::i().isDead == false) {
         try {
             interface.run();
@@ -131,12 +131,6 @@ int mainLoop(int port, const std::string &ip,
                 std::make_unique<Fork>(initChildProcess, port, ip, name));
             usr1Received = false;
         }
-
-        // if (countForForks >= 2) {
-        //     childs.push_back(
-        //         std::make_unique<Fork>(initChildProcess, port, ip, name));
-        //     countForForks = 0;
-        // }
 
         if (childs.empty()) {
             std::cout << "No child processes running, exiting." << std::endl;

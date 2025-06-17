@@ -69,6 +69,7 @@ void GUI::ServerGUI::enwCommand(std::vector<std::string> &args) {
     GameDataManager::i().addEgg(id, team, x, y);
     if (team >= 0)
         GameDataManager::i().setEggAdded(true);
+    GUI::Window::i().needUpdateEggs = true;
 }
 
 /**
@@ -183,6 +184,7 @@ void ServerGUI::pnwCommand(std::vector<std::string> &args) {
         pOrient = Player::SOUTH;
 
     GameDataManager::i().addPlayer(id, x, y, pOrient, level, teamName);
+    GUI::Window::i().needUpdatePlayers = true;
 }
 
 /**
@@ -212,8 +214,8 @@ void ServerGUI::ppoCommand(std::vector<std::string> &args) {
     else
         pOrient = Player::SOUTH;
 
-
     GameDataManager::i().getPlayer(id).setPosition(x, y, pOrient);
+    GUI::Window::i().needUpdatePlayers = true;
 }
 
 /**
@@ -238,6 +240,7 @@ void ServerGUI::pinCommand(std::vector<std::string> &args) {
         p.setRessource(i - 4, r);
     }
     p.setPosition(x, y);
+    GUI::Window::i().needUpdatePlayers = true;
 }
 
 /**

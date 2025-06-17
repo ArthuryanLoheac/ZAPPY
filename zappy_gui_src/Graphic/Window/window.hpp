@@ -55,6 +55,8 @@ class Window {
 
     bool worldSetuped = false; /**<flag to indicate if the world is set up*/
     bool needUpdateRessources = false; /**<flag to indicate if resources need updating*/
+    bool needUpdatePlayers = false; /**<flag to indicate if players need updating*/
+    bool needUpdateEggs = false; /**<flag to indicate if eggs need updating*/
 
     /**
      * @brief Updates the window and handles rendering.

@@ -51,7 +51,7 @@ void GameDataManager::addTeam(const std::string &teamName) {
     teams.push_back(teamName);
 }
 
-const std::vector<Egg> &GameDataManager::getEggs() const {
+std::vector<Egg> &GameDataManager::getEggs() {
     return eggs;
 }
 
@@ -59,19 +59,18 @@ void GameDataManager::addEgg(int id, int team, int x, int y) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getTile(x, y).getWorldPos();
     position.Y += 0.2f;
-    eggs.emplace_back(id, team, nullptr); // MeshImporter::i().importMesh
+    eggs.emplace_back(id, team, x, y, nullptr); // Updated to match the Egg constructor
 }
 
 void GameDataManager::removeEgg(int id) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
     for (size_t i = 0; i < eggs.size(); i++) {
         if (eggs[i].id == id) {
-            if (eggs[i].EggMesh != nullptr) {
+            if (eggs[i].EggMesh) {
                 int idM = eggs[i].EggMesh->getID();
-                if (GUI::Window::i().smgr->getSceneNodeFromId(idM))
-                    GUI::Window::i().smgr->getSceneNodeFromId(idM)->remove();
+                auto sceneNode = GUI::Window::i().smgr->getSceneNodeFromId(idM);
+                sceneNode->setVisible(false);
             }
-            eggs.erase(eggs.begin() + i);
-            return;
         }
     }
     throw ParseException("Invalid ID egg");

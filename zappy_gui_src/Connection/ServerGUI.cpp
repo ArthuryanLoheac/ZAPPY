@@ -62,7 +62,6 @@ void ServerGUI::execCommand(std::map<std::string, void(GUI::ServerGUI::*)
             errStr += " " + args[i];
         LOG_WARNING(errStr.c_str());
     }
-    printf("end of command: %s\n", args[0].c_str());
 }
 
 void ServerGUI::readDatasFromServer() {

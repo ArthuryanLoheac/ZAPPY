@@ -289,6 +289,7 @@ void ServerGUI::picCommand(std::vector<std::string> &args) {
             GameDataManager::i().getPlayer(id).getOrientation(), true);
         GameDataManager::i().getPlayer(id).setElevation(true);
         GameDataManager::i().setElevationSound(true);
+        GUI::Window::i().needUpdatePlayers = true;
     }
 }
 

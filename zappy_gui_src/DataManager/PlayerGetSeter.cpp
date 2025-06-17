@@ -151,6 +151,8 @@ void Player::setPosition(int newX, int newY, Orientation new0, bool TP) {
         return;
 
     if (PlayerMesh) {
+        printf("Player %d set position to (%d, %d) with orientation %d\n",
+            id, x, y, o);
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
         position.Y += 0.5f;
         posTarget = Vec3d(position.X, position.Y, position.Z);
@@ -165,6 +167,7 @@ void Player::setPosition(int newX, int newY, Orientation new0, bool TP) {
                 PlayerMeshesCylinder[i]->setPosition(position);
         }
     }
+    GUI::Window::i().needUpdatePlayers = true;
 }
 
 void Player::setPosition(int newX, int newY) {

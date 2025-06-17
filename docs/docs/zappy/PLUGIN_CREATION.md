@@ -131,3 +131,92 @@ project/
 - Ensure your plugin adheres to the project's coding standards.
 - Test your plugin thoroughly to ensure it does not interfere with existing UI components.
 - The `priority` method allows the GUI to determine the order in which plugins are processed. Higher priority values are processed first.
+
+---
+
+## 🧩 8. Example Plugin Creation
+
+Below is an example of how to create a plugin and expose it for the application:
+
+```cpp
+#include "zappy_gui_src/PluginsManagement/pluginsInterface.hpp"
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+
+class ExamplePlugin : public pluginsInterface {
+ private:
+    pluginsData data; /**< Data manager for the plugin. */
+    irr::scene::ISceneManager* smgr; /**< Pointer to the Irrlicht scene manager. */
+    irr::IrrlichtDevice* device; /**< Pointer to the Irrlicht device. */
+    irr::scene::ICameraSceneNode* cam; /**< Pointer to the Irrlicht camera. */
+    irr::video::IVideoDriver* driver; /**< Pointer to the video driver. */
+    bool isActive = true; /**< Indicates if the plugin is active. */
+
+    void drawImage(const std::string& texture, int x, int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
+        irr::video::ITexture* bg = driver->getTexture(texture.c_str());
+        irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
+        irr::core::rect<irr::s32> destRect(x, y, x + sizeX, y + sizeY);
+        if (!bg) {
+            std::cerr << "Error: Texture not found: " << texture << std::endl;
+            return;
+        }
+        driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
+    }
+
+ public:
+    bool init(irr::scene::ISceneManager* _smgr, irr::IrrlichtDevice* _device, irr::scene::ICameraSceneNode* _cam) override {
+        smgr = _smgr;
+        device = _device;
+        cam = _cam;
+        std::cout << "ExamplePlugin initialized successfully!" << std::endl;
+        return true;
+    }
+
+    void update(pluginsData& _data) override {
+        data = _data;
+        std::cout << "ExamplePlugin updated with new data!" << std::endl;
+    }
+
+    void drawUI(std::shared_ptr<irr::gui::IGUIFont> font, irr::video::IVideoDriver* _driver) override {
+        driver = _driver;
+        if (!font || !driver || !isActive) return;
+
+        UICol white(255, 255, 255, 255);
+
+        drawImage("assets/UI/ExampleBackground.png", 0, 0, 150, 400, driver);
+
+        // Example data display
+        font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(), UIRect(30, 30, 300, 50), white);
+        font->draw(("Freq : " + std::to_string(data.freq)).c_str(), UIRect(130, 30, 300, 50), white);
+    }
+
+    void onEvent(const irr::SEvent& event) override {
+        if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
+            if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
+                std::cout << "ExamplePlugin: Left mouse button pressed!" << std::endl;
+                isActive = !isActive;
+            }
+        }
+    }
+    
+    int getPriority() {
+      return 10;
+    }
+};
+
+// Exposing the plugin
+extern "C" {
+    std::unique_ptr<pluginsInterface> createPlugin() {
+        return std::make_unique<ExamplePlugin>();
+    }
+}
+
+```
+
+This example demonstrates:
+- Implementing the `pluginsInterface` methods.
+- Using `extern "C"` to expose the plugin creation function.
+
+Place the `.cpp` file in the `zappy_gui_plugins_src` directory and compile it using the project's Makefile or manually as described earlier.

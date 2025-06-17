@@ -91,6 +91,7 @@ void ServerGUI::startServer() {
     auto timeNext = time + std::chrono::seconds(updateMapTime);
     int ready = 0;
 
+    GUI::ServerGUI::i().setConnectedToServer(true);
     while (DataManager::i().running) {
         clockUpdate(time, timeNext);
 
@@ -105,6 +106,14 @@ void ServerGUI::startServer() {
             outbuffer.clear();
         }
     }
+}
+
+bool ServerGUI::isConnectedToServer() const {
+    return isConnected;
+}
+
+void ServerGUI::setConnectedToServer(bool connected) {
+    isConnected = connected;
 }
 
 std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
@@ -122,7 +131,6 @@ std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
     }
     return args;
 }
-
 
 void ServerGUI::sendDatasToServer(const std::string &message) {
     if (fd.revents & POLLOUT) {

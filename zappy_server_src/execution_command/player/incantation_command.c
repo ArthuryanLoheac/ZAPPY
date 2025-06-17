@@ -141,6 +141,8 @@ void incantation_command(zappy_t *zappy, client_t *client, char **args)
         sprintf(buffer2, "plv #%d %d\n", client->stats.id,
             client->stats.level);
         send_data_to_graphics(zappy, buffer2);
+        if (client->stats.level == 8)
+            check_win(zappy);
     } else {
         add_pos_elevation_failed(zappy, client->stats.x, client->stats.y,
             client->stats.level);

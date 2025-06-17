@@ -1,4 +1,5 @@
 #include "PluginsManagement/PluginsDataManager.hpp"
+#include "Connection/ServerGUI.hpp"
 
 #include "include/logs.h"
 
@@ -11,6 +12,7 @@ void PluginsDataManager::updatePluginsData() {
     // Teams
     data.teams = GUI::GameDataManager::i().getTeams();
     data.teamColors.clear();
+    data.isConnected = GUI::ServerGUI::i().isConnectedToServer();
     for (const auto &team : data.teams)
         data.teamColors.push_back(MeshImporter::i().getColor(team));
     updatePlayers();

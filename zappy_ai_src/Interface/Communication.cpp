@@ -7,6 +7,7 @@
 #include "Interface/Interface.hpp"
 #include "Exceptions/Commands.hpp"
 #include "Data/Data.hpp"
+#include "include/logs.h"
 
 /**
  * @file Communication.cpp
@@ -29,9 +30,9 @@ namespace AI {
 void Interface::commandBROADCAST(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     if (args.size() < 2) {
-        throw AI::CommandArgumentsException("BROADCAST",
-            "Expected at least one argument, got " +
-            std::to_string(args.size() - 1));
+        LOG_ERROR("BROADCAST: Expected at least one argument, got %i\n.",
+            std::to_string(args.size() - 1).c_str());
+        return;
     }
     (void)command;
 }
@@ -46,9 +47,9 @@ void Interface::commandBROADCAST(std::vector<std::string> &args,
  */
 void Interface::receiveMessage(std::vector<std::string> &args) {
     if (args.size() != 3) {
-        throw AI::CommandArgumentsException("MESSAGE",
-            "Expected 3 arguments, got " +
-            std::to_string(args.size() - 1));
+        LOG_ERROR("MESSAGE: Expected 3 arguments, got %i\n.",
+            std::to_string(args.size() - 1).c_str());
+        return;
     }
 
     std::string message = args[1];

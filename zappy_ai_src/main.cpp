@@ -11,6 +11,7 @@
 #include "Socket/Socket.hpp"
 #include "Interface/Interface.hpp"
 #include "Data/Data.hpp"
+#include "include/logs.h"
 
 bool sigintReceived = false;
 bool usr1Received = false;
@@ -46,6 +47,12 @@ void parseArgs(int argc, char **argv, std::string &ip, int &port,
             name = argv[++i];
         } else if (std::string(argv[i]) == "-h" && i + 1 < argc) {
             ip = argv[++i];
+        } else if (std::string(argv[i]) == "-v") {
+            set_log_level(WARNING);
+        } else if (std::string(argv[i]) == "-vv") {
+            set_log_level(INFO);
+        } else if (std::string(argv[i]) == "-vvv") {
+            set_log_level(DEBUG);
         } else {
             throw AI::ArgumentsException("Unknown argument: " +
                 std::string(argv[i]));
@@ -68,7 +75,8 @@ int initChildProcess(int port, const std::string &ip,
     try {
         interface.start(port, ip, name);
     } catch (const AI::FactoryException &e) {
-        std::cerr << "Error starting interface: " << e.what() << std::endl;
+        LOG_WARNING("Failed to start interface in PID %d: %s",
+            getpid(), e.what());
         return 84;
     }
 
@@ -76,10 +84,10 @@ int initChildProcess(int port, const std::string &ip,
         try {
             interface.run();
         } catch (const AI::ChildProcessException &e) {
-            std::cerr << "Child process error: " << e.what() << std::endl;
+            LOG_ERROR("Child process error in PID %d: %s", getpid(), e.what());
             return 84;
         } catch (const AI::FactoryException &e) {
-            std::cerr << "Factory error: " << e.what() << std::endl;
+            LOG_ERROR("Factory error in PID %d: %s", getpid(), e.what());
             return 84;
         }
         if (AI::Data::i().isRunning) {
@@ -88,7 +96,8 @@ int initChildProcess(int port, const std::string &ip,
                 interface.sendCommand(INVENTORY);
                 interface.sendCommand("Set food\n");
             } catch (const std::exception &e) {
-                std::cerr << "Error sending command: " << e.what() << std::endl;
+                LOG_WARNING("Error sending command in PID %d: %s",
+                    getpid(), e.what());
             }
         }
     }
@@ -106,9 +115,8 @@ int mainLoop(int port, const std::string &ip,
     while (!sigintReceived) {
         for (auto it = childs.begin(); it != childs.end();) {
             if ((*it)->waitNoHang()) {
-                std::cout << "Child process PID " << (*it)->getPid()
-                    << " has exited with status "
-                    << (*it)->getExitStatus() << std::endl;
+                LOG_INFO("Child process PID %d has exited with status %d.",
+                    (*it)->getPid(), (*it)->getExitStatus());
                 it = childs.erase(it);
             } else {
                 ++it;
@@ -143,7 +151,7 @@ int main(int argc, char **argv) {
     try {
         parseArgs(argc, argv, ip, port, name);
     } catch (const std::exception &e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        LOG_FATAL("Argument parsing error: %s", e.what());
         return 84;
     }
 

@@ -8,6 +8,7 @@
 #include "Interface/Interface.hpp"
 #include "Exceptions/Commands.hpp"
 #include "Data/Data.hpp"
+#include "include/logs.h"
 
 /**
  * @file Special.cpp
@@ -30,9 +31,9 @@ namespace AI {
 void Interface::commandFORK(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     if (args.size() != 1) {
-        throw AI::CommandArgumentsException("FORK",
-            "Expected no arguments, got " +
-            std::to_string(args.size() - 1));
+        LOG_ERROR("FORK: Expected no arguments, got %i\n.",
+            std::to_string(args.size() - 1).c_str());
+        return;
     }
     (void)command;
 
@@ -53,9 +54,9 @@ void Interface::commandFORK(std::vector<std::string> &args,
 void Interface::commandINCANTATION(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     if (args.size() < 1) {
-        throw AI::CommandArgumentsException("INCANTATION",
-            "Expected at least one argument, got " +
-            std::to_string(args.size() - 1));
+        LOG_ERROR("INCANTATION: Expected at least one argument, got %i\n.",
+            std::to_string(args.size() - 1).c_str());
+        return;
     }
 
     (void)command;
@@ -64,14 +65,16 @@ void Interface::commandINCANTATION(std::vector<std::string> &args,
         return;
     }
     if (args[0] != "CURRENT") {
-        throw AI::CommandArgumentsException("INCANTATION",
-            "Expected 'CURRENT' or 'KO', got '" + args[0] + "'");
+        LOG_ERROR("INCANTATION: Expected 'CURRENT' or 'KO', got '%s'\n",
+            args[0].c_str());
+        return;
     }
     try {
         Data::i().level = std::stoi(args[2]);
     } catch (const std::invalid_argument &e) {
-        throw AI::CommandArgumentsException("INCANTATION",
-            "Failed to parse level: " + std::string(e.what()));
+        LOG_ERROR("INCANTATION: Failed to parse level: %s", e.what());
+        Data::i().isInIncantation = false;
+        return;
     }
 }
 

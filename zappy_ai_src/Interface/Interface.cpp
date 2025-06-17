@@ -9,6 +9,7 @@
 #include "Exceptions/Factory.hpp"
 #include "Exceptions/Commands.hpp"
 #include "Data/Data.hpp"
+#include "include/logs.h"
 
 /**
  * @file Interface.cpp
@@ -89,11 +90,11 @@ void Interface::run() {
     try {
         handleQueues();
     } catch (const AI::CommandNotFoundException &e) {
-        std::cerr << "Command not found: " << e.what() << std::endl;
+        LOG_ERROR("Command not found: %s", e.what());
     } catch (const AI::CommandArgumentsException &e) {
-        std::cerr << "Invalid command arguments: " << e.what() << std::endl;
+        LOG_ERROR("Invalid command arguments: %s", e.what());
     } catch (const std::exception &e) {
-        std::cerr << "Unexpected error: " << e.what() << std::endl;
+        LOG_ERROR("Unexpected error while handling queues: %s", e.what());
     }
 
     if (commandBuffer.empty()) {
@@ -115,14 +116,16 @@ void Interface::handleQueues() {
         inputQueue.pop();
         auto output = outputQueue.front();
         outputQueue.pop();
+        LOG_INFO("Handling command '%s' with response '%s'",
+            input[0].c_str(), output[0].c_str());
         if (commands.find(input[0]) == commands.end()) {
             throw AI::CommandNotFoundException(input[0]);
         }
         try {
             (this->*(commands[input[0]]))(output, input);
         } catch (const std::exception &e) {
-            std::cerr << "Error handling command '" << input[0]
-                << "': " << e.what() << std::endl;
+            LOG_ERROR("Error handling command '%s': %s",
+                input[0].c_str(), e.what());
         }
     }
 }
@@ -184,9 +187,9 @@ void Interface::commandWELCOME(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
-        throw AI::CommandArgumentsException("WELCOME",
-            "Expected no arguments, got " +
-            std::to_string(args.size() - 1));
+        LOG_ERROR("WELCOME: Expected no arguments, got %i\n.",
+            std::to_string(args.size() - 1).c_str());
+        return;
     }
 
     socket.sendDatasToServer(name + "\n");
@@ -201,8 +204,7 @@ void Interface::commandWELCOME(std::vector<std::string> &args,
         }
 
         if (output[0][0] == "KO") {
-            std::cerr << "Too much players connected, try again later."
-                << std::endl;
+            LOG_ERROR("WELCOME: Too many players connected, try again later.");
             Data::i().isDead = true;
             return;
         }
@@ -214,8 +216,8 @@ void Interface::commandWELCOME(std::vector<std::string> &args,
 
     try {
         if (followUpCommand[0].size() < 1 || followUpCommand[1].size() < 2) {
-            throw AI::CommandArgumentsException("WELCOME",
-                "Invalid response format");
+            LOG_ERROR("WELCOME: Invalid response format");
+            return;
         }
 
         if (std::stoi(followUpCommand[0][0]) != 1) {
@@ -226,8 +228,7 @@ void Interface::commandWELCOME(std::vector<std::string> &args,
         Data::i().mapY = std::stoi(followUpCommand[1][1]);
         Data::i().isRunning = true;
     } catch (const std::invalid_argument& e) {
-        throw AI::CommandArgumentsException("WELCOME",
-            "Failed to parse numeric values");
+        LOG_ERROR("WELCOME: Failed to parse numeric values: %s", e.what());
     }
 }
 

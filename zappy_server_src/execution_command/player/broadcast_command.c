@@ -64,6 +64,8 @@ static void send_broadcast(client_t *client, int dir, char *text)
  */
 static int rotate(int dir, int orient)
 {
+    if (dir == 0)
+        return dir;
     if (orient == 0)
         return (dir + 6) % 8;
     if (orient == 2)
@@ -113,6 +115,8 @@ static void broadcast_every_client(zappy_t *zappy, client_t *client,
     char buffer[2570];
     client_t *curr_client = zappy->clients;
 
+    for (int i = 0; i < 2570; i++)
+        buffer[i] = '\0';
     sprintf(buffer, "pbc #%d %s\n", client->stats.id, textBuffer);
     send_data_to_graphics(zappy, buffer);
     while (curr_client != NULL) {
@@ -132,6 +136,8 @@ void broadcast_command(zappy_t *zappy, client_t *client, char **args)
 {
     char textBuffer[2560];
 
+    for (int i = 0; i < 2560; i++)
+        textBuffer[i] = '\0';
     if (args[0] == NULL) {
         add_to_buffer(&client->out_buffer, "ko\n");
         return;
@@ -146,5 +152,4 @@ void broadcast_command(zappy_t *zappy, client_t *client, char **args)
         strcat(textBuffer, args[i]);
     }
     broadcast_every_client(zappy, client, textBuffer);
-    textBuffer[0] = '\0';
 }

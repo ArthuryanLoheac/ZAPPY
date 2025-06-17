@@ -20,7 +20,7 @@ static void set_client_stat(stats_t *stat)
     stat->y = 0;
     stat->orientation = 1;
     stat->tickLife = 0;
-    stat->inventory.food = 100000;
+    stat->inventory.food = 10;
     stat->inventory.linemate = 0;
     stat->inventory.deraumere = 0;
     stat->inventory.sibur = 0;

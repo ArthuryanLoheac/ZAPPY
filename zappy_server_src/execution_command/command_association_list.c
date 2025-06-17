@@ -19,7 +19,6 @@ const command_func_t player_command_association_list[] = {
     {"START_INCANTATION", start_incantation_command},
     {"INCANTATION", incantation_command},
     {"EJECT", eject_command},
-    {"MAXLEVEL", max_level_command},
     {NULL, NULL}
 };
 

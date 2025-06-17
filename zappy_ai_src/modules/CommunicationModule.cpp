@@ -29,6 +29,8 @@ void CommunicationModule::execute() {
 }
 
 float CommunicationModule::getPriority() {
-    // Define the priority for this module (between 0 and 1)
-    return 1.8f; // Example priority value
+    if (id == -1) {
+        AI::Interface::i().sendCommand("Broadcast \n");
+    }
+    return 1.8f;
 }

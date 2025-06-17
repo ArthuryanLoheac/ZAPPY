@@ -16,6 +16,8 @@ public:
     CommunicationModule();
     void execute() override;
     float getPriority() override;
+private:
+    int id = -1;
 };
 
 #endif // COMMUNICATIONMODULE_HPP

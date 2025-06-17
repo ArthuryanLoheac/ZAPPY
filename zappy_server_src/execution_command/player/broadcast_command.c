@@ -67,11 +67,11 @@ static int rotate(int dir, int orient)
     if (dir == 0)
         return dir;
     if (orient == 0)
-        return (dir + 6) % 8;
+        return (dir + 6) % 9;
     if (orient == 2)
-        return (dir + 2) % 8;
+        return (dir + 2) % 9;
     if (orient == 3)
-        return (dir + 4) % 8;
+        return (dir + 4) % 9;
     return dir;
 }
 

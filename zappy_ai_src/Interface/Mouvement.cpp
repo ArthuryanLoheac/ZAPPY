@@ -4,6 +4,7 @@
 
 #include "Interface/Interface.hpp"
 #include "Exceptions/Commands.hpp"
+#include "include/logs.h"
 
 /**
  * @file Mouvement.cpp
@@ -24,12 +25,12 @@ namespace AI {
  * @param command Original command sent
  */
 void Interface::commandFORWARD(std::vector<std::string> &args,
-std::vector<std::string> &command) {
+    std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
-        throw AI::CommandArgumentsException("FORWARD",
-            "Expected no arguments, got " +
-            std::to_string(args.size() - 1));
+        LOG_ERROR("FORWARD: Expected no arguments, got %i\n.",
+            args.size() - 1);
+        return;
     }
 }
 
@@ -42,12 +43,12 @@ std::vector<std::string> &command) {
  * @param command Original command sent
  */
 void Interface::commandLEFT(std::vector<std::string> &args,
-std::vector<std::string> &command) {
+    std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
-        throw AI::CommandArgumentsException("LEFT",
-            "Expected no arguments, got " +
-            std::to_string(args.size() - 1));
+        LOG_ERROR("LEFT: Expected no arguments, got %i\n.",
+            args.size() - 1);
+        return;
     }
 }
 
@@ -60,12 +61,12 @@ std::vector<std::string> &command) {
  * @param command Original command sent
  */
 void Interface::commandRIGHT(std::vector<std::string> &args,
-std::vector<std::string> &command) {
+    std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
-        throw AI::CommandArgumentsException("RIGHT",
-            "Expected no arguments, got " +
-            std::to_string(args.size() - 1));
+        LOG_ERROR("RIGHT: Expected no arguments, got %i\n.",
+            args.size() - 1);
+        return;
     }
 }
 

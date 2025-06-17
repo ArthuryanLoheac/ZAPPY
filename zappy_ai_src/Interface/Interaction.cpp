@@ -4,6 +4,7 @@
 #include "Interface/Interface.hpp"
 #include "Exceptions/Commands.hpp"
 #include "Data/Data.hpp"
+#include "include/logs.h"
 
 /**
  * @file Interaction.cpp
@@ -25,12 +26,12 @@ namespace AI {
  * @param command Original command sent
  */
 void Interface::commandEJECT(std::vector<std::string> &args,
-std::vector<std::string> &command) {
+    std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
-        throw AI::CommandArgumentsException("EJECT",
-            "Expected one argument, got " +
-            std::to_string(args.size() - 1));
+        LOG_ERROR("EJECT: Expected one argument, got %i\n.",
+            args.size() - 1);
+        return;
     }
 }
 

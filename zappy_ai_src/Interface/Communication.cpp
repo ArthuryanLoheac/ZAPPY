@@ -7,6 +7,7 @@
 #include "Interface/Interface.hpp"
 #include "Exceptions/Commands.hpp"
 #include "Data/Data.hpp"
+#include "include/logs.h"
 
 /**
  * @file Communication.cpp
@@ -27,11 +28,11 @@ namespace AI {
  * @param command Original command sent
  */
 void Interface::commandBROADCAST(std::vector<std::string> &args,
-std::vector<std::string> &command) {
+    std::vector<std::string> &command) {
     if (args.size() < 2) {
-        throw AI::CommandArgumentsException("BROADCAST",
-            "Expected at least one argument, got " +
-            std::to_string(args.size() - 1));
+        LOG_ERROR("BROADCAST: Expected at least one argument, got %i\n.",
+            args.size() - 1);
+        return;
     }
     (void)command;
 }
@@ -46,9 +47,9 @@ std::vector<std::string> &command) {
  */
 void Interface::receiveMessage(std::vector<std::string> &args) {
     if (args.size() != 3) {
-        throw AI::CommandArgumentsException("MESSAGE",
-            "Expected 3 arguments, got " +
-            std::to_string(args.size() - 1));
+        LOG_ERROR("MESSAGE: Expected 3 arguments, got %i\n.",
+            args.size() - 1);
+        return;
     }
 
     std::string message = args[1];
@@ -177,7 +178,7 @@ std::string Interface::base64Decode(const std::string& encoded) {
  * @return The encrypted string
  */
 std::string Interface::encrypt(const std::string& input,
-const std::string& key) {
+    const std::string& key) {
     if (input.empty() || key.empty()) return "";
 
     std::string xored;
@@ -201,7 +202,7 @@ const std::string& key) {
  * @return The decrypted string
  */
 std::string Interface::decrypt(const std::string& encrypted,
-const std::string& key) {
+    const std::string& key) {
     if (encrypted.empty() || key.empty()) return "";
 
     std::string decoded = base64Decode(encrypted);

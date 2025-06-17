@@ -56,7 +56,7 @@ static void send_pin_graphic(client_t *c, zappy_t *zappy)
 
 static void handle_life_tick(client_t *client, zappy_t *zappy)
 {
-    if (!client->is_connected || client->is_waiting_id)
+    if (!client->is_connected || client->is_waiting_id || client->is_graphic)
         return;
     client->stats.tickLife--;
     if (client->stats.tickLife <= 0) {

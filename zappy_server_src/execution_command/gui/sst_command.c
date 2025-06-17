@@ -38,13 +38,12 @@ void sst_command(zappy_t *zappy, client_t *client, char **args)
     int tps;
     char response[20];
 
-    printf("Executing sst command with args: %s\n", args[1]);
     (void) client;
     if (pointlen(args) != 1) {
         LOG_WARNING("[%i]: Wrong amount of arguments for command sst."
             " Got %i but required %i", client->fd, pointlen(args), 1);
     } else {
-        tps = atoi(&args[1][1]);
+        tps = atoi(args[0]);
         if (!is_tps_correct(tps, client->fd))
             return;
         zappy->parser->freq = tps;

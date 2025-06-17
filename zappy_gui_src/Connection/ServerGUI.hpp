@@ -221,6 +221,7 @@ class ServerGUI {
         {"TNA", &ServerGUI::tnaCommand},
         {"BCT", &ServerGUI::bctCommand},
         {"SGT", &ServerGUI::sgtCommand},
+        {"SST", &ServerGUI::sgtCommand},
         {"EBO", &ServerGUI::eboCommand},
         {"EDI", &ServerGUI::ediCommand},
         {"PNW", &ServerGUI::pnwCommand},

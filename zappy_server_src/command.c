@@ -73,7 +73,7 @@ void handle_client_command(zappy_t *zappy, int fd)
     if (current == NULL)
         return;
     if (get_client_buffer(current, fd, zappy) == false) {
-        sprintf(buffer, "pdi %d\n", current->stats.id);
+        sprintf(buffer, "pdi #%d\n", current->stats.id);
         LOG_INFO("Client with fd %d disconnected", fd);
         send_data_to_graphics(zappy, buffer);
         remove_client(zappy, fd);

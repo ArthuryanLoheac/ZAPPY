@@ -34,7 +34,7 @@ FLAGS_SERVER = -MMD -MP \
 FLAGS_GUI =	-MMD -MP \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
 	-I./libcpp -I./libc -std=c++17 -Wall -Wextra -Werror
-LDFLAGS_GUI = -lIrrlicht
+LDFLAGS_GUI = -lIrrlicht -lsfml-audio
 
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \

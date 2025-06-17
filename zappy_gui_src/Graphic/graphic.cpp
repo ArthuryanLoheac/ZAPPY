@@ -6,6 +6,7 @@
 #include "Graphic/Window/window.hpp"
 #include "DataManager/DataManager.hpp"
 #include "PluginsManagement/pluginsManager.hpp"
+#include "DataManager/SoundsManager.hpp"
 
 /**
  * @brief Initializes and runs the graphical interface.
@@ -16,6 +17,7 @@ int graphic() {
     try {
         GUI::Window::i();
         pluginsManager::i().loadPlugins("./plugins");
+        GUI::SoundsManager::i().playMusic("assets/Musics/Ambient.mp3");
         GUI::Window::i().update();
     } catch(const std::exception& e) {
         std::cerr << e.what() << '\n';

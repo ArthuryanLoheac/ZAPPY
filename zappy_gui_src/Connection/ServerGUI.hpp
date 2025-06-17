@@ -174,9 +174,40 @@ class ServerGUI {
      */
     void plvCommand(std::vector<std::string> &args);
 
+    /**
+     * @brief Handles the "PIC" command to start an elevation
+     *
+     * @param args Command arguments containing player ID and resources.
+     */
     void picCommand(std::vector<std::string> &args);
 
+    /**
+     * @brief Handles the "PIE" command to finish an elevation.
+     *
+     * @param args Command arguments containing player ID and resources.
+     */
     void pieCommand(std::vector<std::string> &args);
+
+    /**
+     * @brief Handles the "PDR" command to take ressource from a tile
+     *
+     * @param args Command arguments containing player ID.
+     */
+    void pdrCommand(std::vector<std::string> &args);
+
+    /**
+     * @brief Handles the "PGT" command to get the tile resources.
+     *
+     * @param args Command arguments containing player ID and tile coordinates.
+     */
+    void pgtCommand(std::vector<std::string> &args);
+
+    /**
+     * @brief Handles the "PEX" command to notify that a player has been ejected.
+     *
+     * @param args Command arguments containing player ID.
+     */
+    void pexCommand(std::vector<std::string> &args);
 
     /**
      * @brief Map of server commands to their corresponding handler functions.
@@ -198,6 +229,9 @@ class ServerGUI {
         {"PLV", &ServerGUI::plvCommand},
         {"PIC", &ServerGUI::picCommand},
         {"PIE", &ServerGUI::pieCommand},
+        {"PDR", &ServerGUI::pdrCommand},
+        {"PGT", &ServerGUI::pgtCommand},
+        {"PEX", &ServerGUI::pexCommand}
     };
 };
 

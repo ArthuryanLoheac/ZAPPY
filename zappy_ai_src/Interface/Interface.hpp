@@ -259,6 +259,25 @@ class Interface {
     bool startIncantation();
 
     /**
+     * @brief Base64 encoding map for the encryption/decryption functionality
+     */
+    static const char base64Chars[];
+
+    /**
+     * @brief Encode a string using Base64
+     * @param input The binary data to encode
+     * @return Base64 encoded string
+     */
+    std::string base64Encode(const std::string& input);
+
+    /**
+     * @brief Decode a Base64 encoded string
+     * @param encoded The Base64 encoded string
+     * @return Decoded binary data
+     */
+    std::string base64Decode(const std::string& encoded);
+
+    /**
      * @brief Simple encryption function for command strings
      * @param input The input string to encrypt
      * @param key The encryption key

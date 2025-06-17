@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <cstring>
 
 #include "Interface/Interface.hpp"
 #include "Exceptions/Commands.hpp"
@@ -57,11 +58,14 @@ void Interface::receiveMessage(std::vector<std::string> &args) {
         return;
     }
 
+    // Extract the actual encrypted message (remove magic key)
     message = message.substr(Data::i().magicKey.length());
 
+    // Clean up any newlines from the message
     message.erase(std::remove(message.begin(), message.end(), '\n'),
         message.end());
 
+    // Decrypt the message using our improved decryption method
     message = decrypt(message, Data::i().magicKey);
 
     Data::i().messageQueue.push({message, direction});
@@ -99,11 +103,74 @@ bool Interface::needFilter(const std::string &arg) {
     return false;
 }
 
+const char Interface::base64Chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+"abcdefghijklmnopqrstuvwxyz0123456789+/";
+
 /**
- * @brief Encrypts a string using a simple XOR-based method
+ * @brief Encode a string using Base64
+ *
+ * @param input The binary data to encode
+ * @return Base64 encoded string
+ */
+std::string Interface::base64Encode(const std::string& input) {
+    std::string encoded;
+    int val = 0;
+    int valb = -6;
+
+    for (unsigned char c : input) {
+        val = (val << 8) + c;
+        valb += 8;
+        while (valb >= 0) {
+            encoded.push_back(base64Chars[(val >> valb) & 0x3F]);
+            valb -= 6;
+        }
+    }
+
+    if (valb > -6) {
+        encoded.push_back(base64Chars[((val << 8) >> (valb + 8)) & 0x3F]);
+    }
+
+    while (encoded.size() % 4) {
+        encoded.push_back('=');
+    }
+
+    return encoded;
+}
+
+/**
+ * @brief Decode a Base64 encoded string
+ *
+ * @param encoded The Base64 encoded string
+ * @return Decoded binary data
+ */
+std::string Interface::base64Decode(const std::string& encoded) {
+    std::string decoded;
+    int val = 0;
+    int valb = -8;
+
+    for (unsigned char c : encoded) {
+        if (c == '=') break;
+
+        const char* pos = std::strchr(base64Chars, c);
+        if (pos == nullptr) continue;
+
+        val = (val << 6) + static_cast<int>(pos - base64Chars);
+        valb += 6;
+
+        if (valb >= 0) {
+            decoded.push_back(static_cast<char>((val >> valb) & 0xFF));
+            valb -= 8;
+        }
+    }
+
+    return decoded;
+}
+
+/**
+ * @brief Encrypts a string using XOR with key and Base64 encoding
  *
  * This method applies an XOR operation with a key to each character of the input
- * and maps the result to a printable ASCII range (32-126).
+ * and encodes the result using Base64, ensuring no control characters are present.
  *
  * @param input The string to encrypt
  * @param key The encryption key
@@ -111,23 +178,23 @@ bool Interface::needFilter(const std::string &arg) {
  */
 std::string Interface::encrypt(const std::string& input,
     const std::string& key) {
-    std::string output;
-    output.reserve(input.length());
+    if (input.empty() || key.empty()) return "";
+
+    std::string xored;
+    xored.reserve(input.length());
 
     for (size_t i = 0; i < input.length(); ++i) {
-        unsigned char c = input[i] ^ key[i % key.length()];
-        unsigned char printable = (c % 95) + 32;
-        output.push_back(printable);
+        xored.push_back(input[i] ^ key[i % key.length()]);
     }
 
-    return output;
+    return base64Encode(xored);
 }
 
 /**
  * @brief Decrypts a string that was encrypted using the encrypt method
  *
- * This method reverses the encryption by applying the XOR operation with the key
- * and normalizing the result back to its original character.
+ * This method decodes the Base64 encrypted string and reverses the XOR operation
+ * with the key to recover the original message.
  *
  * @param encrypted The encrypted string to decrypt
  * @param key The decryption key
@@ -135,14 +202,16 @@ std::string Interface::encrypt(const std::string& input,
  */
 std::string Interface::decrypt(const std::string& encrypted,
     const std::string& key) {
-    std::string output;
-    output.reserve(encrypted.length());
+    if (encrypted.empty() || key.empty()) return "";
 
-    for (size_t i = 0; i < encrypted.length(); ++i) {
-        unsigned char c = encrypted[i];
-        unsigned char normalized = c - 32;
+    std::string decoded = base64Decode(encrypted);
+    std::string output;
+    output.reserve(decoded.length());
+
+    for (size_t i = 0; i < decoded.length(); ++i) {
+        unsigned char c = decoded[i];
         unsigned char keyChar = key[i % key.length()];
-        unsigned char original = normalized ^ keyChar;
+        unsigned char original = c ^ keyChar;
         output.push_back(original);
     }
 
@@ -153,7 +222,8 @@ std::string Interface::decrypt(const std::string& encrypted,
  * @brief Sends a message to the other players by using the broadcast command
  *
  * This method encrypts the message and sends it to the server using the
- * broadcast command.
+ * broadcast command. The message is prefixed with the magic key to identify
+ * messages intended for our AI clients.
  *
  * @param message The message string to send
  */

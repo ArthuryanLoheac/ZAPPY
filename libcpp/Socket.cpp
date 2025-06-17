@@ -11,19 +11,43 @@
 
 namespace Network {
 
+/**
+ * @brief Default constructor
+ *
+ * Initializes all members to default values.
+ */
 Socket::Socket(): port(0), ip(), server_fd(0), nb_fds(0), fd(), running(false) {
 }
 
+/**
+ * @brief Parameterized constructor
+ *
+ * Initializes the socket with given port and IP address.
+ * @param port Port number to be used for connection
+ * @param ip IP address to be used for connection
+ */
 Socket::Socket(const int port, const std::string &ip) : port(port), ip(ip),
     server_fd(0), nb_fds(0), fd(), running(false) {
 }
 
+/**
+ * @brief Destructor
+ *
+ * Ensures the socket is stopped if it's still running.
+ */
 Socket::~Socket() {
     if (running) {
         stopSocket();
     }
 }
 
+/**
+ * @brief Starts the socket with specified port and IP
+ *
+ * @param port Port number to connect to
+ * @param ip IP address to connect to
+ * @throws std::runtime_error if socket is already running
+ */
 void Socket::startSocket(const int port, const std::string &ip) {
     this->port = port;
     this->ip = ip;
@@ -32,6 +56,12 @@ void Socket::startSocket(const int port, const std::string &ip) {
     startSocket();
 }
 
+/**
+ * @brief Starts the socket with previously set port and IP
+ *
+ * Creates a socket, connects to the server, and sets up polling.
+ * @throws std::runtime_error if socket is already running or connection fails
+ */
 void Socket::startSocket() {
     if (running)
         throw std::runtime_error("Socket is already running");
@@ -55,6 +85,12 @@ void Socket::startSocket() {
     running = true;
 }
 
+/**
+ * @brief Polls for socket events
+ *
+ * Waits for events on the socket and reads data if available.
+ * @throws std::runtime_error if polling fails
+ */
 void Socket::run() {
     if (!running) {
         throw std::runtime_error("Socket is not running");
@@ -65,6 +101,11 @@ void Socket::run() {
         readDatasFromServer();
 }
 
+/**
+ * @brief Stops the socket
+ *
+ * Closes the connection and resets the socket state.
+ */
 void Socket::stopSocket() {
     if (running) {
         close(server_fd);
@@ -74,6 +115,12 @@ void Socket::stopSocket() {
     }
 }
 
+/**
+ * @brief Processes commands in the buffer
+ *
+ * Extracts commands from buffer that end with newline characters,
+ * parses them, and adds them to the output list.
+ */
 void Socket::handleCommand() {
     while (buffer.find('\n') != std::string::npos) {
         const size_t pos = buffer.find('\n');
@@ -93,6 +140,11 @@ void Socket::handleCommand() {
     }
 }
 
+/**
+ * @brief Reads data from server into buffer
+ *
+ * @throws std::runtime_error if reading from server fails
+ */
 void Socket::readDatasFromServer() {
     char bufferTemp[1024];
     ssize_t bytes_read = 0;
@@ -106,6 +158,13 @@ void Socket::readDatasFromServer() {
     handleCommand();
 }
 
+/**
+ * @brief Parses a command string into arguments
+ *
+ * Splits a command string by spaces and returns each component as a vector element.
+ * @param command The command string to parse
+ * @return Vector of parsed arguments
+ */
 std::vector<std::string> Socket::parseCommands(std::string &command) {
     std::vector<std::string> args;
     size_t pos = 0;
@@ -118,6 +177,12 @@ std::vector<std::string> Socket::parseCommands(std::string &command) {
     return args;
 }
 
+/**
+ * @brief Sends data to the server
+ *
+ * @param message The message to send
+ * @throws std::runtime_error if sending data fails
+ */
 void Socket::sendDatasToServer(const std::string &message) const {
     if (fd.revents & POLLOUT) {
         const ssize_t bytes_sent = write(server_fd,
@@ -128,6 +193,11 @@ void Socket::sendDatasToServer(const std::string &message) const {
     }
 }
 
+/**
+ * @brief Gets and clears the list of command outputs
+ *
+ * @return Vector of command arguments
+ */
 std::vector<std::vector<std::string>> Socket::getListOutputs() {
     std::vector<std::vector<std::string>> outputs;
     outputs.swap(listOuputs);

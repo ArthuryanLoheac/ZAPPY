@@ -19,7 +19,8 @@ static int check_client(zappy_t *zappy, int i)
             curr_client = curr_client->next;
             continue;
         }
-        if (curr_client->stats.team_name == zappy->parser->team_names[i] &&
+        if (strcmp(curr_client->stats.team_name,
+            zappy->parser->team_names[i]) == 0 &&
             curr_client->stats.level == 8) {
             level_8_counter += 1;
         }
@@ -37,6 +38,7 @@ void check_win(zappy_t *zappy)
             zappy->end_game = true;
             zappy->winning_team = strdup(zappy->parser->team_names[i]);
             sprintf(buffer, "seg %s\n", zappy->winning_team);
+            send_data_to_graphics(zappy, buffer);
             return;
         }
     }

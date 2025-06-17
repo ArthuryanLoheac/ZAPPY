@@ -52,7 +52,7 @@ static void send_broadcast(client_t *client, int dir, char *text)
 {
     char buffer[2570];
 
-    sprintf(buffer, "message %d, %s\n", dir, text);
+    snprintf(buffer, sizeof(buffer), "message %d, %s\n", dir, text);
     add_to_buffer(&client->out_buffer, buffer);
 }
 

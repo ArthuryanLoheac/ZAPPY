@@ -22,7 +22,7 @@ static void exec_command_tick(zappy_t *zappy, client_t *client,
 
     if (!command || command->command == NULL || command->command[0] == NULL)
         return;
-    if (strcmp(client->stats.team_name, "GRAPHICAL") == 0)
+    if (client->is_graphic)
         handler = get_gui_command_handler(command->command[0]);
     else
         handler = get_player_command_handler(command->command[0]);
@@ -56,7 +56,7 @@ static void send_pin_graphic(client_t *c, zappy_t *zappy)
 
 static void handle_life_tick(client_t *client, zappy_t *zappy)
 {
-    if (!client->is_connected || client->is_waiting_id)
+    if (!client->is_connected || client->is_waiting_id || client->is_graphic)
         return;
     client->stats.tickLife--;
     if (client->stats.tickLife <= 0) {

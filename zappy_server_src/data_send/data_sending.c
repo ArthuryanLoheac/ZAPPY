@@ -25,10 +25,10 @@ static void send_msz(zappy_t *zappy, client_t *send)
 
 static void send_sgt(zappy_t *zappy, client_t *send)
 {
-    char sgt_data[6 + strlen(zappy->parser_str->freq)];
+    char sgt_data[256];
 
-    snprintf(sgt_data, sizeof(sgt_data), "sgt %s\n",
-        zappy->parser_str->freq);
+    snprintf(sgt_data, sizeof(sgt_data), "sgt %d\n",
+        zappy->parser->freq);
     add_to_buffer(&send->out_buffer, sgt_data);
 }
 

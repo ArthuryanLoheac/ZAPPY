@@ -17,6 +17,7 @@ class ServerGUI {
     int nb_fds; /**< Number of file descriptors. */
     struct pollfd fd; /**< Poll file descriptor structure. */
     std::string buffer; /**< Buffer for storing incoming data. */
+    std::string outbuffer = ""; /**< Buffer for outgoing data. */
     int updateMapTime = 30; /**< Time interval for map updates. */
 
     /**
@@ -33,6 +34,13 @@ class ServerGUI {
         static ServerGUI i;
         return i;
     }
+
+    /**
+     * @brief Sends data to the server.
+     *
+     * @param message The message to send.
+     */
+    void sendDatasToServer(const std::string &message);
 
     /**
      * @brief Starts the server communication loop.
@@ -89,13 +97,6 @@ class ServerGUI {
      */
     void execCommand(std::map<std::string, void(GUI::ServerGUI::*)
     (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args);
-
-    /**
-     * @brief Sends data to the server.
-     *
-     * @param message The message to send.
-     */
-    void sendDatasToServer(const std::string &message);
 
     /**
      * @brief Handles the "WELCOME" command from the server.
@@ -234,6 +235,7 @@ class ServerGUI {
         {"TNA", &ServerGUI::tnaCommand},
         {"BCT", &ServerGUI::bctCommand},
         {"SGT", &ServerGUI::sgtCommand},
+        {"SST", &ServerGUI::sgtCommand},
         {"EBO", &ServerGUI::eboCommand},
         {"EDI", &ServerGUI::ediCommand},
         {"PNW", &ServerGUI::pnwCommand},

@@ -20,6 +20,7 @@ class pluginsManager {
      * @param path The directory path where plugins are located.
      */
     void loadPlugins(const std::string &path);
+
     /** @brief Load a single plugin from the specified path.
      * @param path The file path of the plugin to load.
      */
@@ -31,14 +32,22 @@ class pluginsManager {
      */
     void drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
         irr::video::IVideoDriver* driver) const;
+
     /** @brief Handle events for all loaded plugins.
      * @param event The event to handle.
      */
     void onEvent(const irr::SEvent &event);
+
     /** @brief Update all plugins with the datas of the game
      * @param dataManager The data structure contaning all datas
      */
-    void update(pluginsData &dataManager);
+    void update(pluginsData dataManager);
+
+    /**
+     * @brief Sort the plugins based on their priority.
+     * This function sorts the plugins in descending order of their priority.
+     */
+    void sortPlugins();
 
  private:
     std::vector<std::unique_ptr<pluginsInterface>> _plugins;

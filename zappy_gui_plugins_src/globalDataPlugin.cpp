@@ -47,10 +47,6 @@ irr::video::IVideoDriver* driver) {
     // FPS
     font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
         UIRect(x, y, 300, 50), white);
-    // Frequency
-    y += spaceBetween;
-    font->draw(("Freq : " + std::to_string(data.frequency)).c_str(),
-        UIRect(x, y, 300, 50), white);
     // TEAMS
     y += spaceBetween;
     font->draw("TEAMS : ", UIRect(x, y, 300, 50), white);
@@ -63,10 +59,16 @@ irr::video::IVideoDriver* driver) {
     }
 }
 
-void globalDataPlugin::onEvent(const irr::SEvent &event) {
+bool globalDataPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
     (void) event;
+    (void) datas;
+    return false;
 }
 
-void globalDataPlugin::update(pluginsData &_data) {
+void globalDataPlugin::update(pluginsData _data) {
     data = _data;
+}
+
+int globalDataPlugin::getPriority() const {
+    return 0;
 }

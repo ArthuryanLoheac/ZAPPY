@@ -12,14 +12,6 @@
 #include "logs.h"
 #include "pointlen.h"
 
-static void send_to_all_gui(zappy_t *zappy, const char *msg)
-{
-    for (client_t *actual = zappy->clients; actual != NULL;
-        actual = actual->next) {
-        add_to_buffer(&actual->out_buffer, msg);
-    }
-}
-
 static bool is_tps_correct(int tps, int client_fd)
 {
     if (tps < 1) {
@@ -43,12 +35,12 @@ void sst_command(zappy_t *zappy, client_t *client, char **args)
         LOG_WARNING("[%i]: Wrong amount of arguments for command sst."
             " Got %i but required %i", client->fd, pointlen(args), 1);
     } else {
-        tps = atoi(&args[1][1]);
+        tps = atoi(args[0]);
         if (!is_tps_correct(tps, client->fd))
             return;
         zappy->parser->freq = tps;
         zappy->durationTick = 1.0 / zappy->parser->freq;
         snprintf(response, 19, "sst %i\n", zappy->parser->freq);
-        send_to_all_gui(zappy, response);
+        send_data_to_graphics(zappy, response);
     }
 }

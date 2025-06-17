@@ -6,10 +6,14 @@
 #include <memory>
 #include <string>
 #include <utility>
+#include <algorithm>
 
 #include "include/logs.h"
 #include "PluginsManagement/pluginsManager.hpp"
+#include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
+#include "Connection/ServerGUI.hpp"
+#include "PluginsManagement/PluginsDataManager.hpp"
 
 
 void pluginsManager::loadPlugins(const std::string &path) {
@@ -54,14 +58,33 @@ void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
 
 void pluginsManager::onEvent(const irr::SEvent &event) {
     for (const auto &plugin : _plugins) {
-        if (plugin)
-            plugin->onEvent(event);
+        if (plugin) {
+            pluginsData &datas = PluginsDataManager::i().getData();
+            bool newData = plugin->onEvent(event, datas);
+            if (datas.frequency > 0 &&
+                datas.frequency != GUI::DataManager::i().getFrequency()) {
+                GUI::DataManager::i().setFrequency(datas.frequency);
+                GUI::ServerGUI::i().outbuffer += "sst " +
+                    std::to_string(datas.frequency) + "\n";
+                PluginsDataManager::i().updatePluginsData();
+            }
+            if (newData)
+                return;
+        }
     }
 }
 
-void pluginsManager::update(pluginsData &dataManager) {
+void pluginsManager::update(pluginsData dataManager) {
     for (const auto &plugin : _plugins) {
         if (plugin)
             plugin->update(dataManager);
     }
+}
+
+void pluginsManager::sortPlugins() {
+    std::sort(_plugins.begin(), _plugins.end(),
+        [](const std::unique_ptr<pluginsInterface> &a,
+           const std::unique_ptr<pluginsInterface> &b) {
+            return a->getPriority() > b->getPriority();
+        });
 }

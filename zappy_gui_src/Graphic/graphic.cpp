@@ -17,6 +17,7 @@ int graphic() {
     try {
         GUI::Window::i();
         pluginsManager::i().loadPlugins("./plugins");
+        pluginsManager::i().sortPlugins();
         GUI::SoundsManager::i().playMusic("assets/Musics/Ambient.mp3");
         GUI::Window::i().update();
     } catch(const std::exception& e) {

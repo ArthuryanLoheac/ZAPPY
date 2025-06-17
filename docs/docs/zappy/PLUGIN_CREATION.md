@@ -23,10 +23,11 @@ class pluginsInterface {
     virtual ~pluginsInterface() = default;
     virtual bool init(irr::scene::ISceneManager* smgr,
         irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) = 0;
-    virtual void update(pluginsData &dataManager) = 0;
+    virtual void update(pluginsData dataManager) = 0;
     virtual void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
         irr::video::IVideoDriver* driver) = 0;
-    virtual void onEvent(const irr::SEvent &event) = 0;
+    virtual bool onEvent(const irr::SEvent &event, pluginsData &datas) = 0;
+    virtual int priority() const = 0; // New method to define plugin priority
 };
 ```
 
@@ -48,7 +49,7 @@ class MyPlugin : public pluginsInterface {
         return true;
     }
 
-    void update(pluginsData &dataManager) override {
+    void update(pluginsData dataManager) override {
         // Update logic using game data
     }
 
@@ -57,8 +58,17 @@ class MyPlugin : public pluginsInterface {
         // Render additional UI elements
     }
 
-    void onEvent(const irr::SEvent &event) override {
+    bool onEvent(const irr::SEvent &event, pluginsData &datas) override {
         // Handle user input or events
+        // return true if the event is consumed
+        // datas is a ref to the structure datas (used for send datas to serv)
+        // Updated logic for handling events
+    }
+
+    int priority() const override {
+        // Return the priority of the plugin
+        // Greater the value faster it will be taken
+        return 10; // Example priority value
     }
 };
 ```
@@ -120,6 +130,7 @@ project/
 - Use the `pluginsData` object to access game data such as players, tiles, and teams.
 - Ensure your plugin adheres to the project's coding standards.
 - Test your plugin thoroughly to ensure it does not interfere with existing UI components.
+- The `priority` method allows the GUI to determine the order in which plugins are processed. Higher priority values are processed first.
 
 ---
 
@@ -188,6 +199,10 @@ class ExamplePlugin : public pluginsInterface {
                 isActive = !isActive;
             }
         }
+    }
+    
+    int getPriority() {
+      return 10;
     }
 };
 

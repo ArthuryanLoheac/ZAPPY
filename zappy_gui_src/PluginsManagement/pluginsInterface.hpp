@@ -31,7 +31,7 @@ class pluginsInterface {
     /** @brief Update the plugin with the current game data.
      * @param dataManager Reference to the pluginsData object containing all the datas
      */
-    virtual void update(pluginsData &dataManager) = 0;
+    virtual void update(pluginsData dataManager) = 0;
 
     /** @brief Draw the plugin's UI elements.
      * @param font Pointer to the GUI font used for rendering text.
@@ -43,5 +43,7 @@ class pluginsInterface {
     /** @brief Handle events for the plugin.
      * @param event The event to handle.
      */
-    virtual void onEvent(const irr::SEvent &event) = 0;
+    virtual bool onEvent(const irr::SEvent &event, pluginsData &datas) = 0;
+
+    virtual int getPriority() const = 0;
 };

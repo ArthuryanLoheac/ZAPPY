@@ -107,7 +107,7 @@ static void compute_message(char *textBuffer,
  * @param client The client sending the broadcast.
  * @param textBuffer The message to broadcast.
  */
-static broadcast_every_client(zappy_t *zappy, client_t *client,
+static void broadcast_every_client(zappy_t *zappy, client_t *client,
     char *textBuffer)
 {
     char buffer[2570];

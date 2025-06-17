@@ -28,6 +28,7 @@ int loopClient(int sockfd) {
 
         GUI::ServerGUI::i().startServer();
     } catch (const std::exception &e) {
+        GUI::ServerGUI::i().setConnectedToServer(false);
         LOG_WARNING("Server closed");
         close(sockfd);
     }

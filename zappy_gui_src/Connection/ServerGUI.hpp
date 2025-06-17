@@ -39,7 +39,21 @@ class ServerGUI {
      */
     void startServer();
 
+    /**
+     * @brief Get if the server is connected.
+     */
+    bool isConnectedToServer() const;
+
+    /**
+     * @brief Sets the server connection status.
+     *
+     * @param connected True if connected, false otherwise.
+     */
+    void setConnectedToServer(bool connected);
+
  private:
+    bool isConnected = false; /**< Indicates if the server connection is active. */
+
     /**
      * @brief Updates the clock
      *

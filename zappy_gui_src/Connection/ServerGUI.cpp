@@ -12,6 +12,7 @@
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
 #include "include/logs.h"
+#include "ServerGUI.hpp"
 
 namespace GUI {
 ServerGUI::ServerGUI() {
@@ -91,6 +92,7 @@ void ServerGUI::startServer() {
     auto timeNext = time + std::chrono::seconds(updateMapTime);
     int ready = 0;
 
+    GUI::ServerGUI::i().setConnectedToServer(true);
     while (DataManager::i().running) {
         clockUpdate(time, timeNext);
 
@@ -103,7 +105,16 @@ void ServerGUI::startServer() {
     }
 }
 
-std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
+bool ServerGUI::isConnectedToServer() const {
+    return isConnected;
+}
+
+void ServerGUI::setConnectedToServer(bool connected) {
+    isConnected = connected;
+}
+
+std::vector<std::string> ServerGUI::parseCommands(std::string &command)
+{
     std::vector<std::string> args;
     size_t pos = 0;
 
@@ -118,7 +129,6 @@ std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
     }
     return args;
 }
-
 
 void ServerGUI::sendDatasToServer(const std::string &message) {
     if (fd.revents & POLLOUT) {

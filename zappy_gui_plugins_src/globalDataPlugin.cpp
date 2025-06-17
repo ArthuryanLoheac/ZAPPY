@@ -47,10 +47,6 @@ irr::video::IVideoDriver* driver) {
     // FPS
     font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
         UIRect(x, y, 300, 50), white);
-    // Frequency
-    y += spaceBetween;
-    font->draw(("Freq : " + std::to_string(data.frequency)).c_str(),
-        UIRect(x, y, 300, 50), white);
     // TEAMS
     y += spaceBetween;
     font->draw("TEAMS : ", UIRect(x, y, 300, 50), white);

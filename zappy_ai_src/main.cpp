@@ -121,12 +121,6 @@ int mainLoop(int port, const std::string &ip,
             usr1Received = false;
         }
 
-        // if (countForForks >= 2) {
-        //     childs.push_back(
-        //         std::make_unique<Fork>(initChildProcess, port, ip, name));
-        //     countForForks = 0;
-        // }
-
         if (childs.empty()) {
             std::cout << "No child processes running, exiting." << std::endl;
             return 0;

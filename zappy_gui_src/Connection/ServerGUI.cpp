@@ -12,7 +12,6 @@
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
 #include "include/logs.h"
-#include "ServerGUI.hpp"
 
 namespace GUI {
 ServerGUI::ServerGUI() {
@@ -113,8 +112,7 @@ void ServerGUI::setConnectedToServer(bool connected) {
     isConnected = connected;
 }
 
-std::vector<std::string> ServerGUI::parseCommands(std::string &command)
-{
+std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
     std::vector<std::string> args;
     size_t pos = 0;
 

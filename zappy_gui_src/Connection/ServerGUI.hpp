@@ -52,7 +52,7 @@ class ServerGUI {
     void setConnectedToServer(bool connected);
 
  private:
-    bool isConnected = false; /**< Indicates if the server connection is active. */
+    bool isConnected = false; /**< if the server connection is active */
 
     /**
      * @brief Updates the clock

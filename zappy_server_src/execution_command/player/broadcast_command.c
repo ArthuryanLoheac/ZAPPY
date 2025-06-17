@@ -11,6 +11,14 @@
 #include "command_handler.h"
 #include "command.h"
 
+/**
+ * @brief Computes the direction from one cell to another.
+ * @param from The starting cell.
+ * @param to The destination cell.
+ * @return An integer representing the direction:
+ * 0: same cell, 1: north, 2: northeast, 3: east, 4: southeast,
+ * 5: south, 6: southwest, 7: west, 8: northwest.
+ */
 static int from_to(cell_t from, cell_t to)
 {
     if (from.x == to.x && from.y == to.y)
@@ -34,6 +42,12 @@ static int from_to(cell_t from, cell_t to)
     return -1;
 }
 
+/**
+ * @brief Sends a broadcast message to a specific client.
+ * @param client The client to send the message to.
+ * @param dir The direction of the broadcast.
+ * @param text The message to send.
+ */
 static void send_broadcast(client_t *client, int dir, char *text)
 {
     char buffer[2570];
@@ -42,10 +56,14 @@ static void send_broadcast(client_t *client, int dir, char *text)
     add_to_buffer(&client->out_buffer, buffer);
 }
 
+/**
+ * @brief Rotates the direction based on the client's orientation.
+ * @param dir The direction to rotate.
+ * @param orient The orientation of the client.
+ * @return The new direction after rotation.
+ */
 static int rotate(int dir, int orient)
 {
-    if (dir == 0)
-        return dir;
     if (orient == 0)
         return (dir + 6) % 8;
     if (orient == 2)
@@ -55,6 +73,14 @@ static int rotate(int dir, int orient)
     return dir;
 }
 
+/**
+ * @brief Computes the message to be sent to a client based on their position
+ * and orientation to be the shortest possible.
+ * @param textBuffer The buffer containing the message to send.
+ * @param zappy The zappy server instance.
+ * @param source The client sending the broadcast.
+ * @param dest The client receiving the broadcast.
+ */
 static void compute_message(char *textBuffer,
     zappy_t *zappy, client_t *source, client_t *dest)
 {
@@ -75,6 +101,12 @@ static void compute_message(char *textBuffer,
     send_broadcast(dest, direction, textBuffer);
 }
 
+/**
+ * @brief Broadcasts a message to every client in the game.
+ * @param zappy The zappy server instance.
+ * @param client The client sending the broadcast.
+ * @param textBuffer The message to broadcast.
+ */
 static broadcast_every_client(zappy_t *zappy, client_t *client,
     char *textBuffer)
 {
@@ -90,6 +122,12 @@ static broadcast_every_client(zappy_t *zappy, client_t *client,
     }
 }
 
+/**
+ * @brief Broadcasts a message to all clients in the game.
+ * @param zappy The zappy server instance.
+ * @param client The client sending the broadcast.
+ * @param args The arguments for the broadcast command
+ */
 void broadcast_command(zappy_t *zappy, client_t *client, char **args)
 {
     char textBuffer[2560];

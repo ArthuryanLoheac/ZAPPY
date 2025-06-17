@@ -52,7 +52,7 @@ static void send_broadcast(client_t *client, int dir, char *text)
 {
     char buffer[2570];
 
-    sprintf(buffer, "message %d, %s\n", dir, text);
+    snprintf(buffer, sizeof(buffer), "message %d, %s\n", dir, text);
     add_to_buffer(&client->out_buffer, buffer);
 }
 
@@ -115,8 +115,7 @@ static void broadcast_every_client(zappy_t *zappy, client_t *client,
     char buffer[2570];
     client_t *curr_client = zappy->clients;
 
-    for (int i = 0; i < 2570; i++)
-        buffer[i] = '\0';
+    memset(buffer, 0, sizeof(buffer));
     sprintf(buffer, "pbc #%d %s\n", client->stats.id, textBuffer);
     send_data_to_graphics(zappy, buffer);
     while (curr_client != NULL) {

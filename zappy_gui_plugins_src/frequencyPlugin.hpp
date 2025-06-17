@@ -12,8 +12,18 @@
  */
 class frequencyPlugin : public pluginsInterface {
  private:
+    enum stateButton {
+        DISABLED, /**< Button is disabled. */
+        ENABLED, /**< Button is enabled. */
+        HOVER, /**< Button is hovered. */
+        CLICKED, /**< Button is clicked. */
+    };
+
     pluginsData data; /**< Data manager for the plugin. */
     int frequency = 0; /**< Frequency value to be displayed. */
+
+    stateButton minusButtonState = DISABLED; /**< State of the minus button. */
+    stateButton plusButtonState = DISABLED; /**< State of the plus button. */
 
     /**
      * @brief Draws a background texture at a specified position and size.
@@ -25,7 +35,15 @@ class frequencyPlugin : public pluginsInterface {
      * @param driver Pointer to the video driver.
      */
     void drawImage(const std::string &texture, int x, int y,
-      int sizeX, int sizeY, irr::video::IVideoDriver* driver);
+    int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha = 255);
+
+    void drawButton(const std::string &texture, int x, int y,
+        irr::video::IVideoDriver* driver,
+        stateButton buttonState, const std::string &text,
+        std::shared_ptr<irr::gui::IGUIFont> font);
+
+    void checkHoverButton(const irr::SEvent &event,
+        stateButton &buttonState, int x, int y, int width, int height);
 
  public:
     /**

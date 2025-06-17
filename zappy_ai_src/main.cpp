@@ -25,7 +25,8 @@ void printHelp() {
     std::cout << "USAGE: ./zappy_ai -p port -n name -h machine" << std::endl <<
         "  -n name:    name of the team of the AI" << std::endl <<
         "  -p port:    port number of the zappy server" << std::endl <<
-        "  -h machine: machine name or IP address of the zappy server"
+        "  -h machine: machine name or IP address of the zappy server" <<
+        "  -v, -vv, -vvv : Set verbose level (WARNING, INFO, DEBUG)"
         << std::endl;
 }
 

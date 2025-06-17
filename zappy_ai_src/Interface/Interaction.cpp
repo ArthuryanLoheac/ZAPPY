@@ -25,7 +25,7 @@ namespace AI {
  * @param command Original command sent
  */
 void Interface::commandEJECT(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
         throw AI::CommandArgumentsException("EJECT",

@@ -28,7 +28,7 @@ namespace AI {
  * @param command Original command sent
  */
 void Interface::commandFORK(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     if (args.size() != 1) {
         throw AI::CommandArgumentsException("FORK",
             "Expected no arguments, got " +
@@ -51,7 +51,7 @@ void Interface::commandFORK(std::vector<std::string> &args,
  * @param command Original command sent
  */
 void Interface::commandINCANTATION(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     if (args.size() < 1) {
         throw AI::CommandArgumentsException("INCANTATION",
             "Expected at least one argument, got " +

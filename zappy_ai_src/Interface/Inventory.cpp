@@ -27,7 +27,7 @@ namespace AI {
  * @param command Original command sent
  */
 void Interface::commandLOOK(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() < 2) {
         throw CommandArgumentsException("LOOK",
@@ -102,7 +102,7 @@ void Interface::commandLOOK(std::vector<std::string> &args,
  * @param command Original command sent
  */
 void Interface::commandINVENTORY(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() < 2) {
         throw CommandArgumentsException("INVENTORY",
@@ -130,7 +130,7 @@ void Interface::commandINVENTORY(std::vector<std::string> &args,
 }
 
 void Interface::commandTAKE(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     if (args.size() != 1) {
         throw CommandArgumentsException("TAKE",
             "Expected one argument, got " +
@@ -145,7 +145,7 @@ void Interface::commandTAKE(std::vector<std::string> &args,
 }
 
 void Interface::commandSET(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     if (args.size() != 1) {
         throw CommandArgumentsException("SET",
             "Expected one argument, got " +

@@ -17,6 +17,7 @@ class ServerGUI {
     int nb_fds; /**< Number of file descriptors. */
     struct pollfd fd; /**< Poll file descriptor structure. */
     std::string buffer; /**< Buffer for storing incoming data. */
+    std::string outbuffer = ""; /**< Buffer for outgoing data. */
     int updateMapTime = 30; /**< Time interval for map updates. */
 
     /**

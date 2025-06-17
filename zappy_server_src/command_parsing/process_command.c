@@ -101,6 +101,8 @@ static bool check_graphic(char **args, client_t *client, zappy_t *zappy_ptr)
 {
     if (strcmp(args[0], "GRAPHIC") == 0) {
         client->is_graphic = true;
+        client->is_connected = true;
+        client->is_waiting_id = false;
         send_data(zappy_ptr, client);
         return true;
     }

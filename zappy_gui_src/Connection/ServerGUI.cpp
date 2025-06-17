@@ -100,6 +100,10 @@ void ServerGUI::startServer() {
             throw std::runtime_error("Poll error occurred");
         if (fd.revents & POLLIN)
             readDatasFromServer();
+        if (fd.revents & POLLOUT && !outbuffer.empty()) {
+            sendDatasToServer(outbuffer);
+            outbuffer.clear();
+        }
     }
 }
 

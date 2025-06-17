@@ -61,8 +61,8 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
             if (newData.frequency > 0 &&
                 newData.frequency != GUI::DataManager::i().getFrequency()) {
                 GUI::DataManager::i().setFrequency(newData.frequency);
-                GUI::ServerGUI::i().sendDatasToServer("sst " +
-                    std::to_string(newData.frequency) + "\n");
+                GUI::ServerGUI::i().outbuffer += "sgt " +
+                    std::to_string(newData.frequency) + "\n";
             }
         }
     }

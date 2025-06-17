@@ -38,6 +38,7 @@ void sst_command(zappy_t *zappy, client_t *client, char **args)
     int tps;
     char response[20];
 
+    printf("Executing sst command with args: %s\n", args[1]);
     (void) client;
     if (pointlen(args) != 1) {
         LOG_WARNING("[%i]: Wrong amount of arguments for command sst."

@@ -13,7 +13,6 @@
 class frequencyPlugin : public pluginsInterface {
  private:
     pluginsData data; /**< Data manager for the plugin. */
-    bool wasPressed = false; /**< Indicates if the plugin is currently active. */
     int frequency = 0; /**< Frequency value to be displayed. */
 
     /**

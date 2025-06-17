@@ -27,7 +27,7 @@ namespace AI {
  * @param command Original command sent
  */
 void Interface::commandBROADCAST(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     if (args.size() < 2) {
         throw AI::CommandArgumentsException("BROADCAST",
             "Expected at least one argument, got " +
@@ -177,7 +177,7 @@ std::string Interface::base64Decode(const std::string& encoded) {
  * @return The encrypted string
  */
 std::string Interface::encrypt(const std::string& input,
-    const std::string& key) {
+const std::string& key) {
     if (input.empty() || key.empty()) return "";
 
     std::string xored;
@@ -201,7 +201,7 @@ std::string Interface::encrypt(const std::string& input,
  * @return The decrypted string
  */
 std::string Interface::decrypt(const std::string& encrypted,
-    const std::string& key) {
+const std::string& key) {
     if (encrypted.empty() || key.empty()) return "";
 
     std::string decoded = base64Decode(encrypted);

@@ -24,21 +24,21 @@ static int from_to(cell_t from, cell_t to)
     if (from.x == to.x && from.y == to.y)
         return 0;
     if (from.x == to.x && from.y < to.y)
-        return 1;
-    if (from.x < to.x && from.y < to.y)
-        return 2;
-    if (from.x < to.x && from.y == to.y)
         return 3;
-    if (from.x < to.x && from.y > to.y)
+    if (from.x < to.x && from.y < to.y)
         return 4;
-    if (from.x == to.x && from.y > to.y)
+    if (from.x < to.x && from.y == to.y)
         return 5;
-    if (from.x > to.x && from.y > to.y)
+    if (from.x < to.x && from.y > to.y)
         return 6;
-    if (from.x > to.x && from.y == to.y)
+    if (from.x == to.x && from.y > to.y)
         return 7;
-    if (from.x > to.x && from.y < to.y)
+    if (from.x > to.x && from.y > to.y)
         return 8;
+    if (from.x > to.x && from.y == to.y)
+        return 1;
+    if (from.x > to.x && from.y < to.y)
+        return 2;
     return -1;
 }
 
@@ -64,15 +64,19 @@ static void send_broadcast(client_t *client, int dir, char *text)
  */
 static int rotate(int dir, int orient)
 {
+    int newDir = dir;
+
     if (dir == 0)
         return dir;
     if (orient == 0)
-        return (dir + 6) % 9;
+        newDir = (dir + 6) % 8;
     if (orient == 2)
-        return (dir + 2) % 9;
+        newDir = (dir + 2) % 8;
     if (orient == 3)
-        return (dir + 4) % 9;
-    return dir;
+        newDir = (dir + 4) % 8;
+    if (newDir == 0)
+        newDir = 8;
+    return newDir;
 }
 
 /**
@@ -99,7 +103,7 @@ static void compute_message(char *textBuffer,
     direction = from_to(
         zappy->map->grid[zappy->parser->height / 2][zappy->parser->width / 2],
         zappy->map->grid[newDestY][newDestX]);
-    direction = rotate(direction, dest->stats.orientation);
+    direction = rotate(direction, dest->stats.orientation - 1);
     send_broadcast(dest, direction, textBuffer);
 }
 

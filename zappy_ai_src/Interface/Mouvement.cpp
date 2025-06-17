@@ -24,7 +24,7 @@ namespace AI {
  * @param command Original command sent
  */
 void Interface::commandFORWARD(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
         throw AI::CommandArgumentsException("FORWARD",
@@ -42,7 +42,7 @@ void Interface::commandFORWARD(std::vector<std::string> &args,
  * @param command Original command sent
  */
 void Interface::commandLEFT(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
         throw AI::CommandArgumentsException("LEFT",
@@ -60,7 +60,7 @@ void Interface::commandLEFT(std::vector<std::string> &args,
  * @param command Original command sent
  */
 void Interface::commandRIGHT(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
         throw AI::CommandArgumentsException("RIGHT",

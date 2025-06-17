@@ -13,8 +13,6 @@ extern "C" {
     }
 }
 
-std::unordered_map<std::string, irr::video::ITexture*> cachedTextures;
-
 bool frequencyPlugin::init(irr::scene::ISceneManager* smgr,
     irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) {
     (void) device;
@@ -129,7 +127,8 @@ stateButton &buttonState, int x, int y, int width, int height) {
     }
 }
 
-pluginsData &frequencyPlugin::onEvent(const irr::SEvent &event) {
+bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
+    (void) datas;
     if (data.frequency <= 1) {
         minusButtonState = DISABLED;
     } else {
@@ -139,6 +138,7 @@ pluginsData &frequencyPlugin::onEvent(const irr::SEvent &event) {
                 frequency--;
                 data.frequency = frequency;
             }
+            return true;
         }
     }
     if (data.frequency >= 200) {
@@ -150,9 +150,10 @@ pluginsData &frequencyPlugin::onEvent(const irr::SEvent &event) {
                 frequency++;
                 data.frequency = frequency;
             }
+            return true;
         }
     }
-    return data;
+    return false;
 }
 
 void frequencyPlugin::update(pluginsData _data) {

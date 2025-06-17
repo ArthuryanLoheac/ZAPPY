@@ -50,7 +50,6 @@ irr::video::IVideoDriver* driver) {
 
 pluginsData &frequencyPlugin::onEvent(const irr::SEvent &event) {
     if (event.EventType == irr::EET_KEY_INPUT_EVENT) {
-        // Only process events when the key is released (KeyInput.PressedDown becomes false)
         if (event.KeyInput.PressedDown == false) {
             if (event.KeyInput.Key == irr::KEY_UP) {
                 frequency++;

@@ -40,7 +40,8 @@ void send_data_to_graphics(zappy_t *zappy, char *data)
     client_t *current_client = zappy->clients;
 
     while (current_client != NULL) {
-        if (current_client->is_graphic && current_client->stats.team_name != NULL)
+        if (current_client->is_graphic &&
+            current_client->stats.team_name != NULL)
             add_to_buffer(&current_client->out_buffer, data);
         current_client = current_client->next;
     }

@@ -11,7 +11,6 @@
 #include "PluginsManagement/pluginsManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
-#include "ServerGUI.hpp"
 
 
 void pluginsManager::loadPlugins(const std::string &path) {

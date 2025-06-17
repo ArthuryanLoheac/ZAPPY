@@ -53,6 +53,8 @@ class pluginsData {
     std::vector<Tile> tiles; /**< List of tiles in the game map. */
     std::vector<Player> players; /**< List of players in the game. */
 
+    bool isConnected = false; /**< Connection status to the server. */
+
     /**
      * @brief Get the player by ID.
      *

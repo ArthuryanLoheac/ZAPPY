@@ -6,6 +6,8 @@
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "tools/MeshImporter.hpp"
 #include "DataManager/DataManager.hpp"
+#include "DataManager/SoundsManager.hpp"
+#include "PluginsManagement/PluginsDataManager.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -67,20 +69,25 @@ void Window::windowUpdateFocus() {
     handleEvent();
     updateSkyBoxRotation();
     GameDataManager::i().Update(frameDeltaTime);
+    PluginsDataManager::i().updatePluginsData();
+    pluginsManager::i().update(PluginsDataManager::i().getData());
+    SoundsManager::i().Update();
     driver->beginScene(true, true,
         irr::video::SColor(255, 100, 101, 140));
 
     smgr->drawAll();
-    drawUI();
+    pluginsManager::i().drawPlugins(font, driver);
     guienv->drawAll();
 }
 
 void Window::windowUpdateNoFocus() {
     updateSkyBoxRotation();
     GameDataManager::i().Update(frameDeltaTime);
+    SoundsManager::i().Update();
     driver->beginScene(true, true,
         irr::video::SColor(255, 100, 101, 140));
 
+    pluginsManager::i().drawPlugins(font, driver);
     smgr->drawAll();
 }
 

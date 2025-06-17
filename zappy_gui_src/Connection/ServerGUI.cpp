@@ -77,8 +77,8 @@ void ServerGUI::readDatasFromServer() {
     handleCommand();
 }
 
-void ServerGUI::clockUpdate(std::chrono::_V2::system_clock::time_point &time,
-std::chrono::_V2::system_clock::time_point &timeNext) {
+void ServerGUI::clockUpdate(std::chrono::system_clock::time_point &time,
+std::chrono::system_clock::time_point &timeNext) {
     time = std::chrono::system_clock::now();
     if (time >= timeNext) {
         timeNext = timeNext + std::chrono::seconds(updateMapTime);

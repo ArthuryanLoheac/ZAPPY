@@ -49,10 +49,6 @@ class Window {
     float zoomSpeedCamera = 20.f; /**<speed of camera zooming*/
     float moveSpeedCamera = 5.f; /**<speed of camera movement*/
 
-    int xTile = -1; /**<x-coordinate of the selected tile*/
-    int yTile = -1; /**<y-coordinate of the selected tile*/
-    int idPlayer = -1; /**<ID of the selected player*/
-
     float angleXCamera = 0; /**<angle of the camera in the X direction*/
     float distanceFromCenter = 10.f;
         /**<distance of the camera from the center of the scene*/
@@ -115,63 +111,6 @@ class Window {
      * @brief Updates the rotation of the skybox.
      */
     void updateSkyBoxRotation();
-
-    /**
-     * @brief Handles mouse click events.
-     */
-    void handleCLick();
-
-    /**
-     * @brief Detects collisions with the ground when the user clicks.
-     *
-     * @return bool True if a collision is detected, false otherwise.
-     */
-    bool detectCollisionGround();
-
-    /**
-     * @brief Detects collisions with players when the user clicks.
-     *
-     * @return bool True if a collision is detected, false otherwise.
-     */
-    bool detectCollisionPlayer();
-
-    /**
-     * @brief Draws a single background UI element.
-     *
-     * @param texture Path to the texture.
-     * @param x X-coordinate.
-     * @param y Y-coordinate.
-     * @param sizeX Width of the background.
-     * @param sizeY Height of the background.
-     */
-    void drawOneBackground(const std::string &texture, int x, int y,
-        int sizeX, int sizeY);
-
-    /**
-     * @brief Draws all background UI elements.
-     */
-    void drawBackgrounds();
-
-    /**
-     * @brief Draws the user interface.
-     */
-    void drawUI();
-
-    /**
-     * @brief Draws information about a specific tile in the UI
-     *
-     * @param tile The tile to display information about.
-     * @param y Vertical position for drawing.
-     */
-    void drawTileInfo(GameTile &tile, int &y);
-
-    /**
-     * @brief Draws information about a specific player in the UI.
-     *
-     * @param id The player's ID.
-     * @param y Vertical position for drawing.
-     */
-    void drawPlayerInfo(int id, int &y);
 
     /**
      * @brief Updates the window when it has focus.

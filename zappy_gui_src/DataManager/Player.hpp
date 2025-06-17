@@ -16,6 +16,18 @@ namespace GUI {
 class Player {
  public:
     /**
+     * @brief Enum for player states.
+     *
+     * This enum defines the different states a player can be in during the game.
+     */
+    enum PlayerState {
+        MOVING,
+        START_ELEVATION,
+        IDLE_ELEVATION,
+        END_ELEVATION,
+    };
+
+    /**
      * @brief Enum for player orientation.
      */
     enum Orientation {
@@ -164,6 +176,15 @@ class Player {
      * @param newO New orientation.
      */
     void setPosition(int newX, int newY, Orientation newO);
+    /**
+     * @brief Sets the position and orientation of the player with TP option
+     *
+     * @param newX New X-coordinate.
+     * @param newY New Y-coordinate.
+     * @param newO New orientation.
+     * @param TP Teleportation flag (true for TP, false for normal movement).
+     */
+    void setPosition(int newX, int newY, Orientation newO, bool TP);
 
     /**
      * @brief Sets the position of the player.
@@ -220,9 +241,57 @@ class Player {
     /**
      * @brief Updates the player state based on the elapsed time.
      *
+     * This function updates the player's position, rotation, and state based on the
+     * elapsed time since the last update.
+     *
      * @param deltaTime Time elapsed since the last update.
      */
     void Update(float deltaTime);
+
+    /**
+     * @brief Sets the elevation state of the player.
+     *
+     * This function sets whether the player is starting or ending an elevation.
+     *
+     * @param isStart True if starting elevation, false if ending elevation.
+     */
+    void setElevation(bool isStart);
+
+    /**
+     * @brief Updates the player state when moving.
+     *
+     * This function updates the player's position and rotation while moving.
+     *
+     * @param deltaTime Time elapsed since the last update.
+     */
+    void updateStartElevation(float deltaTime);
+
+    /**
+     * @brief Updates the player state during elevation.
+     *
+     * This function updates the player's rotation while in the elevation state.
+     *
+     * @param deltaTime Time elapsed since the last update.
+     */
+    void updateElevation(float deltaTime);
+
+    /**
+     * @brief Updates the player state when ending elevation.
+     *
+     * This function updates the player's rotation and position when ending elevation.
+     *
+     * @param deltaTime Time elapsed since the last update.
+     */
+    void updateEndElevation(float deltaTime);
+
+    /**
+     * @brief Updates the player state when moving.
+     *
+     * This function updates the player's position and rotation while moving.
+     *
+     * @param deltaTime Time elapsed since the last update.
+     */
+    void UpdateMoving(float deltaTime);
 
     /**
      * @brief Updates the rotation of the player based on the elapsed time.
@@ -265,6 +334,11 @@ class Player {
         /**< Rings meshes associated with the player. */
     std::vector<Vec3d> PlayerMeshesCylinderRotation;
         /**< Rotation vectors for Rings meshes. */
+
+    PlayerState state = MOVING; /**< Current state of the player. */
+    bool isElevation = false; /**< Flag indicating if the player is elevating*/
+    Vec3d deltaRotPlayer; /**< Rotation delta for the player. */
+    float speed = 1; /**< Speed of the player during elevation. */
 
     std::vector<int> ressources = {0, 0, 0, 0, 0, 0, 0};
         /**< Resources held by the player. */

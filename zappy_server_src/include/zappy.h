@@ -9,6 +9,7 @@
     #define ZAPPY_H
 
     #include <sys/time.h>
+    #include <stdbool.h>
     #include "parser.h"
     #include "server.h"
 
@@ -79,6 +80,9 @@ typedef struct zappy_s {
     struct timeval last_time;
     pos_elevation_t *pos_elevations;
     pos_elevation_t *pos_elevationsFail;
+
+    bool end_game;
+    char *winning_team;
 } zappy_t;
 
 starting_map_t *init_starting_map(zappy_t *zappy);
@@ -89,6 +93,7 @@ void free_starting_map(starting_map_t *map);
 cell_t **create_map(parser_t *parser);
 void update_map(cell_t **map, parser_t *parser);
 void destroy_map(cell_t **map);
+void check_win(zappy_t *zappy);
 
 void start_server(zappy_t *zappy);
 void down_server(zappy_t *zappy);

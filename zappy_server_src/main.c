@@ -47,6 +47,8 @@ int main(int ac, char **av)
     zappy_ptr->clients = NULL;
     zappy_ptr->map = init_starting_map(zappy_ptr);
     zappy_ptr->idNextClient = 0;
+    zappy_ptr->end_game = false;
+    zappy_ptr->winning_team = NULL;
     setup_down_server();
     start_server(zappy_ptr);
     down_server(zappy_ptr);

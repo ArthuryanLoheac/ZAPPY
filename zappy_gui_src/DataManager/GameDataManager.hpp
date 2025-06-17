@@ -22,6 +22,14 @@ class GameDataManager {
     std::vector<Egg> eggs; /**< List of eggs. */
     std::vector<std::string> teams; /**< List of team names. */
     std::vector<Player> players; /**< List of players. */
+    bool playerAdded = false; /**< Flag to indicate if a player has been add */
+    bool eggAdded = false; /**< Flag to indicate if an egg has been added. */
+    bool playerDead = false; /**< Flag to indicate if a player has died. */
+    bool eggDead = false; /**< Flag to indicate if an egg has died. */
+    bool elevation = false; /**< Flag to indicate if elevation is active. */
+    bool Collecting = false; /**< Flag to indicate if collecting is active. */
+    bool Dropping = false; /**< Flag to indicate if dropping is active. */
+    bool Pushed = false; /**< Flag to indicate if a player has been pushed. */
 
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
@@ -103,6 +111,19 @@ class GameDataManager {
     void removeEgg(int id);
 
     /**
+     * @brief Checks if a player has been added to the game map.
+     * @return bool True if a player has been added, false otherwise.
+     */
+    bool isPlayerAdded() const;
+
+    /**
+     * @brief Sets the player added flag.
+     *
+     * @param added True if a player has been added, false otherwise.
+     */
+    void setPlayerAdded(bool added);
+
+    /**
      * @brief Adds a player to the game map.
      *
      * @param id ID of the player.
@@ -128,7 +149,7 @@ class GameDataManager {
      *
      * @return const std::vector<Player>& Reference to the list of players.
      */
-    const std::vector<Player> &getPlayers() const;
+    std::vector<Player> &getPlayers();
 
     /**
      * @brief Removes a player from the game map.
@@ -157,6 +178,97 @@ class GameDataManager {
      * @param deltaTime Time elapsed since the last update.
      */
     void Update(float deltaTime);
+
+    /**
+     * @brief Checks if an egg has been added.
+     * @return bool True if an egg has been added, false otherwise.
+     */
+    bool isEggAdded() const;
+
+    /**
+     * @brief Sets the egg added flag.
+     *
+     * @param added True if an egg has been added, false otherwise.
+     */
+    void setEggAdded(bool added);
+
+    /**
+     * @brief Checks if a player has died.
+     * @return bool True if a player has died, false otherwise.
+     */
+    bool isPlayerDead() const;
+
+    /**
+     * @brief Sets the player dead flag.
+     *
+     * @param dead True if a player has died, false otherwise.
+     */
+    void setPlayerDead(bool dead);
+
+    /**
+     * @brief Checks if an egg has died.
+     * @return bool True if an egg has died, false otherwise.
+     */
+    bool isEggDead() const;
+
+    /**
+     * @brief Sets the egg dead flag.
+     *
+     * @param dead True if an egg has died, false otherwise.
+     */
+    void setEggDead(bool dead);
+
+    /**
+     * @brief Checks if elevation is active.
+     * @return bool True if elevation is active, false otherwise.
+     */
+    bool isElevation() const;
+
+    /**
+     * @brief Sets the elevation flag.
+     *
+     * @param elev True if elevation is active, false otherwise.
+     */
+    void setElevationSound(bool elev);
+
+    /**
+     * @brief Checks if collecting is active.
+     * @return bool True if collecting is active, false otherwise.
+     */
+    bool isCollecting() const;
+
+    /**
+     * @brief Sets the collecting flag.
+     *
+     * @param collecting True if collecting is active, false otherwise.
+     */
+    void setCollecting(bool collecting);
+
+    /**
+     * @brief Checks if dropping is active.
+     * @return bool True if dropping is active, false otherwise.
+     */
+    bool isDropping() const;
+
+    /**
+     * @brief Sets the dropping flag.
+     *
+     * @param dropping True if dropping is active, false otherwise.
+     */
+    void setDropping(bool dropping);
+
+    /**
+     * @brief Checks if a player has been pushed.
+     * @return bool True if a player has been pushed, false otherwise.
+     */
+    bool isPushed() const;
+
+    /**
+     * @brief Sets the pushed flag.
+     *
+     * @param pushed True if a player has been pushed, false otherwise.
+     */
+    void setPushed(bool pushed);
 };
 
 }  // namespace GUI

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <irrlicht/irrlicht.h>
+#include "PluginsManagement/pluginsManager.hpp"
 
 /**
  * @brief Handles user input events for the graphical interface.
@@ -22,13 +23,7 @@ class MyEventReceiver : public irr::IEventReceiver {
                 MouseWheelDelta = event.MouseInput.Wheel;
             }
         }
-        if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
-            if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
-                pressed = true;
-            } else if (event.MouseInput.Event == irr::EMIE_LMOUSE_LEFT_UP) {
-                pressed = false;
-            }
-        }
+        pluginsManager::i().onEvent(event);
         return false;
     }
 
@@ -40,22 +35,6 @@ class MyEventReceiver : public irr::IEventReceiver {
      */
     virtual bool IsKeyDown(irr::EKEY_CODE keyCode) const {
         return KeyIsDown[keyCode];
-    }
-
-    /**
-     * @brief Updates the state of the last pressed mouse button.
-     */
-    void updateLastPressed() {
-        Lastpressed = pressed;
-    }
-
-    /**
-     * @brief Checks if the left mouse button is currently pressed for the first time.
-     *
-     * @return bool True if the left mouse button is pressed, false otherwise.
-     */
-    virtual bool IsMouseDown() const {
-        return pressed && !Lastpressed;
     }
 
     /**
@@ -93,7 +72,5 @@ class MyEventReceiver : public irr::IEventReceiver {
 
  private:
     bool KeyIsDown[irr::KEY_KEY_CODES_COUNT]; /**< Array of key states. */
-    bool Lastpressed = false; /**< State of the last pressed mouse button. */
-    bool pressed = false; /**< State of the current mouse button press. */
     float MouseWheelDelta; /**< Mouse wheel delta value. */
 };

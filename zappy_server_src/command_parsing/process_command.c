@@ -40,7 +40,7 @@ void send_data_to_graphics(zappy_t *zappy, char *data)
     client_t *current_client = zappy->clients;
 
     while (current_client != NULL) {
-        if (current_client->is_graphic)
+        if (current_client->is_graphic && current_client->stats.team_name != NULL)
             add_to_buffer(&current_client->out_buffer, data);
         current_client = current_client->next;
     }
@@ -103,6 +103,7 @@ static bool check_graphic(char **args, client_t *client, zappy_t *zappy_ptr)
         client->is_graphic = true;
         client->is_connected = true;
         client->is_waiting_id = false;
+        client->stats.team_name = strdup("GRAPHIC");
         send_data(zappy_ptr, client);
         return true;
     }

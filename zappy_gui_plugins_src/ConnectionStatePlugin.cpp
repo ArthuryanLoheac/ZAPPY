@@ -47,10 +47,16 @@ irr::video::IVideoDriver* driver) {
         drawImage("assets/UI/disconnected.png", width / 2, 20, 30, 30, driver);
 }
 
-void ConnectionStatePlugin::onEvent(const irr::SEvent &event) {
+bool ConnectionStatePlugin::onEvent(const irr::SEvent &event, pluginsData &dataManager) {
     (void) event;
+    (void) dataManager;
+    return false;
 }
 
-void ConnectionStatePlugin::update(pluginsData &_data) {
+void ConnectionStatePlugin::update(pluginsData _data) {
     data = _data;
+}
+
+int ConnectionStatePlugin::getPriority() const {
+    return 0;
 }

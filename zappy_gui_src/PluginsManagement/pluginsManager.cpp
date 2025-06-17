@@ -9,7 +9,9 @@
 
 #include "include/logs.h"
 #include "PluginsManagement/pluginsManager.hpp"
+#include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
+#include "ServerGUI.hpp"
 
 
 void pluginsManager::loadPlugins(const std::string &path) {
@@ -54,12 +56,19 @@ void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
 
 void pluginsManager::onEvent(const irr::SEvent &event) {
     for (const auto &plugin : _plugins) {
-        if (plugin)
-            plugin->onEvent(event);
+        if (plugin) {
+            pluginsData newData = plugin->onEvent(event);
+            if (newData.frequency > 0 &&
+                newData.frequency != GUI::DataManager::i().getFrequency()) {
+                GUI::DataManager::i().setFrequency(newData.frequency);
+                GUI::ServerGUI::i().sendDatasToServer("sst " +
+                    std::to_string(newData.frequency) + "\n");
+            }
+        }
     }
 }
 
-void pluginsManager::update(pluginsData &dataManager) {
+void pluginsManager::update(pluginsData dataManager) {
     for (const auto &plugin : _plugins) {
         if (plugin)
             plugin->update(dataManager);

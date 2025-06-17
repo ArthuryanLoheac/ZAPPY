@@ -23,10 +23,10 @@ class pluginsInterface {
     virtual ~pluginsInterface() = default;
     virtual bool init(irr::scene::ISceneManager* smgr,
         irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) = 0;
-    virtual void update(pluginsData &dataManager) = 0;
+    virtual void update(pluginsData dataManager) = 0;
     virtual void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
         irr::video::IVideoDriver* driver) = 0;
-    virtual void onEvent(const irr::SEvent &event) = 0;
+    virtual pluginsData &onEvent(const irr::SEvent &event) = 0;
 };
 ```
 
@@ -48,7 +48,7 @@ class MyPlugin : public pluginsInterface {
         return true;
     }
 
-    void update(pluginsData &dataManager) override {
+    void update(pluginsData dataManager) override {
         // Update logic using game data
     }
 
@@ -57,7 +57,7 @@ class MyPlugin : public pluginsInterface {
         // Render additional UI elements
     }
 
-    void onEvent(const irr::SEvent &event) override {
+    pluginsData &onEvent(const irr::SEvent &event) override {
         // Handle user input or events
     }
 };

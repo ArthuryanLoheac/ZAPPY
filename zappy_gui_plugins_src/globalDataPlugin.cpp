@@ -63,10 +63,11 @@ irr::video::IVideoDriver* driver) {
     }
 }
 
-void globalDataPlugin::onEvent(const irr::SEvent &event) {
+pluginsData & globalDataPlugin::onEvent(const irr::SEvent &event) {
     (void) event;
+    return data;
 }
 
-void globalDataPlugin::update(pluginsData &_data) {
+void globalDataPlugin::update(pluginsData _data) {
     data = _data;
 }

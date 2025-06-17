@@ -35,6 +35,13 @@ class ServerGUI {
     }
 
     /**
+     * @brief Sends data to the server.
+     *
+     * @param message The message to send.
+     */
+    void sendDatasToServer(const std::string &message);
+
+    /**
      * @brief Starts the server communication loop.
      */
     void startServer();
@@ -75,13 +82,6 @@ class ServerGUI {
      */
     void execCommand(std::map<std::string, void(GUI::ServerGUI::*)
     (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args);
-
-    /**
-     * @brief Sends data to the server.
-     *
-     * @param message The message to send.
-     */
-    void sendDatasToServer(const std::string &message);
 
     /**
      * @brief Handles the "WELCOME" command from the server.

@@ -72,7 +72,7 @@ irr::video::IVideoDriver* driver) {
     } catch (std::exception &e) {}
 }
 
-void TileDataPlugin::onEvent(const irr::SEvent &event) {
+pluginsData &TileDataPlugin::onEvent(const irr::SEvent &event) {
     if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
         if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
             pressed = true;
@@ -83,6 +83,7 @@ void TileDataPlugin::onEvent(const irr::SEvent &event) {
             detectCollisionTile();
         isPressedLastFrame = pressed;
     }
+    return data;
 }
 
 void TileDataPlugin::detectCollisionTile() {
@@ -134,6 +135,6 @@ bool TileDataPlugin::detectCollisionPlayer() {
     return false;
 }
 
-void TileDataPlugin::update(pluginsData &_data) {
+void TileDataPlugin::update(pluginsData _data) {
     data = _data;
 }

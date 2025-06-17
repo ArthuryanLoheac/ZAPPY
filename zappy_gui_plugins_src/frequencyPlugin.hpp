@@ -6,14 +6,15 @@
 #include "zappy_gui_src/PluginsManagement/pluginsInterface.hpp"
 
 /**
- * @class globalDataPlugin
+ * @class frequencyPlugin
  * @brief Plugin class for managing global data visualization and interaction.
  * @implements pluginsInterface
  */
-class globalDataPlugin : public pluginsInterface {
+class frequencyPlugin : public pluginsInterface {
  private:
     pluginsData data; /**< Data manager for the plugin. */
-    bool isActive = true; /**< Indicates if the plugin is currently active. */
+    bool wasPressed = false; /**< Indicates if the plugin is currently active. */
+    int frequency = 0; /**< Frequency value to be displayed. */
 
     /**
      * @brief Draws a background texture at a specified position and size.
@@ -24,7 +25,7 @@ class globalDataPlugin : public pluginsInterface {
      * @param sizeY The height of the background.
      * @param driver Pointer to the video driver.
      */
-    void drawOneBackground(const std::string &texture, int x, int y,
+    void drawImage(const std::string &texture, int x, int y,
       int sizeX, int sizeY, irr::video::IVideoDriver* driver);
 
  public:

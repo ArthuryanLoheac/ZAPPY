@@ -91,11 +91,11 @@ class PlayerDataPlugin : public pluginsInterface {
      * @brief Handles events for the plugin.
      * @param event The event to handle.
      */
-    void onEvent(const irr::SEvent &event) override;
+    pluginsData &onEvent(const irr::SEvent &event) override;
 
     /**
      * @brief Updates the plugin with the latest data.
      * @param dataManager Reference to the data manager.
      */
-    void update(pluginsData &dataManager) override;
+    void update(pluginsData dataManager) override;
 };

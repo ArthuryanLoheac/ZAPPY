@@ -31,7 +31,7 @@ void Interface::commandBROADCAST(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     if (args.size() < 2) {
         LOG_ERROR("BROADCAST: Expected at least one argument, got %i\n.",
-            std::to_string(args.size() - 1).c_str());
+            args.size() - 1);
         return;
     }
     (void)command;
@@ -48,7 +48,7 @@ void Interface::commandBROADCAST(std::vector<std::string> &args,
 void Interface::receiveMessage(std::vector<std::string> &args) {
     if (args.size() != 3) {
         LOG_ERROR("MESSAGE: Expected 3 arguments, got %i\n.",
-            std::to_string(args.size() - 1).c_str());
+            args.size() - 1);
         return;
     }
 

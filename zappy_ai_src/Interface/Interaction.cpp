@@ -30,7 +30,7 @@ void Interface::commandEJECT(std::vector<std::string> &args,
     (void)command;
     if (args.size() != 1) {
         LOG_ERROR("EJECT: Expected one argument, got %i\n.",
-            std::to_string(args.size() - 1).c_str());
+            args.size() - 1);
         return;
     }
 }

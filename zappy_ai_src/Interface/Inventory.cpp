@@ -32,7 +32,7 @@ void Interface::commandLOOK(std::vector<std::string> &args,
     (void)command;
     if (args.size() < 2) {
         LOG_ERROR("LOOK: Expected at least one argument, got %i\n.",
-            std::to_string(args.size() - 1).c_str());
+            args.size() - 1);
         return;
     }
 
@@ -107,7 +107,7 @@ void Interface::commandINVENTORY(std::vector<std::string> &args,
     (void)command;
     if (args.size() < 2) {
         LOG_ERROR("INVENTORY: Expected at least one argument, got %i\n.",
-            std::to_string(args.size() - 1).c_str());
+            args.size() - 1);
         return;
     }
 
@@ -121,7 +121,7 @@ void Interface::commandINVENTORY(std::vector<std::string> &args,
     for (size_t i = 0; i < args.size(); i += 2) {
         if (i + 1 >= args.size()) {
             LOG_ERROR("INVENTORY: Expected an even number of arguments,"
-                "got %i\n.", std::to_string(args.size() - 1).c_str());
+                "got %i\n.", args.size() - 1);
             return;
         }
         const std::string &item = args[i];
@@ -134,7 +134,7 @@ void Interface::commandTAKE(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     if (args.size() != 1) {
         LOG_ERROR("TAKE: Expected one argument, got %i\n.",
-            std::to_string(args.size() - 1).c_str());
+            args.size() - 1);
         return;
     }
 
@@ -149,7 +149,7 @@ void Interface::commandSET(std::vector<std::string> &args,
     std::vector<std::string> &command) {
     if (args.size() != 1) {
         LOG_ERROR("SET: Expected one argument, got %i\n.",
-            std::to_string(args.size() - 1).c_str());
+            args.size() - 1);
         return;
     }
 

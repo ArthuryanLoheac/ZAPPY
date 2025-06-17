@@ -188,7 +188,7 @@ void Interface::commandWELCOME(std::vector<std::string> &args,
     (void)command;
     if (args.size() != 1) {
         LOG_ERROR("WELCOME: Expected no arguments, got %i\n.",
-            std::to_string(args.size() - 1).c_str());
+            args.size() - 1);
         return;
     }
 

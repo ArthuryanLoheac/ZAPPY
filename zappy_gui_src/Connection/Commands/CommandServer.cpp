@@ -104,6 +104,7 @@ void ServerGUI::bctCommand(std::vector<std::string> &args) {
 
     GameDataManager::i().getTile(x, y).setRessources(food, r1, r2, r3,
         r4, r5, r6);
+    GUI::Window::i().needUpdateRessources = true;
 }
 
 /**

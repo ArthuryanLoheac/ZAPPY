@@ -53,10 +53,16 @@ class Window {
     float distanceFromCenter = 10.f;
         /**<distance of the camera from the center of the scene*/
 
+    bool worldSetuped = false; /**<flag to indicate if the world is set up*/
+    bool needUpdateRessources = false; /**<flag to indicate if resources need updating*/
+
     /**
      * @brief Updates the window and handles rendering.
      */
     void update();
+
+    void updateMesh();
+    void worldSetupMesh();
 
     /**
      * @brief Sets up the game world.

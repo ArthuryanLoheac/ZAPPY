@@ -8,6 +8,7 @@
 #include "DataManager/DataManager.hpp"
 #include "DataManager/SoundsManager.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
+#include "window.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -95,6 +96,7 @@ void Window::windowUpdateNoFocus() {
 void Window::update() {
     while (device->run()) {
         updateDeltaTime();
+        updateMesh();
         if (device->isWindowActive())
             windowUpdateFocus();
         else
@@ -104,7 +106,8 @@ void Window::update() {
     device->drop();
 }
 
-void Window::setupWorld() {
+void Window::setupWorld()
+{
     if (cubes.size() > 0) {
         for (auto &cube : cubes) {
             cube->remove();
@@ -134,4 +137,46 @@ void Window::setupWorld() {
     //    irr::video::SColorf(1.5f, 1.5f, 2.f), 2000.0f);
     //smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
 }
+
+void Window::updateMesh()
+{
+    if (!GUI::GameDataManager::i().getTile(0, 0).getTileMesh())
+        worldSetupMesh();
+    if (worldSetuped && needUpdateRessources) {
+        for (int i = 0; i < GUI::GameDataManager::i().getWidth(); i++) {
+            for (int j = 0; j < GUI::GameDataManager::i().getHeight(); j++) {
+                GameTile &tile = GUI::GameDataManager::i().getTile(i, j);
+                tile.updateMeshesRessources();
+            }
+        }
+    }
+}
+
+void Window::worldSetupMesh() {
+    int width = GUI::GameDataManager::i().getWidth();
+    int height = GUI::GameDataManager::i().getHeight();
+
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            GameTile &tile = GUI::GameDataManager::i().getTile(i, j);
+            if (!tile.getTileMesh()) {
+                irr::core::vector3df position(i - (width/2) + (width % 2 == 0 ? 0.5f : 0),
+                    -2,
+                    j - (height/2) + (height % 2 == 0 ? 0.5f : 0));
+                float rotation = std::rand() % 4;
+                auto mesh = MeshImporter::i().importMesh("Plane", "", position,
+                    irr::core::vector3df(0.18f),
+                    irr::core::vector3df(0, rotation * 90, 0));
+                tile.setTileMesh(mesh);
+            }
+        }
+    }
+    printf("============ Updating meshes\n");
+    smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
+        irr::video::SColorf(1.5f, 1.5f, 2.f), 2000.0f);
+    smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
+    worldSetuped = true;
+    needUpdateRessources = true;
+}
+
 }  // namespace GUI

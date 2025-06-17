@@ -24,6 +24,7 @@ class frequencyPlugin : public pluginsInterface {
 
     stateButton minusButtonState = DISABLED; /**< State of the minus button. */
     stateButton plusButtonState = DISABLED; /**< State of the plus button. */
+    int heightSaved = 0; /**< Height of the window. */
 
     /**
      * @brief Draws a background texture at a specified position and size.

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 #include "zappy_gui_src/PluginsManagement/pluginsInterface.hpp"
@@ -25,6 +26,9 @@ class frequencyPlugin : public pluginsInterface {
     stateButton minusButtonState = DISABLED; /**< State of the minus button. */
     stateButton plusButtonState = DISABLED; /**< State of the plus button. */
     int heightSaved = 0; /**< Height of the window. */
+
+    std::unordered_map<std::string, irr::video::ITexture *> cachedTextures;
+        /**< Cache for textures to avoid reloading. */
 
     /**
      * @brief Draws a background texture at a specified position and size.

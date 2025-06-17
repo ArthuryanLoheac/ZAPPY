@@ -6,15 +6,12 @@
 #include <iostream>
 #include <cstdio>
 #include <unordered_map>
-#include "frequencyPlugin.hpp"
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
         return std::make_unique<frequencyPlugin>();
     }
 }
-
-std::unordered_map<std::string, irr::video::ITexture*> cachedTextures;
 
 bool frequencyPlugin::init(irr::scene::ISceneManager* smgr,
     irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) {
@@ -35,10 +32,10 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
     if (it != cachedTextures.end()) {
         bg = it->second;
     } else {
-        // Load and modify the texture if not cached
-        irr::video::ITexture* originalTexture = driver->getTexture(texture.c_str());
+        irr::video::ITexture *originalTexture =
+            driver->getTexture(texture.c_str());
         if (!originalTexture) {
-            std::cerr << "Error: Could not load texture: " << texture << std::endl;
+            std::cerr << "Error: Can't load texture: " << texture << std::endl;
             return;
         }
 
@@ -53,7 +50,7 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
                 }
             }
             bg = driver->addTexture(cacheKey.c_str(), image);
-            cachedTextures[cacheKey] = bg; // Cache the modified texture
+            cachedTextures[cacheKey] = bg;
             image->drop();
         }
     }
@@ -68,7 +65,6 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
 void frequencyPlugin::drawButton(const std::string &texture, int x, int y,
 irr::video::IVideoDriver *driver, stateButton buttonState,
 const std::string &text, std::shared_ptr<irr::gui::IGUIFont> font) {
-
     int alpha = 200;
     if (buttonState == DISABLED)
         alpha = 100;
@@ -83,8 +79,7 @@ const std::string &text, std::shared_ptr<irr::gui::IGUIFont> font) {
 }
 
 void frequencyPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
-                             irr::video::IVideoDriver *driver)
-{
+irr::video::IVideoDriver *driver) {
     int x = 30;
     int y = 630;
     UICol white(255, 255, 255, 255);
@@ -101,9 +96,11 @@ void frequencyPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
     // Buttons
     y += 40;
     // MINUS
-    drawButton("assets/UI/AllRed.png", 30, y, driver, minusButtonState, "-", font);
+    drawButton("assets/UI/AllRed.png", 30, y, driver, minusButtonState, "-",
+        font);
     // PLUS
-    drawButton("assets/UI/AllRed.png", 90, y, driver, plusButtonState, "+", font);
+    drawButton("assets/UI/AllRed.png", 90, y, driver, plusButtonState, "+",
+        font);
 }
 
 void frequencyPlugin::checkHoverButton(const irr::SEvent &event,

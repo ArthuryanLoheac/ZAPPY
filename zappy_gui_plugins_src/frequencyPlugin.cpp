@@ -130,7 +130,6 @@ stateButton &buttonState, int x, int y, int width, int height) {
     }
 }
 
-
 pluginsData &frequencyPlugin::onEvent(const irr::SEvent &event) {
     if (data.frequency <= 1) {
         minusButtonState = DISABLED;

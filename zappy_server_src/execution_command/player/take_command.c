@@ -85,6 +85,7 @@ static int get_ressource_id(const char *object)
 void take_command(zappy_t *zappy, client_t *client, char **args)
 {
     char buffer[256];
+    char buffer2[256];
 
     if (!take_object(zappy,
         &zappy->map->grid[client->stats.y][client->stats.x], args[0])) {
@@ -92,7 +93,14 @@ void take_command(zappy_t *zappy, client_t *client, char **args)
         add_to_buffer(&client->out_buffer, "ok\n");
         sprintf(buffer, "pgt #%d %d\n", client->stats.id,
             get_ressource_id(args[0]));
+        sprintf(buffer2, "pin #%d %d %d %d %d %d %d %d %d %d\n",
+        client->stats.id, client->stats.x, client->stats.y,
+        client->stats.inventory.food, client->stats.inventory.linemate,
+        client->stats.inventory.deraumere, client->stats.inventory.sibur,
+        client->stats.inventory.mendiane, client->stats.inventory.phiras,
+        client->stats.inventory.thystame);
         send_data_to_graphics(zappy, buffer);
+        send_data_to_graphics(zappy, buffer2);
     } else {
         add_to_buffer(&client->out_buffer, "ko\n");
     }

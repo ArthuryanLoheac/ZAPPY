@@ -62,13 +62,11 @@ float randRotation(int i) {
 void Player::Init(std::string team, int level) {
     state = MOVING;
     timeTT = 0;
+    (void) team;
+    (void) level;
     for (int i = 0; i < maxLevel; i++) {
-        PlayerMeshesCylinder.push_back(std::shared_ptr<Mesh>(
-            MeshImporter::i().importMesh("Cylinder", team)));
         PlayerMeshesCylinderRotation.push_back(Vec3d(randRotation(i),
             randRotation(i), randRotation(i)));
-        PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
-        PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);
     }
 }
 
@@ -163,6 +161,7 @@ void Player::setPosition(int newX, int newY, Orientation new0, bool TP) {
                 PlayerMeshesCylinder[i]->setPosition(position);
         }
     }
+    GUI::Window::i().needUpdatePlayers = true;
 }
 
 void Player::setPosition(int newX, int newY) {
@@ -193,6 +192,8 @@ int Player::getRessource(int id) const {
 
 void Player::destroy() {
     std::lock_guard<std::mutex> lock(mutexDatas);
+    if (!PlayerMesh)
+        return;
     int idM = PlayerMesh->getID();
     auto sceneNode = GUI::Window::i().smgr->getSceneNodeFromId(idM);
     if (sceneNode)

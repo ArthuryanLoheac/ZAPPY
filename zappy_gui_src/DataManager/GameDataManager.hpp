@@ -92,7 +92,7 @@ class GameDataManager {
      * @brief Gets the list of eggs.
      * @return const std::vector<Egg>& Reference to the list of eggs.
      */
-    const std::vector<Egg> &getEggs() const;
+    std::vector<Egg> &getEggs();
 
     /**
      * @brief Adds an egg to the game map.

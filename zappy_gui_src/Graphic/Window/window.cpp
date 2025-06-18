@@ -75,6 +75,7 @@ void Window::windowUpdateFocus() {
     driver->beginScene(true, true,
         irr::video::SColor(255, 100, 101, 140));
 
+    updateMesh();
     smgr->drawAll();
     pluginsManager::i().drawPlugins(font, driver);
     guienv->drawAll();
@@ -87,6 +88,7 @@ void Window::windowUpdateNoFocus() {
     driver->beginScene(true, true,
         irr::video::SColor(255, 100, 101, 140));
 
+    updateMesh();
     smgr->drawAll();
     pluginsManager::i().drawPlugins(font, driver);
     guienv->drawAll();
@@ -114,23 +116,90 @@ void Window::setupWorld() {
     int width = GUI::GameDataManager::i().getWidth();
     int height = GUI::GameDataManager::i().getHeight();
 
-    float deltaWidth = (width % 2 == 0) ? 0.5f : 0;
-    float deltaHeight = (height % 2 == 0) ? 0.5f : 0;
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            GUI::GameDataManager::i().addTile(i, j);
+        }
+    }
+}
+
+void Window::updateMesh() {
+    if (!GUI::GameDataManager::i().getTile(0, 0).getTileMesh())
+        worldSetupMesh();
+    if (!worldSetuped)
+        return;
+
+    if (needUpdateRessources) {
+        for (int i = 0; i < GUI::GameDataManager::i().getWidth(); i++) {
+            for (int j = 0; j < GUI::GameDataManager::i().getHeight(); j++) {
+                GameTile &tile = GUI::GameDataManager::i().getTile(i, j);
+                if (tile.getTileMesh()) {  // Ensure tile mesh is valid
+                    try {
+                        tile.updateMeshesRessources();
+                    } catch (const std::exception &e) {
+                        std::cerr << "Error update tile: " << e.what() << '\n';
+                    }
+                }
+            }
+        }
+    }
+
+    if (needUpdatePlayers) {
+        for (auto &player : GUI::GameDataManager::i().getPlayers()) {
+            if (!player.getMesh()) {
+                Vec3d position = GUI::GameDataManager::i()
+                    .getTile(player.getX(), player.getY()).getWorldPos();
+                position.Y += 0.5f;
+                auto mesh = MeshImporter::i().importMesh("Drone",
+                    player.getTeamName(), position, Vec3d(0.2f),
+                    Vec3d(0, player.getOrientation() * 90, 0));
+                if (mesh)
+                    player.setMesh(mesh);
+                player.initMeshRings();
+            }
+        }
+        needUpdatePlayers = false;
+    }
+
+    if (needUpdateEggs) {
+        for (auto &egg : GUI::GameDataManager::i().getEggs()) {
+            if (!egg.EggMesh) {
+                Vec3d position = GUI::GameDataManager::i().
+                    getTile(egg.x, egg.y).getWorldPos();
+                position.Y += 0.2f;
+                auto mesh = MeshImporter::i().importMesh("DroneEgg", "",
+                    position, Vec3d(0.2f), Vec3d(0, 0, 0));
+                if (mesh)
+                    egg.EggMesh = mesh;
+            }
+        }
+        needUpdateEggs = false;
+    }
+}
+
+void Window::worldSetupMesh() {
+    int width = GUI::GameDataManager::i().getWidth();
+    int height = GUI::GameDataManager::i().getHeight();
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            irr::core::vector3df position(i - (width/2) + deltaWidth, -2,
-                j - (height/2) + deltaHeight);
-            float rotation = std::rand() % 4;
-            auto cube = MeshImporter::i().importMesh("Plane", "", position,
-                irr::core::vector3df(0.18f),
-                irr::core::vector3df(0, rotation * 90, 0));
-            GameTile &tile = GUI::GameDataManager::i().addTile(i, j);
-            tile.setTileMesh(cube);
+            GameTile &tile = GUI::GameDataManager::i().getTile(i, j);
+            if (!tile.getTileMesh()) {
+                irr::core::vector3df position(i - (width/2) +
+                    (width % 2 == 0 ? 0.5f : 0), -2,
+                    j - (height/2) + (height % 2 == 0 ? 0.5f : 0));
+                float rotation = std::rand() % 4;
+                auto mesh = MeshImporter::i().importMesh("Plane", "", position,
+                    irr::core::vector3df(0.18f),
+                    irr::core::vector3df(0, rotation * 90, 0));
+                tile.setTileMesh(mesh);
+            }
         }
     }
     smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
         irr::video::SColorf(1.5f, 1.5f, 2.f), 2000.0f);
     smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
+    worldSetuped = true;
+    needUpdateRessources = true;
 }
 }  // namespace GUI

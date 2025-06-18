@@ -12,10 +12,7 @@ namespace GUI {
  * @param eggMesh Mesh representing the egg.
  * @throws ShaderCompilationException If the egg mesh creation fails.
  */
-Egg::Egg(int id, int team, const std::shared_ptr<Mesh> &eggMesh)
-: id(id), team(team), EggMesh(eggMesh) {
-    if (!EggMesh)
-        throw ShaderCompilationException("Error creating egg mesh");
-}
-
+Egg::Egg(int id, int team, int x, int y,
+const std::shared_ptr<Mesh> &eggMesh)
+: id(id), team(team), x(x), y(y), EggMesh(eggMesh) {}
 }  // namespace GUI

@@ -52,6 +52,7 @@ class ConnectionStatePlugin : public pluginsInterface {
      */
     bool onEvent(const irr::SEvent &event, pluginsData &datas) override;
 
+
     /**
      * @brief Updates the plugin with the latest data.
      * @param dataManager Reference to the data manager.

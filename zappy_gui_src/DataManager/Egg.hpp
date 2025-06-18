@@ -16,6 +16,7 @@ class Egg {
     int team; /**< Team associated with the egg. */
     int x; /**< X-coordinate of the egg. */
     int y; /**< Y-coordinate of the egg. */
+    int isDead = false;
     std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> EggMesh;
         /**< Mesh representing the egg. */
 

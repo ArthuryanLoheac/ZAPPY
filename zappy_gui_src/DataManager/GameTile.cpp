@@ -53,9 +53,9 @@ std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &mesh) {
     tileMesh = mesh;
 }
 
-Vec3d GameTile::getWorldPos() const {
+Vec3d GameTile::getWorldPos(Vec3d def) const {
     if (!tileMesh)
-        return Vec3d(0, 0, 0);
+        return def;
     return tileMesh->getPosition();
 }
 

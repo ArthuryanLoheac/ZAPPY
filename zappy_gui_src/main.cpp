@@ -66,31 +66,36 @@ int returnHelp() {
  * @return int Returns 0 on success, 84 on failure.
  */
 int main(int ac, char **av) {
-    int sockfd;
-    GUI::DataManager::i();
-    GUI::GameDataManager::i();
+    try {
+        int sockfd;
+        GUI::DataManager::i();
+        GUI::GameDataManager::i();
 
-    try {
-        if (!(ac == 5 || ac == 6))
-            return returnHelp();
-        if (checkArgs(ac, av) == 84)
-            return returnHelp();
-        if (client_connection(sockfd) == 84)
-            throw GUI::ConnectionException("Failed to connect to server");
-    } catch (std::exception &e) {
-        fprintf(stderr, "Error: %s\n", e.what());
-        return 84;
-    }
-    std::thread communicationThread(loopClient, sockfd);
-    try {
-        graphic();
-    } catch (std::exception &e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        try {
+            if (!(ac == 5 || ac == 6))
+                return returnHelp();
+            if (checkArgs(ac, av) == 84)
+                return returnHelp();
+            if (client_connection(sockfd) == 84)
+                throw GUI::ConnectionException("Failed to connect to server");
+        } catch (std::exception &e) {
+            fprintf(stderr, "Error: %s\n", e.what());
+            return 84;
+        }
+        std::thread communicationThread(loopClient, sockfd);
+        try {
+            graphic();
+        } catch (std::exception &e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+            GUI::DataManager::i().setRunning(false);
+            communicationThread.join();
+            return 84;
+        }
         GUI::DataManager::i().setRunning(false);
         communicationThread.join();
+        return 0;
+    } catch (const std::exception &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
         return 84;
     }
-    GUI::DataManager::i().setRunning(false);
-    communicationThread.join();
-    return 0;
 }

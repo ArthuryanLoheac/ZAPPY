@@ -2,8 +2,10 @@
 #include <irrlicht/irrlicht.h>
 
 #include <vector>
+#include <mutex>
 #include <memory>
 #include <string>
+#include <iostream>
 
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
@@ -24,6 +26,7 @@ class Window {
     void SetupSkybox();
 
  public:
+    std::mutex mutexDatas; /**< Mutex for thread-safe access. */
     /**
      * @brief Constructs a new Window object.
      */
@@ -39,7 +42,13 @@ class Window {
     irr::f32 frameDeltaTime; /**<time delta for frame updates*/
     std::shared_ptr<irr::gui::IGUIFont> font;
         /**<font for rendering textin the GUI*/
-    std::vector<irr::scene::ISceneNode*> cubes; /**<list of cubes in the scene*/
+    std::vector<irr::scene::ISceneNode*> cubes;
+        /**<list of cubes in the scene*/
+
+    std::vector<int> missingPlayersInit;
+        /**<list of missing players initialisation*/
+    std::vector<int> missingEggsInit;
+        /**<list of missing eggs initialisation*/
 
     std::shared_ptr<irr::scene::ISceneNode> Skybox;
         /**<skybox node forthe scene*/
@@ -63,7 +72,61 @@ class Window {
      */
     void update();
 
+    /**
+     * @brief check if the mesh need to be initialized
+     * @return true if the mesh need to be initialized
+     * @return false if the mesh is already initialized
+     */
     void updateMesh();
+
+    /**
+     * @brief Initializes the mesh for players.
+     */
+    void initMeshPlayers();
+
+    /**
+     * @brief Initializes the mesh for eggs.
+     */
+    void initMeshEggs();
+
+    /**
+     * @brief Initializes the mesh resources.
+     *
+     * This function sets up the necessary mesh resources for the game.
+     */
+    void initMeshRessources();
+
+    /**
+     * @brief Removes a player from the initialization list.
+     *
+     * @param id The ID of the player to remove.
+     */
+    void removePlayerInitLst(int id);
+
+    /**
+     * @brief Adds a player to the initialization list.
+     *
+     * @param id The ID of the player to add.
+     */
+    void addPlayerInitLst(int id);
+
+    /**
+     * @brief Removes a Egg from the initialization list.
+     *
+     * @param id The ID of the Egg to remove.
+     */
+    void removeEggInitLst(int id);
+
+    /**
+     * @brief Adds a Egg to the initialization list.
+     *
+     * @param id The ID of the Egg to add.
+     */
+    void addEggInitLst(int id);
+
+    /**
+     * @brief Sets up the tile meshes for the game world.
+     */
     void worldSetupMesh();
 
     /**
@@ -138,6 +201,16 @@ class Window {
     static Window &i() {
         static Window instance;
         return instance;
+    }
+
+    /**
+     * @brief Sets whether the players need to be updated.
+     *
+     * @param b True if resources need updating, false otherwise.
+     */
+    void setUpdatePlayer(bool b) {
+        std::lock_guard<std::mutex> lock(mutexDatas);
+        needUpdatePlayers = b;
     }
 };
 

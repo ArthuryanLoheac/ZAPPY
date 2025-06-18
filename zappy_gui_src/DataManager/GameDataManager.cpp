@@ -38,7 +38,8 @@ GameTile &GameDataManager::addTile(int x, int y) {
 
 GameTile &GameDataManager::getTile(int x, int y) {
     if (x < 0 || x >= width || y < 0 || y >= height)
-        throw std::out_of_range("Tile coordinates out of bounds");
+        throw std::out_of_range("Tile coordinates out of bounds " +
+            std::to_string(x) + " / " + std::to_string(y));
     for (auto &tile : tiles) {
         if (tile.getX() == x && tile.getY() == y)
             return tile;
@@ -66,10 +67,12 @@ void GameDataManager::removeEgg(int id) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     for (size_t i = 0; i < eggs.size(); i++) {
         if (eggs[i].id == id) {
+            eggs[i].isDead = true;
             if (eggs[i].EggMesh) {
                 int idM = eggs[i].EggMesh->getID();
                 auto sceneNode = GUI::Window::i().smgr->getSceneNodeFromId(idM);
                 sceneNode->setVisible(false);
+                return;
             }
         }
     }
@@ -92,7 +95,6 @@ Player::Orientation o, int level, const std::string &teamName) {
     position.Y += 0.5f;
     players.emplace_back(id, x, y, o, level, teamName, nullptr);
     playerAdded = true;
-    GUI::Window::i().needUpdatePlayers = true;
 }
 
 Player &GameDataManager::getPlayer(int id) {

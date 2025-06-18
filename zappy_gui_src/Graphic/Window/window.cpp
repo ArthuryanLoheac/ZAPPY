@@ -1,12 +1,14 @@
 #include <iostream>
 #include <memory>
 #include <random>
+#include <string>
 
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "tools/MeshImporter.hpp"
 #include "DataManager/DataManager.hpp"
 #include "DataManager/SoundsManager.hpp"
+#include "include/logs.h"
 #include "PluginsManagement/PluginsDataManager.hpp"
 
 namespace GUI {
@@ -82,16 +84,21 @@ void Window::windowUpdateFocus() {
 }
 
 void Window::windowUpdateNoFocus() {
-    updateSkyBoxRotation();
-    GameDataManager::i().Update(frameDeltaTime);
-    SoundsManager::i().Update();
-    driver->beginScene(true, true,
-        irr::video::SColor(255, 100, 101, 140));
+    try {
+        updateSkyBoxRotation();
+        GameDataManager::i().Update(frameDeltaTime);
+        SoundsManager::i().Update();
+        driver->beginScene(true, true,
+            irr::video::SColor(255, 100, 101, 140));
 
-    updateMesh();
-    smgr->drawAll();
-    pluginsManager::i().drawPlugins(font, driver);
-    guienv->drawAll();
+        updateMesh();
+        smgr->drawAll();
+        pluginsManager::i().drawPlugins(font, driver);
+        guienv->drawAll();
+    } catch (const std::exception &e) {
+        LOG_ERROR(("Error in windowUpdateNoFocus: " +
+            std::string(e.what())).c_str());
+    }
 }
 
 void Window::update() {
@@ -129,52 +136,118 @@ void Window::updateMesh() {
     if (!worldSetuped)
         return;
 
-    if (needUpdateRessources) {
-        for (int i = 0; i < GUI::GameDataManager::i().getWidth(); i++) {
-            for (int j = 0; j < GUI::GameDataManager::i().getHeight(); j++) {
-                GameTile &tile = GUI::GameDataManager::i().getTile(i, j);
-                if (tile.getTileMesh()) {  // Ensure tile mesh is valid
-                    try {
-                        tile.updateMeshesRessources();
-                    } catch (const std::exception &e) {
-                        std::cerr << "Error update tile: " << e.what() << '\n';
-                    }
+    if (needUpdateRessources)
+        initMeshRessources();
+
+    if (needUpdatePlayers || missingPlayersInit.size() > 0)
+        initMeshPlayers();
+
+    if (needUpdateEggs || missingEggsInit.size() > 0)
+        initMeshEggs();
+}
+
+void Window::initMeshRessources() {
+    for (int i = 0; i < GUI::GameDataManager::i().getWidth(); i++) {
+        for (int j = 0; j < GUI::GameDataManager::i().getHeight(); j++) {
+            GameTile &tile = GUI::GameDataManager::i().getTile(i, j);
+            if (tile.getTileMesh() && tile.getTileMesh()->getMesh()) {
+                try {
+                    tile.updateMeshesRessources();
+                } catch (const std::exception &e) {
+                    std::cerr << "Error updating tile resources: "
+                        << e.what() << '\n';
                 }
+            } else {
+                std::cerr << "Error: Invalid tile mesh at ("
+                    << i << ", " << j << ")" << std::endl;
             }
         }
     }
+    needUpdateRessources = false;
+}
 
-    if (needUpdatePlayers) {
-        for (auto &player : GUI::GameDataManager::i().getPlayers()) {
-            if (!player.getMesh()) {
-                Vec3d position = GUI::GameDataManager::i()
-                    .getTile(player.getX(), player.getY()).getWorldPos();
-                position.Y += 0.5f;
+void Window::removePlayerInitLst(int id) {
+    for (auto it = missingPlayersInit.begin(); it
+        != missingPlayersInit.end(); ++it) {
+        if (*it == id) {
+            missingPlayersInit.erase(it);
+            return;
+        }
+    }
+}
+
+void Window::addPlayerInitLst(int id) {
+    if (std::find(missingPlayersInit.begin(), missingPlayersInit.end(), id)
+        == missingPlayersInit.end()) {
+        missingPlayersInit.push_back(id);
+    }
+}
+
+void Window::removeEggInitLst(int id) {
+    for (auto it = missingEggsInit.begin(); it
+        != missingEggsInit.end(); ++it) {
+        if (*it == id) {
+            missingEggsInit.erase(it);
+            return;
+        }
+    }
+}
+
+void Window::addEggInitLst(int id) {
+    if (std::find(missingEggsInit.begin(), missingEggsInit.end(), id)
+        == missingEggsInit.end()) {
+        missingEggsInit.push_back(id);
+    }
+}
+
+void Window::initMeshPlayers() {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    for (auto &player : GUI::GameDataManager::i().getPlayers()) {
+        if (!player.getMesh()) {
+            Vec3d position = GUI::GameDataManager::i()
+                .getTile(player.getX(), player.getY()).getWorldPos();
+            position.Y += 0.5f;
+            try {
                 auto mesh = MeshImporter::i().importMesh("Drone",
                     player.getTeamName(), position, Vec3d(0.2f),
                     Vec3d(0, player.getOrientation() * 90, 0));
-                if (mesh)
+                if (mesh && mesh->getMesh()) {
                     player.setMesh(mesh);
-                player.initMeshRings();
+                    player.initMeshRings();
+                }
+            } catch (const std::exception &e) {
+                return;
             }
+        } else if (player.getMesh()->getMesh()) {
+            player.initMeshRings();
         }
-        needUpdatePlayers = false;
     }
+    needUpdatePlayers = false;
+}
 
-    if (needUpdateEggs) {
-        for (auto &egg : GUI::GameDataManager::i().getEggs()) {
-            if (!egg.EggMesh) {
-                Vec3d position = GUI::GameDataManager::i().
-                    getTile(egg.x, egg.y).getWorldPos();
-                position.Y += 0.2f;
-                auto mesh = MeshImporter::i().importMesh("DroneEgg", "",
-                    position, Vec3d(0.2f), Vec3d(0, 0, 0));
-                if (mesh)
-                    egg.EggMesh = mesh;
+void Window::initMeshEggs() {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    for (auto &egg : GUI::GameDataManager::i().getEggs()) {
+        if (!egg.EggMesh || !egg.EggMesh->getMesh()) {
+            Vec3d position = GUI::GameDataManager::i().
+                getTile(egg.x, egg.y).getWorldPos();
+            position.Y += 0.2f;
+            auto mesh = MeshImporter::i().importMesh("DroneEgg", "",
+                position, Vec3d(0.2f), Vec3d(0, 0, 0));
+            if (mesh && mesh->getMesh()) {
+                mesh->setVisible(!egg.isDead);
+                egg.EggMesh = mesh;
+                removeEggInitLst(egg.id);
+            } else {
+                LOG_ERROR(("Failed to create egg mesh for egg ID " +
+                    std::to_string(egg.id)).c_str());
             }
+        } else {
+            LOG_ERROR(("Egg mesh already exists for egg ID " +
+                std::to_string(egg.id)).c_str());
         }
-        needUpdateEggs = false;
     }
+    needUpdateEggs = false;
 }
 
 void Window::worldSetupMesh() {

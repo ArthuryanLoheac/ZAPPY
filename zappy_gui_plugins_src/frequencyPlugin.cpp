@@ -128,7 +128,6 @@ stateButton &buttonState, int x, int y, int width, int height) {
 }
 
 bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
-    (void) datas;
     if (data.frequency <= 1) {
         minusButtonState = DISABLED;
     } else {
@@ -137,6 +136,7 @@ bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
             if (frequency > 1) {
                 frequency--;
                 data.frequency = frequency;
+                datas.frequency = frequency;
             }
             return true;
         }
@@ -149,6 +149,7 @@ bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
             if (frequency < 200) {
                 frequency++;
                 data.frequency = frequency;
+                datas.frequency = frequency;
             }
             return true;
         }
@@ -159,4 +160,8 @@ bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
 void frequencyPlugin::update(pluginsData _data) {
     data = _data;
     frequency = data.frequency;
+}
+
+int frequencyPlugin::getPriority() const {
+    return 10;
 }

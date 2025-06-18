@@ -8,7 +8,6 @@
 #include "DataManager/DataManager.hpp"
 #include "DataManager/SoundsManager.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
-#include "window.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -107,8 +106,7 @@ void Window::update() {
     device->drop();
 }
 
-void Window::setupWorld()
-{
+void Window::setupWorld() {
     if (cubes.size() > 0) {
         for (auto &cube : cubes) {
             cube->remove();
@@ -125,8 +123,7 @@ void Window::setupWorld()
     }
 }
 
-void Window::updateMesh()
-{
+void Window::updateMesh() {
     if (!GUI::GameDataManager::i().getTile(0, 0).getTileMesh())
         worldSetupMesh();
     if (!worldSetuped)
@@ -140,7 +137,7 @@ void Window::updateMesh()
                     try {
                         tile.updateMeshesRessources();
                     } catch (const std::exception &e) {
-                        std::cerr << "Error updating tile resources: " << e.what() << '\n';
+                        std::cerr << "Error update tile: " << e.what() << '\n';
                     }
                 }
             }
@@ -150,9 +147,12 @@ void Window::updateMesh()
     if (needUpdatePlayers) {
         for (auto &player : GUI::GameDataManager::i().getPlayers()) {
             if (!player.getMesh()) {
-                Vec3d position = GUI::GameDataManager::i().getTile(player.getX(), player.getY()).getWorldPos();
+                Vec3d position = GUI::GameDataManager::i()
+                    .getTile(player.getX(), player.getY()).getWorldPos();
                 position.Y += 0.5f;
-                auto mesh = MeshImporter::i().importMesh("Drone", player.getTeamName(), position, Vec3d(0.2f), Vec3d(0, player.getOrientation() * 90, 0));
+                auto mesh = MeshImporter::i().importMesh("Drone",
+                    player.getTeamName(), position, Vec3d(0.2f),
+                    Vec3d(0, player.getOrientation() * 90, 0));
                 if (mesh)
                     player.setMesh(mesh);
                 player.initMeshRings();
@@ -164,14 +164,13 @@ void Window::updateMesh()
     if (needUpdateEggs) {
         for (auto &egg : GUI::GameDataManager::i().getEggs()) {
             if (!egg.EggMesh) {
-                Vec3d position = GUI::GameDataManager::i().getTile(egg.x, egg.y).getWorldPos();
+                Vec3d position = GUI::GameDataManager::i().
+                    getTile(egg.x, egg.y).getWorldPos();
                 position.Y += 0.2f;
-                auto mesh = MeshImporter::i().importMesh("DroneEgg", "", position, Vec3d(0.2f), Vec3d(0, 0, 0));
-                if (mesh) {
+                auto mesh = MeshImporter::i().importMesh("DroneEgg", "",
+                    position, Vec3d(0.2f), Vec3d(0, 0, 0));
+                if (mesh)
                     egg.EggMesh = mesh;
-                } else {
-                    std::cerr << "Failed to create egg mesh for ID: " << egg.id << '\n';
-                }
             }
         }
         needUpdateEggs = false;
@@ -186,8 +185,8 @@ void Window::worldSetupMesh() {
         for (int j = 0; j < height; j++) {
             GameTile &tile = GUI::GameDataManager::i().getTile(i, j);
             if (!tile.getTileMesh()) {
-                irr::core::vector3df position(i - (width/2) + (width % 2 == 0 ? 0.5f : 0),
-                    -2,
+                irr::core::vector3df position(i - (width/2) +
+                    (width % 2 == 0 ? 0.5f : 0), -2,
                     j - (height/2) + (height % 2 == 0 ? 0.5f : 0));
                 float rotation = std::rand() % 4;
                 auto mesh = MeshImporter::i().importMesh("Plane", "", position,
@@ -203,5 +202,4 @@ void Window::worldSetupMesh() {
     worldSetuped = true;
     needUpdateRessources = true;
 }
-
 }  // namespace GUI

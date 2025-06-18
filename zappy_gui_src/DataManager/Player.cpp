@@ -7,7 +7,6 @@
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
-#include "Player.hpp"
 
 namespace GUI {
 
@@ -202,7 +201,7 @@ void Player::initMeshRings() {
             return;
         PlayerMeshesCylinder.push_back(mesh);
         PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
-        //PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);
+        PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);
     }
 }
 }  // namespace GUI

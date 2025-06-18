@@ -17,17 +17,17 @@ const std::string &team, const std::shared_ptr<Mesh> &pMesh)
 
 Player::Player(Player &&other) noexcept
 : id(other.id), x(other.x), y(other.y),
-  posTarget(std::move(other.posTarget)),
-  rotationTarget(std::move(other.rotationTarget)),
-  speedMove(other.speedMove),
-  baseSpeedMove(other.baseSpeedMove),
-  o(other.o), level(other.level),
-  teamName(std::move(other.teamName)),
-  PlayerMesh(std::move(other.PlayerMesh)),
-  PlayerMeshesCylinder(std::move(other.PlayerMeshesCylinder)),
-  PlayerMeshesCylinderRotation(std::move(other.PlayerMeshesCylinderRotation)),
-  state(other.state),
-  ressources(std::move(other.ressources)) {}
+posTarget(std::move(other.posTarget)),
+rotationTarget(std::move(other.rotationTarget)),
+speedMove(other.speedMove),
+baseSpeedMove(other.baseSpeedMove),
+o(other.o), level(other.level),
+teamName(std::move(other.teamName)),
+PlayerMesh(std::move(other.PlayerMesh)),
+PlayerMeshesCylinder(std::move(other.PlayerMeshesCylinder)),
+PlayerMeshesCylinderRotation(std::move(other.PlayerMeshesCylinderRotation)),
+state(other.state),
+ressources(std::move(other.ressources)) {}
 
 Player &Player::operator=(Player &&other) noexcept {
     if (this != &other) {

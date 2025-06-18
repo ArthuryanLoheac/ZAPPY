@@ -59,7 +59,7 @@ void GameDataManager::addEgg(int id, int team, int x, int y) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getTile(x, y).getWorldPos();
     position.Y += 0.2f;
-    eggs.emplace_back(id, team, x, y, nullptr); // Updated to match the Egg constructor
+    eggs.emplace_back(id, team, x, y, nullptr);
 }
 
 void GameDataManager::removeEgg(int id) {

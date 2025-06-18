@@ -54,8 +54,8 @@ class Window {
         /**<distance of the camera from the center of the scene*/
 
     bool worldSetuped = false; /**<flag to indicate if the world is set up*/
-    bool needUpdateRessources = false; /**<flag to indicate if resources need updating*/
-    bool needUpdatePlayers = false; /**<flag to indicate if players need updating*/
+    bool needUpdateRessources = false; /**<flag if resources need update*/
+    bool needUpdatePlayers = false; /**<flag if players need update*/
     bool needUpdateEggs = false; /**<flag to indicate if eggs need updating*/
 
     /**

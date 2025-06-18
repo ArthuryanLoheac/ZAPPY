@@ -16,7 +16,8 @@ class Egg {
     int team; /**< Team associated with the egg. */
     int x; /**< X-coordinate of the egg. */
     int y; /**< Y-coordinate of the egg. */
-    std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> EggMesh; /**< Mesh representing the egg. */
+    std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> EggMesh;
+        /**< Mesh representing the egg. */
 
     /**
      * @brief Constructs a new Egg object.
@@ -27,7 +28,8 @@ class Egg {
      * @param y Y-coordinate of the egg.
      * @param mesh Mesh representing the egg.
      */
-    Egg(int id, int team, int x, int y, const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode>& mesh);
+    Egg(int id, int team, int x, int y,
+        const std::shared_ptr<irr::scene::IAnimatedMeshSceneNode>& mesh);
 };
 
 }  // namespace GUI

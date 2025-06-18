@@ -192,4 +192,13 @@ bool add_command(int duration, char **args, client_t *client);
  */
 bool add_command_second(int duration, char **args, client_t *client);
 
+/**
+ * @brief Deletes an egg from a chained list of its.
+ * 
+ * @param prev Last egg in the list, can be NULL.
+ * @param current Egg to delete.
+ * @param zappy_ptr Pointer to the server zappy struct.
+ */
+void delete_egg(egg_t *prev, egg_t *current, zappy_t *zappy_ptr);
+
 #endif /* !CLIENT_H */

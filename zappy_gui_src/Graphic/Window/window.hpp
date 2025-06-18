@@ -68,6 +68,11 @@ class Window {
 
     void updateMesh();
 
+    void initMeshPlayers();
+    void initMeshEggs();
+    void initMeshRessources();
+
+
     void worldSetupMesh();
 
     /**

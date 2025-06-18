@@ -6,18 +6,19 @@
 */
 
 
-#ifndef PRIORITYSYSTEM_HPP
-#define PRIORITYSYSTEM_HPP
+#ifndef ZAPPY_AI_SRC_LOGIC_PRIORITYSYSTEM_HPP_
+#define ZAPPY_AI_SRC_LOGIC_PRIORITYSYSTEM_HPP_
 
 #include <vector>
 #include <algorithm>
+#include <iostream>
 #include <queue>
 #include <string>
 #include "../modules/AIModule.hpp"
-#include "AIBase.hpp"
+#include "./AIBase.hpp"
 
 class PrioritySystem : public AIBase {
-public:
+ public:
     void addModule(AIModule* module) {
         modules.push_back(module);
     }
@@ -25,15 +26,15 @@ public:
     void executeHighestPriorityModule() {
         if (modules.empty()) return;
 
-        auto highestPriorityModule = std::max_element(modules.begin(), modules.end(),
-            [](AIModule* a, AIModule* b) {
+        auto highestPriorityModule = std::max_element(modules.begin(),
+            modules.end(), [](AIModule* a, AIModule* b) {
                 return a->getPriority() < b->getPriority();
             });
 
 
         std::cout << "(EMPTY) Executing highest priority module with priority: "
                   << (*highestPriorityModule)->getPriority() << std::endl;
-        //std::string commands = (*highestPriorityModule)->execute();
+        // std::string commands = (*highestPriorityModule)->execute();
         // size_t start = 0, end;
         // while ((end = commands.find('\n', start)) != std::string::npos) {
         //     std::string cmd = commands.substr(start, end - start);
@@ -51,7 +52,8 @@ public:
     }
     void handleServerResponse(const std::string& response) {
         if (commandQueue.empty()) {
-            std::cerr << "No command in queue to handle response." << std::endl;
+            std::cerr << "No command in queue to handle response."
+                << std::endl;
             return;
         }
 
@@ -64,10 +66,11 @@ public:
     std::queue<std::string>& getCommandQueue() { return commandQueue; }
 
 
-private:
+ private:
     std::vector<AIModule*> modules;
     std::queue<std::string> commandQueue;
-    std::string extractMessageType(const std::string& command, const std::string& response) {
+    std::string extractMessageType(const std::string& command,
+        const std::string& response) {
         if (command.find("Inventory") == 0)
             return "Inventory" + response;
         if (command.find("Look") == 0)
@@ -93,4 +96,4 @@ private:
     }
 };
 
-#endif // PRIORITYSYSTEM_HPP
+#endif  // ZAPPY_AI_SRC_LOGIC_PRIORITYSYSTEM_HPP_

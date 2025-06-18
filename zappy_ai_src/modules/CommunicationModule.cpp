@@ -5,7 +5,7 @@
 ** main
 */
 
-#include "CommunicationModule.hpp"
+#include "modules/CommunicationModule.hpp"
 #include <iostream>
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
@@ -19,8 +19,8 @@ void CommunicationModule::execute() {
     inventoryCheckCount++;
     // Logic for broadcasting messages to other players
     std::cout << "Broadcasting message to other players..." << std::endl;
-    //std::cout << "Current level: " << AI::Data::i().level << std::endl;
-    
+    // std::cout << "Current level: " << AI::Data::i().level << std::endl;
+
     if (inventoryCheckCount % 10 == 0) {
         std::cout << "Checking inventory..." << std::endl;
         AI::Interface::i().sendCommand(INVENTORY);

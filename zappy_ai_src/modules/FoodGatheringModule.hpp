@@ -5,21 +5,20 @@
 ** Food Gathering Module
 */
 
+#ifndef ZAPPY_AI_SRC_MODULES_FOODGATHERINGMODULE_HPP_
+#define ZAPPY_AI_SRC_MODULES_FOODGATHERINGMODULE_HPP_
 
-#ifndef FOOD_GATHERING_MODULE_HPP
-#define FOOD_GATHERING_MODULE_HPP
-
-#include "AIModule.hpp"
 #include <map>
+#include "modules/AIModule.hpp"
 
 /**
  * @brief Module responsible for finding and collecting food
- * 
+ *
  * This module scans the environment for food, evaluates the best food sources,
  * and navigates to them while collecting any food found along the way.
  */
 class FoodGatheringModule : public AIModule {
-public:
+ public:
     /**
      * @brief Constructor for the FoodGatheringModule
      */
@@ -48,7 +47,7 @@ public:
      */
     void updateLevel(int lvl);
 
-private:
+ private:
     /**
      * @brief Look around to update vision data
      */
@@ -70,7 +69,8 @@ private:
         int y;
         float weight;
     };
-    FoodSource evaluateFoodSources(std::map<std::pair<int, int>, int>& foodLocations);
+    FoodSource evaluateFoodSources(
+        std::map<std::pair<int, int>, int>& foodLocations);
 
     /**
      * @brief Calculate the weight of a food source
@@ -105,8 +105,9 @@ private:
      * @param targetY Y coordinate of target
      * @param foodLocations Map of food locations and quantities
      */
-    void collectFoodAlongPath(int targetX, int targetY, 
-                            const std::map<std::pair<int, int>, int>& foodLocations);
+    void collectFoodAlongPath(
+        int targetX, int targetY,
+        const std::map<std::pair<int, int>, int>& foodLocations);
 
     /**
      * @brief Move along X axis and collect food along the way
@@ -114,7 +115,9 @@ private:
      * @param foodLocations Map of food locations
      * @return int Current X position after moving
      */
-    int moveAlongXAxis(int targetX, const std::map<std::pair<int, int>, int>& foodLocations);
+    int moveAlongXAxis(
+        int targetX,
+        const std::map<std::pair<int, int>, int>& foodLocations);
 
     /**
      * @brief Move along Y axis and collect food along the way
@@ -122,7 +125,9 @@ private:
      * @param targetY Target Y coordinate
      * @param foodLocations Map of food locations
      */
-    void moveAlongYAxis(int currentX, int targetY, const std::map<std::pair<int, int>, int>& foodLocations);
+    void moveAlongYAxis(
+        int currentX, int targetY,
+        const std::map<std::pair<int, int>, int>& foodLocations);
 
     /**
      * @brief Collect food at a specific location
@@ -130,13 +135,15 @@ private:
      * @param y Y coordinate
      * @param foodLocations Map of food locations
      */
-    void collectFoodAtLocation(int x, int y, const std::map<std::pair<int, int>, int>& foodLocations);
-    
+    void collectFoodAtLocation(
+        int x, int y,
+        const std::map<std::pair<int, int>, int>& foodLocations);
+
     /// Food resource count
     int foodCount = 0;
-    
+
     /// AI level
     int level = 1;
 };
 
-#endif // FOOD_GATHERING_MODULE_HPP
+#endif  // ZAPPY_AI_SRC_MODULES_FOODGATHERINGMODULE_HPP_

@@ -6,13 +6,13 @@
 */
 
 
-#ifndef AIMODULE_HPP
-#define AIMODULE_HPP
+#ifndef ZAPPY_AI_SRC_MODULES_AIMODULE_HPP_
+#define ZAPPY_AI_SRC_MODULES_AIMODULE_HPP_
 
 #include <string>
 
 class AIModule {
-public:
+ public:
     virtual ~AIModule() {}
 
     // Execute the behavior of the module - no parameters, no return value
@@ -22,4 +22,4 @@ public:
     virtual float getPriority() = 0;
 };
 
-#endif // AIMODULE_HPP
+#endif  // ZAPPY_AI_SRC_MODULES_AIMODULE_HPP_

@@ -312,7 +312,6 @@ class Interface {
      * @param message The message string to send
      */
     void sendMessage(const std::string &message);
-
 };
 
 }  // namespace AI

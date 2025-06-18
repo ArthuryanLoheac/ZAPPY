@@ -1,21 +1,32 @@
-#include "Core.hpp"
-#include <iostream>
-#include "PrioritySystem.hpp"
-#include "../modules/FoodGatheringModule.hpp"
-#include "../modules/CommunicationModule.hpp"
+#include "Logic/Core.hpp"
 
-void CommandHistory::addCommandResponse(const std::string& command, const std::string& response) {
+#include <iostream>
+#include <map>
+#include <memory>
+#include <queue>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "Logic/PrioritySystem.hpp"
+#include "../modules/CommunicationModule.hpp"
+#include "../modules/FoodGatheringModule.hpp"
+
+void CommandHistory::addCommandResponse(const std::string& command,
+                                       const std::string& response) {
     history.emplace_back(command, response);
     if (history.size() > MAX_HISTORY_SIZE) {
         history.erase(history.begin());
     }
 }
 
-const std::vector<std::pair<std::string, std::string>>& CommandHistory::getHistory() const {
+const std::vector<std::pair<std::string, std::string>>&
+CommandHistory::getHistory() const {
     return history;
 }
 
-std::pair<std::string, std::string> CommandHistory::getLastCommandResponse() const {
+std::pair<std::string, std::string> CommandHistory::getLastCommandResponse()
+    const {
     if (history.empty()) {
         return {"", ""};
     }
@@ -26,7 +37,8 @@ Logic::Logic() : level(1) {
     inventory["Food"] = 10;
 }
 
-void Logic::addCommandResponse(const std::string& command, const std::string& response) {
+void Logic::addCommandResponse(const std::string& command,
+                              const std::string& response) {
     commandHistory.addCommandResponse(command, response);
 }
 
@@ -37,8 +49,10 @@ void Logic::addModule(std::unique_ptr<AIModule> module) {
 void Logic::executeHighestPriorityModule() {
     if (modules.empty()) return;
 
-    auto highestPriorityModuleIt = std::max_element(modules.begin(), modules.end(),
-        [](const std::unique_ptr<AIModule>& a, const std::unique_ptr<AIModule>& b) {
+    auto highestPriorityModuleIt = std::max_element(
+        modules.begin(), modules.end(),
+        [](const std::unique_ptr<AIModule>& a,
+            const std::unique_ptr<AIModule>& b) {
             return a->getPriority() > b->getPriority();
         });
     (*highestPriorityModuleIt)->execute();
@@ -65,7 +79,8 @@ void Logic::handleServerResponse(const std::string& response) {
     addCommandResponse(originalCommand, response);
 }
 
-std::string Logic::extractMessageType(const std::string& command, const std::string& response) {
+std::string Logic::extractMessageType(const std::string& command,
+                                     const std::string& response) {
     (void)response;
     if (command.find("Inventory") == 0)
         return "Inventory";
@@ -78,7 +93,7 @@ std::string Logic::extractMessageType(const std::string& command, const std::str
     if (command.find("Broadcast") == 0)
         return "Broadcast";
     if (command.find("Forward") == 0)
-        return "Forward"; 
+        return "Forward";
     if (command.find("Right") == 0)
         return "Right";
     if (command.find("Left") == 0)
@@ -90,7 +105,8 @@ std::string Logic::extractMessageType(const std::string& command, const std::str
     return "Unknown";
 }
 
-const std::vector<std::pair<std::string, std::string>>& Logic::getCommandHistory() const {
+const std::vector<std::pair<std::string, std::string>>&
+Logic::getCommandHistory() const {
     return commandHistory.getHistory();
 }
 
@@ -114,10 +130,10 @@ const std::map<std::string, int>& Logic::getInventory() const {
     return inventory;
 }
 
-void Logic::setLevel(short newLevel) {
+void Logic::setLevel(int16_t newLevel) {
     level = newLevel;
 }
 
-short Logic::getLevel() const {
+int16_t Logic::getLevel() const {
     return level;
 }

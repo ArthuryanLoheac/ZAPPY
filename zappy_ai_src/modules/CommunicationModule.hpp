@@ -5,19 +5,18 @@
 ** main
 */
 
+#ifndef ZAPPY_AI_SRC_MODULES_COMMUNICATIONMODULE_HPP_
+#define ZAPPY_AI_SRC_MODULES_COMMUNICATIONMODULE_HPP_
 
-#ifndef COMMUNICATIONMODULE_HPP
-#define COMMUNICATIONMODULE_HPP
-
-#include "AIModule.hpp"
+#include "modules/AIModule.hpp"
 
 class CommunicationModule : public AIModule {
-public:
+ public:
     CommunicationModule();
     void execute() override;
     float getPriority() override;
-private:
+ private:
     int id = -1;
 };
 
-#endif // COMMUNICATIONMODULE_HPP
+#endif  // ZAPPY_AI_SRC_MODULES_COMMUNICATIONMODULE_HPP_

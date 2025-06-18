@@ -5,8 +5,8 @@
 ** main
 */
 
-#ifndef AIBASE_HPP
-#define AIBASE_HPP
+#ifndef ZAPPY_AI_SRC_LOGIC_AIBASE_HPP_
+#define ZAPPY_AI_SRC_LOGIC_AIBASE_HPP_
 
 #include <string>
 #include <functional>
@@ -14,7 +14,7 @@
 #include <vector>
 
 class AIBase {
-public:
+ public:
     using MessageCallback = std::function<void(const std::string&)>;
 
     virtual ~AIBase() = default;
@@ -32,8 +32,8 @@ public:
         }
     }
 
-protected:
+ protected:
     std::unordered_map<std::string, std::vector<MessageCallback>> subscribers;
 };
 
-#endif // AIBASE_HPP
+#endif  // ZAPPY_AI_SRC_LOGIC_AIBASE_HPP_

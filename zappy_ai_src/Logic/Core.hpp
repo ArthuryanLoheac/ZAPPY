@@ -13,22 +13,24 @@
 #include <map>
 #include <queue>
 #include <memory>
+#include <cstdint>
 #include "../modules/AIModule.hpp"
 
 class CommandHistory {
-public:
+ public:
     CommandHistory() = default;
-    void addCommandResponse(const std::string& command, const std::string& response);
+    void addCommandResponse(const std::string& command,
+        const std::string& response);
     const std::vector<std::pair<std::string, std::string>>& getHistory() const;
     std::pair<std::string, std::string> getLastCommandResponse() const;
 
-private:
+ private:
     std::vector<std::pair<std::string, std::string>> history;
     static const size_t MAX_HISTORY_SIZE = 20;
 };
 
 class Logic {
-public:
+ public:
     Logic();
     static Logic& getInstance() {
         static Logic instance;
@@ -40,22 +42,25 @@ public:
     void queueCommand(const std::string& command);
     std::queue<std::string>& getCommandQueue();
     void handleServerResponse(const std::string& response);
-    void addCommandResponse(const std::string& command, const std::string& response);
-    const std::vector<std::pair<std::string, std::string>>& getCommandHistory() const;
+    void addCommandResponse(const std::string& command, const
+        std::string& response);
+    const std::vector<std::pair<std::string, std::string>>&
+        getCommandHistory() const;
     std::pair<std::string, std::string> getLastCommandResponse() const;
     void setItemQuantity(const std::string& item, int quantity);
     int getItemQuantity(const std::string& item) const;
     const std::map<std::string, int>& getInventory() const;
-    void setLevel(short newLevel);
-    short getLevel() const;
+    void setLevel(int16_t newLevel);
+    int16_t getLevel() const;
 
-private:
+ private:
     std::vector<std::unique_ptr<AIModule>> modules;
     std::queue<std::string> commandQueue;
     CommandHistory commandHistory;
     std::map<std::string, int> inventory;
-    short level;
-    std::string extractMessageType(const std::string& command, const std::string& response);
+    int16_t level;
+    std::string extractMessageType(const std::string& command,
+        const std::string& response);
 };
 
 void run_ai_logic_loop();

@@ -5,7 +5,7 @@
 ** Elevation Module
 */
 
-#include "ElevationModule.hpp"
+#include "modules/ElevationModule.hpp"
 #include <iostream>
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
@@ -23,49 +23,51 @@ ElevationModule::ElevationModule() {
 
 /**
  * @brief Calculate the priority of the elevation module
- * 
+ *
  * Priority is determined by food availability:
  * - 0.7 if we need to gather food (<3 food)
  * - 0.4 if we have sufficient food (≥3 food)
  * - 0.0 if we have no resources and no conditions for elevation
- * 
+ *
  * @return float Priority value between 0.0 and 1.0
  */
 float ElevationModule::getPriority() {
     checkResources();
-    
+
     return 1.0f;
-    //TEMP above
+    // TEMP above
     if (foodCount < 3 || !hasLinemate || !foundSpot) {
         return 1.0f;
     }
-    
+
     return (hasSufficientFood) ? 0.4f : 0.7f;
 }
 
 /**
  * @brief Check the resources needed for elevation
- * 
+ *
  * Updates status flags based on current inventory contents
  */
 void ElevationModule::checkResources() {
-    foodCount = AI::Data::i().inventory.find("food") != AI::Data::i().inventory.end() ?
-                AI::Data::i().inventory.at("food") : 0;
-    
-    hasLinemate = AI::Data::i().inventory.find("linemate") != AI::Data::i().inventory.end() &&
+    foodCount = AI::Data::i().inventory.find("food") !=
+        AI::Data::i().inventory.end() ?
+        AI::Data::i().inventory.at("food") : 0;
+
+    hasLinemate = AI::Data::i().inventory.find("linemate") !=
+                  AI::Data::i().inventory.end() &&
                   AI::Data::i().inventory.at("linemate") > 0;
-    
+
     hasSufficientFood = (foodCount >= 3);
 }
 
 /**
  * @brief Execute the elevation module behavior
- * 
+ *
  * Manages the sequence of looking for linemate, moving to it, and starting incantation
  */
 void ElevationModule::execute() {
     checkResources();
-    
+
     static int lookCounter = 0;
     if (++lookCounter >= 10) {
         foundSpot = false;
@@ -73,7 +75,7 @@ void ElevationModule::execute() {
         AI::Interface::i().sendCommand(LOOK);
         return;
     }
-    
+
     if (!foundSpot && !hasLinemate) {
         foundSpot = findElevationSpot();
         if (!foundSpot) {
@@ -81,7 +83,7 @@ void ElevationModule::execute() {
             return;
         }
     }
-    
+
     if (foundSpot || hasLinemate) {
         performElevation();
     }
@@ -89,30 +91,31 @@ void ElevationModule::execute() {
 
 /**
  * @brief Check if linemate is on the current tile
- * 
+ *
  * @return True if linemate is found on current tile
  */
 bool ElevationModule::checkCurrentTileForLinemate() {
     if (AI::Data::i().vision.empty() || AI::Data::i().vision[0].empty()) {
         return false;
     }
-    
+
     const size_t midY = AI::Data::i().vision[0].size() / 2;
     auto& currentTile = AI::Data::i().vision[0][midY];
-    
-    if (currentTile.find("linemate") != currentTile.end() && currentTile["linemate"] == 1) {
+
+    if (currentTile.find("linemate") != currentTile.end() &&
+        currentTile["linemate"] == 1) {
         std::cout << "Found linemate on current tile!" << std::endl;
         targetX = 0;
         targetY = 0;
         return true;
     }
-    
+
     return false;
 }
 
 /**
  * @brief Scan the vision data for tiles containing linemate
- * 
+ *
  * @return True if a suitable tile with linemate was found
  */
 bool ElevationModule::scanVisionForLinemate() {
@@ -120,25 +123,25 @@ bool ElevationModule::scanVisionForLinemate() {
         const size_t midY = AI::Data::i().vision[x].size() / 2;
         for (size_t y = 0; y < AI::Data::i().vision[x].size(); y++) {
             int relativeY = static_cast<int>(y) - static_cast<int>(midY);
-            
+
             auto& tileContents = AI::Data::i().vision[x][y];
-            if (tileContents.find("linemate") != tileContents.end() && 
+            if (tileContents.find("linemate") != tileContents.end() &&
                 tileContents["linemate"] == 1) {
-                
-                std::cout << "Found linemate at position (" << x << "," << relativeY << ")" << std::endl;
+                std::cout << "Found linemate at position (" << x << ","
+                          << relativeY << ")" << std::endl;
                 targetX = static_cast<int>(x);
                 targetY = relativeY;
                 return true;
             }
         }
     }
-    
+
     return false;
 }
 
 /**
  * @brief Find a suitable location for elevation
- * 
+ *
  * @return True if a suitable spot was found
  */
 bool ElevationModule::findElevationSpot() {
@@ -149,7 +152,7 @@ bool ElevationModule::findElevationSpot() {
     if (checkCurrentTileForLinemate()) {
         return true;
     }
-    
+
     return scanVisionForLinemate();
 }
 
@@ -168,7 +171,8 @@ void ElevationModule::handleLinemateInInventory() {
  */
 void ElevationModule::handleFoundLinemateTile() {
     if (targetX > 0 || targetY != 0) {
-        std::cout << "Moving to linemate at (" << targetX << "," << targetY << ")" << std::endl;
+        std::cout << "Moving to linemate at (" << targetX << ","
+            << targetY << ")" << std::endl;
         AI::Interface::i().goTo(targetX, targetY);
         targetX = 0;
         targetY = 0;
@@ -183,21 +187,22 @@ void ElevationModule::handleFoundLinemateTile() {
 
 /**
  * @brief Perform the elevation process
- * 
+ *
  * This method handles both cases: when linemate is in inventory or when
  * a tile with linemate has been found
  */
 void ElevationModule::performElevation() {
     if (foodCount < 3) {
-        std::cout << "Not enough food for elevation: " << foodCount << "/3" << std::endl;
+        std::cout << "Not enough food for elevation: " << foodCount << "/3"
+                  << std::endl;
         return;
     }
-    
+
     if (hasLinemate) {
         handleLinemateInInventory();
         return;
     }
-    
+
     if (foundSpot && targetX >= 0 && targetY >= 0) {
         handleFoundLinemateTile();
     }

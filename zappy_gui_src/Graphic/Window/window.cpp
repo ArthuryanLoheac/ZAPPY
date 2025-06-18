@@ -144,21 +144,26 @@ void Window::updateMesh() {
         }
     }
 
-    if (needUpdatePlayers) {
-        for (auto &player : GUI::GameDataManager::i().getPlayers()) {
-            if (!player.getMesh()) {
-                Vec3d position = GUI::GameDataManager::i()
-                    .getTile(player.getX(), player.getY()).getWorldPos();
-                position.Y += 0.5f;
-                auto mesh = MeshImporter::i().importMesh("Drone",
-                    player.getTeamName(), position, Vec3d(0.2f),
-                    Vec3d(0, player.getOrientation() * 90, 0));
-                if (mesh)
-                    player.setMesh(mesh);
-                player.initMeshRings();
+    try {
+        if (needUpdatePlayers) {
+            for (auto &player : GUI::GameDataManager::i().getPlayers()) {
+                if (!player.getMesh()) {
+                    Vec3d position = GUI::GameDataManager::i()
+                        .getTile(player.getX(), player.getY()).getWorldPos();
+                    position.Y += 0.5f;
+                    auto mesh = MeshImporter::i().importMesh("Drone",
+                        player.getTeamName(), position, Vec3d(0.2f),
+                        Vec3d(0, player.getOrientation() * 90, 0));
+                    if (mesh) {
+                        player.setMesh(mesh);
+                        player.initMeshRings();
+                    }
+                }
             }
+            needUpdatePlayers = false;
         }
-        needUpdatePlayers = false;
+    } catch (const std::exception &e) {
+        needUpdatePlayers = true;
     }
 
     if (needUpdateEggs) {
@@ -201,5 +206,7 @@ void Window::worldSetupMesh() {
     smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
     worldSetuped = true;
     needUpdateRessources = true;
+    needUpdatePlayers = true;
+    needUpdateEggs = true;
 }
 }  // namespace GUI

@@ -15,6 +15,8 @@ namespace GUI {
  */
 class Player {
  public:
+    bool firstSet = true;
+ 
     /**
      * @brief Enum for player states.
      *

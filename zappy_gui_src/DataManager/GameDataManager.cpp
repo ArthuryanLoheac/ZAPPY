@@ -70,6 +70,7 @@ void GameDataManager::removeEgg(int id) {
                 int idM = eggs[i].EggMesh->getID();
                 auto sceneNode = GUI::Window::i().smgr->getSceneNodeFromId(idM);
                 sceneNode->setVisible(false);
+                return;
             }
         }
     }
@@ -92,12 +93,14 @@ Player::Orientation o, int level, const std::string &teamName) {
     position.Y += 0.5f;
     players.emplace_back(id, x, y, o, level, teamName, nullptr);
     playerAdded = true;
-    GUI::Window::i().needUpdatePlayers = true;
+    printf("--------- Player added: id=%d, team=%s\n", id, teamName.c_str());
 }
 
 Player &GameDataManager::getPlayer(int id) {
     std::lock_guard<std::mutex> lock(mutexDatas);
+    printf("--------- Get player: id=%d\n", id);
     for (auto &player : players) {
+        printf("Checking player: id=%d\n", player.getId());
         if (player.getId() == id)
             return player;
     }
@@ -110,6 +113,7 @@ std::vector<Player> &GameDataManager::getPlayers() {
 
 void GameDataManager::removePlayer(int id) {
     std::lock_guard<std::mutex> lock(mutexDatas);
+    printf("--------- REMOVE player: id=%d\n", id);
     for (size_t i = 0; i < players.size(); i++) {
         if (players[i].getId() == id) {
             players[i].destroy();

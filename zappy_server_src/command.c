@@ -65,7 +65,7 @@ static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
 void handle_client_command(zappy_t *zappy, int fd)
 {
     client_t *current = zappy->clients;
-    char buffer[1024];
+    //char buffer[1024];
 
     while (current != NULL && current->fd != fd) {
         current = current->next;
@@ -74,8 +74,9 @@ void handle_client_command(zappy_t *zappy, int fd)
         return;
     if (get_client_buffer(current, fd, zappy) == false) {
         if (!current->is_graphic) {
-            sprintf(buffer, "pdi #%d\n", current->stats.id);
-            send_data_to_graphics(zappy, buffer);
+            printf("Client with fd %d disconnected\n", fd);
+            //sprintf(buffer, "pdi #%d\n", current->stats.id);
+            //send_data_to_graphics(zappy, buffer);
         }
         LOG_INFO("Client with fd %d disconnected", fd);
         remove_client(zappy, fd);

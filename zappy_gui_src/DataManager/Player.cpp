@@ -62,6 +62,10 @@ void Player::updateStartElevation(float deltaTime) {
         state = IDLE_ELEVATION;
         return;
     }
+    if (firstSet) {
+        firstSet = false;
+        posTarget = PlayerMesh->getPosition();
+    }
     Vec3d currentRot = PlayerMesh->getRotation();
     Vec3d newRot = Vec3d(
         currentRot.X + deltaRotPlayer.X * deltaTime * 2,
@@ -191,6 +195,8 @@ void Player::updtaeIdle(float deltaTime) {
 
 void Player::initMeshRings() {
     std::lock_guard<std::mutex> lock(mutexDatas);
+    if (!PlayerMesh)
+        return;
     PlayerMeshesCylinder.clear();
     for (int i = 0; i < maxLevel; i++) {
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();

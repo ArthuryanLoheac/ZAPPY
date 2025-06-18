@@ -148,6 +148,8 @@ void Player::setPosition(int newX, int newY, Orientation new0, bool TP) {
 
     if (PlayerMesh) {
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
+        if (position.X == 0 && position.Z == 0 && position.Y == 0)
+            position = PlayerMesh->getPosition();
         position.Y += 0.5f;
         posTarget = Vec3d(position.X, position.Y, position.Z);
         speedMove = baseSpeedMove * DataManager::i().getFrequency() *
@@ -156,6 +158,7 @@ void Player::setPosition(int newX, int newY, Orientation new0, bool TP) {
         // check first set
         if (PlayerMesh->getPosition().Y == 0 || tp || TP) {
             PlayerMesh->setPosition(position);
+            posTarget = Vec3d(position.X, position.Y, position.Z);
             PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
             for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++)
                 PlayerMeshesCylinder[i]->setPosition(position);

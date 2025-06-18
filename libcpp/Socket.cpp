@@ -27,8 +27,7 @@ Socket::Socket(): port(0), ip(), server_fd(0), nb_fds(0), fd(), running(false) {
  * @param ip IP address to be used for connection
  */
 Socket::Socket(const int port, const std::string &ip) : port(port), ip(ip),
-    server_fd(0), nb_fds(0), fd(), running(false) {
-}
+server_fd(0), nb_fds(0), fd(), running(false) {}
 
 /**
  * @brief Destructor

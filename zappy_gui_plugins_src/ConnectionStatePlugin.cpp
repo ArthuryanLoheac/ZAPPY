@@ -47,12 +47,15 @@ irr::video::IVideoDriver* driver) {
         irr::core::rect<irr::s32>(width / 2 - 20, 10, width / 2 + 20, 50),
         color, false, true);
     if (data.isConnected)
-        drawImage("assets/UI/connected.png", width / 2 + 20, 10, 30, 30, driver);
+        drawImage("assets/UI/connected.png", width / 2 + 20, 10, 30, 30,
+            driver);
     else
-        drawImage("assets/UI/disconnected.png", width / 2 + 20, 10, 30, 30, driver);
+        drawImage("assets/UI/disconnected.png", width / 2 + 20, 10, 30, 30,
+            driver);
 }
 
-bool ConnectionStatePlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
+bool ConnectionStatePlugin::onEvent(const irr::SEvent &event,
+pluginsData &datas) {
     (void) event;
     (void) datas;
     return false;

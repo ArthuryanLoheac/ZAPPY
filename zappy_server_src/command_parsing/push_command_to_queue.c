@@ -118,6 +118,16 @@ static int get_command_duration(client_t *client, char **args)
     return -1;
 }
 
+static void send_unknown(client_t *client, char **args)
+{
+    LOG_WARNING("[%i]: Received unknown command: %s\n",
+        client->fd, args[0]);
+    if (client->is_graphic)
+        add_to_buffer(&client->out_buffer, "suc\n");
+    else
+        add_to_buffer(&client->out_buffer, "ko\n");
+}
+
 void push_command_to_queue(char **args, client_t *client, zappy_t *zappy_ptr)
 {
     int command_duration = 0;
@@ -133,12 +143,6 @@ void push_command_to_queue(char **args, client_t *client, zappy_t *zappy_ptr)
             return;
         if (!add_command(command_duration, args, client))
             add_to_buffer(&client->out_buffer, "ko\n");
-    } else {
-        LOG_WARNING("[%i]: Received unknown command: %s\n",
-            client->fd, args[0]);
-        if (client->is_graphic)
-            add_to_buffer(&client->out_buffer, "suc\n");
-        else
-            add_to_buffer(&client->out_buffer, "ko\n");
-    }
+    } else
+        send_unknown(client, args);
 }

@@ -8,7 +8,6 @@
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "DataManager/SoundsManager.hpp"
-#include "ServerGUI.hpp"
 
 /**
  * @brief Prints an error message and the associated arguments.

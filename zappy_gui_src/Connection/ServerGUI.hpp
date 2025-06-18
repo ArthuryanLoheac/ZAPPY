@@ -256,7 +256,6 @@ class ServerGUI {
         {"PGT", &ServerGUI::pgtCommand},
         {"PEX", &ServerGUI::pexCommand},
         {"SUC", &ServerGUI::sucCommand},
-
     };
 };
 

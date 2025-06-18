@@ -84,8 +84,7 @@ std::chrono::system_clock::time_point &timeNextPing) {
     if (time >= timeNext) {
         timeNext = timeNext + std::chrono::seconds(updateMapTime);
         sendDatasToServer("mct\n");
-    }
-    if (time >= timeNextPing) {
+    } else if (time >= timeNextPing) {
         timeNextPing = timeNextPing + std::chrono::seconds(updatePingTime);
         sendDatasToServer("PING\n");
         sendPing = true;

@@ -21,7 +21,10 @@ int graphic() {
         GUI::SoundsManager::i().playMusic("assets/Musics/Ambient.mp3");
         GUI::Window::i().update();
     } catch(const std::exception& e) {
-        std::cerr << e.what() << '\n';
+        std::cerr << "Error in graphic(): " << e.what() << '\n';
+        return 84;
+    } catch(...) {
+        std::cerr << "Unknown error occurred in graphic()" << '\n';
         return 84;
     }
     GUI::DataManager::i().setRunning(false);

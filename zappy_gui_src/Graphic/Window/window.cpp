@@ -7,6 +7,7 @@
 #include "tools/MeshImporter.hpp"
 #include "DataManager/DataManager.hpp"
 #include "DataManager/SoundsManager.hpp"
+#include "include/logs.h"
 #include "PluginsManagement/PluginsDataManager.hpp"
 
 namespace GUI {
@@ -82,16 +83,20 @@ void Window::windowUpdateFocus() {
 }
 
 void Window::windowUpdateNoFocus() {
-    updateSkyBoxRotation();
-    GameDataManager::i().Update(frameDeltaTime);
-    SoundsManager::i().Update();
-    driver->beginScene(true, true,
-        irr::video::SColor(255, 100, 101, 140));
+    try {
+        updateSkyBoxRotation();
+        GameDataManager::i().Update(frameDeltaTime);
+        SoundsManager::i().Update();
+        driver->beginScene(true, true,
+            irr::video::SColor(255, 100, 101, 140));
 
-    updateMesh();
-    smgr->drawAll();
-    pluginsManager::i().drawPlugins(font, driver);
-    guienv->drawAll();
+        updateMesh();
+        smgr->drawAll();
+        pluginsManager::i().drawPlugins(font, driver);
+        guienv->drawAll();
+    } catch (const std::exception &e) {
+        LOG_ERROR(("Error in windowUpdateNoFocus: " + std::string(e.what())).c_str());
+    }
 }
 
 void Window::update() {

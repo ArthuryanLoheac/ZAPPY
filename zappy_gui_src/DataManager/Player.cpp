@@ -2,6 +2,7 @@
 #include <string>
 #include <mutex>
 #include <utility>
+#include <iostream>
 
 #include "DataManager/Player.hpp"
 #include "DataManager/GameDataManager.hpp"
@@ -130,6 +131,8 @@ void Player::updatePosition(float deltaTime) {
 
     if (!PlayerMesh)
         return;
+    if (posTarget.X == 0 && posTarget.Y == 0 && posTarget.Z)
+        posTarget = PlayerMesh->getPosition();
     if (posTarget.getDistanceFrom(PlayerMesh->getPosition()) > 0.1f) {
         // new pos
         Vec3d direction = posTarget - PlayerMesh->getPosition();
@@ -195,16 +198,20 @@ void Player::updtaeIdle(float deltaTime) {
 
 void Player::initMeshRings() {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    if (!PlayerMesh)
+    if (!PlayerMesh) {
+        std::cerr << "Error: PlayerMesh is not initialized in initMeshRings()" << std::endl;
         return;
+    }
     PlayerMeshesCylinder.clear();
     for (int i = 0; i < maxLevel; i++) {
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
         position.Y += 0.5f;
         auto mesh = MeshImporter::i().importMesh("Cylinder", teamName, position,
             Vec3d(0.2f), Vec3d(0, o * 90, 0));
-        if (!mesh)
+        if (!mesh) {
+            std::cerr << "Error: Failed to import mesh for level " << i + 1 << std::endl;
             return;
+        }
         PlayerMeshesCylinder.push_back(mesh);
         PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
         PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);

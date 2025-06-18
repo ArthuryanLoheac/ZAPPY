@@ -68,6 +68,7 @@ void Player::Init(std::string team, int level) {
         PlayerMeshesCylinderRotation.push_back(Vec3d(randRotation(i),
             randRotation(i), randRotation(i)));
     }
+    posTarget = Vec3d(0, 0, 0);
 }
 
 void Player::setId(int newId) {

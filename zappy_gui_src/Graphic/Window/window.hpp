@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <iostream> // Added for error handling
 
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
@@ -64,6 +65,7 @@ class Window {
     void update();
 
     void updateMesh();
+
     void worldSetupMesh();
 
     /**

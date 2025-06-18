@@ -39,18 +39,25 @@ irr::video::IVideoDriver* driver) {
     if (!driver)
         return;
     int width = driver->getScreenSize().Width;
+    UICol color = data.ping < 100 ? UICol(125, 255, 255, 255) :
+        data.ping < 200 ? UICol(125, 255, 255, 0) :
+        UICol(125, 255, 0, 0);
 
-    (void) font;
+    font->draw(std::to_string(data.ping).c_str(),
+        irr::core::rect<irr::s32>(width / 2 - 20, 10, width / 2 + 20, 50),
+        color, false, true);
     if (data.isConnected)
-        drawImage("assets/UI/connected.png", width / 2, 20, 30, 30, driver);
+        drawImage("assets/UI/connected.png", width / 2 + 20, 10, 30, 30,
+            driver);
     else
-        drawImage("assets/UI/disconnected.png", width / 2, 20, 30, 30, driver);
+        drawImage("assets/UI/disconnected.png", width / 2 + 20, 10, 30, 30,
+            driver);
 }
 
 bool ConnectionStatePlugin::onEvent(const irr::SEvent &event,
-pluginsData &dataManager) {
+pluginsData &datas) {
     (void) event;
-    (void) dataManager;
+    (void) datas;
     return false;
 }
 

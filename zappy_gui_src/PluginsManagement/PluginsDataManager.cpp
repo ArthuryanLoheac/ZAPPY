@@ -13,6 +13,7 @@ void PluginsDataManager::updatePluginsData() {
     data.teams = GUI::GameDataManager::i().getTeams();
     data.teamColors.clear();
     data.isConnected = GUI::ServerGUI::i().isConnectedToServer();
+    data.ping = GUI::ServerGUI::i().ping;
     for (const auto &team : data.teams)
         data.teamColors.push_back(MeshImporter::i().getColor(team));
     updatePlayers();

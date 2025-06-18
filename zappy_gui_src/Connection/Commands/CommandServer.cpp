@@ -331,3 +331,11 @@ void ServerGUI::pexCommand(std::vector<std::string> &args) {
     GameDataManager::i().setPushed(true);
 }
 }  // namespace GUI
+
+void GUI::ServerGUI::sucCommand(std::vector<std::string> &args) {
+    (void) args;
+    if (sendPing) {
+        ping = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now() - timeForPing).count();
+    }
+}

@@ -50,7 +50,8 @@ class ConnectionStatePlugin : public pluginsInterface {
      * @brief Handles events for the plugin.
      * @param event The event to handle.
      */
-    bool onEvent(const irr::SEvent &event, pluginsData &dataManager) override;
+    bool onEvent(const irr::SEvent &event, pluginsData &datas) override;
+
 
     /**
      * @brief Updates the plugin with the latest data.
@@ -59,8 +60,8 @@ class ConnectionStatePlugin : public pluginsInterface {
     void update(pluginsData dataManager) override;
 
     /**
-     * @brief Return priority of the plugin.
-     * @return Priority level of the plugin.
+     * @brief Gets the priority of the plugin.
+     * @return The priority level of the plugin.
      */
-    int getPriority() const override;
+    virtual int getPriority() const;
 };

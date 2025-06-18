@@ -52,6 +52,7 @@ class pluginsData {
     std::vector<irr::video::SColor> teamColors; /**< List of team colors. */
     std::vector<Tile> tiles; /**< List of tiles in the game map. */
     std::vector<Player> players; /**< List of players in the game. */
+    int ping = 0; /**< Ping time to the server. */
 
     bool isConnected = false; /**< Connection status to the server. */
 

@@ -153,11 +153,9 @@ void Window::updateMesh()
                 Vec3d position = GUI::GameDataManager::i().getTile(player.getX(), player.getY()).getWorldPos();
                 position.Y += 0.5f;
                 auto mesh = MeshImporter::i().importMesh("Drone", player.getTeamName(), position, Vec3d(0.2f), Vec3d(0, player.getOrientation() * 90, 0));
-                if (mesh) {  // Ensure mesh creation was successful
+                if (mesh)
                     player.setMesh(mesh);
-                } else {
-                    std::cerr << "Failed to create player mesh for ID: " << player.getId() << '\n';
-                }
+                player.initMeshRings();
             }
         }
         needUpdatePlayers = false;
@@ -199,7 +197,6 @@ void Window::worldSetupMesh() {
             }
         }
     }
-    printf("============ Updating meshes\n");
     smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
         irr::video::SColorf(1.5f, 1.5f, 2.f), 2000.0f);
     smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));

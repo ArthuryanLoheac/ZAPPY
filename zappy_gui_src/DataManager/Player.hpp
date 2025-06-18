@@ -314,6 +314,8 @@ class Player {
      */
     void updtaeIdle(float deltaTime);
 
+    void initMeshRings();
+
  private:
     int id; /**< Player ID. */
     int x; /**< X-coordinate of the player. */

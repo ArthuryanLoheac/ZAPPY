@@ -184,7 +184,6 @@ void ServerGUI::pnwCommand(std::vector<std::string> &args) {
         pOrient = Player::SOUTH;
 
     GameDataManager::i().addPlayer(id, x, y, pOrient, level, teamName);
-    GUI::Window::i().needUpdatePlayers = true;
 }
 
 /**

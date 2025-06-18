@@ -7,6 +7,7 @@
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
+#include "Player.hpp"
 
 namespace GUI {
 
@@ -186,6 +187,22 @@ void Player::updtaeIdle(float deltaTime) {
             Vec3d posC = PlayerMesh->getPosition();
             PlayerMeshesCylinder[i]->setPosition(posC);
         }
+    }
+}
+
+void Player::initMeshRings() {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    PlayerMeshesCylinder.clear();
+    for (int i = 0; i < maxLevel; i++) {
+        Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
+        position.Y += 0.5f;
+        auto mesh = MeshImporter::i().importMesh("Cylinder", teamName, position,
+            Vec3d(0.2f), Vec3d(0, o * 90, 0));
+        if (!mesh)
+            return;
+        PlayerMeshesCylinder.push_back(mesh);
+        PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
+        //PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);
     }
 }
 }  // namespace GUI

@@ -91,9 +91,8 @@ Player::Orientation o, int level, const std::string &teamName) {
     Vec3d position = getTile(x, y).getWorldPos();
     position.Y += 0.5f;
     players.emplace_back(id, x, y, o, level, teamName, nullptr);
-        //MeshImporter::i().importMesh("Drone", teamName, position, Vec3d(0.2f),
-        //Vec3d(0, o * 90, 0)));
     playerAdded = true;
+    GUI::Window::i().needUpdatePlayers = true;
 }
 
 Player &GameDataManager::getPlayer(int id) {

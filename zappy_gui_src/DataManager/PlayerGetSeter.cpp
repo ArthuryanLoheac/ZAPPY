@@ -17,17 +17,17 @@ const std::string &team, const std::shared_ptr<Mesh> &pMesh)
 
 Player::Player(Player &&other) noexcept
 : id(other.id), x(other.x), y(other.y),
-posTarget(std::move(other.posTarget)),
-rotationTarget(std::move(other.rotationTarget)),
-speedMove(other.speedMove),
-baseSpeedMove(other.baseSpeedMove),
-o(other.o), level(other.level),
-teamName(std::move(other.teamName)),
-PlayerMesh(std::move(other.PlayerMesh)),
-PlayerMeshesCylinder(std::move(other.PlayerMeshesCylinder)),
-PlayerMeshesCylinderRotation(std::move(other.PlayerMeshesCylinderRotation)),
-state(other.state),
-ressources(std::move(other.ressources)) {}
+  posTarget(std::move(other.posTarget)),
+  rotationTarget(std::move(other.rotationTarget)),
+  speedMove(other.speedMove),
+  baseSpeedMove(other.baseSpeedMove),
+  o(other.o), level(other.level),
+  teamName(std::move(other.teamName)),
+  PlayerMesh(std::move(other.PlayerMesh)),
+  PlayerMeshesCylinder(std::move(other.PlayerMeshesCylinder)),
+  PlayerMeshesCylinderRotation(std::move(other.PlayerMeshesCylinderRotation)),
+  state(other.state),
+  ressources(std::move(other.ressources)) {}
 
 Player &Player::operator=(Player &&other) noexcept {
     if (this != &other) {
@@ -65,12 +65,8 @@ void Player::Init(std::string team, int level) {
     (void) team;
     (void) level;
     for (int i = 0; i < maxLevel; i++) {
-        //PlayerMeshesCylinder.push_back(std::shared_ptr<Mesh>(
-        //    MeshImporter::i().importMesh("Cylinder", team)));
         PlayerMeshesCylinderRotation.push_back(Vec3d(randRotation(i),
             randRotation(i), randRotation(i)));
-        //PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
-        //PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);
     }
 }
 
@@ -151,8 +147,6 @@ void Player::setPosition(int newX, int newY, Orientation new0, bool TP) {
         return;
 
     if (PlayerMesh) {
-        printf("Player %d set position to (%d, %d) with orientation %d\n",
-            id, x, y, o);
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
         position.Y += 0.5f;
         posTarget = Vec3d(position.X, position.Y, position.Z);

@@ -42,9 +42,11 @@ class Window {
     irr::f32 frameDeltaTime; /**<time delta for frame updates*/
     std::shared_ptr<irr::gui::IGUIFont> font;
         /**<font for rendering textin the GUI*/
-    std::vector<irr::scene::ISceneNode*> cubes; /**<list of cubes in the scene*/
+    std::vector<irr::scene::ISceneNode*> cubes;
+        /**<list of cubes in the scene*/
 
-    std::vector<int> missingPlayersInit; /**<list of missing players initialisation*/
+    std::vector<int> missingPlayersInit;
+        /**<list of missing players initialisation*/
 
     std::shared_ptr<irr::scene::ISceneNode> Skybox;
         /**<skybox node forthe scene*/

@@ -38,7 +38,8 @@ GameTile &GameDataManager::addTile(int x, int y) {
 
 GameTile &GameDataManager::getTile(int x, int y) {
     if (x < 0 || x >= width || y < 0 || y >= height)
-        throw std::out_of_range("Tile coordinates out of bounds " + std::to_string(x) + " / " + std::to_string(y));
+        throw std::out_of_range("Tile coordinates out of bounds " +
+            std::to_string(x) + " / " + std::to_string(y));
     for (auto &tile : tiles) {
         if (tile.getX() == x && tile.getY() == y)
             return tile;

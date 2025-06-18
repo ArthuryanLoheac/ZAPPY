@@ -213,7 +213,8 @@ void Player::initMeshRings() {
         auto mesh = MeshImporter::i().importMesh("Cylinder", teamName, position,
             Vec3d(0.2f), Vec3d(0, o * 90, 0));
         if (!mesh || !mesh->getMesh()) {
-            std::cerr << "Error: Failed to create Cylinder mesh for level " << i << std::endl;
+            std::cerr << "Error: Failed to create Cylinder mesh for level "
+                << i << std::endl;
             continue;
         }
         PlayerMeshesCylinder.push_back(mesh);

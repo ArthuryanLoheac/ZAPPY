@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <random>
+#include <string>
 
 #include "Graphic/Window/window.hpp"
 #include "Graphic/Events/MyEventReceiver.hpp"
@@ -9,7 +10,6 @@
 #include "DataManager/SoundsManager.hpp"
 #include "include/logs.h"
 #include "PluginsManagement/PluginsDataManager.hpp"
-#include "window.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -96,7 +96,8 @@ void Window::windowUpdateNoFocus() {
         pluginsManager::i().drawPlugins(font, driver);
         guienv->drawAll();
     } catch (const std::exception &e) {
-        LOG_ERROR(("Error in windowUpdateNoFocus: " + std::string(e.what())).c_str());
+        LOG_ERROR(("Error in windowUpdateNoFocus: " +
+            std::string(e.what())).c_str());
     }
 }
 
@@ -145,8 +146,7 @@ void Window::updateMesh() {
         initMeshEggs();
 }
 
-void Window::initMeshRessources()
-{
+void Window::initMeshRessources() {
     for (int i = 0; i < GUI::GameDataManager::i().getWidth(); i++) {
         for (int j = 0; j < GUI::GameDataManager::i().getHeight(); j++) {
             GameTile &tile = GUI::GameDataManager::i().getTile(i, j);
@@ -154,10 +154,12 @@ void Window::initMeshRessources()
                 try {
                     tile.updateMeshesRessources();
                 } catch (const std::exception &e) {
-                    std::cerr << "Error updating tile resources: " << e.what() << '\n';
+                    std::cerr << "Error updating tile resources: "
+                        << e.what() << '\n';
                 }
             } else {
-                std::cerr << "Error: Invalid tile mesh at (" << i << ", " << j << ")" << std::endl;
+                std::cerr << "Error: Invalid tile mesh at ("
+                    << i << ", " << j << ")" << std::endl;
             }
         }
     }
@@ -165,7 +167,8 @@ void Window::initMeshRessources()
 }
 
 void Window::removePlayerInitLst(int id) {
-    for (auto it = missingPlayersInit.begin(); it != missingPlayersInit.end(); ++it) {
+    for (auto it = missingPlayersInit.begin(); it
+        != missingPlayersInit.end(); ++it) {
         if (*it == id) {
             missingPlayersInit.erase(it);
             return;
@@ -174,13 +177,13 @@ void Window::removePlayerInitLst(int id) {
 }
 
 void Window::addPlayerInitLst(int id) {
-    if (std::find(missingPlayersInit.begin(), missingPlayersInit.end(), id) == missingPlayersInit.end()) {
+    if (std::find(missingPlayersInit.begin(), missingPlayersInit.end(), id)
+        == missingPlayersInit.end()) {
         missingPlayersInit.push_back(id);
     }
 }
 
-void Window::initMeshPlayers()
-{
+void Window::initMeshPlayers() {
     for (auto &player : GUI::GameDataManager::i().getPlayers()) {
         if (!player.getMesh()) {
             Vec3d position = GUI::GameDataManager::i()
@@ -204,8 +207,7 @@ void Window::initMeshPlayers()
     needUpdatePlayers = false;
 }
 
-void Window::initMeshEggs()
-{
+void Window::initMeshEggs() {
     for (auto &egg : GUI::GameDataManager::i().getEggs()) {
         if (!egg.EggMesh || !egg.EggMesh->getMesh()) {
             Vec3d position = GUI::GameDataManager::i().
@@ -216,9 +218,10 @@ void Window::initMeshEggs()
             if (mesh && mesh->getMesh()) {
                 mesh->setVisible(!egg.isDead);
                 egg.EggMesh = mesh;
-            } else
+            } else {
                 LOG_ERROR(("Failed to create egg mesh for egg ID " +
                     std::to_string(egg.id)).c_str());
+            }
         } else {
             LOG_ERROR(("Egg mesh already exists for egg ID " +
                 std::to_string(egg.id)).c_str());
@@ -227,8 +230,7 @@ void Window::initMeshEggs()
     needUpdateEggs = false;
 }
 
-void Window::worldSetupMesh()
-{
+void Window::worldSetupMesh() {
     int width = GUI::GameDataManager::i().getWidth();
     int height = GUI::GameDataManager::i().getHeight();
 

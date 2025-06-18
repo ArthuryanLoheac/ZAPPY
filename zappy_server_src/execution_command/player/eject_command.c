@@ -162,18 +162,37 @@ static void send_pex_to_graphics(zappy_t *zappy, client_t *client)
  * @param client Pointer to the client executing the eject command.
  * @param xCheck X coordinate to check.
  * @param yCheck Y coordinate to check.
- * @return true if there is a player in front, false otherwise.
+ * @return true if there is a player in the coordinates, false otherwise.
  */
 static bool is_player_at_pos(zappy_t *zappy, client_t *client, int xCheck,
     int yCheck)
 {
-    client_t *zappyClient = zappy->clients;
-
-    while (zappyClient) {
+    for (client_t *zappyClient = zappy->clients; client != NULL;
+        client = client->next) {
         if (zappyClient->stats.x == xCheck && zappyClient->stats.y == yCheck
             && zappyClient->stats.id != client->stats.id)
             return true;
         zappyClient = zappyClient->next;
+    }
+    return false;
+}
+
+/**
+ * @brief Checks if a egg is in front of the client.
+ * This function checks if there is a egg in the position
+ * where the clientis trying to eject.
+ *
+ * @param zappy Pointer to the zappy server structure.
+ * @param xCheck X coordinate to check.
+ * @param yCheck Y coordinate to check.
+ * @return true if there is a egg the coordinates, false otherwise.
+ */
+static bool is_egg_at_pos(zappy_t *zappy, int xCheck,
+    int yCheck)
+{
+    for (egg_t *egg = zappy->map->eggs; egg != NULL; egg = egg->next) {
+        if (egg->x == xCheck && egg->y == yCheck)
+            return true;
     }
     return false;
 }
@@ -185,13 +204,16 @@ static bool is_player_at_pos(zappy_t *zappy, client_t *client, int xCheck,
  * @param x Horizontal tile position.
  * @param y Vertical tile position.
  */
-void destroy_eggs_on_tile(zappy_t *zappy, int x, int y)
+static void destroy_eggs_on_tile(zappy_t *zappy, int x, int y)
 {
+    char buff[256];
     egg_t *last = NULL;
 
     for (egg_t *actual = zappy->map->eggs; actual != NULL;
         actual = actual->next) {
         if (actual->x == x && actual->y == y) {
+            sprintf(buff, "edi #%i\n", actual->id);
+            send_data_to_graphics(zappy, buff);
             delete_egg(last, actual, zappy);
         } else {
             last = actual;
@@ -215,7 +237,8 @@ void eject_command(zappy_t *zappy, client_t *client, char **args)
 
     (void) args;
     compute_forward_pos(&xFinal, &yFinal, self, zappy);
-    if (!is_player_at_pos(zappy, client, self->x, self->y)) {
+    if (!is_player_at_pos(zappy, client, self->x, self->y)
+        && !is_egg_at_pos(zappy, self->x, self->y)) {
         add_to_buffer(&client->out_buffer, "ko\n");
         return;
     }
@@ -227,4 +250,5 @@ void eject_command(zappy_t *zappy, client_t *client, char **args)
             && zappyClient->stats.id != self->id)
             update_pos_client_ejected(zappyClient, xFinal, yFinal, zappy);
     }
+    destroy_eggs_on_tile(zappy, self->x, self->y);
 }

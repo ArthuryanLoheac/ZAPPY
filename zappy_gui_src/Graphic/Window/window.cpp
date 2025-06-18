@@ -138,7 +138,7 @@ void Window::updateMesh() {
     if (needUpdateRessources)
         initMeshRessources();
 
-    if (needUpdatePlayers)
+    if (needUpdatePlayers || missingPlayersInit.size() > 0)
         initMeshPlayers();
 
     if (needUpdateEggs)
@@ -162,6 +162,21 @@ void Window::initMeshRessources()
         }
     }
     needUpdateRessources = false;
+}
+
+void Window::removePlayerInitLst(int id) {
+    for (auto it = missingPlayersInit.begin(); it != missingPlayersInit.end(); ++it) {
+        if (*it == id) {
+            missingPlayersInit.erase(it);
+            return;
+        }
+    }
+}
+
+void Window::addPlayerInitLst(int id) {
+    if (std::find(missingPlayersInit.begin(), missingPlayersInit.end(), id) == missingPlayersInit.end()) {
+        missingPlayersInit.push_back(id);
+    }
 }
 
 void Window::initMeshPlayers()

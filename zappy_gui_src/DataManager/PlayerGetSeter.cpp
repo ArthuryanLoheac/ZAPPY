@@ -196,6 +196,7 @@ void Player::setMesh(const std::shared_ptr<Mesh> &mesh) {
     if (PlayerMesh)
         PlayerMesh->setVisible(false);
     PlayerMesh = mesh;
+    Window::i().removePlayerInitLst(id);
 }
 
 std::shared_ptr<Mesh> Player::getMesh() const {

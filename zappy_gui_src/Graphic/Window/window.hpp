@@ -44,6 +44,8 @@ class Window {
         /**<font for rendering textin the GUI*/
     std::vector<irr::scene::ISceneNode*> cubes; /**<list of cubes in the scene*/
 
+    std::vector<int> missingPlayersInit; /**<list of missing players*/
+
     std::shared_ptr<irr::scene::ISceneNode> Skybox;
         /**<skybox node forthe scene*/
     Vec3d rotationSkybox; /**<rotation of the skybox*/
@@ -71,6 +73,9 @@ class Window {
     void initMeshPlayers();
     void initMeshEggs();
     void initMeshRessources();
+
+    void removePlayerInitLst(int id);
+    void addPlayerInitLst(int id);
 
 
     void worldSetupMesh();

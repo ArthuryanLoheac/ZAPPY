@@ -189,9 +189,10 @@ void Window::updateMesh() {
                 position.Y += 0.2f;
                 auto mesh = MeshImporter::i().importMesh("DroneEgg", "",
                     position, Vec3d(0.2f), Vec3d(0, 0, 0));
-                if (mesh && mesh->getMesh())
+                if (mesh && mesh->getMesh()) {
+                    mesh->setVisible(!egg.isDead);
                     egg.EggMesh = mesh;
-                else
+                } else
                     std::cerr << "Error: Failed to create egg mesh for egg ID " << egg.id << std::endl;
             } else {
                 std::cerr << "Error: Invalid egg mesh for egg ID " << egg.id << std::endl;

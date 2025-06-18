@@ -66,6 +66,7 @@ void GameDataManager::removeEgg(int id) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     for (size_t i = 0; i < eggs.size(); i++) {
         if (eggs[i].id == id) {
+            eggs[i].isDead = true;
             if (eggs[i].EggMesh) {
                 int idM = eggs[i].EggMesh->getID();
                 auto sceneNode = GUI::Window::i().smgr->getSceneNodeFromId(idM);

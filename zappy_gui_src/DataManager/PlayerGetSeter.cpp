@@ -68,7 +68,16 @@ void Player::Init(std::string team, int level) {
         PlayerMeshesCylinderRotation.push_back(Vec3d(randRotation(i),
             randRotation(i), randRotation(i)));
     }
-    posTarget = Vec3d(0, 0, 0);
+    if (PlayerMesh)
+        posTarget = PlayerMesh->getPosition();
+    else  {
+        int width = GUI::GameDataManager::i().getWidth();
+        int height = GUI::GameDataManager::i().getHeight();
+
+        Vec3d position(x - (width/2) + (width % 2 == 0 ? 0.5f : 0), -2,
+                    y - (height/2) + (height % 2 == 0 ? 0.5f : 0));
+        posTarget = GameDataManager::i().getTile(x, y).getWorldPos(position);
+    }
 }
 
 void Player::setId(int newId) {
@@ -148,7 +157,7 @@ void Player::setPosition(int newX, int newY, Orientation new0, bool TP) {
         return;
 
     if (PlayerMesh) {
-        Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
+        Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos(PlayerMesh->getPosition());
         if (position.X == 0 && position.Z == 0 && position.Y == 0)
             position = PlayerMesh->getPosition();
         position.Y += 0.5f;

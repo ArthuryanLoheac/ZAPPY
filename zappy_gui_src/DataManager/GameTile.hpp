@@ -113,7 +113,7 @@ class GameTile {
      *
      * @return Vec3d World position of the tile.
      */
-    Vec3d getWorldPos() const;
+    Vec3d getWorldPos(Vec3d def = Vec3d(0, 0, 0)) const;
 
     /**
      * @brief Sets the resources on the tile.

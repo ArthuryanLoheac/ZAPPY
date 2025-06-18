@@ -131,8 +131,6 @@ void Player::updatePosition(float deltaTime) {
 
     if (!PlayerMesh)
         return;
-    if (posTarget.X == 0 && posTarget.Y == 0 && posTarget.Z)
-        posTarget = PlayerMesh->getPosition();
     if (posTarget.getDistanceFrom(PlayerMesh->getPosition()) > 0.1f) {
         // new pos
         Vec3d direction = posTarget - PlayerMesh->getPosition();

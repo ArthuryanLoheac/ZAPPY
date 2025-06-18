@@ -73,6 +73,7 @@ static void message_start_server(zappy_t *zappy)
     printf("Frequency: %s\n", parser_str->freq);
     LOG_FATAL("FATAL INFORMATION ENABLED");
     LOG_ERROR("ERROR INFORMATION ENABLED");
+    LOG_WARNING("warning INFORMATION ENABLED");
     LOG_DEBUG("DEBUG INFORMATION ENABLED");
     LOG_INFO("INFO INFORMATION ENABLED");
     printf("===================================\n");

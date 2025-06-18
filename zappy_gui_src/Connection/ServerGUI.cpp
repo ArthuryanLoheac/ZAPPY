@@ -86,17 +86,17 @@ std::chrono::system_clock::time_point &timeNextPing) {
         sendDatasToServer("mct\n");
     }
     if (time >= timeNextPing) {
-        timeNextPing = timeNextPing + std::chrono::seconds(1);
+        timeNextPing = timeNextPing + std::chrono::seconds(updatePingTime);
         sendDatasToServer("PING\n");
         sendPing = true;
-        timeForPing = time;
+        timeForPing = std::chrono::system_clock::time_point(time);
     }
 }
 
 void ServerGUI::startServer() {
     auto time = std::chrono::system_clock::now();
     auto timeNext = time + std::chrono::seconds(updateMapTime);
-    auto timeNextPing = time + std::chrono::seconds(1);
+    auto timeNextPing = time + std::chrono::milliseconds(1);
     int ready = 0;
 
     GUI::ServerGUI::i().setConnectedToServer(true);

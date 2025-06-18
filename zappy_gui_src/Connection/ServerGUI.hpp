@@ -18,7 +18,8 @@ class ServerGUI {
     struct pollfd fd; /**< Poll file descriptor structure. */
     std::string buffer; /**< Buffer for storing incoming data. */
     std::string outbuffer = ""; /**< Buffer for outgoing data. */
-    int updateMapTime = 5; /**< Time interval for map updates. */
+    int updateMapTime = 30; /**< Time interval for map updates. */
+    int updatePingTime = 3; /**< Time interval for map updates. */
     int ping = 0; /**< Ping counter for server communication. */
 
     /**
@@ -254,6 +255,7 @@ class ServerGUI {
         {"PDR", &ServerGUI::pdrCommand},
         {"PGT", &ServerGUI::pgtCommand},
         {"PEX", &ServerGUI::pexCommand},
+        {"SUC", &ServerGUI::sucCommand},
 
     };
 };

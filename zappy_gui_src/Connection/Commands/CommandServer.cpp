@@ -105,10 +105,6 @@ void ServerGUI::bctCommand(std::vector<std::string> &args) {
 
     GameDataManager::i().getTile(x, y).setRessources(food, r1, r2, r3,
         r4, r5, r6);
-    if (sendPing) {
-        ping = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now() - timeForPing).count();
-    }
 }
 
 /**
@@ -338,6 +334,5 @@ void GUI::ServerGUI::sucCommand(std::vector<std::string> &args) {
     if (sendPing) {
         ping = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - timeForPing).count();
-        sendPing = false;
     }
 }

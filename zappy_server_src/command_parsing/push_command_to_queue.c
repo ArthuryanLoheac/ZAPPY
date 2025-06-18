@@ -136,6 +136,9 @@ void push_command_to_queue(char **args, client_t *client, zappy_t *zappy_ptr)
     } else {
         LOG_WARNING("[%i]: Received unknown command: %s\n",
             client->fd, args[0]);
-        add_to_buffer(&client->out_buffer, "ko\n");
+        if (client->is_graphic)
+            add_to_buffer(&client->out_buffer, "suc\n");
+        else
+            add_to_buffer(&client->out_buffer, "ko\n");
     }
 }

@@ -202,16 +202,15 @@ void Player::initMeshRings() {
         std::cerr << "Error: PlayerMesh is not initialized in initMeshRings()" << std::endl;
         return;
     }
-    PlayerMeshesCylinder.clear();
+    if (PlayerMeshesCylinder.size() > 0)
+        return;
     for (int i = 0; i < maxLevel; i++) {
         Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
         position.Y += 0.5f;
         auto mesh = MeshImporter::i().importMesh("Cylinder", teamName, position,
             Vec3d(0.2f), Vec3d(0, o * 90, 0));
-        if (!mesh) {
-            std::cerr << "Error: Failed to import mesh for level " << i + 1 << std::endl;
+        if (!mesh)
             return;
-        }
         PlayerMeshesCylinder.push_back(mesh);
         PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
         PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);

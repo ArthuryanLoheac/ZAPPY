@@ -174,6 +174,8 @@ void Player::setPosition(int newX, int newY) {
 
 void Player::setMesh(const std::shared_ptr<Mesh> &mesh) {
     std::lock_guard<std::mutex> lock(mutexDatas);
+    if (PlayerMesh)
+        PlayerMesh->setVisible(false);
     PlayerMesh = mesh;
 }
 

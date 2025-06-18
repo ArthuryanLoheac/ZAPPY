@@ -156,13 +156,19 @@ void Window::updateMesh() {
                     Vec3d position = GUI::GameDataManager::i()
                         .getTile(player.getX(), player.getY()).getWorldPos();
                     position.Y += 0.5f;
+                    printf("---------------------------- Creating mesh for player %d at (%d, %d)\n",
+                        player.getId(), player.getX(), player.getY());
                     auto mesh = MeshImporter::i().importMesh("Drone",
                         player.getTeamName(), position, Vec3d(0.2f),
                         Vec3d(0, player.getOrientation() * 90, 0));
                     if (mesh) {
                         player.setMesh(mesh);
                         player.initMeshRings();
+                    } else {
+                        throw std::runtime_error("Failed to create player mesh");
                     }
+                } else {
+                    player.initMeshRings();
                 }
             }
             needUpdatePlayers = false;

@@ -142,7 +142,7 @@ void Window::updateMesh() {
     if (needUpdatePlayers || missingPlayersInit.size() > 0)
         initMeshPlayers();
 
-    if (needUpdateEggs)
+    if (needUpdateEggs || missingEggsInit.size() > 0)
         initMeshEggs();
 }
 
@@ -183,6 +183,23 @@ void Window::addPlayerInitLst(int id) {
     }
 }
 
+void Window::removeEggInitLst(int id) {
+    for (auto it = missingEggsInit.begin(); it
+        != missingEggsInit.end(); ++it) {
+        if (*it == id) {
+            missingEggsInit.erase(it);
+            return;
+        }
+    }
+}
+
+void Window::addEggInitLst(int id) {
+    if (std::find(missingEggsInit.begin(), missingEggsInit.end(), id)
+        == missingEggsInit.end()) {
+        missingEggsInit.push_back(id);
+    }
+}
+
 void Window::initMeshPlayers() {
     for (auto &player : GUI::GameDataManager::i().getPlayers()) {
         if (!player.getMesh()) {
@@ -218,6 +235,7 @@ void Window::initMeshEggs() {
             if (mesh && mesh->getMesh()) {
                 mesh->setVisible(!egg.isDead);
                 egg.EggMesh = mesh;
+                removeEggInitLst(egg.id);
             } else {
                 LOG_ERROR(("Failed to create egg mesh for egg ID " +
                     std::to_string(egg.id)).c_str());

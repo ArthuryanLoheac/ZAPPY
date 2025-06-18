@@ -47,6 +47,8 @@ class Window {
 
     std::vector<int> missingPlayersInit;
         /**<list of missing players initialisation*/
+    std::vector<int> missingEggsInit;
+        /**<list of missing eggs initialisation*/
 
     std::shared_ptr<irr::scene::ISceneNode> Skybox;
         /**<skybox node forthe scene*/
@@ -107,6 +109,20 @@ class Window {
      * @param id The ID of the player to add.
      */
     void addPlayerInitLst(int id);
+
+    /**
+     * @brief Removes a Egg from the initialization list.
+     *
+     * @param id The ID of the Egg to remove.
+     */
+    void removeEggInitLst(int id);
+
+    /**
+     * @brief Adds a Egg to the initialization list.
+     *
+     * @param id The ID of the Egg to add.
+     */
+    void addEggInitLst(int id);
 
     /**
      * @brief Sets up the tile meshes for the game world.

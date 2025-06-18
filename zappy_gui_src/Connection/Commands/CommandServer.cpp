@@ -72,6 +72,7 @@ void GUI::ServerGUI::enwCommand(std::vector<std::string> &args) {
     if (team >= 0)
         GameDataManager::i().setEggAdded(true);
     GUI::Window::i().needUpdateEggs = true;
+    GUI::Window::i().addEggInitLst(id);
 }
 
 /**

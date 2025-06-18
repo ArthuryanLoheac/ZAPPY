@@ -9,7 +9,7 @@
 #include <iostream>
 #include <random>
 #include <map>
-#include "modules/AIBase.hpp"
+#include "../Logic/AIBase.hpp"
 #include "../Interface/Interface.hpp"
 #include "../Exceptions/Factory.hpp"
 #include "../Exceptions/Commands.hpp"

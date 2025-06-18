@@ -28,7 +28,7 @@ namespace AI {
  * @param command Original command sent
  */
 void Interface::commandLOOK(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() < 2) {
         LOG_ERROR("LOOK: Expected at least one argument, got %i\n.",
@@ -103,7 +103,7 @@ void Interface::commandLOOK(std::vector<std::string> &args,
  * @param command Original command sent
  */
 void Interface::commandINVENTORY(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() < 2) {
         LOG_ERROR("INVENTORY: Expected at least one argument, got %i\n.",
@@ -131,7 +131,7 @@ void Interface::commandINVENTORY(std::vector<std::string> &args,
 }
 
 void Interface::commandTAKE(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     if (args.size() != 1) {
         LOG_ERROR("TAKE: Expected one argument, got %i\n.",
             args.size() - 1);
@@ -146,7 +146,7 @@ void Interface::commandTAKE(std::vector<std::string> &args,
 }
 
 void Interface::commandSET(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     if (args.size() != 1) {
         LOG_ERROR("SET: Expected one argument, got %i\n.",
             args.size() - 1);

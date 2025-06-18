@@ -78,22 +78,29 @@ void ServerGUI::readDatasFromServer() {
 }
 
 void ServerGUI::clockUpdate(std::chrono::system_clock::time_point &time,
-std::chrono::system_clock::time_point &timeNext) {
+std::chrono::system_clock::time_point &timeNext,
+std::chrono::system_clock::time_point &timeNextPing) {
     time = std::chrono::system_clock::now();
     if (time >= timeNext) {
         timeNext = timeNext + std::chrono::seconds(updateMapTime);
         sendDatasToServer("mct\n");
+    } else if (time >= timeNextPing) {
+        timeNextPing = timeNextPing + std::chrono::seconds(updatePingTime);
+        sendDatasToServer("PING\n");
+        sendPing = true;
+        timeForPing = std::chrono::system_clock::time_point(time);
     }
 }
 
 void ServerGUI::startServer() {
     auto time = std::chrono::system_clock::now();
     auto timeNext = time + std::chrono::seconds(updateMapTime);
+    auto timeNextPing = time + std::chrono::milliseconds(1);
     int ready = 0;
 
     GUI::ServerGUI::i().setConnectedToServer(true);
     while (DataManager::i().running) {
-        clockUpdate(time, timeNext);
+        clockUpdate(time, timeNext, timeNextPing);
 
         ready = poll(
             &GUI::ServerGUI::i().fd, 1, -1);

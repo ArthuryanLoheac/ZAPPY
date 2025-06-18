@@ -32,7 +32,8 @@ const command_name_size_t gui_command_name_size_list[] = {
     {"MCT", 0},
     {"TNA", 0},
     {"SGT", 0},
-    {"SST", 0}
+    {"SST", 0},
+    {NULL, -1}
 };
 
 const required_elevation_t requires_elevation_list[] = {

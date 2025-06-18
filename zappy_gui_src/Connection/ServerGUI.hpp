@@ -19,6 +19,8 @@ class ServerGUI {
     std::string buffer; /**< Buffer for storing incoming data. */
     std::string outbuffer = ""; /**< Buffer for outgoing data. */
     int updateMapTime = 30; /**< Time interval for map updates. */
+    int updatePingTime = 3; /**< Time interval for map updates. */
+    int ping = 0; /**< Ping counter for server communication. */
 
     /**
      * @brief Constructs a new ServerGUI object.
@@ -60,6 +62,8 @@ class ServerGUI {
     void setConnectedToServer(bool connected);
 
  private:
+    bool sendPing = false; /**< Flag to indicate if BCT command has been sent */
+    std::chrono::_V2::system_clock::time_point timeForPing;
     bool isConnected = false; /**< if the server connection is active */
 
     /**
@@ -68,8 +72,9 @@ class ServerGUI {
      * @param time Current time point.
      * @param timeNext Next scheduled time point.
      */
-    void clockUpdate(std::chrono::_V2::system_clock::time_point &time,
-        std::chrono::_V2::system_clock::time_point &timeNext);
+    void clockUpdate(std::chrono::system_clock::time_point &time,
+        std::chrono::system_clock::time_point &timeNext,
+        std::chrono::system_clock::time_point &timeNextPing);
 
     /**
      * @brief Handles parsing and executing commands received from the server.
@@ -224,6 +229,8 @@ class ServerGUI {
      */
     void pexCommand(std::vector<std::string> &args);
 
+    void sucCommand(std::vector<std::string> &args);
+
     /**
      * @brief Map of server commands to their corresponding handler functions.
      */
@@ -247,7 +254,8 @@ class ServerGUI {
         {"PIE", &ServerGUI::pieCommand},
         {"PDR", &ServerGUI::pdrCommand},
         {"PGT", &ServerGUI::pgtCommand},
-        {"PEX", &ServerGUI::pexCommand}
+        {"PEX", &ServerGUI::pexCommand},
+        {"SUC", &ServerGUI::sucCommand},
     };
 };
 

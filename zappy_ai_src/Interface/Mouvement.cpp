@@ -25,7 +25,7 @@ namespace AI {
  * @param command Original command sent
  */
 void Interface::commandFORWARD(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
         LOG_ERROR("FORWARD: Expected no arguments, got %i\n.",
@@ -43,7 +43,7 @@ void Interface::commandFORWARD(std::vector<std::string> &args,
  * @param command Original command sent
  */
 void Interface::commandLEFT(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
         LOG_ERROR("LEFT: Expected no arguments, got %i\n.",
@@ -61,7 +61,7 @@ void Interface::commandLEFT(std::vector<std::string> &args,
  * @param command Original command sent
  */
 void Interface::commandRIGHT(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
         LOG_ERROR("RIGHT: Expected no arguments, got %i\n.",

@@ -42,7 +42,7 @@ static std::string computeMagicKey(const std::string &name) {
 }
 
 void Interface::start(int port, const std::string &ip,
-    const std::string &name) {
+const std::string &name) {
     this->port = port;
     this->ip = ip;
     this->name = name;
@@ -184,7 +184,7 @@ void Interface::factoryCommands() {
 // ————————————————————————— END OF FACTORY ————————————————————————
 
 void Interface::commandWELCOME(std::vector<std::string> &args,
-    std::vector<std::string> &command) {
+std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
         LOG_ERROR("WELCOME: Expected no arguments, got %i\n.",

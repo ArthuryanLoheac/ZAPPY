@@ -185,7 +185,7 @@ static bool is_player_at_pos(zappy_t *zappy, client_t *client, int xCheck,
  * @param x Horizontal tile position.
  * @param y Vertical tile position.
  */
-void destroy_eggs_on_tile(zappy_t *zappy, unsigned int x, unsigned int y)
+void destroy_eggs_on_tile(zappy_t *zappy, int x, int y)
 {
     egg_t *last = NULL;
 

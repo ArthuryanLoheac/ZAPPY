@@ -75,6 +75,20 @@ class Interface {
      */
     void sendCommand(const std::string &command);
 
+    /**
+     * @brief Return if the AI is waiting for a response from the server
+     * @return true if waiting for a response, false otherwise
+     */
+
+    bool isWaitingForResponse() const;
+
+    /**
+     * @brief Moves the AI to a specific position on the map, based on the inventory direction system
+     * @param x The x-coordinate to move to
+     * @param y The y-coordinate to move to
+     */
+    void goTo(int x, int y);
+
  private:
     /**
      * @brief Processes the input and output queues to handle commands
@@ -298,13 +312,6 @@ class Interface {
      * @param message The message string to send
      */
     void sendMessage(const std::string &message);
-
-    /**
-     * @brief Moves the AI to a specific position on the map, based on the inventory direction system
-     * @param x The x-coordinate to move to
-     * @param y The y-coordinate to move to
-     */
-    void goTo(int x, int y);
 };
 
 }  // namespace AI

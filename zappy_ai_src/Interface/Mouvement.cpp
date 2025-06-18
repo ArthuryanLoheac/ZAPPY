@@ -71,29 +71,37 @@ std::vector<std::string> &command) {
 }
 
 /**
+ * @brief Checks if the AI is waiting for a response from the server
+ * @return true if waiting for a response, false otherwise
+ */
+bool Interface::isWaitingForResponse() const {
+    return !inputQueue.empty() || !commandBuffer.empty();
+}
+
+/**
  * @brief Moves the AI to a specific position on the map, based on the system of the inventory direction
  * @param x The x-coordinate to move to
  * @param y The y-coordinate to move to
  */
 void Interface::goTo(int x, int y) {
     if (x < 0) {
-        sendCommand("LEFT\n");
-        sendCommand("LEFT\n");
+        sendCommand(LEFT);
+        sendCommand(LEFT);
         x = -x;
     }
 
     for (int i = 0; i < x; ++i) {
-        sendCommand("FORWARD\n");
+        sendCommand(FORWARD);
     }
     if (y < 0) {
-        sendCommand("LEFT\n");
+        sendCommand(LEFT);
         for (int i = 0; i < -y; ++i) {
-            sendCommand("FORWARD\n");
+            sendCommand(FORWARD);
         }
     } else if (y > 0) {
-        sendCommand("RIGHT\n");
+        sendCommand(RIGHT);
         for (int i = 0; i < y; ++i) {
-            sendCommand("FORWARD\n");
+            sendCommand(FORWARD);
         }
     }
 }

@@ -13,6 +13,12 @@
 #include "Data/Data.hpp"
 #include "include/logs.h"
 
+#include "Logic/Core.hpp"
+#include "modules/FoodGatheringModule.hpp"
+#include "modules/CommunicationModule.hpp"
+#include "modules/ElevationModule.hpp"
+
+
 bool sigintReceived = false;
 bool usr1Received = false;
 
@@ -81,6 +87,11 @@ int initChildProcess(int port, const std::string &ip,
         return 84;
     }
 
+    Logic& logic = Logic::getInstance();
+    logic.addModule(std::make_unique<FoodGatheringModule>());
+    logic.addModule(std::make_unique<CommunicationModule>());
+    logic.addModule(std::make_unique<ElevationModule>());
+
     while (AI::Data::i().isDead == false) {
         try {
             interface.run();
@@ -93,9 +104,9 @@ int initChildProcess(int port, const std::string &ip,
         }
         if (AI::Data::i().isRunning) {
             try {
-                interface.sendCommand(FORWARD);
-                interface.sendCommand(INVENTORY);
-                interface.sendCommand("Set food\n");
+                if (!interface.isWaitingForResponse()) {
+                    logic.executeHighestPriorityModule();
+                }
             } catch (const std::exception &e) {
                 LOG_WARNING("Error sending command in PID %d: %s",
                     getpid(), e.what());

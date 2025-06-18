@@ -97,11 +97,7 @@ void Interface::run() {
         LOG_ERROR("Unexpected error while handling queues: %s", e.what());
     }
 
-    if (commandBuffer.empty()) {
-        return;
-    }
-
-    for (size_t i = 0; i < (10 - inputQueue.size()); i++) {
+    if (inputQueue.empty() && !commandBuffer.empty()) {
         auto command = commandBuffer.front();
         commandBuffer.pop();
         sendCommand(command);

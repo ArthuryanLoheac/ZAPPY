@@ -110,7 +110,6 @@ std::vector<Player> &GameDataManager::getPlayers() {
 
 void GameDataManager::removePlayer(int id) {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    printf("--------- REMOVE player: id=%d\n", id);
     for (size_t i = 0; i < players.size(); i++) {
         if (players[i].getId() == id) {
             players[i].destroy();

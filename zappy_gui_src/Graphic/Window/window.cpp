@@ -138,12 +138,14 @@ void Window::updateMesh() {
         for (int i = 0; i < GUI::GameDataManager::i().getWidth(); i++) {
             for (int j = 0; j < GUI::GameDataManager::i().getHeight(); j++) {
                 GameTile &tile = GUI::GameDataManager::i().getTile(i, j);
-                if (tile.getTileMesh()) {  // Ensure tile mesh is valid
+                if (tile.getTileMesh() && tile.getTileMesh()->getMesh()) {  // Ensure tile mesh is valid
                     try {
                         tile.updateMeshesRessources();
                     } catch (const std::exception &e) {
-                        std::cerr << "Error update tile: " << e.what() << '\n';
+                        std::cerr << "Error updating tile resources: " << e.what() << '\n';
                     }
+                } else {
+                    std::cerr << "Error: Invalid tile mesh at (" << i << ", " << j << ")" << std::endl;
                 }
             }
         }
@@ -152,41 +154,47 @@ void Window::updateMesh() {
     try {
         if (needUpdatePlayers) {
             for (auto &player : GUI::GameDataManager::i().getPlayers()) {
-                if (!player.getMesh()) {
+                if (!player.getMesh() || !player.getMesh()->getMesh()) {
                     Vec3d position = GUI::GameDataManager::i()
                         .getTile(player.getX(), player.getY()).getWorldPos();
                     position.Y += 0.5f;
-                    printf("---------------------------- Creating mesh for player %d at (%d, %d)\n",
-                        player.getId(), player.getX(), player.getY());
                     auto mesh = MeshImporter::i().importMesh("Drone",
                         player.getTeamName(), position, Vec3d(0.2f),
                         Vec3d(0, player.getOrientation() * 90, 0));
-                    if (mesh) {
+                    if (mesh && mesh->getMesh()) {
                         player.setMesh(mesh);
                         player.initMeshRings();
                     } else {
-                        throw std::runtime_error("Failed to create player mesh");
+                        throw std::runtime_error(
+                            "Failed to create player mesh for ID " + std::to_string(player.getId()));
                     }
-                } else {
+                } else if (player.getMesh()->getMesh()) {
                     player.initMeshRings();
+                } else {
+                    std::cerr << "Error: Invalid player mesh for ID " << player.getId() << std::endl;
                 }
             }
             needUpdatePlayers = false;
         }
     } catch (const std::exception &e) {
+        std::cerr << "Error updating players: " << e.what() << std::endl;
         needUpdatePlayers = true;
     }
 
     if (needUpdateEggs) {
         for (auto &egg : GUI::GameDataManager::i().getEggs()) {
-            if (!egg.EggMesh) {
+            if (!egg.EggMesh || !egg.EggMesh->getMesh()) {
                 Vec3d position = GUI::GameDataManager::i().
                     getTile(egg.x, egg.y).getWorldPos();
                 position.Y += 0.2f;
                 auto mesh = MeshImporter::i().importMesh("DroneEgg", "",
                     position, Vec3d(0.2f), Vec3d(0, 0, 0));
-                if (mesh)
+                if (mesh && mesh->getMesh())
                     egg.EggMesh = mesh;
+                else
+                    std::cerr << "Error: Failed to create egg mesh for egg ID " << egg.id << std::endl;
+            } else {
+                std::cerr << "Error: Invalid egg mesh for egg ID " << egg.id << std::endl;
             }
         }
         needUpdateEggs = false;

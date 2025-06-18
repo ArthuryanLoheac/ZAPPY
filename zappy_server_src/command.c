@@ -73,7 +73,8 @@ void handle_client_command(zappy_t *zappy, int fd)
     if (current == NULL)
         return;
     if (get_client_buffer(current, fd, zappy) == false) {
-        if (!current->is_graphic) {
+        if (!current->is_graphic && current->is_connected &&
+            !current->is_waiting_id) {
             sprintf(buffer, "pdi #%d\n", current->stats.id);
             send_data_to_graphics(zappy, buffer);
         }

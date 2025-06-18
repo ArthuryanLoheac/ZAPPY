@@ -196,8 +196,8 @@ void Player::updtaeIdle(float deltaTime) {
 
 void Player::initMeshRings() {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    if (!PlayerMesh) {
-        std::cerr << "Error: PlayerMesh is not initialized in initMeshRings()" << std::endl;
+    if (!PlayerMesh || !PlayerMesh->getMesh()) {
+        throw std::runtime_error("Player mesh is not initialized or invalid");
         return;
     }
     if (PlayerMeshesCylinder.size() > 0)
@@ -207,11 +207,13 @@ void Player::initMeshRings() {
         position.Y += 0.5f;
         auto mesh = MeshImporter::i().importMesh("Cylinder", teamName, position,
             Vec3d(0.2f), Vec3d(0, o * 90, 0));
-        if (!mesh)
-            return;
+        if (!mesh || !mesh->getMesh()) {
+            std::cerr << "Error: Failed to create Cylinder mesh for level " << i << std::endl;
+            continue;
+        }
         PlayerMeshesCylinder.push_back(mesh);
-        PlayerMeshesCylinder[i]->setScale(Vec3d(0.2f + (0.04f * i)));
-        PlayerMeshesCylinder[i]->setVisible((i + 1) <= level);
+        PlayerMeshesCylinder.back()->setScale(Vec3d(0.2f + (0.04f * i)));
+        PlayerMeshesCylinder.back()->setVisible((i + 1) <= level);
     }
 }
 }  // namespace GUI

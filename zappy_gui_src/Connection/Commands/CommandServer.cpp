@@ -186,7 +186,7 @@ void ServerGUI::pnwCommand(std::vector<std::string> &args) {
         pOrient = Player::SOUTH;
 
     GameDataManager::i().addPlayer(id, x, y, pOrient, level, teamName);
-    GUI::Window::i().needUpdatePlayers = true;
+    GUI::Window::i().setUpdatePlayer(true);
 }
 
 /**
@@ -254,7 +254,6 @@ void ServerGUI::pdiCommand(std::vector<std::string> &args) {
     if (args[1].size() < 2)
         throw CommandParsingException("Invalid id name");
     int id = std::stoi(args[1].substr(1));
-    printf("PDI command: removing player with id=%d\n", id);
     GameDataManager::i().removePlayer(id);
     GameDataManager::i().setPlayerDead(true);
 }
@@ -291,7 +290,6 @@ void ServerGUI::picCommand(std::vector<std::string> &args) {
         GameDataManager::i().getPlayer(id).setElevation(true);
         GameDataManager::i().setElevationSound(true);
     }
-    GUI::Window::i().needUpdatePlayers = true;
 }
 
 void ServerGUI::pieCommand(std::vector<std::string> &args) {

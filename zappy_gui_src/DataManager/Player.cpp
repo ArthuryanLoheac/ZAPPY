@@ -203,7 +203,12 @@ void Player::initMeshRings() {
     if (PlayerMeshesCylinder.size() > 0)
         return;
     for (int i = 0; i < maxLevel; i++) {
-        Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
+        Vec3d position;
+        try {
+            position = GameDataManager::i().getTile(x, y).getWorldPos();
+        } catch (std::exception &e) {
+            position = Vec3d(0);
+        }
         position.Y += 0.5f;
         auto mesh = MeshImporter::i().importMesh("Cylinder", teamName, position,
             Vec3d(0.2f), Vec3d(0, o * 90, 0));

@@ -174,7 +174,6 @@ void Player::setPosition(int newX, int newY, Orientation new0, bool TP) {
                 PlayerMeshesCylinder[i]->setPosition(position);
         }
     }
-    GUI::Window::i().needUpdatePlayers = true;
 }
 
 void Player::setPosition(int newX, int newY) {
@@ -182,7 +181,18 @@ void Player::setPosition(int newX, int newY) {
 }
 
 void Player::setMesh(const std::shared_ptr<Mesh> &mesh) {
-    std::lock_guard<std::mutex> lock(mutexDatas);
+    bool isInList = false;
+    for (auto &player : GUI::GameDataManager::i().getPlayers()) {
+        if (player.getId() == id) {
+            isInList = true;
+            break;
+        }
+    }
+    if (!isInList) {
+        mesh->remove();
+        return;
+    }
+
     if (PlayerMesh)
         PlayerMesh->setVisible(false);
     PlayerMesh = mesh;

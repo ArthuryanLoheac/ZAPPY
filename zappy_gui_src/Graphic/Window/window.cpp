@@ -138,7 +138,7 @@ void Window::updateMesh() {
         for (int i = 0; i < GUI::GameDataManager::i().getWidth(); i++) {
             for (int j = 0; j < GUI::GameDataManager::i().getHeight(); j++) {
                 GameTile &tile = GUI::GameDataManager::i().getTile(i, j);
-                if (tile.getTileMesh() && tile.getTileMesh()->getMesh()) {  // Ensure tile mesh is valid
+                if (tile.getTileMesh() && tile.getTileMesh()->getMesh()) {
                     try {
                         tile.updateMeshesRessources();
                     } catch (const std::exception &e) {
@@ -151,34 +151,28 @@ void Window::updateMesh() {
         }
     }
 
-    try {
-        if (needUpdatePlayers) {
-            for (auto &player : GUI::GameDataManager::i().getPlayers()) {
-                if (!player.getMesh() || !player.getMesh()->getMesh()) {
-                    Vec3d position = GUI::GameDataManager::i()
-                        .getTile(player.getX(), player.getY()).getWorldPos();
-                    position.Y += 0.5f;
+    if (needUpdatePlayers) {
+        for (auto &player : GUI::GameDataManager::i().getPlayers()) {
+            if (!player.getMesh()) {
+                Vec3d position = GUI::GameDataManager::i()
+                    .getTile(player.getX(), player.getY()).getWorldPos();
+                position.Y += 0.5f;
+                try {
                     auto mesh = MeshImporter::i().importMesh("Drone",
                         player.getTeamName(), position, Vec3d(0.2f),
                         Vec3d(0, player.getOrientation() * 90, 0));
                     if (mesh && mesh->getMesh()) {
                         player.setMesh(mesh);
                         player.initMeshRings();
-                    } else {
-                        throw std::runtime_error(
-                            "Failed to create player mesh for ID " + std::to_string(player.getId()));
                     }
-                } else if (player.getMesh()->getMesh()) {
-                    player.initMeshRings();
-                } else {
-                    std::cerr << "Error: Invalid player mesh for ID " << player.getId() << std::endl;
+                } catch (const std::exception &e) {
+                    return;
                 }
+            } else if (player.getMesh()->getMesh()) {
+                player.initMeshRings();
             }
-            needUpdatePlayers = false;
         }
-    } catch (const std::exception &e) {
-        std::cerr << "Error updating players: " << e.what() << std::endl;
-        needUpdatePlayers = true;
+        needUpdatePlayers = false;
     }
 
     if (needUpdateEggs) {
@@ -193,9 +187,11 @@ void Window::updateMesh() {
                     mesh->setVisible(!egg.isDead);
                     egg.EggMesh = mesh;
                 } else
-                    std::cerr << "Error: Failed to create egg mesh for egg ID " << egg.id << std::endl;
+                    LOG_ERROR(("Failed to create egg mesh for egg ID " +
+                        std::to_string(egg.id)).c_str());
             } else {
-                std::cerr << "Error: Invalid egg mesh for egg ID " << egg.id << std::endl;
+                LOG_ERROR(("Egg mesh already exists for egg ID " +
+                    std::to_string(egg.id)).c_str());
             }
         }
         needUpdateEggs = false;
@@ -226,7 +222,5 @@ void Window::worldSetupMesh() {
     smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
     worldSetuped = true;
     needUpdateRessources = true;
-    needUpdatePlayers = true;
-    needUpdateEggs = true;
 }
 }  // namespace GUI

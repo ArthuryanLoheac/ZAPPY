@@ -2,9 +2,10 @@
 #include <irrlicht/irrlicht.h>
 
 #include <vector>
+#include <mutex>
 #include <memory>
 #include <string>
-#include <iostream> // Added for error handling
+#include <iostream>
 
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
@@ -25,6 +26,7 @@ class Window {
     void SetupSkybox();
 
  public:
+    std::mutex mutexDatas; /**< Mutex for thread-safe access. */
     /**
      * @brief Constructs a new Window object.
      */
@@ -140,6 +142,11 @@ class Window {
     static Window &i() {
         static Window instance;
         return instance;
+    }
+
+    void setUpdatePlayer(bool b) {
+        std::lock_guard<std::mutex> lock(mutexDatas);
+        needUpdatePlayers = b;
     }
 };
 

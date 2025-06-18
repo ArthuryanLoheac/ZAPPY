@@ -46,12 +46,7 @@ class GameDataManager {
     /**
      * @brief Constructs a new GameDataManager object.
      */
-    GameDataManager() : width(-1), height(-1) {
-        tiles.clear();
-        players.clear();
-        teams.clear();
-        eggs.clear();
-    }
+    GameDataManager() : width(-1), height(-1) {}
 
     /**
      * @brief Gets the width of the game map.

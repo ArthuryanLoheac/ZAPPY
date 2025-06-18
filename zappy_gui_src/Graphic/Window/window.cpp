@@ -201,6 +201,7 @@ void Window::addEggInitLst(int id) {
 }
 
 void Window::initMeshPlayers() {
+    std::lock_guard<std::mutex> lock(mutexDatas);
     for (auto &player : GUI::GameDataManager::i().getPlayers()) {
         if (!player.getMesh()) {
             Vec3d position = GUI::GameDataManager::i()
@@ -225,6 +226,7 @@ void Window::initMeshPlayers() {
 }
 
 void Window::initMeshEggs() {
+    std::lock_guard<std::mutex> lock(mutexDatas);
     for (auto &egg : GUI::GameDataManager::i().getEggs()) {
         if (!egg.EggMesh || !egg.EggMesh->getMesh()) {
             Vec3d position = GUI::GameDataManager::i().

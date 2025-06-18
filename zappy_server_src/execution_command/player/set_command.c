@@ -28,6 +28,8 @@ static bool put_object(zappy_t *zappy, stats_t *stats,
 {
     cell_t comp_cell = *cell;
 
+    if (object == NULL)
+        return (true);
     if (strcmp("food", object) == 0 && stats->inventory.food > 0)
         cell->nbr_food += 1;
     if (strcmp("linemate", object) == 0 && stats->inventory.linemate > 0)

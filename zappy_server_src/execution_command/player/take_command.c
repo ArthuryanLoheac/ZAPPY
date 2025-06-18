@@ -27,6 +27,8 @@ static bool take_object(zappy_t *zappy, cell_t *cell, char *object)
 {
     cell_t comp_cell = *cell;
 
+    if (object == NULL)
+        return (true);
     if (strcmp("food", object) == 0 && cell->nbr_food > 0)
         cell->nbr_food -= 1;
     if (strcmp("linemate", object) == 0 && cell->nbr_linemate > 0)

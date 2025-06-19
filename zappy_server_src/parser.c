@@ -113,11 +113,11 @@ static void parse_one_arg(int ac, char **av, parser_t *parser, int i)
     if (strcmp(av[i], "-f") == 0 && i + 1 < ac)
         parser->freq = parse_int(av[i + 1], 1, 10000);
     if (strcmp(av[i], "-v") == 0)
-        set_log_level(WARNING);
+        set_minimum_log_level(WARNING);
     if (strcmp(av[i], "-vv") == 0)
-        set_log_level(INFO);
+        set_minimum_log_level(INFO);
     if (strcmp(av[i], "-vvv") == 0)
-        set_log_level(DEBUG);
+        set_minimum_log_level(DEBUG);
 }
 
 parser_t *parse_arguments(int ac, char **av)

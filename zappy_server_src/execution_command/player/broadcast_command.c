@@ -123,7 +123,7 @@ static void broadcast_every_client(zappy_t *zappy, client_t *client,
     sprintf(buffer, "pbc #%d %s\n", client->stats.id, textBuffer);
     send_data_to_graphics(zappy, buffer);
     while (curr_client != NULL) {
-        if (!curr_client->is_graphic)
+        if (!curr_client->is_graphic && !curr_client->is_waiting_id)
             compute_message(textBuffer, zappy, client, curr_client);
         curr_client = curr_client->next;
     }

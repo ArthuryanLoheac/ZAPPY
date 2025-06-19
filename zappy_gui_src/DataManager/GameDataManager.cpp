@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <queue>
 
 #include "DataManager/GameDataManager.hpp"
 #include "Exceptions/GraphicalExceptions.hpp"
@@ -72,6 +73,22 @@ void GameDataManager::addTeam(const std::string &teamName) {
 
 std::vector<Egg> &GameDataManager::getEggs() {
     return eggs;
+}
+
+void GameDataManager::addMessage(const std::string &message, int id) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    messages.emplace_back(message, id);
+    messagesThisFrame.emplace_back(message, id);
+    if (messages.size() > 5)
+        messages.erase(messages.begin());
+}
+
+std::vector<GameDataManager::Message> &GameDataManager::getMessages() {
+    return messages;
+}
+
+std::vector<GameDataManager::Message> &GameDataManager::getMessagesThisFrame() {
+    return messagesThisFrame;
 }
 
 void GameDataManager::addEgg(int id, int team, int x, int y) {

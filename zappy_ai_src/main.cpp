@@ -78,11 +78,11 @@ void parseArgs(const int argc, char **argv, std::string &ip, int &port,
         } else if (std::string(argv[i]) == "-h" && i + 1 < argc) {
             ip = argv[++i];
         } else if (std::string(argv[i]) == "-v") {
-            set_log_level(WARNING);
+            set_minimum_log_level(WARNING);
         } else if (std::string(argv[i]) == "-vv") {
-            set_log_level(INFO);
+            set_minimum_log_level(INFO);
         } else if (std::string(argv[i]) == "-vvv") {
-            set_log_level(DEBUG);
+            set_minimum_log_level(DEBUG);
         } else {
             throw AI::ArgumentsException("Unknown argument: " +
                 std::string(argv[i]));

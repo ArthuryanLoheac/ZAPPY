@@ -30,13 +30,13 @@ int checkArgs(int ac, char **av) {
             GUI::DataManager::i().setIp(av[i + 1]);
             i+= 2;
         } else if (std::string(av[i]) == "-v") {
-            set_log_level(WARNING);
+            set_minimum_log_level(WARNING);
             i++;
         } else if (std::string(av[i]) == "-vv") {
-            set_log_level(INFO);
+            set_minimum_log_level(INFO);
             i++;
         } else if (std::string(av[i]) == "-vvv") {
-            set_log_level(DEBUG);
+            set_minimum_log_level(DEBUG);
             i++;
         } else {
             return 84;

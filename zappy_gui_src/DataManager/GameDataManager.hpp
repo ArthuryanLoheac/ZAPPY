@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <string>
 #include <memory>
+#include <queue>
 
 #include "DataManager/GameTile.hpp"
 #include "DataManager/Player.hpp"
@@ -16,6 +17,16 @@ namespace GUI {
  */
 class GameDataManager {
  private:
+    class Message {
+        /** @brief Represents a message in the game,
+         * including its content and associated player ID. */
+     public:
+        Message(const std::string &content, int playerId)
+            : content(content), playerId(playerId) {}
+        std::string content; /**< Content of the message. */
+        int playerId; /**< ID of the player who sent the message. */
+    };
+
     int width; /**< Width of the game map. */
     int height; /**< Height of the game map. */
     std::vector<GameTile> tiles; /**< List of game tiles. */
@@ -30,6 +41,8 @@ class GameDataManager {
     bool Collecting = false; /**< Flag to indicate if collecting is active. */
     bool Dropping = false; /**< Flag to indicate if dropping is active. */
     bool Pushed = false; /**< Flag to indicate if a player has been pushed. */
+    std::vector<Message> messages;
+    std::vector<Message> messagesThisFrame;
 
     bool isGameOver = false; /**< Flag to indicate if the game is over. */
     std::string winner; /**< Name of the winning team. */
@@ -120,6 +133,24 @@ class GameDataManager {
      * @return const std::vector<Egg>& Reference to the list of eggs.
      */
     std::vector<Egg> &getEggs();
+
+    /**
+     * @brief Adds a message to the message queue.
+     * @param message The message to add.
+     */
+    void addMessage(const std::string &message, int id);
+
+    /**
+     * @brief Gets the list of messages.
+     * @return std::queue<std::string>& Reference to the message queue.
+     */
+    std::vector<Message> &getMessages();
+
+    /**
+     * @brief Gets the list of messages.
+     * @return std::queue<std::string>& Reference to the message queue.
+     */
+    std::vector<Message> &getMessagesThisFrame();
 
     /**
      * @brief Adds an egg to the game map.

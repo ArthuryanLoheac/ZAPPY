@@ -14,7 +14,7 @@ int GameDataManager::getWidth() const {
 }
 
 bool GameDataManager::getGameOver() const {
-    return false;
+    return isGameOver;
 }
 
 void GameDataManager::setGameOver(bool over) {

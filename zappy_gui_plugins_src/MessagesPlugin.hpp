@@ -14,8 +14,8 @@ class MessagesPlugin : public pluginsInterface {
  private:
     pluginsData data; /**< Data manager for the plugin. */
     bool isActive = true; /**< Indicates if the plugin is currently active. */
-    irr::scene::IParticleSystemSceneNode *ps;
-    bool isInitParticle = false;
+    irr::scene::ISceneManager* smgr;
+    irr::IrrlichtDevice *device;
     int speedParticle = 1;
 
     /**

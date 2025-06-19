@@ -13,13 +13,11 @@ extern "C" {
     }
 }
 
-bool MessagesPlugin::init(irr::scene::ISceneManager* smgr,
-    irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) {
-    (void) device;
-    (void) smgr;
+bool MessagesPlugin::init(irr::scene::ISceneManager* _smgr,
+    irr::IrrlichtDevice *_device, irr::scene::ICameraSceneNode *cam) {
+    device = _device;
     (void) cam;
-    if (smgr)
-        ps = smgr->addParticleSystemSceneNode(false);
+    smgr = _smgr;
     printf("============= Initializing Messages Plugin =============\n");
     return true;
 }
@@ -61,6 +59,8 @@ irr::video::IVideoDriver* driver) {
 
 void MessagesPlugin::initParticle(irr::video::IVideoDriver *driver,
 irr::core::vector3df position, irr::core::vector3df direction) {
+    irr::scene::IParticleSystemSceneNode *ps =
+        smgr->addParticleSystemSceneNode(false);
     int age = 800 * speedParticle;
     irr::core::vector3df dir = direction / (100.f * speedParticle);
 
@@ -88,6 +88,14 @@ irr::core::vector3df position, irr::core::vector3df direction) {
     ps->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE, false);
     ps->setMaterialTexture(0, driver->getTexture("assets/UI/dataParticle.png"));
     ps->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
+
+    //// Stop particles after 800ms (the particle's age)
+    //irr::ITimer* timer = device->getTimer();
+    //int stopTime = timer->getTime() + age;
+
+    // Schedule removal using a lambda function to stop emitting new particles
+    smgr->registerNodeForRendering(ps, irr::scene::ESNRP_AUTOMATIC);
+    smgr->addToDeletionQueue(ps);
 }
 
 void MessagesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
@@ -95,10 +103,11 @@ void MessagesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
 {
     if (!driver || !font)
         return;
-    if (!isInitParticle && ps) {
-        initParticle(driver, irr::core::vector3df(0, -2 + 0.2f, 0),
-            irr::core::vector3df(1, 0, 0));
-        isInitParticle = true;
+    for (auto message : data.messagesThisFrame) {
+        pluginsData::Player p = data.getPlayer(message.playerId);
+        if (p.PlayerMesh)
+            initParticle(driver, p.PlayerMesh->getPosition(),
+                irr::core::vector3df(1, 0, 0));
     }
     drawMessageHistory(font, driver);
 }

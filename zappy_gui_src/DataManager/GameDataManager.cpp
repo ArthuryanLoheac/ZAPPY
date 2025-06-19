@@ -7,6 +7,7 @@
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
 #include "Window/window.hpp"
+#include "GameDataManager.hpp"
 
 namespace GUI {
 int GameDataManager::getWidth() const {
@@ -60,6 +61,7 @@ std::vector<Egg> &GameDataManager::getEggs() {
 void GameDataManager::addMessage(const std::string &message, int id) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     messages.emplace_back(message, id);
+    messagesThisFrame.emplace_back(message, id);
     if (messages.size() > 5)
         messages.erase(messages.begin());
 }
@@ -68,7 +70,12 @@ std::vector<GameDataManager::Message> &GameDataManager::getMessages() {
     return messages;
 }
 
-void GameDataManager::addEgg(int id, int team, int x, int y) {
+std::vector<GameDataManager::Message> &GameDataManager::getMessagesThisFrame() {
+    return messagesThisFrame;
+}
+
+void GameDataManager::addEgg(int id, int team, int x, int y)
+{
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getTile(x, y).getWorldPos();
     position.Y += 0.2f;

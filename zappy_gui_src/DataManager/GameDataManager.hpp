@@ -42,6 +42,7 @@ class GameDataManager {
     bool Dropping = false; /**< Flag to indicate if dropping is active. */
     bool Pushed = false; /**< Flag to indicate if a player has been pushed. */
     std::vector<Message> messages;
+    std::vector<Message> messagesThisFrame;
 
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
@@ -117,6 +118,12 @@ class GameDataManager {
      * @return std::queue<std::string>& Reference to the message queue.
      */
     std::vector<Message> &getMessages();
+
+    /**
+     * @brief Gets the list of messages.
+     * @return std::queue<std::string>& Reference to the message queue.
+     */
+    std::vector<Message> &getMessagesThisFrame();
 
     /**
      * @brief Adds an egg to the game map.

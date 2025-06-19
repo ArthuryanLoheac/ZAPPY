@@ -347,6 +347,7 @@ void GUI::ServerGUI::pbcCommand(std::vector<std::string> &args) {
     if (args.size() < 3)
         throw CommandParsingException("Invalid pbc command format");
     int id = std::stoi(args[1].substr(1));
+    (void) id;
     std::string message = args[2];
     for (size_t i = 3; i < args.size(); i++)
         message += " " + args[i];

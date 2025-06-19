@@ -16,6 +16,7 @@ void PluginsDataManager::updatePluginsData() {
     data.teamColors.clear();
     data.isConnected = GUI::ServerGUI::i().isConnectedToServer();
     data.ping = GUI::ServerGUI::i().ping;
+    data.messages.clear();
     for (const auto &message : GUI::GameDataManager::i().getMessages())
         data.messages.push_back(message);
     for (const auto &team : data.teams)

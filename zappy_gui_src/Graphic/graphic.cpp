@@ -17,8 +17,11 @@ int graphic() {
     try {
         GUI::Window::i();
         pluginsManager::i().loadPlugins("./plugins");
+        printf("============= Initializing Zappy GUI =============\n");
         pluginsManager::i().sortPlugins();
+        printf("============= Plugins loaded =============\n");
         GUI::SoundsManager::i().playMusic("assets/Musics/Ambient.mp3");
+        printf("============= Music started =============\n");
         GUI::Window::i().update();
     } catch(const std::exception& e) {
         std::cerr << "Error in graphic(): " << e.what() << '\n';

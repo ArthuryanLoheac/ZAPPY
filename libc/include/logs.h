@@ -39,9 +39,9 @@ extern "C" {
         char color[10];
     } log_level_str_t;
 
-    void set_minimum_log_level(log_level_e level);
+    void set_minimum_log_level(log_level_t level);
 
-    void my_log(log_level_e level, const char *format, ...);
+    void my_log(log_level_t level, const char *format, ...);
 
 
     #define LOG_DEBUG(format, ...) (my_log(DEBUG, format, ##__VA_ARGS__))

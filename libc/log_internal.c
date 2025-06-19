@@ -22,19 +22,19 @@ static const log_level_str_t LOG_LEVEL_STRS_LIST[] = {
 
 static const unsigned int LOGS_LEVELS_COUNT = 5;
 
-static log_level_e *get_minimum_log_level_ptr(void)
+static log_level_t *get_minimum_log_level_ptr(void)
 {
-    static log_level_e level = ERROR;
+    static log_level_t level = ERROR;
 
     return &level;
 }
 
-void set_minimum_log_level(log_level_e level)
+void set_minimum_log_level(log_level_t level)
 {
     *get_minimum_log_level_ptr() = level;
 }
 
-static log_level_e get_minimum_log_level(void)
+static log_level_t get_minimum_log_level(void)
 {
     return *get_minimum_log_level_ptr();
 }
@@ -56,7 +56,7 @@ static void remove_newlines(char *str)
             str[i] = '|';
 }
 
-void my_log(log_level_e level, const char *format, ...)
+void my_log(log_level_t level, const char *format, ...)
 {
     char *timestamp;
     char msg[1024];

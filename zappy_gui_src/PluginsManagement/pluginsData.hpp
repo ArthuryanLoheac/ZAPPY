@@ -64,6 +64,10 @@ class pluginsData {
     std::vector<Player> players; /**< List of players in the game. */
     int ping = 0; /**< Ping time to the server. */
 
+
+    std::string winner; /**< Name of the winning team. */
+    bool isGameOver = false; /**< Flag indicating if the game is over. */
+
     std::vector<Message> messages; /**< List of messages from the server. */
     std::vector<Message> messagesThisFrame;
         /**< List of messages from the server. */

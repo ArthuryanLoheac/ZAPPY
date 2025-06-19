@@ -10,7 +10,6 @@
 #include "DataManager/SoundsManager.hpp"
 #include "include/logs.h"
 #include "PluginsManagement/PluginsDataManager.hpp"
-#include "window.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -138,8 +137,7 @@ void Window::clearMeshes() {
     worldSetuped = false;
 }
 
-void Window::setupWorld()
-{
+void Window::setupWorld() {
     if (cubes.size() > 0) {
         for (auto &cube : cubes) {
             cube->remove();

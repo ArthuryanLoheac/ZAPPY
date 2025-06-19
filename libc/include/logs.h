@@ -26,22 +26,22 @@ extern "C" {
     // Classic white
     #define NO_COLOR "\e[0;37m"
 
-    enum log_level_e {
+    typedef enum log_level {
         DEBUG,
         INFO,
         WARNING,
         ERROR,
         FATAL
-    };
+    } log_level_e;
 
     typedef struct log_level_str_s {
         char str[10];
         char color[10];
     } log_level_str_t;
 
-    void set_minimum_log_level(enum log_level_e level);
+    void set_minimum_log_level(log_level_e level);
 
-    void my_log(enum log_level_e level, const char *format, ...);
+    void my_log(log_level_e level, const char *format, ...);
 
 
     #define LOG_DEBUG(format, ...) (my_log(DEBUG, format, ##__VA_ARGS__))

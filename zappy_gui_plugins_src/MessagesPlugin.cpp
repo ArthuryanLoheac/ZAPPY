@@ -41,7 +41,7 @@ irr::video::IVideoDriver* driver) {
     int delta = 30;
     int y = height - 30 - (data.messages.size() * delta);
     int x = 5;
-    UICol color = UICol(125, 255, 255, 255);
+    UICol color = UICol(255, 255, 255, 255);
 
     for (const auto &message : data.messages) {
         if (message.content.empty())
@@ -50,9 +50,9 @@ irr::video::IVideoDriver* driver) {
             ": " + message.content;
         if (text.size() > 50)
             text = text.substr(0, 50) + "...";
-        drawImage("assets/UI/BottomBig.png", 0, y, 400, delta, driver);
+        drawImage("assets/UI/BottomBig.png", 0, y, 550, delta, driver);
         font->draw(text.c_str(), irr::core::rect<irr::s32>(
-            x, y + 5, 500, y + delta), color);
+            x, y + 5, 650, y + delta), color);
         y += delta;
     }
 }
@@ -103,8 +103,8 @@ void MessagesPlugin::checkDeleteParticles() {
 
     for (auto particle : particles) {
         if (particle.end < device->getTimer()->getTime() && !particle.stopped) {
-            particle.emitter->setMinLifeTime(0);
-            particle.emitter->setMaxLifeTime(0);
+            particle.emitter->setMinParticlesPerSecond(0);
+            particle.emitter->setMaxParticlesPerSecond(0);
             particle.stopped = true;
         }
         if (particle.kill < device->getTimer()->getTime()) {
@@ -119,8 +119,7 @@ void MessagesPlugin::checkDeleteParticles() {
 }
 
 void MessagesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
-                            irr::video::IVideoDriver *driver)
-{
+    irr::video::IVideoDriver *driver) {
     if (!driver || !font)
         return;
     for (auto message : data.messagesThisFrame) {

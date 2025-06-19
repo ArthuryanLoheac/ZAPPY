@@ -101,15 +101,24 @@ void MessagesPlugin::checkDeleteParticles() {
     int i = 0;
 
     for (auto particle : particles) {
-        if (particle.end < device->getTimer()->getTime() && !particle.stopped) {
+        if (particle.end < device->getTimer()->getTime() && !particle.stopped
+            && particle.emitter) {
             particle.emitter->setMinParticlesPerSecond(0);
             particle.emitter->setMaxParticlesPerSecond(0);
             particle.stopped = true;
         }
-        if (particle.kill < device->getTimer()->getTime()) {
-            smgr->registerNodeForRendering(particle.particleSystem,
-                irr::scene::ESNRP_AUTOMATIC);
-            smgr->addToDeletionQueue(particle.particleSystem);
+        if (particle.particleSystem && smgr &&
+            particle.kill < device->getTimer()->getTime()) {
+            if (!particle.particleSystem->isVisible()) {
+                try {
+                    smgr->registerNodeForRendering(particle.particleSystem,
+                        irr::scene::ESNRP_AUTOMATIC);
+                    smgr->addToDeletionQueue(particle.particleSystem);
+                } catch (const std::exception &e) {
+                    std::cerr << "Exception occurred: " << e.what()
+                        << std::endl;
+                }
+            }
             particles.erase(particles.begin() + i);
             i--;
         }

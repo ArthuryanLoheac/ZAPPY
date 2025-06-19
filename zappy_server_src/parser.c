@@ -23,7 +23,8 @@ void display_help(void)
         "-y height\theight of the world\n"
         "-n name1 name2 ...\tnames of the teams\n"
         "-c clientsNb\tnumber of authorized clients per team\n"
-        "-f freq\treciprocal of time unit for execution of actions\n"
+        "-f freq\treciprocal of time unit for execution of actions"
+        " (0 =< freq < 200)\n"
         "-v, -vv, -vvv\tverbose level of the logs\n");
     exit(84);
 }
@@ -112,11 +113,11 @@ static void parse_one_arg(int ac, char **av, parser_t *parser, int i)
     if (strcmp(av[i], "-f") == 0 && i + 1 < ac)
         parser->freq = parse_int(av[i + 1], 1, 10000);
     if (strcmp(av[i], "-v") == 0)
-        set_log_level(WARNING);
+        set_minimum_log_level(WARNING);
     if (strcmp(av[i], "-vv") == 0)
-        set_log_level(INFO);
+        set_minimum_log_level(INFO);
     if (strcmp(av[i], "-vvv") == 0)
-        set_log_level(DEBUG);
+        set_minimum_log_level(DEBUG);
 }
 
 parser_t *parse_arguments(int ac, char **av)
@@ -126,7 +127,8 @@ parser_t *parse_arguments(int ac, char **av)
     for (int i = 1; i < ac; i++)
         parse_one_arg(ac, av, parser, i);
     if (parser->port == 0 || parser->width == 0 || parser->height == 0 ||
-        parser->team_names == NULL || parser->clients_per_team == 0)
+        parser->team_names == NULL || parser->clients_per_team == 0 ||
+        parser->freq > 200)
         display_help();
     return parser;
 }

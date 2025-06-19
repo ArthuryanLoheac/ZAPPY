@@ -95,9 +95,6 @@ irr::core::vector3df position, irr::core::vector3df direction, int age) {
     particle.kill = timer->getTime() + (age * 2);
     particle.emitter = em;
     particles.push_back(particle);
-
-    printf("Debug: Particle initialized at position: (%f, %f, %f)\n",
-        position.X, position.Y, position.Z);
 }
 
 void MessagesPlugin::checkDeleteParticles() {

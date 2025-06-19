@@ -114,7 +114,7 @@ void Interface::handleQueues() {
         outputQueue.pop();
         LOG_INFO("Handling command '%s' with response '%s'",
             input[0].c_str(), output[0].c_str());
-        if (commands.find(input[0]) == commands.end()) {
+        if (!commands.contains(input[0])) {
             throw AI::CommandNotFoundException(input[0]);
         }
         try {
@@ -211,7 +211,7 @@ std::vector<std::string> &command) {
     }
 
     try {
-        if (followUpCommand[0].size() < 1 || followUpCommand[1].size() < 2) {
+        if (followUpCommand[0].empty() || followUpCommand[1].size() < 2) {
             LOG_ERROR("WELCOME: Invalid response format");
             return;
         }

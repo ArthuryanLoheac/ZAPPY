@@ -63,7 +63,7 @@ class ServerGUI {
 
  private:
     bool sendPing = false; /**< Flag to indicate if BCT command has been sent */
-    std::chrono::_V2::system_clock::time_point timeForPing;
+    std::chrono::system_clock::time_point timeForPing;
     bool isConnected = false; /**< if the server connection is active */
 
     /**

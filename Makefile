@@ -160,6 +160,12 @@ coding_style:
 	coding-style zappy_server_src/ .
 	cat coding-style-reports.log
 	rm -f coding-style-reports.log
+	coding-style libc/ .
+	cat coding-style-reports.log
+	rm -f coding-style-reports.log
+	coding-style libcpp/ .
+	cat coding-style-reports.log
+	rm -f coding-style-reports.log
 
 doxygen:
 	cd docs && doxygen Doxyfile
@@ -190,7 +196,7 @@ INCLUDE_SO = -I. \
 	-I./zappy_gui_src/PluginsManagement \
 
 FLAGS_SO =  -std=c++17 -Wall -Wextra -Werror -lIrrlicht \
-			$(INCLUDE_SO) \
+			$(INCLUDE_SO) -Wno-return-type-c-linkage \
             -ldl -g
 
 TEST_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")

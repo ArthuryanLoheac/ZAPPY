@@ -53,7 +53,7 @@ std::vector<std::string> &command) {
  */
 void Interface::commandINCANTATION(std::vector<std::string> &args,
 std::vector<std::string> &command) {
-    if (args.size() < 1) {
+    if (args.empty()) {
         LOG_ERROR("INCANTATION: Expected at least one argument, got %i\n.",
             args.size() - 1);
         return;

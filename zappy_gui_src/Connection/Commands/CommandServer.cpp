@@ -10,7 +10,6 @@
 #include "DataManager/SoundsManager.hpp"
 
 #include "include/logs.h"
-#include "ServerGUI.hpp"
 
 /**
  * @brief Prints an error message and the associated arguments.

@@ -77,7 +77,8 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
                 if (newData)
                     return;
             } catch (const std::exception &e) {
-                LOG_ERROR("Error while processing event in plugin: %s", e.what());
+                LOG_ERROR("Error while processing event in plugin: %s",
+                    e.what());
             }
         }
     }

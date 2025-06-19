@@ -6,7 +6,6 @@
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
 #include "Window/window.hpp"
-#include "GameDataManager.hpp"
 
 namespace GUI {
 int GameDataManager::getWidth() const {

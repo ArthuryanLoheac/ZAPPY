@@ -61,6 +61,9 @@ static struct pollfd *create_poll(int server_fd)
     fds[0].fd = server_fd;
     fds[0].events = POLLIN;
     fds[0].revents = 0;
+    fds[1].fd = 0;
+    fds[1].events = POLLIN;
+    fds[1].revents = 0;
     return fds;
 }
 

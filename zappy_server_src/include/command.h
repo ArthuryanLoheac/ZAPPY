@@ -41,4 +41,6 @@ void append_client_out_buffer(client_t *client, const char *format, ...);
 void extract_commands(client_t *client, zappy_t *zappy_ptr);
 void process_command(char **args, client_t *client, zappy_t *zappy_ptr);
 
+void handle_cheat_function(zappy_t *zappy);
+
 #endif /* !COMMAND_H */

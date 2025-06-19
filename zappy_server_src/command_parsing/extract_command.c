@@ -57,7 +57,7 @@ static int fill_args_array(char **args, char *command, int count)
     return 0;
 }
 
-static char **parse_command(char *command)
+char **parse_command(char *command)
 {
     char **args = NULL;
     int count = count_tokens(command);

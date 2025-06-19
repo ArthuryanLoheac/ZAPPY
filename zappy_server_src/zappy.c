@@ -97,6 +97,7 @@ void start_server(zappy_t *zappy)
         }
         check_for_new_client(zappy);
         check_for_client_command(zappy);
+        handle_cheat_function(zappy);
     }
 }
 

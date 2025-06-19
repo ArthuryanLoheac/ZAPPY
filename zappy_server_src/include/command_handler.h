@@ -14,6 +14,12 @@
 typedef void (*command_handler_t)
 (zappy_t *zappy, client_t *client, char **args);
 
+typedef void (*cheat_handler_t)
+(zappy_t *zappy, char **args);
+
+// Helper function
+char **parse_command(char *command);
+
 // Commonly used functions
 void update_pos_player(zappy_t *zappy, stats_t *stat);
 void update_cell(zappy_t *zappy, cell_t cell);
@@ -33,6 +39,9 @@ void incantation_command(zappy_t *zappy, client_t *client, char **args);
 void eject_command(zappy_t *zappy, client_t *client, char **args);
 void broadcast_command(zappy_t *zappy, client_t *client, char **args);
 
+// Cheat commands
+void level_command(zappy_t *zappy, char **args);
+
 // GUI commands
 void msz_command(zappy_t *zappy, client_t *client, char **args);
 void bct_command(zappy_t *zappy, client_t *client, char **args);
@@ -49,8 +58,15 @@ typedef struct command_func_s {
     command_handler_t func;
 } command_func_t;
 
+typedef struct cheat_func_s {
+    char *name;
+    cheat_handler_t func;
+} cheat_func_t;
+
 extern const command_func_t player_command_association_list[];
 extern const command_func_t gui_command_association_list[];
+
+extern const cheat_func_t cheat_association_list[];
 
 command_handler_t get_player_command_handler(const char *name);
 command_handler_t get_gui_command_handler(const char *name);

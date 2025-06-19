@@ -51,25 +51,34 @@ void pluginsManager::loadPlugin(const std::string &path) {
 void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
     irr::video::IVideoDriver* driver) const {
     for (const auto &plugin : _plugins) {
-        if (plugin)
-            plugin->drawUI(font, driver);
+        if (plugin) {
+            try {
+                plugin->drawUI(font, driver);
+            } catch (const std::exception &e) {
+                LOG_ERROR("Error while drawing plugin: %s", e.what());
+            }
+        }
     }
 }
 
 void pluginsManager::onEvent(const irr::SEvent &event) {
     for (const auto &plugin : _plugins) {
         if (plugin) {
-            pluginsData &datas = PluginsDataManager::i().getData();
-            bool newData = plugin->onEvent(event, datas);
-            if (datas.frequency > 0 &&
-                datas.frequency != GUI::DataManager::i().getFrequency()) {
-                GUI::DataManager::i().setFrequency(datas.frequency);
-                GUI::ServerGUI::i().outbuffer += "sst " +
-                    std::to_string(datas.frequency) + "\n";
-                PluginsDataManager::i().updatePluginsData();
+            try {
+                pluginsData &datas = PluginsDataManager::i().getData();
+                bool newData = plugin->onEvent(event, datas);
+                if (datas.frequency > 0 &&
+                    datas.frequency != GUI::DataManager::i().getFrequency()) {
+                    GUI::DataManager::i().setFrequency(datas.frequency);
+                    GUI::ServerGUI::i().outbuffer += "sst " +
+                        std::to_string(datas.frequency) + "\n";
+                    PluginsDataManager::i().updatePluginsData();
+                }
+                if (newData)
+                    return;
+            } catch (const std::exception &e) {
+                LOG_ERROR("Error while processing event in plugin: %s", e.what());
             }
-            if (newData)
-                return;
         }
     }
 }

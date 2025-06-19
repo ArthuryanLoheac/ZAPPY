@@ -61,7 +61,12 @@ class Fork {
             _isChild = true;
             _isForked = true;
             func(std::forward<Args>(args)...);
-            exit(0);
+            auto result = func(std::forward<Args>(args)...);
+            if constexpr (std::is_same_v<decltype(result), void>) {
+                exit(0);
+            } else {
+                exit(static_cast<int>(result));
+            }
         } else {
             _isParent = true;
             _isForked = true;

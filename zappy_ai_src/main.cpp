@@ -107,9 +107,7 @@ int initChildProcess(const int port, const std::string &ip,
     try {
         interface.start(port, ip, name);
     } catch (const AI::FactoryException &e) {
-        LOG_WARNING("Failed to start interface in PID %d: %s",
-            getpid(), e.what());
-        return 84;
+        return 42;
     }
 
     Logic& logic = Logic::getInstance();
@@ -146,6 +144,7 @@ int mainLoop(int port, const std::string &ip,
     std::vector<std::unique_ptr<Fork>> childs;
 
     setupSignalHandlers();
+    int lastErrorCode = 0;
 
     childs.push_back(std::make_unique<Fork>(initChildProcess, port, ip, name));
 
@@ -154,6 +153,7 @@ int mainLoop(int port, const std::string &ip,
             if ((*it)->waitNoHang()) {
                 LOG_INFO("Child process PID %d has exited with status %d.",
                     (*it)->getPid(), (*it)->getExitStatus());
+                lastErrorCode = (*it)->getExitStatus();
                 it = childs.erase(it);
             } else {
                 ++it;
@@ -167,6 +167,10 @@ int mainLoop(int port, const std::string &ip,
         }
 
         if (childs.empty()) {
+            if (lastErrorCode == 42 && childs.size() == 0) {
+                LOG_FATAL("The AI can't connect to the server, exiting.");
+                return 84;
+            }
             std::cout << "No child processes running, exiting." << std::endl;
             return 0;
         }

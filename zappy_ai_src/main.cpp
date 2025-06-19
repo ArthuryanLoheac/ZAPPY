@@ -1,3 +1,6 @@
+#include <netdb.h>
+#include <arpa/inet.h>
+
 #include <string>
 #include <vector>
 #include <csignal>
@@ -5,6 +8,7 @@
 #include <thread>
 #include <memory>
 #include <iostream>
+#include <stdexcept>
 
 #include "Exceptions/Factory.hpp"
 #include "ForkWrapper/Fork.hpp"
@@ -12,7 +16,6 @@
 #include "Interface/Interface.hpp"
 #include "Data/Data.hpp"
 #include "include/logs.h"
-
 #include "Logic/Core.hpp"
 #include "modules/FoodGatheringModule.hpp"
 #include "modules/CommunicationModule.hpp"
@@ -34,6 +37,28 @@ void printHelp() {
         "  -h machine: machine name or IP address of the zappy server" <<
         "  -v, -vv, -vvv : Set verbose level (WARNING, INFO, DEBUG)"
         << std::endl;
+}
+
+std::string getHostnameIP(const std::string& hostname) {
+    struct addrinfo hints, *res;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+
+    int status = getaddrinfo(hostname.c_str(), NULL, &hints, &res);
+    if (status != 0) {
+        throw std::runtime_error("Error while getting IP: " +
+            std::string(gai_strerror(status)));
+    }
+
+    std::string ipStr;
+
+    struct sockaddr_in *ipv4 = (struct sockaddr_in *)res->ai_addr;
+    char ipBuffer[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &(ipv4->sin_addr), ipBuffer, sizeof(ipBuffer));
+    ipStr = ipBuffer;
+    freeaddrinfo(res);
+    return ipStr;
 }
 
 void parseArgs(int argc, char **argv, std::string &ip, int &port,
@@ -70,6 +95,8 @@ void parseArgs(int argc, char **argv, std::string &ip, int &port,
         throw
             AI::ArgumentsException("Port number must be between 1 and 65535.");
     }
+
+    ip = getHostnameIP(ip);
 
     if (name.empty()) {
         throw AI::ArgumentsException("Team name cannot be empty.");

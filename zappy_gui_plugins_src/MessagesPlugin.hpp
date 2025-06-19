@@ -39,12 +39,14 @@ class MessagesPlugin : public pluginsInterface {
      * @param driver Pointer to the video driver.
      */
     void drawImage(const std::string &texture, int x, int y,
-      int sizeX, int sizeY, irr::video::IVideoDriver* driver);
+        int sizeX, int sizeY, irr::video::IVideoDriver* driver);
     void drawMessageHistory(std::shared_ptr<irr::gui::IGUIFont> font,
-      irr::video::IVideoDriver* driver);
+         irr::video::IVideoDriver* driver);
     void initParticle(irr::video::IVideoDriver* driver,
-      irr::core::vector3df position, irr::core::vector3df direction);
+        irr::core::vector3df position, irr::core::vector3df direction, int age);
     void checkDeleteParticles();
+    void SendParticlesToAll(irr::video::IVideoDriver* driver,
+        pluginsData::Player p);
 
  public:
     /**

@@ -58,10 +58,10 @@ irr::video::IVideoDriver* driver) {
 }
 
 void MessagesPlugin::initParticle(irr::video::IVideoDriver *driver,
-irr::core::vector3df position, irr::core::vector3df direction) {
+irr::core::vector3df position, irr::core::vector3df direction, int age) {
     irr::scene::IParticleSystemSceneNode *ps =
         smgr->addParticleSystemSceneNode(false);
-    int age = 800 * speedParticle;
+    age *= speedParticle;
     irr::core::vector3df dir = direction / (100.f * speedParticle);
 
     irr::scene::IParticleEmitter* em = ps->createBoxEmitter(
@@ -118,6 +118,20 @@ void MessagesPlugin::checkDeleteParticles() {
     }
 }
 
+void MessagesPlugin::SendParticlesToAll(irr::video::IVideoDriver *driver,
+pluginsData::Player p) {
+    for (auto &player : data.players) {
+        if (player.id == p.id || !player.PlayerMesh)
+            continue;
+        irr::core::vector3df pos = player.PlayerMesh->getPosition();
+        irr::core::vector3df dir = pos - p.PlayerMesh->getPosition();
+        int dist = (pos - p.PlayerMesh->getPosition()).getLength();
+        dir.normalize();
+        dist *= 100;
+        initParticle(driver, p.PlayerMesh->getPosition(), dir, dist);
+    }
+}
+
 void MessagesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
     irr::video::IVideoDriver *driver) {
     if (!driver || !font)
@@ -125,8 +139,7 @@ void MessagesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
     for (auto message : data.messagesThisFrame) {
         pluginsData::Player p = data.getPlayer(message.playerId);
         if (p.PlayerMesh)
-            initParticle(driver, p.PlayerMesh->getPosition(),
-                irr::core::vector3df(1, 0, 0));
+            SendParticlesToAll(driver, p);
     }
     drawMessageHistory(font, driver);
     checkDeleteParticles();

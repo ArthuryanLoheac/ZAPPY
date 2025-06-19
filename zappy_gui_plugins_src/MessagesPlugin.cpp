@@ -40,15 +40,17 @@ irr::video::IVideoDriver* driver) {
         return;
     int height = driver->getScreenSize().Height;
     int y = height - 100;
+    int x = 10;
     UICol color = UICol(125, 255, 255, 255);
 
     for (const auto &message : data.messages) {
-        if (message.empty())
+        if (message.content.empty())
             continue;
-        std::string text = message;
+        std::string text = std::to_string(message.playerId) +
+            ": " + message.content;
         if (text.size() > 50)
             text = text.substr(0, 50) + "...";
-        font->draw(text.c_str(), irr::core::rect<irr::s32>(10, y, 500, y + 20),
+        font->draw(text.c_str(), irr::core::rect<irr::s32>(x, y, 500, y + 20),
             color);
         y += 20;
     }

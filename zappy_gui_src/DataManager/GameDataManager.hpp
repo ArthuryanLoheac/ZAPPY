@@ -17,6 +17,16 @@ namespace GUI {
  */
 class GameDataManager {
  private:
+    class Message {
+        /** @brief Represents a message in the game,
+         * including its content and associated player ID. */
+     public:
+        Message(const std::string &content, int playerId)
+            : content(content), playerId(playerId) {}
+        std::string content; /**< Content of the message. */
+        int playerId; /**< ID of the player who sent the message. */
+    };
+
     int width; /**< Width of the game map. */
     int height; /**< Height of the game map. */
     std::vector<GameTile> tiles; /**< List of game tiles. */
@@ -31,7 +41,7 @@ class GameDataManager {
     bool Collecting = false; /**< Flag to indicate if collecting is active. */
     bool Dropping = false; /**< Flag to indicate if dropping is active. */
     bool Pushed = false; /**< Flag to indicate if a player has been pushed. */
-    std::vector<std::string> messages;
+    std::vector<Message> messages;
 
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
@@ -100,13 +110,13 @@ class GameDataManager {
      * @brief Adds a message to the message queue.
      * @param message The message to add.
      */
-    void addMessage(const std::string &message);
+    void addMessage(const std::string &message, int id);
 
     /**
      * @brief Gets the list of messages.
      * @return std::queue<std::string>& Reference to the message queue.
      */
-    std::vector<std::string> &getMessages();
+    std::vector<Message> &getMessages();
 
     /**
      * @brief Adds an egg to the game map.

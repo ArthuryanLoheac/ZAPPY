@@ -18,7 +18,7 @@ void PluginsDataManager::updatePluginsData() {
     data.ping = GUI::ServerGUI::i().ping;
     data.messages.clear();
     for (const auto &message : GUI::GameDataManager::i().getMessages())
-        data.messages.push_back(message);
+        data.messages.emplace_back(message.content, message.playerId);
     for (const auto &team : data.teams)
         data.teamColors.push_back(MeshImporter::i().getColor(team));
     updatePlayers();

@@ -20,6 +20,16 @@ class pluginsData {
         std::vector<int> resources; /**< List of resources on the tile. */
     };
 
+    class Message {
+        /** @brief Represents a message in the game,
+         * including its content and associated player ID. */
+     public:
+        Message(const std::string &content, int playerId)
+            : content(content), playerId(playerId) {}
+        std::string content; /**< Content of the message. */
+        int playerId; /**< ID of the player who sent the message. */
+    };
+
     class Player {
      /** @brief Represents a player in the game, including position,
       * orientation, level, and resources. */
@@ -54,7 +64,7 @@ class pluginsData {
     std::vector<Player> players; /**< List of players in the game. */
     int ping = 0; /**< Ping time to the server. */
 
-    std::vector<std::string> messages; /**< List of messages from the server. */
+    std::vector<Message> messages; /**< List of messages from the server. */
 
     bool isConnected = false; /**< Connection status to the server. */
 

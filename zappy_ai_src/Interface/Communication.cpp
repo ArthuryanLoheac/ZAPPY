@@ -59,13 +59,11 @@ void Interface::receiveMessage(const std::vector<std::string> &args) {
         return;
     }
 
-    // Extract the actual encrypted message (remove magic key)
     message = message.substr(Data::i().magicKey.length());
 
-    // Clean up any newlines from the message
-    std::erase(message, '\n');
+    message.erase(std::remove(message.begin(), message.end(), '\n'),
+        message.end());
 
-    // Decrypt the message using our improved decryption method
     message = decrypt(message, Data::i().magicKey);
 
     Data::i().messageQueue.emplace(message, direction);

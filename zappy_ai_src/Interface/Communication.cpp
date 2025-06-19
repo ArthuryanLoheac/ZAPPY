@@ -90,7 +90,7 @@ void Interface::initializeFilteredStrings() {
  * @return true if the message should be filtered, false otherwise
  */
 bool Interface::needFilter(const std::string &arg) {
-    if (std::ranges::find(filteredStrings, arg) !=
+    if (std::find(filteredStrings.begin(), filteredStrings.end(), arg) !=
         filteredStrings.end()) {
         return true;
     }

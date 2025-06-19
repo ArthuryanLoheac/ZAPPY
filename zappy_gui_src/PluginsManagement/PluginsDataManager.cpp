@@ -4,6 +4,9 @@
 #include "include/logs.h"
 
 void PluginsDataManager::updatePluginsData() {
+    // Win
+    data.winner = GUI::GameDataManager::i().getWinner();
+    data.isGameOver = GUI::GameDataManager::i().getGameOver();
     // Map
     data.height = GUI::GameDataManager::i().getHeight();
     data.width = GUI::GameDataManager::i().getWidth();

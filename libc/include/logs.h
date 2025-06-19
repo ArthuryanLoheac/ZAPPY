@@ -32,7 +32,7 @@ extern "C" {
         WARNING,
         ERROR,
         FATAL
-    } log_level_e;
+    } log_level_t;
 
     typedef struct log_level_str_s {
         char str[10];

@@ -16,8 +16,21 @@ typedef struct command_name_size_s {
     unsigned int duration;
 } command_name_size_t;
 
+typedef struct required_elevation_s {
+    unsigned int nb_player;
+    unsigned int nb_linemate;
+    unsigned int nb_deraumere;
+    unsigned int nb_sibur;
+    unsigned int nb_mendiane;
+    unsigned int nb_phiras;
+    unsigned int nb_thystame;
+} required_elevation_t;
+
+
+
 extern const command_name_size_t player_command_name_size_list[];
 extern const command_name_size_t gui_command_name_size_list[];
+extern const required_elevation_t requires_elevation_list[];
 
 int get_gui_command_duration(const char *name);
 int get_player_command_duration(const char *name);

@@ -29,17 +29,17 @@ DEPS = $(OBJ_DIR)/*.d
 FLAGS_SERVER = -MMD -MP \
 	-I./zappy_server_src/include \
 	-I./libc/include \
-	-I./lib	\
 	-std=gnu17 -Wall -Wextra -Werror \
 
 FLAGS_GUI =	-MMD -MP \
 	$(shell find zappy_gui_src -type d -exec echo -I{} \;) \
-	-I./libcpp -I./lib -std=c++17 -Wall -Wextra -Werror
-LDFLAGS_GUI = -lIrrlicht
+	-I./libcpp -I./libc -std=c++17 -Wall -Wextra -Werror
+LDFLAGS_GUI = -lIrrlicht -lsfml-audio
+
 
 FLAGS_AI = -MMD -MP \
 	$(shell find zappy_ai_src -type d -exec echo -I{} \;) \
-	-I./libcpp -I./lib -std=c++20 -Wall -Wextra -Werror
+	-I./libcpp -I./libc -std=c++20 -Wall -Wextra -Werror
 
 FLAGS_CPP_COMMON = -MMD -MP \
 	$(shell find lib -type d -exec echo -I{} \;) \
@@ -83,7 +83,9 @@ SRC_TESTS = $(shell find tests -type f -name "*.c" ! -name "main.c")
 
 # ============= RULES ============= #
 
-all: $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI)
+all: no_plugins plugins_all
+
+no_plugins: $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI)
 
 $(COMMON_CPP_LIB): $(OBJ_CPP_COMMON)
 	@mkdir -p $(dir $@)
@@ -97,14 +99,16 @@ $(COMMON_C_LIB): $(OBJ_C_COMMON)
 
 $(ZAPPY_SERVER): $(COMMON_C_LIB) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER)
 	gcc -o $(ZAPPY_SERVER) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER) \
-	$(FLAGS_SERVER) -Llibc -lcommon
+	$(FLAGS_SERVER) $(COMMON_C_LIB)
 
 $(ZAPPY_GUI): $(COMMON_CPP_LIB) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI)
-	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) -Llibcpp -lcommon \
+	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) \
+	$(COMMON_C_LIB) $(COMMON_CPP_LIB) \
 	$(LDFLAGS_GUI)
 
 $(ZAPPY_AI): $(COMMON_CPP_LIB) $(OBJ_SRC_AI) $(OBJ_MAIN_AI)
-	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) -Llibcpp -lcommon \
+	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) \
+	$(COMMON_C_LIB) $(COMMON_CPP_LIB) \
 	$(FLAGS_AI)
 
 # ============= CLEANS ============= #
@@ -114,8 +118,10 @@ clean:
 	rm -f *.gcda *.gcno
 
 fclean: clean
-	rm -f $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI) $(COMMON_LIB)
+	rm -f $(ZAPPY_SERVER) $(ZAPPY_GUI) $(ZAPPY_AI) \
+	$(COMMON_C_LIB) $(COMMON_CPP_LIB)
 	rm -f unit_tests
+	rm -f plugins/*.so
 
 # ============= COMPILATION ============= #
 
@@ -150,7 +156,7 @@ re: fclean all
 run: all
 	./$(ZAPPY_SERVER) -p 4242 -x 10 -y 10 -n team1 team2 -c 10
 
-coding_style: fclean
+coding_style:
 	coding-style zappy_server_src/ .
 	cat coding-style-reports.log
 	rm -f coding-style-reports.log
@@ -173,3 +179,26 @@ tests_run_coverage: tests_run
 style_check:
 	@cpplint $(FLAGS_LINTER) \
 		$(shell find . -type f \( -name '*.cpp' -o -name '*.hpp' \))
+
+# ============ PLUGINS ============ #
+
+COMMON_PLUGINS = \
+
+INCLUDE_SO = -I. \
+	-I./zappy_gui_src/include \
+	-I./zappy_gui_src/dlLoader/ \
+	-I./zappy_gui_src/PluginsManagement \
+
+FLAGS_SO =  -std=c++17 -Wall -Wextra -Werror -lIrrlicht \
+			$(INCLUDE_SO) \
+            -ldl -g
+
+TEST_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")
+
+plugins_all:
+	@mkdir -p plugins
+	@for src in $(TEST_SRC); do \
+		plugin_name=$$(basename $$src .cpp); \
+		g++ -o plugins/$$plugin_name.so -shared -fPIC $(COMMON_PLUGINS) \
+			$$src $(FLAGS_SO); \
+	done

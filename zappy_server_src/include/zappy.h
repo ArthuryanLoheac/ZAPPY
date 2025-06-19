@@ -9,6 +9,7 @@
     #define ZAPPY_H
 
     #include <sys/time.h>
+    #include <stdbool.h>
     #include "parser.h"
     #include "server.h"
 
@@ -34,13 +35,13 @@ typedef struct cell_s {
     int x;
     int y;
 
-    int nbr_food;
-    int nbr_linemate;
-    int nbr_deraumere;
-    int nbr_sibur;
-    int nbr_mendiane;
-    int nbr_phiras;
-    int nbr_thystame;
+    unsigned int nbr_food;
+    unsigned int nbr_linemate;
+    unsigned int nbr_deraumere;
+    unsigned int nbr_sibur;
+    unsigned int nbr_mendiane;
+    unsigned int nbr_phiras;
+    unsigned int nbr_thystame;
 } cell_t;
 
 typedef struct egg_s {
@@ -54,7 +55,16 @@ typedef struct egg_s {
 typedef struct starting_map_s {
     cell_t **grid;
     egg_t *eggs;
+    int id_egg;
 } starting_map_t;
+
+typedef struct pos_elevation_s {
+    int x;
+    int y;
+    int level;
+    struct pos_elevation_s *next;
+} pos_elevation_t;
+
 
 typedef struct zappy_s {
     parser_t *parser;
@@ -68,6 +78,11 @@ typedef struct zappy_s {
     int tickCount;
 
     struct timeval last_time;
+    pos_elevation_t *pos_elevations;
+    pos_elevation_t *pos_elevationsFail;
+
+    bool end_game;
+    char *winning_team;
 } zappy_t;
 
 starting_map_t *init_starting_map(zappy_t *zappy);
@@ -78,6 +93,7 @@ void free_starting_map(starting_map_t *map);
 cell_t **create_map(parser_t *parser);
 void update_map(cell_t **map, parser_t *parser);
 void destroy_map(cell_t **map);
+void check_win(zappy_t *zappy);
 
 void start_server(zappy_t *zappy);
 void down_server(zappy_t *zappy);

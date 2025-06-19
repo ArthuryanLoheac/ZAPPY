@@ -10,10 +10,12 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <fcntl.h>
 
 #include "include/command.h"
 #include "include/client.h"
 #include "logs.h"
+#include <errno.h>
 
 void append_client_out_buffer(client_t *client, const char *format, ...)
 {
@@ -45,6 +47,8 @@ static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
         display_error("Memory allocation failed for client buffer");
     bytes_read = read(fd, buffer, 1023);
     if (bytes_read <= 0) {
+        if (bytes_read == -1)
+            perror("Read error");
         free(buffer);
         client->is_connected = false;
         return false;
@@ -61,11 +65,21 @@ static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
 void handle_client_command(zappy_t *zappy, int fd)
 {
     client_t *current = zappy->clients;
+    char buffer[1024];
 
-    while (current != NULL && current->fd != fd)
+    while (current != NULL && current->fd != fd) {
         current = current->next;
-    if (current == NULL || get_client_buffer(current, fd, zappy) == false)
+    }
+    if (current == NULL)
         return;
+    if (get_client_buffer(current, fd, zappy) == false) {
+        if (!current->is_graphic && !current->is_waiting_id) {
+            sprintf(buffer, "pdi #%d\n", current->stats.id);
+            send_data_to_graphics(zappy, buffer);
+        }
+        LOG_INFO("Client with fd %d disconnected", fd);
+        remove_client(zappy, fd);
+    }
 }
 
 void send_client_command(zappy_t *zappy, int fd)
@@ -76,11 +90,15 @@ void send_client_command(zappy_t *zappy, int fd)
         current = current->next;
     if (current == NULL || current->out_buffer == NULL)
         return;
-    if (write(fd, current->out_buffer, strlen(current->out_buffer)) == -1)
+    if (fcntl(fd, F_GETFD) == -1 && errno == EBADF)
+        return;
+    if (write(fd, current->out_buffer, strlen(current->out_buffer)) == -1) {
+        perror("Write error");
         LOG_INFO("[%i]: Failed to send command %s",
             current->fd, current->out_buffer);
-    else
+    } else {
         LOG_INFO("[%i]: Sent %s", current->fd, current->out_buffer);
+    }
     free(current->out_buffer);
     current->out_buffer = NULL;
 }

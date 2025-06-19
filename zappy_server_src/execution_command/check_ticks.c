@@ -9,6 +9,7 @@
 #include <signal.h>
 #include <time.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "../include/client.h"
 #include "command.h"
@@ -21,7 +22,10 @@ static void exec_command_tick(zappy_t *zappy, client_t *client,
 
     if (!command || command->command == NULL || command->command[0] == NULL)
         return;
-    handler = get_command_handler(command->command[0]);
+    if (client->is_graphic)
+        handler = get_gui_command_handler(command->command[0]);
+    else
+        handler = get_player_command_handler(command->command[0]);
     if (handler == NULL)
         add_to_buffer(&client->out_buffer, "ko\n");
     else
@@ -52,7 +56,7 @@ static void send_pin_graphic(client_t *c, zappy_t *zappy)
 
 static void handle_life_tick(client_t *client, zappy_t *zappy)
 {
-    if (!client->is_connected || client->is_waiting_id)
+    if (!client->is_connected || client->is_waiting_id || client->is_graphic)
         return;
     client->stats.tickLife--;
     if (client->stats.tickLife <= 0) {
@@ -68,6 +72,46 @@ static void handle_life_tick(client_t *client, zappy_t *zappy)
             client->stats.id = -1;
         }
     }
+}
+
+static void check_consume(zappy_t *zappy)
+{
+    pos_elevation_t *poses = zappy->pos_elevations;
+    pos_elevation_t *prev = NULL;
+    char buffer[256];
+
+    while (poses) {
+        consume_incantation(zappy, poses->x, poses->y, poses->level);
+        sprintf(buffer, "pie %d %d Current level: %d\n", poses->x, poses->y,
+            poses->level + 1);
+        send_data_to_graphics(zappy, buffer);
+        prev = poses;
+        poses = poses->next;
+        free(prev);
+        prev = NULL;
+    }
+    if (prev)
+        free(prev);
+    zappy->pos_elevations = NULL;
+}
+
+static void check_fail(zappy_t *zappy)
+{
+    pos_elevation_t *poses = zappy->pos_elevationsFail;
+    pos_elevation_t *prev = NULL;
+    char buffer[256];
+
+    while (poses) {
+        sprintf(buffer, "pie %d %d ko\n", poses->x, poses->y);
+        send_data_to_graphics(zappy, buffer);
+        prev = poses;
+        poses = poses->next;
+        free(prev);
+        prev = NULL;
+    }
+    if (prev)
+        free(prev);
+    zappy->pos_elevationsFail = NULL;
 }
 
 static void reduce_tick_all(zappy_t *zappy)
@@ -90,6 +134,8 @@ static void reduce_tick_all(zappy_t *zappy)
         }
         client = client->next;
     }
+    check_consume(zappy);
+    check_fail(zappy);
 }
 
 static float get_delta_time(zappy_t *zappy)

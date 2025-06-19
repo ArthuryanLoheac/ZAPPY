@@ -22,6 +22,7 @@ const command_name_size_t player_command_name_size_list[] = {
     {"TAKE", 7},
     {"SET", 7},
     {"INCANTATION", 300},
+    {"START_INCANTATION", 0},
     {NULL, -1}
 };
 
@@ -31,5 +32,16 @@ const command_name_size_t gui_command_name_size_list[] = {
     {"MCT", 0},
     {"TNA", 0},
     {"SGT", 0},
-    {"SST", 0}
+    {"SST", 0},
+    {NULL, -1}
+};
+
+const required_elevation_t requires_elevation_list[] = {
+    {1, 1, 0, 0, 0, 0, 0},
+    {2, 1, 1, 1, 0, 0, 0},
+    {2, 2, 0, 1, 0, 2, 0},
+    {4, 1, 1, 2, 0, 1, 0},
+    {4, 1, 2, 1, 3, 0, 0},
+    {6, 1, 2, 3, 0, 1, 0},
+    {6, 2, 2, 2, 2, 2, 1},
 };

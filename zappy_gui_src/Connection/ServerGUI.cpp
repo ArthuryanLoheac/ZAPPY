@@ -11,6 +11,7 @@
 
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
+#include "include/logs.h"
 
 namespace GUI {
 ServerGUI::ServerGUI() {
@@ -38,26 +39,28 @@ void GUI::ServerGUI::handleCommand() {
 
 void ServerGUI::execCommand(std::map<std::string, void(GUI::ServerGUI::*)
 (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
+    std::string errStr;
+
     if (it != commands.end()) {
         try {
             (GUI::ServerGUI::i().*(it->second))(args);
-            if (GUI::DataManager::i().getDebug())
-                printf("\033[1;32m[OK]\033[0m Received Command: %s\n",
-                    args[0].c_str());
+            std::string logMessage = "\033[1;32m[OK]\033[0m Received Command: "
+                + args[0];
+            for (size_t i = 1; i < args.size(); i++)
+                logMessage += " " + args[i];
+            LOG_DEBUG(logMessage.c_str());
         } catch (const std::exception &e) {
-            if (GUI::DataManager::i().getErrors()) {
-                printf("\033[1;31m[ERROR]\033[0m %s : ", e.what());
-                for (size_t i = 0; i < args.size(); i++)
-                    printf(" %s", args[i].c_str());
-                printf("\n");
-            }
+            errStr += std::string(e.what()) + " : ";
+            for (size_t i = 0; i < args.size(); i++)
+                errStr += " " + args[i];
+            LOG_WARNING(errStr.c_str());
         }
-    } else if (GUI::DataManager::i().getErrors()) {
+    } else {
         // Error
-        printf("\033[1;31m[ERROR]\033[0m Unknown Command:");
+        errStr += "Unknown Command: ";
         for (size_t i = 0; i < args.size(); i++)
-            printf(" %s", args[i].c_str());
-        printf("\n");
+            errStr += " " + args[i];
+        LOG_WARNING(errStr.c_str());
     }
 }
 
@@ -74,22 +77,30 @@ void ServerGUI::readDatasFromServer() {
     handleCommand();
 }
 
-void ServerGUI::clockUpdate(std::chrono::_V2::system_clock::time_point &time,
-std::chrono::_V2::system_clock::time_point &timeNext) {
+void ServerGUI::clockUpdate(std::chrono::system_clock::time_point &time,
+std::chrono::system_clock::time_point &timeNext,
+std::chrono::system_clock::time_point &timeNextPing) {
     time = std::chrono::system_clock::now();
     if (time >= timeNext) {
         timeNext = timeNext + std::chrono::seconds(updateMapTime);
         sendDatasToServer("mct\n");
+    } else if (time >= timeNextPing) {
+        timeNextPing = timeNextPing + std::chrono::seconds(updatePingTime);
+        sendDatasToServer("PING\n");
+        sendPing = true;
+        timeForPing = std::chrono::system_clock::time_point(time);
     }
 }
 
 void ServerGUI::startServer() {
     auto time = std::chrono::system_clock::now();
     auto timeNext = time + std::chrono::seconds(updateMapTime);
+    auto timeNextPing = time + std::chrono::milliseconds(1);
     int ready = 0;
 
+    GUI::ServerGUI::i().setConnectedToServer(true);
     while (DataManager::i().running) {
-        clockUpdate(time, timeNext);
+        clockUpdate(time, timeNext, timeNextPing);
 
         ready = poll(
             &GUI::ServerGUI::i().fd, 1, -1);
@@ -97,7 +108,19 @@ void ServerGUI::startServer() {
             throw std::runtime_error("Poll error occurred");
         if (fd.revents & POLLIN)
             readDatasFromServer();
+        if (fd.revents & POLLOUT && !outbuffer.empty()) {
+            sendDatasToServer(outbuffer);
+            outbuffer.clear();
+        }
     }
+}
+
+bool ServerGUI::isConnectedToServer() const {
+    return isConnected;
+}
+
+void ServerGUI::setConnectedToServer(bool connected) {
+    isConnected = connected;
 }
 
 std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
@@ -110,12 +133,11 @@ std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
     }
     args.push_back(command);
     if (args.empty()) {
-        std::cerr << "Empty command received." << std::endl;
+        LOG_WARNING("Empty command received.");
         throw std::runtime_error("Empty command received");
     }
     return args;
 }
-
 
 void ServerGUI::sendDatasToServer(const std::string &message) {
     if (fd.revents & POLLOUT) {
@@ -124,8 +146,7 @@ void ServerGUI::sendDatasToServer(const std::string &message) {
         if (bytes_sent == -1) {
             throw std::runtime_error("Error sending data to server");
         }
-        if (GUI::DataManager::i().getDebug())
-            printf("[OK] Sent data: %s\n", message.c_str());
+        LOG_DEBUG("[OK] Sent data: %s\n", message.c_str());
     }
 }
 

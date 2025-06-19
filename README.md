@@ -5,6 +5,12 @@
     <img src="https://img.shields.io/badge/Status-In%20Development-green" alt="Status"/>
 </p>
 
+<p align="center">
+    <a href="https://arthuryanloheac.github.io/ZAPPY/" target="_blank">
+        <img src="https://img.shields.io/badge/Documentation-Visit%20Here-blue" alt="Documentation" style="transform: scale(1.5);" />
+    </a>
+</p>
+
 # <p align=center> 📜 Overview </p>
 
 #### Zappy is a network game where several teams confront each other on a tile map containing resources. The game simulates a virtual world called Trantor where AI-controlled beings called "trantorians" must evolve and survive.
@@ -15,11 +21,9 @@
     <img src="docs/static/img/trantor.png" alt="Trantor World" width="600"/>
 </p>
 
-Trantor is a donut-shaped world recently discovered by humanity, the different nation on Earth have each sent drones, named trantorians, to the planets to harvest its resources. Due to the weird geography of Trantor, the drones have been broken and unable to contact Earth, but the abundant resources of the planet can be used to repair themselves. The drones have then started to upgrade their body, and the first nations that will repair six of their drones will have the necessary power to contact Earth and end new rockets for extraction.
+Trantor is a donut-shaped world recently discovered by humanity, the different nation on Earth have each sent drones, named trantorians, to the planets to harvest its resources. Due to the weird geography of Trantor, the drones have been broken and unable to contact Earth, but the abundant resources of the planet can be used to repair themselves. The drones have then started to upgrade their body, and the first nations that will repair six of their drones will have the necessary power to contact Earth and send new rockets for extraction.
 
 To survive on Trantor, trantorians must keep their energy levels high by consuming resources. Luckly for them, the world grows batteries in the soil, but also rare stones that can be used to upgrade their modules.
-
-Each kingdom needs 6 trantorians with a mini-gun to win the game. The last team standing wins the game and becomes the ruler of Trantor.
 
 # <p align=center> 🌍 Project Architecture </p>
 
@@ -60,7 +64,7 @@ USAGE: ./zappy_server -p port -x width -y height -n name1 name2 ... -c clientsNb
 | -n | name1 name2 ... | name of the team |
 | -c | clientsNb | number of authorized clients per team |
 | -f | freq | reciprocal of time unit for execution of actions |
-| -d | ---- | enable more precise logs (debug) |
+| -v, -vv, -vvv | ---- | set verbose level (WARNINGS, INFOS, DEBUGS) |
 
 > The team name GRAPHIC is reserved for the GUI to authenticate itself as such to the server.
 
@@ -76,6 +80,7 @@ USAGE: ./zappy_gui -p port -h machine
 |--------|-----------|-------------|
 | -p | port | port number |
 | -h | machine | hostname of the server |
+| -v, -vv, -vvv | ---- | set verbose level (WARNINGS, INFOS, DEBUGS) |
 
 </details>
 
@@ -90,6 +95,7 @@ USAGE: ./zappy_ai -p port -n name -h machine
 | -p | port | port number |
 | -n | name | name of the team |
 | -h | machine | name of the machine; localhost by default |
+| -v, -vv, -vvv | ---- | set verbose level (WARNINGS, INFOS, DEBUGS) |
 
 > The team name GRAPHIC is reserved for the GUI to authenticate itself as such to the server.
 

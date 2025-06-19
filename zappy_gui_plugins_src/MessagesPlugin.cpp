@@ -61,13 +61,13 @@ irr::video::IVideoDriver* driver) {
 
 void MessagesPlugin::initParticle(irr::video::IVideoDriver *driver,
 irr::core::vector3df position, irr::core::vector3df direction) {
-    int age = 800;
-    irr::core::vector3df dir = direction / 100.f;
+    int age = 800 * speedParticle;
+    irr::core::vector3df dir = direction / (100.f * speedParticle);
 
     irr::scene::IParticleEmitter* em = ps->createBoxEmitter(
         irr::core::aabbox3d<irr::f32>(-7, 0, -7, 7, 1, 7), // emitter size
         dir,   // initial direction
-        80,100,                             // emit rate
+        50,100,                             // emit rate
         irr::video::SColor(0,255,255,255),       // darkest color
         irr::video::SColor(0,255,255,255),       // brightest color
         age,age,0,                         // min and max age, angle

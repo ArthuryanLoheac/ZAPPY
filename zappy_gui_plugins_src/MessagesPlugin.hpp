@@ -16,6 +16,7 @@ class MessagesPlugin : public pluginsInterface {
     bool isActive = true; /**< Indicates if the plugin is currently active. */
     irr::scene::IParticleSystemSceneNode *ps;
     bool isInitParticle = false;
+    int speedParticle = 1;
 
     /**
      * @brief Draws a background texture at a specified position and size.

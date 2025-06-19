@@ -12,7 +12,7 @@
 
 #include "include/logs.h"
 
-static const log_level_str_t Log_level_strs_list[] = {
+static const log_level_str_t LOG_LEVEL_STRS_LIST[] = {
     {"DEBUG", COLOR_DEBUG},
     {"INFO", COLOR_INFO},
     {"WARNING", COLOR_WARNING},
@@ -70,7 +70,7 @@ void my_log(enum log_level_e level, const char *format, ...)
     va_end(args);
     remove_newlines(msg);
     printf("%s  [%s%s%s]\t%s\n",
-        timestamp, Log_level_strs_list[level].color,
-        Log_level_strs_list[level].str, NO_COLOR, msg);
+        timestamp, LOG_LEVEL_STRS_LIST[level].color,
+        LOG_LEVEL_STRS_LIST[level].str, NO_COLOR, msg);
     free(timestamp);
 }

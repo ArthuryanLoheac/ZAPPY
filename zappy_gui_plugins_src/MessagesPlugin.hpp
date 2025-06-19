@@ -12,11 +12,22 @@
  */
 class MessagesPlugin : public pluginsInterface {
  private:
+    class Particle {
+      public:
+        irr::scene::IParticleSystemSceneNode* particleSystem;
+          /**< Particle system node. */
+        irr::scene::IParticleEmitter* emitter; /**< Particle emitter. */
+        irr::u32 end; /**< Timer for particle system end time. */
+        irr::u32 kill; /**< Timer for particle system end time. */
+        bool stopped = false;
+    };
+
     pluginsData data; /**< Data manager for the plugin. */
     bool isActive = true; /**< Indicates if the plugin is currently active. */
     irr::scene::ISceneManager* smgr;
     irr::IrrlichtDevice *device;
     int speedParticle = 1;
+    std::vector<Particle> particles;
 
     /**
      * @brief Draws a background texture at a specified position and size.
@@ -33,6 +44,7 @@ class MessagesPlugin : public pluginsInterface {
       irr::video::IVideoDriver* driver);
     void initParticle(irr::video::IVideoDriver* driver,
       irr::core::vector3df position, irr::core::vector3df direction);
+    void checkDeleteParticles();
 
  public:
     /**

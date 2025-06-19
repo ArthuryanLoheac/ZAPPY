@@ -75,7 +75,6 @@ irr::core::vector3df position, irr::core::vector3df direction) {
         irr::core::dimension2df(0.2f, 0.2f));        // max size
 
     ps->setEmitter(em);
-    em->drop();
 
     irr::scene::IParticleAffector* paf = ps->createFadeOutParticleAffector();
 
@@ -90,12 +89,33 @@ irr::core::vector3df position, irr::core::vector3df direction) {
     ps->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
 
     //// Stop particles after 800ms (the particle's age)
-    //irr::ITimer* timer = device->getTimer();
-    //int stopTime = timer->getTime() + age;
+    irr::ITimer* timer = device->getTimer();
+    Particle particle;
+    particle.particleSystem = ps;
+    particle.end = timer->getTime() + age;
+    particle.kill = timer->getTime() + (age * 2);
+    particle.emitter = em;
+    particles.push_back(particle);
+}
 
-    // Schedule removal using a lambda function to stop emitting new particles
-    smgr->registerNodeForRendering(ps, irr::scene::ESNRP_AUTOMATIC);
-    smgr->addToDeletionQueue(ps);
+void MessagesPlugin::checkDeleteParticles() {
+    int i = 0;
+
+    for (auto particle : particles) {
+        if (particle.end < device->getTimer()->getTime() && !particle.stopped) {
+            particle.emitter->setMinLifeTime(0);
+            particle.emitter->setMaxLifeTime(0);
+            particle.stopped = true;
+        }
+        if (particle.kill < device->getTimer()->getTime()) {
+            smgr->registerNodeForRendering(particle.particleSystem,
+                irr::scene::ESNRP_AUTOMATIC);
+            smgr->addToDeletionQueue(particle.particleSystem);
+            particles.erase(particles.begin() + i);
+            i--;
+        }
+        i++;
+    }
 }
 
 void MessagesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
@@ -110,6 +130,7 @@ void MessagesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
                 irr::core::vector3df(1, 0, 0));
     }
     drawMessageHistory(font, driver);
+    checkDeleteParticles();
 }
 
 bool MessagesPlugin::onEvent(const irr::SEvent &event,

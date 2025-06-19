@@ -13,7 +13,6 @@
 
 #include "Exceptions/Factory.hpp"
 #include "ForkWrapper/Fork.hpp"
-#include "Socket/Socket.hpp"
 #include "Interface/Interface.hpp"
 #include "Data/Data.hpp"
 #include "include/logs.h"
@@ -41,28 +40,26 @@ void printHelp() {
 }
 
 std::string getHostnameIP(const std::string& hostname) {
-    struct addrinfo hints, *res;
+    struct addrinfo hints{}, *res;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
 
-    int status = getaddrinfo(hostname.c_str(), NULL, &hints, &res);
-    if (status != 0) {
+    if (const int status = getaddrinfo(hostname.c_str(), nullptr, &hints, &res);
+        status != 0) {
         throw std::runtime_error("Error while getting IP: " +
             std::string(gai_strerror(status)));
     }
 
-    std::string ipStr;
-
-    struct sockaddr_in *ipv4 = (struct sockaddr_in *)res->ai_addr;
+    const auto *ipv4 = reinterpret_cast<struct sockaddr_in *>(res->ai_addr);
     char ipBuffer[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &(ipv4->sin_addr), ipBuffer, sizeof(ipBuffer));
-    ipStr = ipBuffer;
+    std::string ipStr = ipBuffer;
     freeaddrinfo(res);
     return ipStr;
 }
 
-void parseArgs(int argc, char **argv, std::string &ip, int &port,
+void parseArgs(const int argc, char **argv, std::string &ip, int &port,
     std::string &name) {
     if (argc < 2) {
         throw AI::ArgumentsException("Invalid number of arguments.");
@@ -104,7 +101,7 @@ void parseArgs(int argc, char **argv, std::string &ip, int &port,
     }
 }
 
-int initChildProcess(int port, const std::string &ip,
+int initChildProcess(const int port, const std::string &ip,
     const std::string &name) {
     AI::Interface &interface = AI::Interface::i();
     try {
@@ -185,7 +182,7 @@ int mainLoop(int port, const std::string &ip,
 
 int main(int argc, char **argv) {
     std::string ip = "localhost";
-    std::string name = "";
+    std::string name;
     int port = 0;
 
     try {

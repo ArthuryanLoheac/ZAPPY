@@ -167,7 +167,7 @@ int mainLoop(int port, const std::string &ip,
         }
 
         if (childs.empty()) {
-            if (lastErrorCode == 42 && childs.size() == 0) {
+            if (lastErrorCode == 42) {
                 LOG_FATAL("The AI can't connect to the server, exiting.");
                 return 84;
             }

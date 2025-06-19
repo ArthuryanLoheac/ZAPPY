@@ -31,7 +31,7 @@ class GameDataManager {
     bool Collecting = false; /**< Flag to indicate if collecting is active. */
     bool Dropping = false; /**< Flag to indicate if dropping is active. */
     bool Pushed = false; /**< Flag to indicate if a player has been pushed. */
-    std::queue<std::string> messages;
+    std::vector<std::string> messages;
 
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
@@ -101,6 +101,12 @@ class GameDataManager {
      * @param message The message to add.
      */
     void addMessage(const std::string &message);
+
+    /**
+     * @brief Gets the list of messages.
+     * @return std::queue<std::string>& Reference to the message queue.
+     */
+    std::vector<std::string> &getMessages();
 
     /**
      * @brief Adds an egg to the game map.

@@ -60,9 +60,13 @@ std::vector<Egg> &GameDataManager::getEggs() {
 
 void GameDataManager::addMessage(const std::string &message) {
     std::lock_guard<std::mutex> lock(mutexDatas);
-    messages.push(message);
+    messages.push_back(message);
     if (messages.size() > 5)
-        messages.pop();
+        messages.erase(messages.begin());
+}
+
+std::vector<std::string> &GameDataManager::getMessages() {
+    return messages;
 }
 
 void GameDataManager::addEgg(int id, int team, int x, int y)

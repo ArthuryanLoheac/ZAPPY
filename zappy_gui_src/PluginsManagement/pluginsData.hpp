@@ -54,6 +54,8 @@ class pluginsData {
     std::vector<Player> players; /**< List of players in the game. */
     int ping = 0; /**< Ping time to the server. */
 
+    std::vector<std::string> messages; /**< List of messages from the server. */
+
     bool isConnected = false; /**< Connection status to the server. */
 
     /**
@@ -69,5 +71,5 @@ class pluginsData {
                 return player;
         }
         throw std::out_of_range("Player not found");
-    }
+    };
 };

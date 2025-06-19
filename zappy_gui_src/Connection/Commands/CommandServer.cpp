@@ -10,6 +10,7 @@
 #include "DataManager/SoundsManager.hpp"
 
 #include "include/logs.h"
+#include "ServerGUI.hpp"
 
 /**
  * @brief Prints an error message and the associated arguments.
@@ -340,4 +341,14 @@ void GUI::ServerGUI::sucCommand(std::vector<std::string> &args) {
         ping = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - timeForPing).count();
     }
+}
+
+void GUI::ServerGUI::pbcCommand(std::vector<std::string> &args) {
+    if (args.size() < 3)
+        throw CommandParsingException("Invalid pbc command format");
+    int id = std::stoi(args[1].substr(1));
+    std::string message = args[2];
+    for (size_t i = 3; i < args.size(); i++)
+        message += " " + args[i];
+    GameDataManager::i().addMessage(message);
 }

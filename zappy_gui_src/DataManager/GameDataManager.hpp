@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <string>
 #include <memory>
+#include <queue>
 
 #include "DataManager/GameTile.hpp"
 #include "DataManager/Player.hpp"
@@ -30,6 +31,7 @@ class GameDataManager {
     bool Collecting = false; /**< Flag to indicate if collecting is active. */
     bool Dropping = false; /**< Flag to indicate if dropping is active. */
     bool Pushed = false; /**< Flag to indicate if a player has been pushed. */
+    std::queue<std::string> messages;
 
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
@@ -93,6 +95,12 @@ class GameDataManager {
      * @return const std::vector<Egg>& Reference to the list of eggs.
      */
     std::vector<Egg> &getEggs();
+
+    /**
+     * @brief Adds a message to the message queue.
+     * @param message The message to add.
+     */
+    void addMessage(const std::string &message);
 
     /**
      * @brief Adds an egg to the game map.

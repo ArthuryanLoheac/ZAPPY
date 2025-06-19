@@ -10,6 +10,7 @@
 #include "DataManager/SoundsManager.hpp"
 
 #include "include/logs.h"
+#include "ServerGUI.hpp"
 
 /**
  * @brief Prints an error message and the associated arguments.
@@ -340,4 +341,12 @@ void GUI::ServerGUI::sucCommand(std::vector<std::string> &args) {
         ping = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - timeForPing).count();
     }
+}
+
+void GUI::ServerGUI::segCommand(std::vector<std::string> &args) {
+    if (args.size() < 2)
+        throw CommandParsingException("Invalid seg command format");
+    std::string winner = args[1];
+    GameDataManager::i().setGameOver(true);
+    GameDataManager::i().setWinner(winner);
 }

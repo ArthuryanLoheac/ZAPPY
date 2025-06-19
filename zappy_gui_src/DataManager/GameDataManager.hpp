@@ -31,6 +31,9 @@ class GameDataManager {
     bool Dropping = false; /**< Flag to indicate if dropping is active. */
     bool Pushed = false; /**< Flag to indicate if a player has been pushed. */
 
+    bool isGameOver = false; /**< Flag to indicate if the game is over. */
+    std::string winner; /**< Name of the winning team. */
+
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
 
@@ -47,6 +50,30 @@ class GameDataManager {
      * @brief Constructs a new GameDataManager object.
      */
     GameDataManager() : width(-1), height(-1) {}
+
+    /**
+     * @brief Checks if the game is over.
+     * @return bool True if the game is over, false otherwise.
+     */
+    bool getGameOver() const;
+
+    /**
+     * @brief Sets the game over flag.
+     * @param over True if the game is over, false otherwise.
+     */
+    void setGameOver(bool over);
+
+    /**
+     * @brief Gets the name of the winning team.
+     * @return const std::string& Name of the winning team.
+     */
+    const std::string &getWinner();
+
+    /**
+     * @brief Sets the name of the winning team.
+     * @param winner Name of the winning team.
+     */
+    void setWinner(const std::string &winner);
 
     /**
      * @brief Gets the width of the game map.

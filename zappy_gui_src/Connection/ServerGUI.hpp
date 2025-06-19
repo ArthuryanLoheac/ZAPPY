@@ -232,6 +232,14 @@ class ServerGUI {
     void sucCommand(std::vector<std::string> &args);
 
     /**
+     * @brief Handles the "SEG" Command that mark the end of the game
+     * giving us the winner
+     *
+     * @param args Command arguments containing game state details.
+     */
+    void segCommand(std::vector<std::string> &args);
+
+    /**
      * @brief Map of server commands to their corresponding handler functions.
      */
     std::map<std::string,
@@ -256,6 +264,7 @@ class ServerGUI {
         {"PGT", &ServerGUI::pgtCommand},
         {"PEX", &ServerGUI::pexCommand},
         {"SUC", &ServerGUI::sucCommand},
+        {"SEG", &ServerGUI::segCommand},
     };
 };
 

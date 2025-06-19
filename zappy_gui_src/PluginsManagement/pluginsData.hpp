@@ -81,5 +81,5 @@ class pluginsData {
                 return player;
         }
         throw std::out_of_range("Player not found");
-    };
+    }
 };

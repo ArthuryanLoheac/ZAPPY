@@ -39,8 +39,9 @@ irr::video::IVideoDriver* driver) {
     if (!driver)
         return;
     int height = driver->getScreenSize().Height;
-    int y = height - 100;
-    int x = 10;
+    int delta = 30;
+    int y = height - 30 - (data.messages.size() * delta);
+    int x = 5;
     UICol color = UICol(125, 255, 255, 255);
 
     for (const auto &message : data.messages) {
@@ -50,9 +51,10 @@ irr::video::IVideoDriver* driver) {
             ": " + message.content;
         if (text.size() > 50)
             text = text.substr(0, 50) + "...";
-        font->draw(text.c_str(), irr::core::rect<irr::s32>(x, y, 500, y + 20),
-            color);
-        y += 20;
+        drawImage("assets/UI/BottomBig.png", 0, y, 400, delta, driver);
+        font->draw(text.c_str(), irr::core::rect<irr::s32>(
+            x, y + 5, 500, y + delta), color);
+        y += delta;
     }
 }
 

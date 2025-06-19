@@ -50,6 +50,10 @@ class Window {
     std::vector<int> missingEggsInit;
         /**<list of missing eggs initialisation*/
 
+    // lights
+    irr::scene::ILightSceneNode *light = nullptr;
+        /**<light source for the scene*/
+
     std::shared_ptr<irr::scene::ISceneNode> Skybox;
         /**<skybox node forthe scene*/
     Vec3d rotationSkybox; /**<rotation of the skybox*/
@@ -71,6 +75,14 @@ class Window {
      * @brief Updates the window and handles rendering.
      */
     void update();
+
+    /**
+     * @brief Clears all meshes in the scene.
+     *
+     * This function clears all meshes, including player meshes, egg meshes,
+     * and tile meshes, and resets the world setup state.
+     */
+    void clearMeshes();
 
     /**
      * @brief check if the mesh need to be initialized

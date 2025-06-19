@@ -9,6 +9,26 @@
 #include "Window/window.hpp"
 
 namespace GUI {
+
+void GameDataManager::clear() {
+    width = -1;
+    height = -1;
+    tiles.clear();
+    eggs.clear();
+    teams.clear();
+    players.clear();
+    playerAdded = false;
+    eggAdded = false;
+    playerDead = false;
+    eggDead = false;
+    elevation = false;
+    Collecting = false;
+    Dropping = false;
+    Pushed = false;
+    messages.clear();
+    messagesThisFrame.clear();
+}
+
 int GameDataManager::getWidth() const {
     return width;
 }

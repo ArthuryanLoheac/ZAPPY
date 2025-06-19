@@ -24,6 +24,36 @@ GameTile &GameTile::operator=(GameTile &&other) noexcept {
     return *this;
 }
 
+void GameTile::clear(irr::scene::ISceneManager *smgr) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    if (!smgr)
+        return;
+    smgr->addToDeletionQueue(tileMesh.get());
+    tileMesh.reset();
+    tileMesh = nullptr;
+    for (auto &mesh : meshesFood)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesFood.clear();
+    for (auto &mesh : meshesR1)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR1.clear();
+    for (auto &mesh : meshesR2)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR2.clear();
+    for (auto &mesh : meshesR3)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR3.clear();
+    for (auto &mesh : meshesR4)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR4.clear();
+    for (auto &mesh : meshesR5)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR5.clear();
+    for (auto &mesh : meshesR6)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR6.clear();
+}
+
 int GameTile::getX() const {
     return x;
 }

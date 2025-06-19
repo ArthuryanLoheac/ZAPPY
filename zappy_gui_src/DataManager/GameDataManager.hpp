@@ -41,8 +41,10 @@ class GameDataManager {
     bool Collecting = false; /**< Flag to indicate if collecting is active. */
     bool Dropping = false; /**< Flag to indicate if dropping is active. */
     bool Pushed = false; /**< Flag to indicate if a player has been pushed. */
-    std::vector<Message> messages;
+    bool toClear = false; /**< Flag to indicate if data should be cleared. */
+    std::vector<Message> messages; /**< Queue of messages. */
     std::vector<Message> messagesThisFrame;
+        /**< Messages coming at the current frame. */
 
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
@@ -55,6 +57,11 @@ class GameDataManager {
         static GameDataManager i;
         return i;
     }
+
+    /**
+     * @brief Clears the game data, including tiles, players, eggs, and messages.
+     */
+    void clear();
 
     /**
      * @brief Constructs a new GameDataManager object.

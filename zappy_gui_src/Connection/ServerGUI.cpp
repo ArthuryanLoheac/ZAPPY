@@ -11,6 +11,8 @@
 
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
+#include "DataManager/GameDataManager.hpp"
+#include "Window/window.hpp"
 #include "include/logs.h"
 
 namespace GUI {
@@ -98,6 +100,9 @@ void ServerGUI::startServer() {
     auto timeNextPing = time + std::chrono::milliseconds(1);
     int ready = 0;
 
+    GUI::Window::i().clearMeshes();
+    GUI::GameDataManager::i().clear();
+    GUI::DataManager::i().clear();
     GUI::ServerGUI::i().setConnectedToServer(true);
     while (DataManager::i().running) {
         clockUpdate(time, timeNext, timeNextPing);

@@ -47,6 +47,13 @@ class GameTile {
     GameTile(int xCoord, int yCoord);
 
     /**
+     * @brief Clears the resources and meshes associated with the tile.
+     *
+     * @param smgr Scene manager to clear the meshes from.
+     */
+    void clear(irr::scene::ISceneManager *smgr);
+
+    /**
      * @brief Deleted copy constructor.
      */
     GameTile(const GameTile &) = delete;

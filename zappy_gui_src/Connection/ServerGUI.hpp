@@ -243,7 +243,8 @@ class ServerGUI {
      * @param args Command arguments containing game state details.
      */
     void segCommand(std::vector<std::string> &args);
- 
+
+    /**
      * @brief Handles the "PBC" command when a player broadcasts a message.
      *
      * @param args Command arguments containing the server time.

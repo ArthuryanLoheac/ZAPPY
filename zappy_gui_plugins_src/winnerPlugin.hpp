@@ -13,7 +13,6 @@
  */
 class winnerPlugin : public pluginsInterface {
  private:
-    bool forceActive = false;
     pluginsData data; /**< Data manager for the plugin. */
 
     std::unordered_map<std::string, irr::video::ITexture *> cachedTextures;

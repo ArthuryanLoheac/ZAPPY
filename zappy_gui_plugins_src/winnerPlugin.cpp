@@ -66,7 +66,7 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
 
 void winnerPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
 irr::video::IVideoDriver *driver) {
-    if (((!data.isGameOver || data.winner.empty()) && !forceActive) || !font || !driver)
+    if (!data.isGameOver || data.winner.empty() || !font || !driver)
         return;
     UICol white(255, 255, 255, 255);
     int w = 300;
@@ -84,15 +84,9 @@ irr::video::IVideoDriver *driver) {
         height / 2 - 25, 100, 100, driver, 255);
 }
 
-
 bool winnerPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
     (void) datas;
-    if (event.EventType == irr::EET_KEY_INPUT_EVENT) {
-        if (event.KeyInput.Key == irr::KEY_KEY_W && event.KeyInput.PressedDown) {
-            forceActive = !forceActive;
-            return true;
-        }
-    }
+    (void) event;
     return false;
 }
 
@@ -101,5 +95,5 @@ void winnerPlugin::update(pluginsData _data) {
 }
 
 int winnerPlugin::getPriority() const {
-    return 10;
+    return 0;
 }

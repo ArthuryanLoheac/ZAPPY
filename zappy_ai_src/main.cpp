@@ -1,18 +1,21 @@
+#include <netdb.h>
+#include <arpa/inet.h>
+
 #include <string>
 #include <vector>
 #include <csignal>
+#include <cstring>
 #include <chrono>
 #include <thread>
 #include <memory>
 #include <iostream>
+#include <stdexcept>
 
 #include "Exceptions/Factory.hpp"
 #include "ForkWrapper/Fork.hpp"
-#include "Socket/Socket.hpp"
 #include "Interface/Interface.hpp"
 #include "Data/Data.hpp"
 #include "include/logs.h"
-
 #include "Logic/Core.hpp"
 #include "modules/FoodGatheringModule.hpp"
 #include "modules/CommunicationModule.hpp"
@@ -36,7 +39,27 @@ void printHelp() {
         << std::endl;
 }
 
-void parseArgs(int argc, char **argv, std::string &ip, int &port,
+std::string getHostnameIP(const std::string& hostname) {
+    struct addrinfo hints{}, *res;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+
+    if (const int status = getaddrinfo(hostname.c_str(), nullptr, &hints, &res);
+        status != 0) {
+        throw std::runtime_error("Error while getting IP: " +
+            std::string(gai_strerror(status)));
+    }
+
+    const auto *ipv4 = reinterpret_cast<struct sockaddr_in *>(res->ai_addr);
+    char ipBuffer[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &(ipv4->sin_addr), ipBuffer, sizeof(ipBuffer));
+    std::string ipStr = ipBuffer;
+    freeaddrinfo(res);
+    return ipStr;
+}
+
+void parseArgs(const int argc, char **argv, std::string &ip, int &port,
     std::string &name) {
     if (argc < 2) {
         throw AI::ArgumentsException("Invalid number of arguments.");
@@ -71,12 +94,14 @@ void parseArgs(int argc, char **argv, std::string &ip, int &port,
             AI::ArgumentsException("Port number must be between 1 and 65535.");
     }
 
+    ip = getHostnameIP(ip);
+
     if (name.empty()) {
         throw AI::ArgumentsException("Team name cannot be empty.");
     }
 }
 
-int initChildProcess(int port, const std::string &ip,
+int initChildProcess(const int port, const std::string &ip,
     const std::string &name) {
     AI::Interface &interface = AI::Interface::i();
     try {
@@ -157,7 +182,7 @@ int mainLoop(int port, const std::string &ip,
 
 int main(int argc, char **argv) {
     std::string ip = "localhost";
-    std::string name = "";
+    std::string name;
     int port = 0;
 
     try {

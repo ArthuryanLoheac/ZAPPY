@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <cstdio>
+#include "MessagesPlugin.hpp"
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
@@ -17,6 +18,8 @@ bool MessagesPlugin::init(irr::scene::ISceneManager* smgr,
     (void) device;
     (void) smgr;
     (void) cam;
+    if (smgr)
+        ps = smgr->addParticleSystemSceneNode(false);
     printf("============= Initializing Messages Plugin =============\n");
     return true;
 }
@@ -34,10 +37,8 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
     driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
 }
 
-void MessagesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
+void MessagesPlugin::drawMessageHistory(std::shared_ptr<irr::gui::IGUIFont> font,
 irr::video::IVideoDriver* driver) {
-    if (!driver)
-        return;
     int height = driver->getScreenSize().Height;
     int delta = 30;
     int y = height - 30 - (data.messages.size() * delta);
@@ -56,6 +57,50 @@ irr::video::IVideoDriver* driver) {
             x, y + 5, 500, y + delta), color);
         y += delta;
     }
+}
+
+void MessagesPlugin::initParticle(irr::video::IVideoDriver *driver,
+irr::core::vector3df position, irr::core::vector3df direction) {
+    int age = 800;
+    irr::core::vector3df dir = direction / 100.f;
+
+    irr::scene::IParticleEmitter* em = ps->createBoxEmitter(
+        irr::core::aabbox3d<irr::f32>(-7, 0, -7, 7, 1, 7), // emitter size
+        dir,   // initial direction
+        80,100,                             // emit rate
+        irr::video::SColor(0,255,255,255),       // darkest color
+        irr::video::SColor(0,255,255,255),       // brightest color
+        age,age,0,                         // min and max age, angle
+        irr::core::dimension2df(0.05f, 0.05f),         // min size
+        irr::core::dimension2df(0.2f, 0.2f));        // max size
+
+    ps->setEmitter(em);
+    em->drop();
+
+    irr::scene::IParticleAffector* paf = ps->createFadeOutParticleAffector();
+
+    ps->addAffector(paf);
+    paf->drop();
+
+    ps->setPosition(position);
+    ps->setScale(irr::core::vector3df(0.001f,0.001f,0.001f));
+    ps->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+    ps->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE, false);
+    ps->setMaterialTexture(0, driver->getTexture("assets/UI/dataParticle.png"));
+    ps->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
+}
+
+void MessagesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
+                            irr::video::IVideoDriver *driver)
+{
+    if (!driver || !font)
+        return;
+    if (!isInitParticle && ps) {
+        initParticle(driver, irr::core::vector3df(0, -2 + 0.2f, 0),
+            irr::core::vector3df(1, 0, 0));
+        isInitParticle = true;
+    }
+    drawMessageHistory(font, driver);
 }
 
 bool MessagesPlugin::onEvent(const irr::SEvent &event,

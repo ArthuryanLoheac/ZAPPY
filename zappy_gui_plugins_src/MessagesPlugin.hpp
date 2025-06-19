@@ -14,6 +14,8 @@ class MessagesPlugin : public pluginsInterface {
  private:
     pluginsData data; /**< Data manager for the plugin. */
     bool isActive = true; /**< Indicates if the plugin is currently active. */
+    irr::scene::IParticleSystemSceneNode *ps;
+    bool isInitParticle = false;
 
     /**
      * @brief Draws a background texture at a specified position and size.
@@ -26,6 +28,10 @@ class MessagesPlugin : public pluginsInterface {
      */
     void drawImage(const std::string &texture, int x, int y,
       int sizeX, int sizeY, irr::video::IVideoDriver* driver);
+    void drawMessageHistory(std::shared_ptr<irr::gui::IGUIFont> font,
+      irr::video::IVideoDriver* driver);
+    void initParticle(irr::video::IVideoDriver* driver,
+      irr::core::vector3df position, irr::core::vector3df direction);
 
  public:
     /**

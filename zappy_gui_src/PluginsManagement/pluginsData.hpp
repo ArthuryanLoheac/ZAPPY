@@ -65,7 +65,8 @@ class pluginsData {
     int ping = 0; /**< Ping time to the server. */
 
     std::vector<Message> messages; /**< List of messages from the server. */
-    std::vector<Message> messagesThisFrame; /**< List of messages from the server. */
+    std::vector<Message> messagesThisFrame;
+        /**< List of messages from the server. */
 
     bool isConnected = false; /**< Connection status to the server. */
 

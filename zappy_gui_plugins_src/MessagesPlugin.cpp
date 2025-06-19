@@ -5,7 +5,6 @@
 #include <vector>
 #include <iostream>
 #include <cstdio>
-#include "MessagesPlugin.hpp"
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
@@ -35,8 +34,8 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
     driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
 }
 
-void MessagesPlugin::drawMessageHistory(std::shared_ptr<irr::gui::IGUIFont> font,
-irr::video::IVideoDriver* driver) {
+void MessagesPlugin::drawMessageHistory(
+std::shared_ptr<irr::gui::IGUIFont> font, irr::video::IVideoDriver* driver) {
     int height = driver->getScreenSize().Height;
     int delta = 30;
     int y = height - 30 - (data.messages.size() * delta);
@@ -65,14 +64,15 @@ irr::core::vector3df position, irr::core::vector3df direction, int age) {
     irr::core::vector3df dir = direction / (100.f * speedParticle);
 
     irr::scene::IParticleEmitter* em = ps->createBoxEmitter(
-        irr::core::aabbox3d<irr::f32>(-7, 0, -7, 7, 1, 7), // emitter size
-        dir,   // initial direction
-        50,100,                             // emit rate
-        irr::video::SColor(0,255,255,255),       // darkest color
-        irr::video::SColor(0,255,255,255),       // brightest color
-        age,age,0,                         // min and max age, angle
-        irr::core::dimension2df(0.05f, 0.05f),         // min size
-        irr::core::dimension2df(0.2f, 0.2f));        // max size
+        irr::core::aabbox3d<irr::f32>(-7, 0, -7, 7, 1, 7),  // emitter size
+        dir,                                                // initial direction
+        50, 100,                                            // emit rate
+        irr::video::SColor(0, 255, 255, 255),               // darkest color
+        irr::video::SColor(0, 255, 255, 255),               // brightest color
+        age, age,                                           // min and max age
+        0,                                                  // angle creation
+        irr::core::dimension2df(0.05f, 0.05f),              // min size
+        irr::core::dimension2df(0.2f, 0.2f));               // max size
 
     ps->setEmitter(em);
 
@@ -82,13 +82,12 @@ irr::core::vector3df position, irr::core::vector3df direction, int age) {
     paf->drop();
 
     ps->setPosition(position);
-    ps->setScale(irr::core::vector3df(0.001f,0.001f,0.001f));
+    ps->setScale(irr::core::vector3df(0.001f, 0.001f, 0.001f));
     ps->setMaterialFlag(irr::video::EMF_LIGHTING, false);
     ps->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE, false);
     ps->setMaterialTexture(0, driver->getTexture("assets/UI/dataParticle.png"));
     ps->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
 
-    //// Stop particles after 800ms (the particle's age)
     irr::ITimer* timer = device->getTimer();
     Particle particle;
     particle.particleSystem = ps;

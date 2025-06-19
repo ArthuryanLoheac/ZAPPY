@@ -13,7 +13,7 @@
 class MessagesPlugin : public pluginsInterface {
  private:
     class Particle {
-      public:
+     public:
         irr::scene::IParticleSystemSceneNode* particleSystem;
           /**< Particle system node. */
         irr::scene::IParticleEmitter* emitter; /**< Particle emitter. */

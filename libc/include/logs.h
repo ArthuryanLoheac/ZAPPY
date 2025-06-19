@@ -34,34 +34,25 @@ extern "C" {
         FATAL
     };
 
-    void set_log_level(enum log_level_e level);
+    typedef struct log_level_str_s {
+        char str[10];
+        char color[10];
+    } log_level_str_t;
 
-    // If I reduce the number of arguments, the complexity of the function
-    // may increase significally
-    void log_internal(enum log_level_e level, const char *level_str,
-        const char *color, const char *format, ...);
+    void set_minimum_log_level(enum log_level_e level);
 
-    // These debug macros functions are too long for the coding style ToT
-    // There seems to be now way to legally respect the 80chars rule & no \ at
-    // end of file ...
+    void my_log(enum log_level_e level, const char *format, ...);
 
-    // I can replace them with functions but this will lead to repeated functions.
-    // It is why I use macros here, to not have 5 (almost) same functions and
-    // not having to say smth like log(DEBUG, "Hello");
-    #define LOG_DEBUG(format, ...) \
-    (log_internal(DEBUG, "DEBUG", COLOR_DEBUG, format, ##__VA_ARGS__))
 
-    #define LOG_INFO(format, ...) \
-    (log_internal(INFO, "INFO", COLOR_INFO, format, ##__VA_ARGS__))
+    #define LOG_DEBUG(format, ...) (my_log(DEBUG, format, ##__VA_ARGS__))
 
-    #define LOG_WARNING(format, ...) \
-    (log_internal(WARNING, "WARNING", COLOR_WARNING, format, ##__VA_ARGS__))
+    #define LOG_INFO(format, ...) (my_log(INFO, format, ##__VA_ARGS__))
 
-    #define LOG_ERROR(format, ...) \
-    (log_internal(ERROR, "ERROR", COLOR_ERROR, format, ##__VA_ARGS__))
+    #define LOG_WARNING(format, ...) (my_log(WARNING, format, ##__VA_ARGS__))
 
-    #define LOG_FATAL(format, ...) \
-    (log_internal(FATAL, "FATAL", COLOR_FATAL, format, ##__VA_ARGS__))
+    #define LOG_ERROR(format, ...) (my_log(ERROR, format, ##__VA_ARGS__))
+
+    #define LOG_FATAL(format, ...) (my_log(FATAL, format, ##__VA_ARGS__))
 
     #ifdef __cplusplus
 }  // extern "C"

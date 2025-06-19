@@ -160,6 +160,12 @@ coding_style:
 	coding-style zappy_server_src/ .
 	cat coding-style-reports.log
 	rm -f coding-style-reports.log
+	coding-style libc/ .
+	cat coding-style-reports.log
+	rm -f coding-style-reports.log
+	coding-style libcpp/ .
+	cat coding-style-reports.log
+	rm -f coding-style-reports.log
 
 doxygen:
 	cd docs && doxygen Doxyfile

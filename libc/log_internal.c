@@ -12,8 +12,32 @@
 
 #include "include/logs.h"
 
-// Global var used here to save the log level between each log calls
-enum log_level_e actual_log_level = ERROR;
+static const log_level_str_t Log_level_strs_list[] = {
+    {"DEBUG", COLOR_DEBUG},
+    {"INFO", COLOR_INFO},
+    {"WARNING", COLOR_WARNING},
+    {"ERROR", COLOR_ERROR},
+    {"FATAL", COLOR_FATAL}
+};
+
+static const unsigned int LOGS_LEVELS_COUNT = 5;
+
+static enum log_level_e *get_minimum_log_level_ptr(void)
+{
+    static enum log_level_e level = ERROR;
+
+    return &level;
+}
+
+void set_minimum_log_level(enum log_level_e level)
+{
+    *get_minimum_log_level_ptr() = level;
+}
+
+static enum log_level_e get_minimum_log_level(void)
+{
+    return *get_minimum_log_level_ptr();
+}
 
 static char *get_timestamp(void)
 {
@@ -32,18 +56,13 @@ static void remove_newlines(char *str)
             str[i] = '|';
 }
 
-// This function has 5 arguments to allow more modularity in the logs
-// messages.
-// If the coding style infraction is that big of an issue, you can get
-// rid of the color.
-void log_internal(enum log_level_e level, const char *level_str,
-    const char *color, const char *format, ...)
+void my_log(enum log_level_e level, const char *format, ...)
 {
     char *timestamp;
     char msg[1024];
     va_list args;
 
-    if (level < actual_log_level)
+    if (level < get_minimum_log_level() || level > LOGS_LEVELS_COUNT)
         return;
     timestamp = get_timestamp();
     va_start(args, format);
@@ -51,11 +70,7 @@ void log_internal(enum log_level_e level, const char *level_str,
     va_end(args);
     remove_newlines(msg);
     printf("%s  [%s%s%s]\t%s\n",
-        timestamp, color, level_str, NO_COLOR, msg);
+        timestamp, Log_level_strs_list[level].color,
+        Log_level_strs_list[level].str, NO_COLOR, msg);
     free(timestamp);
-}
-
-void set_log_level(enum log_level_e level)
-{
-    actual_log_level = level;
 }

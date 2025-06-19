@@ -341,3 +341,13 @@ void GUI::ServerGUI::sucCommand(std::vector<std::string> &args) {
             std::chrono::system_clock::now() - timeForPing).count();
     }
 }
+
+void GUI::ServerGUI::pbcCommand(std::vector<std::string> &args) {
+    if (args.size() < 3)
+        throw CommandParsingException("Invalid pbc command format");
+    int id = std::stoi(args[1].substr(1));
+    std::string message = args[2];
+    for (size_t i = 3; i < args.size(); i++)
+        message += " " + args[i];
+    GameDataManager::i().addMessage(message, id);
+}

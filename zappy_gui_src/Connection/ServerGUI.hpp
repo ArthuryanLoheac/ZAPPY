@@ -229,7 +229,19 @@ class ServerGUI {
      */
     void pexCommand(std::vector<std::string> &args);
 
+    /**
+     * @brief Handles the "SUC" command when an hunknown command is received
+     *
+     * @param args Command arguments containing player ID and action details.
+     */
     void sucCommand(std::vector<std::string> &args);
+
+    /**
+     * @brief Handles the "PBC" command when a player broadcasts a message.
+     *
+     * @param args Command arguments containing the server time.
+     */
+    void pbcCommand(std::vector<std::string> &args);
 
     /**
      * @brief Map of server commands to their corresponding handler functions.
@@ -256,6 +268,7 @@ class ServerGUI {
         {"PGT", &ServerGUI::pgtCommand},
         {"PEX", &ServerGUI::pexCommand},
         {"SUC", &ServerGUI::sucCommand},
+        {"PBC", &ServerGUI::pbcCommand},
     };
 };
 

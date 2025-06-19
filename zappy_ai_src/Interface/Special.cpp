@@ -36,10 +36,6 @@ std::vector<std::string> &command) {
         return;
     }
     (void)command;
-
-    if (args[0] == "OK") {
-        kill(getppid(), SIGUSR1);
-    }
 }
 
 /**

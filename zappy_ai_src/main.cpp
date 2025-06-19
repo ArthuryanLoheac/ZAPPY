@@ -23,11 +23,9 @@
 
 
 bool sigintReceived = false;
-bool usr1Received = false;
 
 void setupSignalHandlers() {
     std::signal(SIGINT, [](int) { sigintReceived = true; });
-    std::signal(SIGUSR1, [](int) { usr1Received = true; });
 }
 
 void printHelp() {
@@ -145,6 +143,9 @@ int mainLoop(int port, const std::string &ip,
     const std::string &name) {
     std::vector<std::unique_ptr<Fork>> childs;
 
+    auto lastExecution = std::chrono::steady_clock::now();
+    int lastReturnCode = 0;
+
     setupSignalHandlers();
 
     childs.push_back(std::make_unique<Fork>(initChildProcess, port, ip, name));
@@ -154,21 +155,26 @@ int mainLoop(int port, const std::string &ip,
             if ((*it)->waitNoHang()) {
                 LOG_INFO("Child process PID %d has exited with status %d.",
                     (*it)->getPid(), (*it)->getExitStatus());
+                lastReturnCode = (*it)->getExitStatus();
                 it = childs.erase(it);
             } else {
                 ++it;
             }
         }
 
-        if (usr1Received) {
-            childs.push_back(
-                std::make_unique<Fork>(initChildProcess, port, ip, name));
-            usr1Received = false;
-        }
-
         if (childs.empty()) {
             std::cout << "No child processes running, exiting." << std::endl;
-            return 0;
+            return lastReturnCode;
+        }
+
+        auto currentTime = std::chrono::steady_clock::now();
+        auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>
+            (currentTime - lastExecution);
+
+        if (elapsedTime.count() > 1) {
+            childs.push_back(
+                std::make_unique<Fork>(initChildProcess, port, ip, name));
+            lastExecution = currentTime;
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));

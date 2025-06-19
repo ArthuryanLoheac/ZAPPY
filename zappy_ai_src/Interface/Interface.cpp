@@ -202,6 +202,7 @@ std::vector<std::string> &command) {
         if (output[0][0] == "KO") {
             LOG_ERROR("WELCOME: Too many players connected, try again later.");
             Data::i().isDead = true;
+            Data::i().isRunning = false;
             return;
         }
 
@@ -214,10 +215,6 @@ std::vector<std::string> &command) {
         if (followUpCommand[0].empty() || followUpCommand[1].size() < 2) {
             LOG_ERROR("WELCOME: Invalid response format");
             return;
-        }
-
-        if (std::stoi(followUpCommand[0][0]) != 1) {
-            kill(getppid(), SIGUSR1);
         }
 
         Data::i().mapX = std::stoi(followUpCommand[1][0]);

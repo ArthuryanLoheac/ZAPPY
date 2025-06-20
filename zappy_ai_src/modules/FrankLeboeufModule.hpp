@@ -15,12 +15,12 @@ class FrankLeboeufModule : public AIModule {
     /**
      * @brief Construct a new FrankLeboeufModule object.
      */
-    FrankLeboeufModule();
+    FrankLeboeufModule() = default;
 
     /**
      * @brief Destroy the FrankLeboeufModule object.
      */
-    ~FrankLeboeufModule();
+    ~FrankLeboeufModule() = default;
 
     /**
      * @brief Execute the module's main action.

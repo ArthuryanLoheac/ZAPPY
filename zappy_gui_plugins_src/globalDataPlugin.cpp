@@ -21,7 +21,7 @@ irr::video::IVideoDriver* driver) {
 
     if (!font)
         return;
-    drawImage("assets/UI/BottomRight.png", 0, 0, 150, 400, driver, 125);
+    drawImage("assets/UI/BottomRight.png", 0, 0, 150, 400, driver);
     // FPS
     font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
         UIRect(x, y, 300, 50), white);

@@ -30,7 +30,7 @@ irr::video::IVideoDriver* driver) {
     try {
         pluginsData::Tile tile = getTile(xTile, yTile);
         drawImage("assets/UI/BottomLeft.png", width - 240, 0, 240, 200,
-            driver, 125);
+            driver);
 
         std::string tileInfo = "Tile : " + std::to_string(tile.x) + ", " +
             std::to_string(tile.y) + " :";

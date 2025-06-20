@@ -27,7 +27,7 @@ std::shared_ptr<irr::gui::IGUIFont> font, irr::video::IVideoDriver* driver) {
             ": " + message.content;
         if (text.size() > 50)
             text = text.substr(0, 50) + "...";
-        drawImage("assets/UI/BottomBig.png", 0, y, 550, delta, driver, 125);
+        drawImage("assets/UI/BottomBig.png", 0, y, 550, delta, driver);
         font->draw(text.c_str(), irr::core::rect<irr::s32>(
             x, y + 5, 650, y + delta), color);
         y += delta;

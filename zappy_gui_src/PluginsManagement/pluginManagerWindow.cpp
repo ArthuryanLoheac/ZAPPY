@@ -16,6 +16,46 @@
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
 
+void pluginsManager::drawImage(const std::string &texture, int x,
+int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
+    irr::video::ITexture* bg = nullptr;
+
+    // Check if the texture with the given alpha is already cached
+    std::string cacheKey = texture + "_" + std::to_string(alpha);
+    auto it = cachedTextures.find(cacheKey);
+    if (it != cachedTextures.end()) {
+        bg = it->second;
+    } else {
+        irr::video::ITexture* originalTexture =
+            driver->getTexture(texture.c_str());
+        if (!originalTexture) {
+            std::cerr << "Error: Cant load texture: " << texture << std::endl;
+            return;
+        }
+
+        irr::video::IImage* image = driver->createImage(originalTexture,
+            irr::core::position2d<irr::s32>(0, 0), originalTexture->getSize());
+        if (image) {
+            for (irr::u32 y = 0; y < image->getDimension().Height; ++y) {
+                for (irr::u32 x = 0; x < image->getDimension().Width; ++x) {
+                    UICol imageColor = image->getPixel(x, y);
+                    imageColor.setAlpha(imageColor.getAlpha() *
+                        (alpha / 255.0f));
+                    image->setPixel(x, y, imageColor);
+                }
+            }
+            bg = driver->addTexture(cacheKey.c_str(), image);
+            cachedTextures[cacheKey] = bg;
+            image->drop();
+        }
+    }
+
+    if (bg) {
+        irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
+        irr::core::rect<irr::s32> destRect(x, y, x + sizeX, y + sizeY);
+        driver->draw2DImage(bg, destRect, sourceRect, nullptr, 0, true);
+    }
+}
 
 void pluginsManager::onEventWindow(const irr::SEvent &event)
 {
@@ -25,12 +65,21 @@ void pluginsManager::onEventWindow(const irr::SEvent &event)
 void pluginsManager::drawWindow(std::shared_ptr<irr::gui::IGUIFont> font,
     irr::video::IVideoDriver* driver) const
 {
-    (void) font;
-    (void) driver;
+    int y = 250;
+    int width = driver->getScreenSize().Width;
+    int i = 0;
+
+    for (auto &plugin : _plugins) {
+        if (plugin && i >= pluginIndex && i < pluginIndex + showedPlugins) {
+            font->draw(plugin->getName().c_str(),
+                irr::core::rect<irr::s32>(width / 2 - 150, y, 0, 30),
+                irr::video::SColor(255, 255, 255, 255), false, false);
+            y += 30;
+        }
+        i++;
+    }
 }
 
-void pluginsManager::updateWindow(pluginsData dataManager)
-{
+void pluginsManager::updateWindow(pluginsData dataManager) {
     (void) dataManager;
-    printf("UPDATE WINDOW\n");
 }

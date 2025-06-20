@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <memory>
 
 #include "dlLoader/dlLoader.hpp"
@@ -69,6 +70,14 @@ class pluginsManager {
 
     // ========= WINDOW PAGE =========
     bool windowOpened = false;
+    int pluginIndex = 0;
+    int showedPlugins = 6;
+
+    std::unordered_map<std::string, irr::video::ITexture *> cachedTextures;
+    /**< Cache for textures to avoid reloading. */
+
+    void drawImage(const std::string &texture, int x, int y, int sizeX,
+        int sizeY, irr::video::IVideoDriver* driver, int alpha);
 
     void onEventWindow(const irr::SEvent &event);
 

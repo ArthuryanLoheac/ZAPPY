@@ -40,7 +40,7 @@ irr::video::IVideoDriver *driver) {
     widthSaved = x + 20;
     heightSaved = driver->getScreenSize().Height;
     y = heightSaved - 140;
-    drawImage("assets/UI/All.png", x + 5, y, 150, 110, driver, 125);
+    drawImage("assets/UI/All.png", x + 5, y, 150, 110, driver);
     y += 20;
     x += 20;
     // Frequency

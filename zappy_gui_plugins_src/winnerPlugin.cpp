@@ -24,7 +24,7 @@ irr::video::IVideoDriver *driver) {
     int height = driver->getScreenSize().Height;
     int width = driver->getScreenSize().Width;
     drawImage("assets/UI/All.png", width / 2 - (w / 2), height / 2 - (h / 2),
-        w, h, driver, 125);
+        w, h, driver);
     font->draw(("Winner: " + data.winner).c_str(), irr::core::rect<irr::s32>(
         width / 2 - (w / 2) + 10, height / 2 - (h / 2) - 90,
         width / 2 + (w / 2) - 10, height / 2 + (h / 2) - 10),

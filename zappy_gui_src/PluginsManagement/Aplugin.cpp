@@ -47,9 +47,8 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
             for (irr::u32 y = 0; y < image->getDimension().Height; ++y) {
                 for (irr::u32 x = 0; x < image->getDimension().Width; ++x) {
                     UICol imageColor = image->getPixel(x, y);
-                    if (imageColor.getAlpha() == 0)
-                        continue;
-                    imageColor.setAlpha(alpha);
+                    imageColor.setAlpha(imageColor.getAlpha() *
+                        (alpha / 255.0f));
                     image->setPixel(x, y, imageColor);
                 }
             }

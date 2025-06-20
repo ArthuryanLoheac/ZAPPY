@@ -185,7 +185,7 @@ class ExamplePlugin : public pluginsInterface {
 
         UICol white(255, 255, 255, 255);
 
-        drawImage("assets/UI/ExampleBackground.png", 0, 0, 150, 400, driver, 125);
+        drawImage("assets/UI/ExampleBackground.png", 0, 0, 150, 400, driver);
 
         // Example data display
         font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(), UIRect(30, 30, 300, 50), white);

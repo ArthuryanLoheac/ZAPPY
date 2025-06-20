@@ -1,6 +1,7 @@
 #pragma once
 #include <irrlicht/irrlicht.h>
 #include <memory>
+#include <vector>
 #include <string>
 #include <unordered_map>
 
@@ -48,8 +49,8 @@ class pluginA : public pluginsInterface {
     * @param cam Pointer to the camera scene node used for rendering.
     * @return True if the plugin was initialized successfully, false otherwise.
     */
-    bool init(irr::scene::ISceneManager* smgr,
-        irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) override;
+    bool init(irr::scene::ISceneManager* smgr, irr::IrrlichtDevice *device,
+        irr::scene::ICameraSceneNode *cam) override;
 
     /** @brief Update the plugin with the current game data.
      * @param dataManager Reference to the pluginsData object containing all the datas

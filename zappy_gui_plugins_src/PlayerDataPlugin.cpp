@@ -79,7 +79,7 @@ irr::video::IVideoDriver* _driver) {
     int width = driver->getScreenSize().Width;
     try {
         drawImage("assets/UI/All.png", width - 240, 300, 250, 200,
-            driver);
+            driver, 125);
         drawPlayerInfo(idPlayer, font);
     } catch (std::exception &e) {}
 }

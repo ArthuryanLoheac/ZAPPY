@@ -194,6 +194,7 @@ INCLUDE_SO = -I. \
 	-I./zappy_gui_src/include \
 	-I./zappy_gui_src/dlLoader/ \
 	-I./zappy_gui_src/PluginsManagement \
+	-I./zappy_gui_src/PluginsManagement/include \
 
 FLAGS_SO =  -std=c++17 -Wall -Wextra -Werror -lIrrlicht \
 			$(INCLUDE_SO) -Wno-return-type-c-linkage \

@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "zappy_gui_src/PluginsManagement/pluginA.hpp"
+#include "zappy_gui_src/PluginsManagement/include/pluginA.hpp"
 
 /**
  * @class winnerPlugin

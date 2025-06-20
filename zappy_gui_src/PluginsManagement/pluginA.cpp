@@ -1,5 +1,6 @@
-#include "./pluginA.hpp"
 #include <iostream>
+#include <string>
+#include "include/pluginA.hpp"
 
 bool pluginA::init(irr::scene::ISceneManager* smgr,
     irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) {

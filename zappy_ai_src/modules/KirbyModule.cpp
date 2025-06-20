@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 #include "Interface/Interface.hpp"
 #include "Data/Data.hpp"
@@ -14,6 +15,11 @@
 KirbyModule::KirbyModule() : tickUsed(0), timeRemaining(FOOD_TICK * 10),
     forwardCount(0), suckMode(false), hasMadeHisWill(false) {
 }
+
+/**
+ * @brief Destroys the KirbyModule object.
+ */
+KirbyModule::~KirbyModule() = default;
 
 /**
  * @brief Executes the main logic of the KirbyModule.

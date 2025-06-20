@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "Exceptions/GraphicalExceptions.hpp"
+#include "DataManager/PathManager.hpp"
 #include "tools/MeshImporter.hpp"
 #include "Graphic/Window/window.hpp"
 
@@ -30,7 +31,7 @@ const Vec3d &rotation) {
     std::shared_ptr<Mesh> node = std::shared_ptr<Mesh>(GUI::Window::i()
         .smgr->addAnimatedMeshSceneNode(mesh), [](Mesh* p) {(void) p;});
     if (node) {
-        node->setScale(scale);
+        node->setScale(scale * GUI::PathManager::i().getScale(meshName));
         node->setRotation(Vec3d(rotation));
         std::random_device rd;
         node->setID(rd());

@@ -5,16 +5,19 @@
 
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "Graphic/Window/window.hpp"
+#include "PluginsManagement/pluginsManager.hpp"
 
 namespace GUI {
 void Window::handleEvent() {
+    if (receiver.IsKeyDown(irr::KEY_ESCAPE))
+        device->closeDevice();
+    if (pluginsManager::i().isWindowOpened())
+        return;
     int xMoveCam = receiver.getValBetween(irr::KEY_KEY_E, irr::KEY_KEY_A);
     int yMoveCenterCam = receiver.getValBetween(irr::KEY_KEY_D, irr::KEY_KEY_Q);
     int xMoveCenterCam = receiver.getValBetween(irr::KEY_KEY_S, irr::KEY_KEY_Z);
     float zoom = 0;
 
-    if (receiver.IsKeyDown(irr::KEY_ESCAPE))
-        device->closeDevice();
     zoom = -receiver.ConsumeWheelDelta();
     moveCamera(xMoveCam, zoom, xMoveCenterCam, yMoveCenterCam);
 }

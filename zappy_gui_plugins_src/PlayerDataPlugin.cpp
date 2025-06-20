@@ -12,29 +12,6 @@ extern "C" {
     }
 }
 
-bool PlayerDataPlugin::init(irr::scene::ISceneManager* _smgr,
-    irr::IrrlichtDevice *_device, irr::scene::ICameraSceneNode *_cam) {
-    device = _device;
-    smgr = _smgr;
-    cam = _cam;
-    idPlayer = -1;
-    printf("============= Initializing PlayerData Plugin =============\n");
-    return true;
-}
-
-void PlayerDataPlugin::drawOneBackground(const std::string &texture, int x,
-int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
-    irr::video::ITexture* bg = driver->getTexture(texture.c_str());
-    irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
-
-    irr::core::rect<irr::s32>destRect(x, y, x + sizeX, y + sizeY);
-    if (!bg) {
-        std::cerr << "Error: Texture not found: " << texture << std::endl;
-        return;
-    }
-    driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
-}
-
 pluginsData::Tile PlayerDataPlugin::getTile(int x, int y) {
     for (auto tile : data.tiles) {
         if (tile.x == x && tile.y == y)
@@ -101,7 +78,7 @@ irr::video::IVideoDriver* _driver) {
         return;
     int width = driver->getScreenSize().Width;
     try {
-        drawOneBackground("assets/UI/All.png", width - 240, 300, 250, 200,
+        drawImage("assets/UI/All.png", width - 240, 300, 250, 200,
             driver);
         drawPlayerInfo(idPlayer, font);
     } catch (std::exception &e) {}
@@ -146,12 +123,4 @@ void PlayerDataPlugin::detectCollisionPlayer() {
         }
     }
     return;
-}
-
-void PlayerDataPlugin::update(pluginsData _data) {
-    data = _data;
-}
-
-int PlayerDataPlugin::getPriority() const {
-    return 0;
 }

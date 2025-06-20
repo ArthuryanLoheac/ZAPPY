@@ -12,28 +12,6 @@ extern "C" {
     }
 }
 
-bool TileDataPlugin::init(irr::scene::ISceneManager* _smgr,
-    irr::IrrlichtDevice *_device, irr::scene::ICameraSceneNode *_cam) {
-    device = _device;
-    smgr = _smgr;
-    cam = _cam;
-    printf("============= Initializing TileData Plugin =============\n");
-    return true;
-}
-
-void TileDataPlugin::drawOneBackground(const std::string &texture, int x, int y,
-int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
-    irr::video::ITexture* bg = driver->getTexture(texture.c_str());
-    irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
-
-    irr::core::rect<irr::s32>destRect(x, y, x + sizeX, y + sizeY);
-    if (!bg) {
-        std::cerr << "Error: Texture not found: " << texture << std::endl;
-        return;
-    }
-    driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
-}
-
 pluginsData::Tile TileDataPlugin::getTile(int x, int y) {
     for (auto tile : data.tiles) {
         if (tile.x == x && tile.y == y)
@@ -51,7 +29,7 @@ irr::video::IVideoDriver* driver) {
         return;
     try {
         pluginsData::Tile tile = getTile(xTile, yTile);
-        drawOneBackground("assets/UI/BottomLeft.png", width - 240, 0, 240, 200,
+        drawImage("assets/UI/BottomLeft.png", width - 240, 0, 240, 200,
             driver);
 
         std::string tileInfo = "Tile : " + std::to_string(tile.x) + ", " +
@@ -134,12 +112,4 @@ bool TileDataPlugin::detectCollisionPlayer() {
             return true;
     }
     return false;
-}
-
-void TileDataPlugin::update(pluginsData _data) {
-    data = _data;
-}
-
-int TileDataPlugin::getPriority() const {
-    return 0;
 }

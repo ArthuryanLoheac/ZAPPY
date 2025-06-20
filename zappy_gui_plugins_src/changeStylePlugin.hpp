@@ -3,16 +3,17 @@
 
 #include <string>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 #include "zappy_gui_src/PluginsManagement/include/Aplugin.hpp"
 
 /**
- * @class globalDataPlugin
+ * @class changeStylePlugin
  * @brief Plugin class for managing global data visualization and interaction.
  * @implements Aplugin
  */
-class globalDataPlugin : public Aplugin {
+class changeStylePlugin : public Aplugin {
  public:
     /**
      * @brief Draws the UI elements for the plugin.
@@ -22,7 +23,11 @@ class globalDataPlugin : public Aplugin {
     void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
       irr::video::IVideoDriver* driver) override;
 
+
+    initPluginData init(irr::scene::ISceneManager* smgr,
+      irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) override;
+
     std::string getName() const override {
-        return "Global Data Plugin";
+        return "Change Style Plugin";
     }
 };

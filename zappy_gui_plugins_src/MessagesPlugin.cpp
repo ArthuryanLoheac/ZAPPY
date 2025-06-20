@@ -12,28 +12,6 @@ extern "C" {
     }
 }
 
-bool MessagesPlugin::init(irr::scene::ISceneManager* _smgr,
-    irr::IrrlichtDevice *_device, irr::scene::ICameraSceneNode *cam) {
-    device = _device;
-    (void) cam;
-    smgr = _smgr;
-    printf("============= Initializing Messages Plugin =============\n");
-    return true;
-}
-
-void MessagesPlugin::drawImage(const std::string &texture, int x,
-int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
-    irr::video::ITexture* bg = driver->getTexture(texture.c_str());
-    irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
-
-    irr::core::rect<irr::s32>destRect(x, y, x + sizeX, y + sizeY);
-    if (!bg) {
-        std::cerr << "Error: Texture not found: " << texture << std::endl;
-        return;
-    }
-    driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
-}
-
 void MessagesPlugin::drawMessageHistory(
 std::shared_ptr<irr::gui::IGUIFont> font, irr::video::IVideoDriver* driver) {
     int height = driver->getScreenSize().Height;
@@ -151,19 +129,4 @@ void MessagesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
     }
     drawMessageHistory(font, driver);
     checkDeleteParticles();
-}
-
-bool MessagesPlugin::onEvent(const irr::SEvent &event,
-pluginsData &datas) {
-    (void) event;
-    (void) datas;
-    return false;
-}
-
-void MessagesPlugin::update(pluginsData _data) {
-    data = _data;
-}
-
-int MessagesPlugin::getPriority() const {
-    return 0;
 }

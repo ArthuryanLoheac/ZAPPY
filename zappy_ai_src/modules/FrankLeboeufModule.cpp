@@ -1,14 +1,5 @@
-#include <string>
-#include <vector>
-
 #include "modules/FrankLeboeufModule.hpp"
 #include "Interface/Interface.hpp"
-
-FrankLeboeufModule::FrankLeboeufModule() {
-}
-
-FrankLeboeufModule::~FrankLeboeufModule() {
-}
 
 void FrankLeboeufModule::execute() {
     AI::Interface::i().sendCommand("Broadcast Salut c'est Frank Leboeuf, vous "

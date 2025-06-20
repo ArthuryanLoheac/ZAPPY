@@ -11,7 +11,6 @@
 #include "include/logs.h"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
-#include "window.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -115,14 +114,12 @@ void Window::setUpdatePlayer(bool b) {
     needUpdatePlayers = b;
 }
 
-void Window::setRotationSpeedSkybox(float speed)
-{
+void Window::setRotationSpeedSkybox(float speed) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     speedRotationSkybox = speed;
 }
 
-void Window::update()
-{
+void Window::update() {
     while (device->run()) {
         updateDeltaTime();
         if (device->isWindowActive())

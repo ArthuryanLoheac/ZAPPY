@@ -27,9 +27,9 @@ initPluginData changeStylePlugin::init(irr::scene::ISceneManager* smgr,
     this->cam = cam;
     initPluginData pluginData;
     pluginData.MeshBattery = initPluginData::MeshInitPlugin("Battery2", 2.f);
-    //pluginData.skyBox = initPluginData::SkyBox(
-    //    "skybox/skybox2/skybox_py.jpg", "skybox/skybox2/skybox_ny.jpg",
-    //    "skybox/skybox2/skybox_nx.jpg", "skybox/skybox2/skybox_px.jpg",
-    //    "skybox/skybox2/skybox_pz.jpg", "skybox/skybox2/skybox_nz.jpg", 0);
+    // pluginData.skyBox = initPluginData::SkyBox(
+    //     "skybox/skybox2/skybox_py.jpg", "skybox/skybox2/skybox_ny.jpg",
+    //     "skybox/skybox2/skybox_nx.jpg", "skybox/skybox2/skybox_px.jpg",
+    //     "skybox/skybox2/skybox_pz.jpg", "skybox/skybox2/skybox_nz.jpg", 0);
     return pluginData;
 }

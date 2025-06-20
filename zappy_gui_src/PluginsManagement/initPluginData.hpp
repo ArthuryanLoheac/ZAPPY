@@ -43,8 +43,8 @@ class initPluginData {
         std::string front;
         std::string back;
         /** @brief Default constructor for SkyBox. */
-        SkyBox() : isSet(false), speedRotation(0), top(""), bottom(""), left(""),
-                   right(""), front(""), back("") {}
+        SkyBox() : isSet(false), speedRotation(0), top(""), bottom(""),
+            left(""), right(""), front(""), back("") {}
         /**
          * @brief Constructor for SkyBox with parameters.
          * @param topPath Path to the top texture.
@@ -58,8 +58,8 @@ class initPluginData {
         SkyBox(const std::string &topPath, const std::string &bottomPath,
                const std::string &leftPath, const std::string &rightPath,
                const std::string &frontPath, const std::string &backPath,
-               float rotationSpeed = 0) :
-            isSet(true), speedRotation(rotationSpeed), top(topPath), bottom(bottomPath),
+               float rotationSpeed = 0) : isSet(true),
+            speedRotation(rotationSpeed), top(topPath), bottom(bottomPath),
             left(leftPath), right(rightPath), front(frontPath), back(backPath){
             if (topPath.empty() || bottomPath.empty() || leftPath.empty() ||
                 rightPath.empty() || frontPath.empty() || backPath.empty())

@@ -62,7 +62,6 @@ class PathManager {
      */
     void setPath(const std::string &key, const std::string &value) {
         _paths[key] = value;
-        printf("PathManager::setPath called with key: %s, value: %s\n", key.c_str(), value.c_str());
     }
 
     /**

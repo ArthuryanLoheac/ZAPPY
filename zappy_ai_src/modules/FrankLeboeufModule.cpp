@@ -16,7 +16,7 @@ void FrankLeboeufModule::execute() {
         "vendezvotrevoiture.fr ! Rentrez simplement les détails de votre "
         "véhicule et recevez rapidement son prix de vente. Et vendez ensuite "
         "votre voiture dans une de nos agences. On s'occupe de tout. Mon "
-        "conseil ? Optenez votre prix de vente sur vendezvotrevoiture.fr.");
+        "conseil ? Obtenez votre prix de vente sur vendezvotrevoiture.fr.");
 }
 
 float FrankLeboeufModule::getPriority() {

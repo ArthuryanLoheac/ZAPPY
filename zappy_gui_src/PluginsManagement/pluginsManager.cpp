@@ -15,6 +15,7 @@
 #include "Connection/ServerGUI.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
+#include "pluginsManager.hpp"
 
 
 void pluginsManager::loadPlugins(const std::string &path) {
@@ -26,13 +27,25 @@ void pluginsManager::loadPlugins(const std::string &path) {
         return;
     }
     while ((entry = readdir(dir)) != nullptr) {
-        if (entry->d_type == DT_REG)
+        if (entry->d_type == DT_REG && strcmp(entry->d_name, "save.txt") != 0)
             loadPlugin(path + "/" + entry->d_name);
     }
     closedir(dir);
+    loadActivePlugins();
+    initPlugins();
 }
 
-void pluginsManager::loadPlugin(const std::string &path) {
+void pluginsManager::initPlugins() {
+    for (auto &plugin : _plugins) {
+        initPluginData data = plugin->init(GUI::Window::i().smgr,
+            GUI::Window::i().device, GUI::Window::i().cam);
+        if (plugin->isActive())
+            initPluginMesh(data);
+    }
+}
+
+void pluginsManager::loadPlugin(const std::string &path)
+{
     if (!dlLoader<pluginsInterface>::verifyLib(path, "createPlugin")) {
         LOG_ERROR("Plugin %s is not a valid plugin", path.c_str());
         return;
@@ -40,9 +53,6 @@ void pluginsManager::loadPlugin(const std::string &path) {
     try {
         auto plugin = dlLoader<pluginsInterface>::getLib(path, "createPlugin");
         if (plugin) {
-            initPluginData data = plugin->init(GUI::Window::i().smgr,
-                GUI::Window::i().device, GUI::Window::i().cam);
-            initPluginMesh(data);
             _plugins.push_back(std::move(plugin));
         }
     } catch (const dlLoader<pluginsInterface>::dlError &e) {

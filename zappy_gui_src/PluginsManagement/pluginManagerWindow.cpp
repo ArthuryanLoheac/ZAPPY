@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <utility>
+#include <fstream>
 #include <algorithm>
 
 #include "include/logs.h"
@@ -15,6 +16,7 @@
 #include "Connection/ServerGUI.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
+#include "pluginsManager.hpp"
 
 void pluginsManager::drawImage(const std::string &texture, int x,
 int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
@@ -127,3 +129,46 @@ irr::video::IVideoDriver *driver, int i, int y) {
         irr::video::SColor(alpha, 255, 255, 255), false, false);
 }
 
+void pluginsManager::loadActivePlugins() {
+    std::ifstream file(pathSaveFile, std::ios::in);
+    if (!file.is_open()) {
+        LOG_ERROR("Failed to open plugins save file: %s", pathSaveFile.c_str());
+        return;
+    }
+    std::string line;
+    while (std::getline(file, line)) {
+        if (line.empty())
+            continue;
+        std::string name = line.substr(0, line.find(':'));
+        bool isActive = false;
+        try {
+            isActive = std::stoi(line.substr(line.find(':') + 1)) == 1;
+        } catch (const std::exception &e) {
+            LOG_ERROR("Invalid format in plugins save file: %s", e.what());
+            continue;
+        }
+
+        for (auto &plugin : _plugins) {
+            if (plugin && plugin->getName() == name) {
+                plugin->setActive(isActive);
+                break;
+            }
+        }
+    }
+}
+
+void pluginsManager::saveActivePlugins() {
+    std::ofstream file(pathSaveFile, std::ios::out);
+
+    if (!file.is_open()) {
+        LOG_ERROR("Failed to open plugins save file for writing: %s",
+            pathSaveFile.c_str());
+        return;
+    }
+    for (const auto &plugin : _plugins) {
+        if (plugin) {
+            file << plugin->getName() << ":"
+                 << (plugin->isActive() ? "1" : "0") << "\n";
+        }
+    }
+}

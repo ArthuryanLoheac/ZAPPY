@@ -23,6 +23,8 @@ class pluginsManager {
      */
     void loadPlugins(const std::string &path);
 
+    void initPlugins();
+
     /** @brief Load a single plugin from the specified path.
      * @param path The file path of the plugin to load.
      */
@@ -67,9 +69,12 @@ class pluginsManager {
         return windowOpened;
     }
 
+    void saveActivePlugins();
  private:
     std::vector<std::unique_ptr<pluginsInterface>> _plugins;
         /**plugins stored */
+
+    std::string pathSaveFile = "plugins/save.txt";
 
     // ========= WINDOW PAGE =========
     class ButtonPlugin {
@@ -100,4 +105,7 @@ class pluginsManager {
 
     void drawButton(std::shared_ptr<irr::gui::IGUIFont> font,
         irr::video::IVideoDriver* driver, int i, int y);
+
+    void loadActivePlugins();
+
 };

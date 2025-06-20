@@ -9,6 +9,8 @@
 
 namespace GUI {
 void Window::handleEvent() {
+    if (receiver.IsKeyDown(irr::KEY_ESCAPE))
+        device->closeDevice();
     if (pluginsManager::i().isWindowOpened())
         return;
     int xMoveCam = receiver.getValBetween(irr::KEY_KEY_E, irr::KEY_KEY_A);
@@ -16,8 +18,6 @@ void Window::handleEvent() {
     int xMoveCenterCam = receiver.getValBetween(irr::KEY_KEY_S, irr::KEY_KEY_Z);
     float zoom = 0;
 
-    if (receiver.IsKeyDown(irr::KEY_ESCAPE))
-        device->closeDevice();
     zoom = -receiver.ConsumeWheelDelta();
     moveCamera(xMoveCam, zoom, xMoveCenterCam, yMoveCenterCam);
 }

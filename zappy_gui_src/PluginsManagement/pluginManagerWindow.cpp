@@ -59,7 +59,20 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
 
 void pluginsManager::onEventWindow(const irr::SEvent &event)
 {
-    (void) event;
+    int size = static_cast<int>(_plugins.size());
+
+    if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
+        if (event.MouseInput.Event == irr::EMIE_MOUSE_WHEEL) {
+            if (event.MouseInput.Wheel < 0 && pluginIndex + showedPlugins < size)
+                pluginIndex++;
+            else if (event.MouseInput.Wheel > 0 && pluginIndex > 0)
+                pluginIndex--;
+            if (pluginIndex < 0)
+                pluginIndex = 0;
+            if (pluginIndex + showedPlugins > size)
+                pluginIndex = size - showedPlugins;
+        }
+    }
 }
 
 void pluginsManager::drawWindow(std::shared_ptr<irr::gui::IGUIFont> font,

@@ -52,7 +52,7 @@ void pluginsManager::loadPlugin(const std::string &path) {
 }
 
 void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
-    irr::video::IVideoDriver* driver) const {
+    irr::video::IVideoDriver* driver) {
     if (windowOpened)
         drawWindow(font, driver);
 

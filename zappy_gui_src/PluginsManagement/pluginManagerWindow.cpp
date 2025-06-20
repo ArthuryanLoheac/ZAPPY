@@ -63,16 +63,18 @@ void pluginsManager::onEventWindow(const irr::SEvent &event)
 }
 
 void pluginsManager::drawWindow(std::shared_ptr<irr::gui::IGUIFont> font,
-    irr::video::IVideoDriver* driver) const
+    irr::video::IVideoDriver* driver)
 {
     int y = 250;
-    int width = driver->getScreenSize().Width;
+    int x = driver->getScreenSize().Width / 2 - 150;
     int i = 0;
 
+    drawImage("assets/UI/All.png", x - 30,
+        y - 30, 350, 30 * (showedPlugins + 2), driver, 255);
     for (auto &plugin : _plugins) {
         if (plugin && i >= pluginIndex && i < pluginIndex + showedPlugins) {
             font->draw(plugin->getName().c_str(),
-                irr::core::rect<irr::s32>(width / 2 - 150, y, 0, 30),
+                irr::core::rect<irr::s32>(x, y, 0, 30),
                 irr::video::SColor(255, 255, 255, 255), false, false);
             y += 30;
         }

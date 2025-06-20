@@ -33,7 +33,7 @@ class pluginsManager {
      * @param driver Pointer to the video driver used for rendering graphics.
      */
     void drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
-        irr::video::IVideoDriver* driver) const;
+        irr::video::IVideoDriver* driver);
 
     /** @brief Handle events for all loaded plugins.
      * @param event The event to handle.
@@ -63,6 +63,9 @@ class pluginsManager {
     void setPluginMeshData(std::string key,
         initPluginData::MeshInitPlugin meshData);
 
+    bool isWindowOpened() const {
+        return windowOpened;
+    }
 
  private:
     std::vector<std::unique_ptr<pluginsInterface>> _plugins;
@@ -84,5 +87,5 @@ class pluginsManager {
     void updateWindow(pluginsData dataManager);
 
     void drawWindow(std::shared_ptr<irr::gui::IGUIFont> font,
-        irr::video::IVideoDriver* driver) const;
+        irr::video::IVideoDriver* driver);
 };

@@ -9,6 +9,7 @@
 #include "PluginsManagement/pluginsInterface.hpp"
 #include "DataManager/GameDataManager.hpp"
 
+
 class pluginsManager {
  public:
     static pluginsManager &i() {
@@ -48,6 +49,18 @@ class pluginsManager {
      * This function sorts the plugins in descending order of their priority.
      */
     void sortPlugins();
+
+    /** @brief Initialize the plugins.
+     * This function initializes all loaded plugins.
+     */
+    void initPluginMesh(initPluginData meshData);
+
+    /** @brief Set the mesh data for a specific plugin.
+     * @param key The key identifying the plugin.
+     * @param meshData The mesh data to set for the plugin.
+     */
+    void setPluginMeshData(std::string key,
+        initPluginData::MeshInitPlugin meshData);
 
  private:
     std::vector<std::unique_ptr<pluginsInterface>> _plugins;

@@ -2,12 +2,12 @@
 #include <string>
 #include "include/pluginA.hpp"
 
-bool pluginA::init(irr::scene::ISceneManager* smgr,
+initPluginData pluginA::init(irr::scene::ISceneManager* smgr,
     irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) {
     this->smgr = smgr;
     this->device = device;
     this->cam = cam;
-    return true;
+    return initPluginData();
 }
 
 void pluginA::update(pluginsData dataManager) {

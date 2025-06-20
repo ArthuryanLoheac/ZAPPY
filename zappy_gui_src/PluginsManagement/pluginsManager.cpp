@@ -14,6 +14,7 @@
 #include "Graphic/Window/window.hpp"
 #include "Connection/ServerGUI.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
+#include "DataManager/PathManager.hpp"
 
 
 void pluginsManager::loadPlugins(const std::string &path) {
@@ -39,8 +40,9 @@ void pluginsManager::loadPlugin(const std::string &path) {
     try {
         auto plugin = dlLoader<pluginsInterface>::getLib(path, "createPlugin");
         if (plugin) {
-            plugin->init(GUI::Window::i().smgr, GUI::Window::i().device,
-                GUI::Window::i().cam);
+            initPluginData data = plugin->init(GUI::Window::i().smgr,
+                GUI::Window::i().device, GUI::Window::i().cam);
+            initPluginMesh(data);
             _plugins.push_back(std::move(plugin));
         }
     } catch (const dlLoader<pluginsInterface>::dlError &e) {
@@ -97,4 +99,25 @@ void pluginsManager::sortPlugins() {
            const std::unique_ptr<pluginsInterface> &b) {
             return a->getPriority() > b->getPriority();
         });
+}
+
+void pluginsManager::initPluginMesh(initPluginData meshData) {
+    setPluginMeshData("Food", meshData.MeshBattery);
+    setPluginMeshData("Mat1", meshData.MeshMat1);
+    setPluginMeshData("Mat2", meshData.MeshMat2);
+    setPluginMeshData("Mat3", meshData.MeshMat3);
+    setPluginMeshData("Mat4", meshData.MeshMat4);
+    setPluginMeshData("Mat5", meshData.MeshMat5);
+    setPluginMeshData("Mat6", meshData.MeshMat6);
+    setPluginMeshData("Player", meshData.MeshPlayer);
+    setPluginMeshData("Egg", meshData.MeshEgg);
+    setPluginMeshData("Tile", meshData.MeshTile);
+}
+
+void pluginsManager::setPluginMeshData(std::string key,
+initPluginData::MeshInitPlugin meshData) {
+    if (meshData.isSet) {
+       GUI::PathManager::i().setPath(key, meshData.name);
+       GUI::PathManager::i().setScale(meshData.name, meshData.scale);
+    }
 }

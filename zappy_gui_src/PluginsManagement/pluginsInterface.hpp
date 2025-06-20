@@ -9,6 +9,7 @@
 #define UICol irr::video::SColor
 
 #include "./pluginsData.hpp"
+#include "./initPluginData.hpp"
 
 class pluginsInterface {
 /** @brief Interface for plugins in the Zappy GUI application.
@@ -25,7 +26,7 @@ class pluginsInterface {
     * @param cam Pointer to the camera scene node used for rendering.
     * @return True if the plugin was initialized successfully, false otherwise.
     */
-    virtual bool init(irr::scene::ISceneManager* smgr,
+    virtual initPluginData init(irr::scene::ISceneManager* smgr,
         irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) = 0;
 
     /** @brief Update the plugin with the current game data.
@@ -45,5 +46,9 @@ class pluginsInterface {
      */
     virtual bool onEvent(const irr::SEvent &event, pluginsData &datas) = 0;
 
+    /** @brief Get the priority of the plugin.
+     * The priority determines the order in which plugins are processed.
+     * @return The priority level of the plugin.
+     */
     virtual int getPriority() const = 0;
 };

@@ -49,8 +49,9 @@ class pluginA : public pluginsInterface {
     * @param cam Pointer to the camera scene node used for rendering.
     * @return True if the plugin was initialized successfully, false otherwise.
     */
-    bool init(irr::scene::ISceneManager* smgr, irr::IrrlichtDevice *device,
-        irr::scene::ICameraSceneNode *cam) override;
+    initPluginData init(irr::scene::ISceneManager* smgr,
+        irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam)
+        override;
 
     /** @brief Update the plugin with the current game data.
      * @param dataManager Reference to the pluginsData object containing all the datas
@@ -69,5 +70,8 @@ class pluginA : public pluginsInterface {
      */
     bool onEvent(const irr::SEvent &event, pluginsData &datas) override;
 
+    /** @brief Get the priority of the plugin.
+     * @return The priority level of the plugin.
+     */
     int getPriority() const override;
 };

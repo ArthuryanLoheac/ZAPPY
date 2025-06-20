@@ -89,7 +89,7 @@ void DataManager::setFrequency(int f) {
 /**
  * @brief Clears the DataManager state.
  *
- * This method resets the port, IP address, frequency, and running state to their default values.
+ * This method resets frequency, and running state to their default values.
  */
 void DataManager::clear()  {
     std::lock_guard<std::mutex> lock(mutexDatas);

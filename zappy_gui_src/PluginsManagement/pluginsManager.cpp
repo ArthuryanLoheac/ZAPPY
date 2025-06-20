@@ -15,6 +15,7 @@
 #include "Connection/ServerGUI.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
+#include "pluginsManager.hpp"
 
 
 void pluginsManager::loadPlugins(const std::string &path) {
@@ -52,6 +53,9 @@ void pluginsManager::loadPlugin(const std::string &path) {
 
 void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
     irr::video::IVideoDriver* driver) const {
+    if (windowOpened)
+        drawWindow(font, driver);
+
     for (const auto &plugin : _plugins) {
         if (plugin && plugin->isActive()) {
             try {
@@ -64,6 +68,14 @@ void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
 }
 
 void pluginsManager::onEvent(const irr::SEvent &event) {
+    if (event.EventType == irr::EET_KEY_INPUT_EVENT &&
+        event.KeyInput.Key == irr::KEY_TAB &&
+        event.KeyInput.PressedDown)
+        windowOpened = !windowOpened;
+    if (windowOpened) {
+        onEventWindow(event);
+        return;
+    }
     for (const auto &plugin : _plugins) {
         if (plugin && plugin->isActive()) {
             try {
@@ -87,6 +99,9 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
 }
 
 void pluginsManager::update(pluginsData dataManager) {
+    if (windowOpened)
+        updateWindow(dataManager);
+
     for (const auto &plugin : _plugins) {
         if (plugin && plugin->isActive())
             plugin->update(dataManager);

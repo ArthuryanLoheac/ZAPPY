@@ -62,7 +62,18 @@ class pluginsManager {
     void setPluginMeshData(std::string key,
         initPluginData::MeshInitPlugin meshData);
 
+
  private:
     std::vector<std::unique_ptr<pluginsInterface>> _plugins;
         /**plugins stored */
+
+    // ========= WINDOW PAGE =========
+    bool windowOpened = false;
+
+    void onEventWindow(const irr::SEvent &event);
+
+    void updateWindow(pluginsData dataManager);
+
+    void drawWindow(std::shared_ptr<irr::gui::IGUIFont> font,
+        irr::video::IVideoDriver* driver) const;
 };

@@ -16,7 +16,6 @@
 #include "Connection/ServerGUI.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
-#include "pluginsManager.hpp"
 
 void pluginsManager::drawImage(const std::string &texture, int x,
 int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {

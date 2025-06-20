@@ -15,7 +15,6 @@
 #include "Connection/ServerGUI.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
-#include "pluginsManager.hpp"
 
 
 void pluginsManager::loadPlugins(const std::string &path) {
@@ -44,8 +43,7 @@ void pluginsManager::initPlugins() {
     }
 }
 
-void pluginsManager::loadPlugin(const std::string &path)
-{
+void pluginsManager::loadPlugin(const std::string &path) {
     if (!dlLoader<pluginsInterface>::verifyLib(path, "createPlugin")) {
         LOG_ERROR("Plugin %s is not a valid plugin", path.c_str());
         return;

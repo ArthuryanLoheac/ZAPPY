@@ -5,14 +5,14 @@
 #include <memory>
 #include <vector>
 
-#include "zappy_gui_src/PluginsManagement/include/pluginA.hpp"
+#include "zappy_gui_src/PluginsManagement/include/Aplugin.hpp"
 
 /**
  * @class TileDataPlugin
  * @brief Plugin class for handling tile data visualization and interaction.
- * @implements pluginA
+ * @implements Aplugin
  */
-class TileDataPlugin : public pluginA {
+class TileDataPlugin : public Aplugin {
  private:
     int xTile = -1; /**< X position of the selected tile. */
     int yTile = -1; /**< Y position of the selected tile. */

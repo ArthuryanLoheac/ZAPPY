@@ -7,7 +7,7 @@
 
 #include "./pluginsInterface.hpp"
 
-class pluginA : public pluginsInterface {
+class Aplugin : public pluginsInterface {
  protected:
     irr::scene::ISceneManager* smgr;
     irr::IrrlichtDevice *device;

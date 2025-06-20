@@ -6,14 +6,14 @@
 #include <unordered_map>
 #include <vector>
 
-#include "zappy_gui_src/PluginsManagement/include/pluginA.hpp"
+#include "zappy_gui_src/PluginsManagement/include/Aplugin.hpp"
 
 /**
  * @class frequencyPlugin
  * @brief Plugin class for managing global data visualization and interaction.
- * @implements pluginA
+ * @implements Aplugin
  */
-class frequencyPlugin : public pluginA {
+class frequencyPlugin : public Aplugin {
  private:
     enum stateButton {
         DISABLED, /**< Button is disabled. */

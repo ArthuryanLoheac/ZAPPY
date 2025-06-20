@@ -5,15 +5,15 @@
 #include <memory>
 #include <vector>
 
-#include "zappy_gui_src/PluginsManagement/include/pluginA.hpp"
+#include "zappy_gui_src/PluginsManagement/include/Aplugin.hpp"
 
 /**
  * @class PlayerDataPlugin
  * @brief Plugin class for managing player data visualization and interaction
  * when clicking on one
- * @implements pluginA
+ * @implements Aplugin
  */
-class PlayerDataPlugin : public pluginA {
+class PlayerDataPlugin : public Aplugin {
  private:
     int idPlayer = -1; /**< ID of the selected player. */
 

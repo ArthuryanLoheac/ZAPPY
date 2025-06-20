@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
-#include "include/pluginA.hpp"
+#include "include/Aplugin.hpp"
 
-initPluginData pluginA::init(irr::scene::ISceneManager* smgr,
+initPluginData Aplugin::init(irr::scene::ISceneManager* smgr,
     irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) {
     this->smgr = smgr;
     this->device = device;
@@ -10,21 +10,21 @@ initPluginData pluginA::init(irr::scene::ISceneManager* smgr,
     return initPluginData();
 }
 
-void pluginA::update(pluginsData dataManager) {
+void Aplugin::update(pluginsData dataManager) {
     data = dataManager;
 }
 
-bool pluginA::onEvent(const irr::SEvent &event, pluginsData &datas) {
+bool Aplugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
     (void)event;
     (void)datas;
     return false;
 }
 
-int pluginA::getPriority() const {
+int Aplugin::getPriority() const {
     return 0;
 }
 
-void pluginA::drawImage(const std::string &texture, int x,
+void Aplugin::drawImage(const std::string &texture, int x,
 int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
     irr::video::ITexture* bg = nullptr;
 

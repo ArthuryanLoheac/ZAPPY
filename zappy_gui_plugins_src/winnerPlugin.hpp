@@ -6,14 +6,14 @@
 #include <unordered_map>
 #include <vector>
 
-#include "zappy_gui_src/PluginsManagement/include/pluginA.hpp"
+#include "zappy_gui_src/PluginsManagement/include/Aplugin.hpp"
 
 /**
  * @class winnerPlugin
  * @brief Plugin class for managing global data visualization and interaction.
- * @implements pluginA
+ * @implements Aplugin
  */
-class winnerPlugin : public pluginA {
+class winnerPlugin : public Aplugin {
  public:
     /**
      * @brief Draws the UI elements for the plugin.

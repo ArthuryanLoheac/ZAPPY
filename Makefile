@@ -188,7 +188,7 @@ style_check:
 
 # ============ PLUGINS ============ #
 
-COMMON_PLUGINS = zappy_gui_src/PluginsManagement/pluginA.cpp \
+COMMON_PLUGINS = zappy_gui_src/PluginsManagement/Aplugin.cpp \
 
 INCLUDE_SO = -I. \
 	-I./zappy_gui_src/include \

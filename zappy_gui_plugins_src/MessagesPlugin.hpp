@@ -5,14 +5,14 @@
 #include <memory>
 #include <vector>
 
-#include "zappy_gui_src/PluginsManagement/include/pluginA.hpp"
+#include "zappy_gui_src/PluginsManagement/include/Aplugin.hpp"
 
 /**
  * @class MessagesPlugin
  * @brief Plugin class for managing global data visualization and interaction.
- * @implements pluginA
+ * @implements Aplugin
  */
-class MessagesPlugin : public pluginA {
+class MessagesPlugin : public Aplugin {
  private:
     class Particle {
      public:

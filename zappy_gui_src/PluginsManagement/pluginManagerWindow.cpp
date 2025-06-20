@@ -15,7 +15,6 @@
 #include "Connection/ServerGUI.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
-#include "pluginsManager.hpp"
 
 void pluginsManager::drawImage(const std::string &texture, int x,
 int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
@@ -58,13 +57,13 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
     }
 }
 
-void pluginsManager::onEventWindow(const irr::SEvent &event)
-{
+void pluginsManager::onEventWindow(const irr::SEvent &event) {
     int size = static_cast<int>(_plugins.size());
 
     if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
         if (event.MouseInput.Event == irr::EMIE_MOUSE_WHEEL) {
-            if (event.MouseInput.Wheel < 0 && pluginIndex + showedPlugins < size)
+            if (event.MouseInput.Wheel < 0 &&
+                pluginIndex + showedPlugins < size)
                 pluginIndex++;
             else if (event.MouseInput.Wheel > 0 && pluginIndex > 0)
                 pluginIndex--;
@@ -75,10 +74,13 @@ void pluginsManager::onEventWindow(const irr::SEvent &event)
         }
         if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
             for (const auto &button : buttons) {
-                if (event.MouseInput.X >= button.x && event.MouseInput.X <= button.x + 20 &&
-                    event.MouseInput.Y >= button.y && event.MouseInput.Y <= button.y + 20) {
+                if (event.MouseInput.X >= button.x &&
+                    event.MouseInput.X <= button.x + 20 &&
+                    event.MouseInput.Y >= button.y &&
+                    event.MouseInput.Y <= button.y + 20) {
                     if (_plugins[button.index])
-                        _plugins[button.index]->setActive(!_plugins[button.index]->isActive());
+                        _plugins[button.index]->setActive(
+                            !_plugins[button.index]->isActive());
                 }
             }
         }
@@ -86,8 +88,7 @@ void pluginsManager::onEventWindow(const irr::SEvent &event)
 }
 
 void pluginsManager::drawWindow(std::shared_ptr<irr::gui::IGUIFont> font,
-    irr::video::IVideoDriver* driver)
-{
+    irr::video::IVideoDriver* driver) {
     int y = driver->getScreenSize().Height / 2 - (15 * (showedPlugins + 2));
     int x = driver->getScreenSize().Width / 2 - 175;
     int i = 0;

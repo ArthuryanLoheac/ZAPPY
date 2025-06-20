@@ -30,7 +30,7 @@ namespace AI {
 void Interface::commandBROADCAST(std::vector<std::string> &args,
 std::vector<std::string> &command) {
     if (args.size() < 2) {
-        LOG_ERROR("BROADCAST: Expected at least one argument, got %i\n.",
+        LOG_WARNING("BROADCAST: Expected at least one argument, got %i\n.",
             args.size() - 1);
         return;
     }
@@ -47,7 +47,7 @@ std::vector<std::string> &command) {
  */
 void Interface::receiveMessage(const std::vector<std::string> &args) {
     if (args.size() != 3) {
-        LOG_ERROR("MESSAGE: Expected 3 arguments, got %i\n.",
+        LOG_WARNING("MESSAGE: Expected 3 arguments, got %i\n.",
             args.size() - 1);
         return;
     }

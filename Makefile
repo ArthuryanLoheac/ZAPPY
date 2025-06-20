@@ -202,6 +202,7 @@ FLAGS_SO =  -std=c++17 -Wall -Wextra -Werror -lIrrlicht \
 TEST_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")
 
 plugins_all:
+	rm -f plugins/*.so
 	@mkdir -p plugins
 	@for src in $(TEST_SRC); do \
 		plugin_name=$$(basename $$src .cpp); \

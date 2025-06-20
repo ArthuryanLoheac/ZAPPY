@@ -30,7 +30,6 @@ void GameTile::clear(irr::scene::ISceneManager *smgr) {
         return;
     smgr->addToDeletionQueue(tileMesh.get());
     tileMesh.reset();
-    tileMesh = nullptr;
     for (auto &mesh : meshesFood)
         smgr->addToDeletionQueue(mesh.get());
     meshesFood.clear();

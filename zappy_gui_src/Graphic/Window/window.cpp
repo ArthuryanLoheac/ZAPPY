@@ -114,6 +114,9 @@ void Window::update() {
 }
 
 void Window::clearMeshes() {
+    for (auto &cube : cubes) {
+        smgr->addToDeletionQueue(cube);
+    }
     cubes.clear();
     for (int i = 0; i < GUI::GameDataManager::i().getWidth(); i++) {
         for (int j = 0; j < GUI::GameDataManager::i().getHeight(); j++) {

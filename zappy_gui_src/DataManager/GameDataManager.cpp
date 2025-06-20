@@ -33,6 +33,24 @@ int GameDataManager::getWidth() const {
     return width;
 }
 
+bool GameDataManager::getGameOver() const {
+    return isGameOver;
+}
+
+void GameDataManager::setGameOver(bool over) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    isGameOver = over;
+}
+
+const std::string &GameDataManager::getWinner() {
+    return winner;
+}
+
+void GameDataManager::setWinner(const std::string &winnerName) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    winner = winnerName;
+}
+
 int GameDataManager::getHeight() const {
     return height;
 }

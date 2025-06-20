@@ -342,6 +342,14 @@ void GUI::ServerGUI::sucCommand(std::vector<std::string> &args) {
     }
 }
 
+void GUI::ServerGUI::segCommand(std::vector<std::string> &args) {
+    if (args.size() < 2)
+        throw CommandParsingException("Invalid seg command format");
+    std::string winner = args[1];
+    GameDataManager::i().setGameOver(true);
+    GameDataManager::i().setWinner(winner);
+}
+
 void GUI::ServerGUI::pbcCommand(std::vector<std::string> &args) {
     if (args.size() < 3)
         throw CommandParsingException("Invalid pbc command format");

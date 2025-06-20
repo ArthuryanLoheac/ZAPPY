@@ -13,6 +13,7 @@
 #include "DataManager/DataManager.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "Window/window.hpp"
+
 #include "include/logs.h"
 
 namespace GUI {
@@ -83,7 +84,7 @@ void ServerGUI::clockUpdate(std::chrono::system_clock::time_point &time,
 std::chrono::system_clock::time_point &timeNext,
 std::chrono::system_clock::time_point &timeNextPing) {
     time = std::chrono::system_clock::now();
-    if (time >= timeNext) {
+    if (time >= timeNext && !GUI::GameDataManager::i().getGameOver()) {
         timeNext = timeNext + std::chrono::seconds(updateMapTime);
         sendDatasToServer("mct\n");
     } else if (time >= timeNextPing) {

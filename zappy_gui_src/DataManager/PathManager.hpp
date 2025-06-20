@@ -30,6 +30,16 @@ class PathManager {
         _paths["skyboxRight"] = "skybox/right.png";
         _paths["skyboxFront"] = "skybox/front.png";
         _paths["skyboxBack"] = "skybox/back.png";
+        // Musics
+        _paths["Ambient"] = "Musics/Ambient.mp3";
+        _paths["Spawn"] = "Musics/Spawn.wav";
+        _paths["SpawnEgg"] = "Musics/SpawnEgg.wav";
+        _paths["Death"] = "Musics/Death.mp3";
+        _paths["DeathEgg"] = "Musics/DeathEgg.wav";
+        _paths["Drop"] = "Musics/Drop.wav";
+        _paths["Take"] = "Musics/Drop.mp3";
+        _paths["Elevation"] = "Musics/Elevation.wav";
+        _paths["Push"] = "Musics/Push.wav";
     }
 
     // Delete copy constructor and assignment operator

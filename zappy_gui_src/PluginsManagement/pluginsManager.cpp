@@ -140,6 +140,15 @@ void pluginsManager::initPluginMesh(initPluginData meshData) {
         GUI::PathManager::i().setPath("skyboxBack", meshData.skyBox.back);
         GUI::Window::i().setRotationSpeedSkybox(meshData.skyBox.speedRotation);
     }
+    setPluginSoundData("Ambient", meshData.Ambient);
+    setPluginSoundData("Spawn", meshData.Spawn);
+    setPluginSoundData("SpawnEgg", meshData.SpawnEgg);
+    setPluginSoundData("Death", meshData.Death);
+    setPluginSoundData("DeathEgg", meshData.DeathEgg);
+    setPluginSoundData("Drop", meshData.Drop);
+    setPluginSoundData("Take", meshData.Take);
+    setPluginSoundData("Elevation", meshData.Elevation);
+    setPluginSoundData("Push", meshData.Push);
 }
 
 void pluginsManager::setPluginMeshData(std::string key,
@@ -147,5 +156,12 @@ initPluginData::MeshInitPlugin meshData) {
     if (meshData.isSet) {
        GUI::PathManager::i().setPath(key, meshData.name);
        GUI::PathManager::i().setScale(meshData.name, meshData.scale);
+    }
+}
+
+void pluginsManager::setPluginSoundData(std::string key,
+initPluginData::SoundInitPlugin soundData) {
+    if (soundData.isSet) {
+       GUI::PathManager::i().setPath(key, soundData.name);
     }
 }

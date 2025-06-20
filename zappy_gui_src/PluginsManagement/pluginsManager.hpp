@@ -68,6 +68,13 @@ class pluginsManager {
     void setPluginMeshData(std::string key,
         initPluginData::MeshInitPlugin meshData);
 
+    /** @brief Set the sound data for a specific plugin.
+     * @param key The key identifying the plugin.
+     * @param soundData The sound data to set for the plugin.
+     */
+    void setPluginSoundData(std::string key,
+        initPluginData::SoundInitPlugin soundData);
+
     /** @brief Check if the plugins management window is opened.
      * @return True if the window is opened, false otherwise.
      */

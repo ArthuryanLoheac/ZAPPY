@@ -32,6 +32,25 @@ class initPluginData {
         }
     };
 
+    class SoundInitPlugin {
+     public:
+        bool isSet = false;
+        std::string name; /**< Name of the sound. */
+
+        /** @brief Default constructor for SoundInitPlugin. */
+        SoundInitPlugin() : isSet(false), name("") {}
+        /**
+         * @brief Constructor for SoundInitPlugin with parameters.
+         * @param soundName The name of the sound.
+         * @throws std::invalid_argument if soundName is empty.
+         */
+        explicit SoundInitPlugin(const std::string &soundName) :
+            isSet(true), name(soundName) {
+            if (soundName.empty())
+                throw std::invalid_argument("Sound name cannot be empty");
+        }
+    };
+
     class SkyBox {
      public:
         bool isSet = false;
@@ -81,4 +100,14 @@ class initPluginData {
     MeshInitPlugin MeshTile; /**< Path to the tile mesh. */
 
     SkyBox skyBox; /**< Skybox textures. */
+
+    SoundInitPlugin Ambient; /**< Path to the ambient sound. */
+    SoundInitPlugin Spawn; /**< Path to the spawn sound. */
+    SoundInitPlugin SpawnEgg; /**< Path to the spawn egg sound. */
+    SoundInitPlugin Death; /**< Path to the death sound. */
+    SoundInitPlugin DeathEgg; /**< Path to the death egg sound. */
+    SoundInitPlugin Drop; /**< Path to the drop sound. */
+    SoundInitPlugin Take; /**< Path to the take sound. */
+    SoundInitPlugin Elevation; /**< Path to the elevation sound. */
+    SoundInitPlugin Push; /**< Path to the push sound.  */
 };

@@ -21,4 +21,8 @@ class ConnectionStatePlugin : public Aplugin {
      */
     void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
       irr::video::IVideoDriver* driver) override;
+
+    std::string getName() const override {
+        return "Connection State Plugin";
+    }
 };

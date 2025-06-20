@@ -61,4 +61,9 @@ class pluginsInterface {
      * @param active True to activate the plugin, false to deactivate it.
      */
     virtual void setActive(bool active) = 0;
+
+    /** @brief Get the name of the plugin.
+     * @return The name of the plugin as a string.
+     */
+    virtual std::string getName() const = 0;
 };

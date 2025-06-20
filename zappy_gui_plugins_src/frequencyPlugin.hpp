@@ -83,4 +83,8 @@ class frequencyPlugin : public Aplugin {
      * @param dataManager Reference to the data manager.
      */
     void update(pluginsData dataManager) override;
+
+    std::string getName() const override {
+        return "Frequency Plugin";
+    }
 };

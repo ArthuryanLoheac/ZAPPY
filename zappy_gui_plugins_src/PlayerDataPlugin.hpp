@@ -55,4 +55,8 @@ class PlayerDataPlugin : public Aplugin {
      * @param event The event to handle.
      */
     bool onEvent(const irr::SEvent &event, pluginsData &datas) override;
+
+    std::string getName() const override {
+        return "Player Data Plugin";
+    }
 };

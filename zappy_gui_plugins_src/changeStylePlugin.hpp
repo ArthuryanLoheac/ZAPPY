@@ -26,4 +26,8 @@ class changeStylePlugin : public Aplugin {
 
     initPluginData init(irr::scene::ISceneManager* smgr,
       irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) override;
+
+    std::string getName() const override {
+        return "Change Style Plugin";
+    }
 };

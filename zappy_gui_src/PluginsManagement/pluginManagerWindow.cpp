@@ -15,6 +15,7 @@
 #include "Connection/ServerGUI.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
+#include "pluginsManager.hpp"
 
 void pluginsManager::drawImage(const std::string &texture, int x,
 int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
@@ -72,16 +73,29 @@ void pluginsManager::onEventWindow(const irr::SEvent &event)
             if (pluginIndex + showedPlugins > size)
                 pluginIndex = size - showedPlugins;
         }
+        if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
+            for (const auto &button : buttons) {
+                if (event.MouseInput.X >= button.x && event.MouseInput.X <= button.x + 20 &&
+                    event.MouseInput.Y >= button.y && event.MouseInput.Y <= button.y + 20) {
+                    if (_plugins[button.index])
+                        _plugins[button.index]->setActive(!_plugins[button.index]->isActive());
+                }
+            }
+        }
     }
 }
 
 void pluginsManager::drawWindow(std::shared_ptr<irr::gui::IGUIFont> font,
     irr::video::IVideoDriver* driver)
 {
-    int y = 250;
-    int x = driver->getScreenSize().Width / 2 - 150;
+    int y = driver->getScreenSize().Height / 2 - (15 * (showedPlugins + 2));
+    int x = driver->getScreenSize().Width / 2 - 175;
     int i = 0;
 
+    buttons.clear();
+    font->draw("Plugins Manager : ",
+        irr::core::rect<irr::s32>(x - 30, y - 50, 0, 30),
+        irr::video::SColor(255, 255, 255, 255), false, false);
     drawImage("assets/UI/All.png", x - 30,
         y - 30, 350, 30 * (showedPlugins + 2), driver, 255);
     for (auto &plugin : _plugins) {
@@ -90,11 +104,25 @@ void pluginsManager::drawWindow(std::shared_ptr<irr::gui::IGUIFont> font,
                 irr::core::rect<irr::s32>(x, y, 0, 30),
                 irr::video::SColor(255, 255, 255, 255), false, false);
             y += 30;
+            drawButton(font, driver, i, y);
         }
         i++;
     }
 }
 
-void pluginsManager::updateWindow(pluginsData dataManager) {
-    (void) dataManager;
+void pluginsManager::drawButton(std::shared_ptr<irr::gui::IGUIFont> font,
+irr::video::IVideoDriver *driver, int i, int y) {
+    if (!_plugins[i])
+        return;
+    int x = driver->getScreenSize().Width / 2 + 175;
+    int alpha = _plugins[i]->isActive() ? 255 : 100;
+    std::string buttonText = _plugins[i]->isActive() ? "O" : "X";
+
+    drawImage("assets/UI/AllRed.png", x - 75,
+        y - 25, 20, 20, driver, alpha);
+    buttons.push_back(ButtonPlugin(x - 75, y - 25, i));
+    font->draw(buttonText.c_str(),
+        irr::core::rect<irr::s32>(x - 70, y - 25, 0, 20),
+        irr::video::SColor(alpha, 255, 255, 255), false, false);
 }
+

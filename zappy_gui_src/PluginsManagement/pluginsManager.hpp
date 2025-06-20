@@ -72,9 +72,20 @@ class pluginsManager {
         /**plugins stored */
 
     // ========= WINDOW PAGE =========
+    class ButtonPlugin {
+     public:
+        ButtonPlugin(int x, int y, int index)
+            : x(x), y(y), index(index) {}
+        int x;
+        int y;
+        int index;
+    };
+
     bool windowOpened = false;
     int pluginIndex = 0;
     int showedPlugins = 6;
+
+    std::vector<ButtonPlugin> buttons;
 
     std::unordered_map<std::string, irr::video::ITexture *> cachedTextures;
     /**< Cache for textures to avoid reloading. */
@@ -84,8 +95,9 @@ class pluginsManager {
 
     void onEventWindow(const irr::SEvent &event);
 
-    void updateWindow(pluginsData dataManager);
-
     void drawWindow(std::shared_ptr<irr::gui::IGUIFont> font,
         irr::video::IVideoDriver* driver);
+
+    void drawButton(std::shared_ptr<irr::gui::IGUIFont> font,
+        irr::video::IVideoDriver* driver, int i, int y);
 };

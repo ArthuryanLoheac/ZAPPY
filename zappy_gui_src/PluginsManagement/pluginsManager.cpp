@@ -99,9 +99,6 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
 }
 
 void pluginsManager::update(pluginsData dataManager) {
-    if (windowOpened)
-        updateWindow(dataManager);
-
     for (const auto &plugin : _plugins) {
         if (plugin && plugin->isActive())
             plugin->update(dataManager);

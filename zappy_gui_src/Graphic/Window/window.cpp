@@ -318,7 +318,7 @@ void Window::worldSetupMesh() {
         }
     }
     light = smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
-        irr::video::SColorf(1.5f, 1.5f, 2.f), 2000.0f);
+        GUI::PathManager::i().getLightColor(), 2000.0f);
     smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
     worldSetuped = true;
     needUpdateRessources = true;

@@ -13,7 +13,6 @@ extern "C" {
     }
 }
 
-
 void changeStylePlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
 irr::video::IVideoDriver *driver) {
     (void) font;
@@ -27,10 +26,14 @@ initPluginData changeStylePlugin::init(irr::scene::ISceneManager* smgr,
     this->cam = cam;
     initPluginData pluginData;
     pluginData.MeshBattery = initPluginData::MeshInitPlugin("Battery2", 2.f);
-    pluginData.Ambient = initPluginData::SoundInitPlugin("Musics/SC_WorldPyro.mp3");
+    pluginData.Ambient = initPluginData::SoundInitPlugin(
+        "Musics/SC_WorldPyro.mp3");
     pluginData.skyBox = initPluginData::SkyBox(
         "skybox/skybox2/skybox_py.jpg", "skybox/skybox2/skybox_ny.jpg",
         "skybox/skybox2/skybox_nx.jpg", "skybox/skybox2/skybox_px.jpg",
         "skybox/skybox2/skybox_pz.jpg", "skybox/skybox2/skybox_nz.jpg", 0);
+    // RED
+    pluginData.light = initPluginData::LightPlugin(
+        irr::video::SColorf(2, 1.5f, 1.5f, 1.f));
     return pluginData;
 }

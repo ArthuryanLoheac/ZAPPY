@@ -149,6 +149,8 @@ void pluginsManager::initPluginMesh(initPluginData meshData) {
     setPluginSoundData("Take", meshData.Take);
     setPluginSoundData("Elevation", meshData.Elevation);
     setPluginSoundData("Push", meshData.Push);
+    if (meshData.light.isSet)
+        GUI::PathManager::i().setLightColor(meshData.light.color);
 }
 
 void pluginsManager::setPluginMeshData(std::string key,

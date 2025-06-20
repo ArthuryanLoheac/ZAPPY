@@ -86,6 +86,26 @@ class initPluginData {
         }
     };
 
+    class LightPlugin {
+     public:
+        bool isSet = false; /**< Indicates if the light plugin is set. */
+        irr::video::SColorf color; /**< Color of the light in RGBA format. */
+
+        /** @brief Default constructor for LightPlugin. */
+        LightPlugin() : isSet(false), color(1.5f, 1.5f, 2.f, 1.f) {}
+
+        /**
+         * @brief Constructor for LightPlugin with parameters.
+         * @param lightColor The color of the light in RGBA format.
+         * @throws std::invalid_argument if the color is not valid.
+         */
+        explicit LightPlugin(const irr::video::SColorf &lightColor) :
+            isSet(true), color(lightColor) {
+            if (lightColor.getAlpha() < 0 || lightColor.getRed() < 0 ||
+                lightColor.getGreen() < 0 || lightColor.getBlue() < 0 )
+                throw std::invalid_argument("Invalid light color");
+            }
+    };
     initPluginData() = default;
 
     MeshInitPlugin MeshBattery; /**< Path to the battery mesh. */
@@ -110,4 +130,6 @@ class initPluginData {
     SoundInitPlugin Take; /**< Path to the take sound. */
     SoundInitPlugin Elevation; /**< Path to the elevation sound. */
     SoundInitPlugin Push; /**< Path to the push sound.  */
+
+    LightPlugin light; /**< Light plugin data. */
 };

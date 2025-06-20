@@ -46,6 +46,9 @@ class PathManager {
     PathManager(const PathManager &) = delete;
     PathManager &operator=(const PathManager &) = delete;
 
+    irr::video::SColorf lightColor = irr::video::SColorf(1.5f, 1.5f, 2.f);
+        // Default light color
+
  public:
     static PathManager &i() {
         static PathManager instance;
@@ -93,6 +96,14 @@ class PathManager {
      */
     void setScale(const std::string &key, const float &value) {
         _scales[key] = value;
+    }
+
+    irr::video::SColorf getLightColor() const {
+        return lightColor;
+    }
+
+    void setLightColor(const irr::video::SColorf &color) {
+        lightColor = color;
     }
 };
 

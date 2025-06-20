@@ -1,4 +1,6 @@
 #pragma once
+#include <irrlicht/irrlicht.h>
+
 #include <string>
 #include <memory>
 #include <unordered_map>
@@ -9,7 +11,7 @@
 /**
  * @class winnerPlugin
  * @brief Plugin class for managing global data visualization and interaction.
- * @implements pluginsInterface
+ * @implements pluginA
  */
 class winnerPlugin : public pluginA {
  public:

@@ -1,52 +1,25 @@
 #pragma once
+#include <irrlicht/irrlicht.h>
+
 #include <string>
 #include <memory>
 #include <vector>
 
-#include "zappy_gui_src/PluginsManagement/pluginsInterface.hpp"
+#include "zappy_gui_src/PluginsManagement/pluginA.hpp"
 
 /**
  * @class TileDataPlugin
  * @brief Plugin class for handling tile data visualization and interaction.
- * @implements pluginsInterface
+ * @implements pluginA
  */
-class TileDataPlugin : public pluginsInterface {
+class TileDataPlugin : public pluginA {
  private:
-    pluginsData data; /**< Data manager for the plugin. */
     int xTile = -1; /**< X position of the selected tile. */
     int yTile = -1; /**< Y position of the selected tile. */
-
-    std::vector<UICol> lstColors = {
-        UICol(255, 255, 255, 255), UICol(255, 200, 193, 198),
-        UICol(255, 105, 105, 105), UICol(255, 121, 123, 166),
-        UICol(255, 94, 84, 33), UICol(255, 144, 81, 82),
-        UICol(255, 114, 85, 144)
-    }; /**< List of colors representing resources. */
-
-    std::vector<std::string> lstNames = {"Food", "Linemate", "Deraumere",
-            "Sibur", "Mendiane", "Phiras", "Thystame"};
-      /**< List of resource names. */
-
-    irr::scene::ISceneManager* smgr;
-      /**< Pointer to the Irrlicht scene manager. */
-    irr::IrrlichtDevice *device; /**< Pointer to the Irrlicht device. */
-    irr::scene::ICameraSceneNode *cam; /**< Pointer to the Irrlicht camera. */
 
     bool pressed = false; /**< Indicates if the mouse is currently pressed. */
     bool isPressedLastFrame = false;
       /**< Indicates if the mouse was pressed in the last frame. */
-
-    /**
-     * @brief Draws a background texture at a specified position and size.
-     * @param texture The texture file path.
-     * @param x The X position.
-     * @param y The Y position.
-     * @param sizeX The width of the background.
-     * @param sizeY The height of the background.
-     * @param driver Pointer to the video driver.
-     */
-    void drawOneBackground(const std::string &texture, int x, int y,
-      int sizeX, int sizeY, irr::video::IVideoDriver* driver);
 
     /**
      * @brief Retrieves the tile data at the specified position.
@@ -69,16 +42,6 @@ class TileDataPlugin : public pluginsInterface {
 
  public:
     /**
-     * @brief Initializes the plugin with the necessary Irrlicht components.
-     * @param smgr Pointer to the scene manager.
-     * @param device Pointer to the Irrlicht device.
-     * @param cam Pointer to the camera scene node.
-     * @return True if initialization is successful, false otherwise.
-     */
-    bool init(irr::scene::ISceneManager* smgr,
-      irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) override;
-
-    /**
      * @brief Draws the UI elements for the plugin.
      * @param font Shared pointer to the GUI font.
      * @param driver Pointer to the video driver.
@@ -91,16 +54,4 @@ class TileDataPlugin : public pluginsInterface {
      * @param event The event to handle.
      */
     bool onEvent(const irr::SEvent &event, pluginsData &datas) override;
-
-    /**
-     * @brief Gets the priority of the plugin.
-     * @return The priority level of the plugin.
-     */
-    int getPriority() const override;
-
-    /**
-     * @brief Updates the plugin with the latest data.
-     * @param dataManager Reference to the data manager.
-     */
-    void update(pluginsData dataManager) override;
 };

@@ -33,7 +33,7 @@ void pluginsManager::loadPlugins(const std::string &path) {
 
 void pluginsManager::loadPlugin(const std::string &path) {
     if (!dlLoader<pluginsInterface>::verifyLib(path, "createPlugin")) {
-        std::cerr << "Failed to load plugin from: " << path << std::endl;
+        LOG_ERROR("Plugin %s is not a valid plugin", path.c_str());
         return;
     }
     try {

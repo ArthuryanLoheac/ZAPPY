@@ -65,3 +65,11 @@ int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
         driver->draw2DImage(bg, destRect, sourceRect, nullptr, 0, true);
     }
 }
+
+void Aplugin::setActive(bool active) {
+    this->active = active;
+}
+
+bool Aplugin::isActive() const {
+    return active;
+}

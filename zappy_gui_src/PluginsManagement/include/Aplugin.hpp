@@ -9,6 +9,7 @@
 
 class Aplugin : public pluginsInterface {
  protected:
+    bool active = true;
     irr::scene::ISceneManager* smgr;
     irr::IrrlichtDevice *device;
     irr::scene::ICameraSceneNode *cam;
@@ -74,4 +75,14 @@ class Aplugin : public pluginsInterface {
      * @return The priority level of the plugin.
      */
     int getPriority() const override;
+
+    /** @brief Check if the plugin is currently active.
+     * @return True if the plugin is active, false otherwise.
+     */
+    bool isActive() const override;
+
+    /** @brief Set the active state of the plugin.
+     * @param active True to activate the plugin, false to deactivate it.
+     */
+    void setActive(bool active) override;
 };

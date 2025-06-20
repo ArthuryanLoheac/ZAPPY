@@ -51,4 +51,14 @@ class pluginsInterface {
      * @return The priority level of the plugin.
      */
     virtual int getPriority() const = 0;
+
+    /** @brief Check if the plugin is currently active.
+     * @return True if the plugin is active, false otherwise.
+     */
+    virtual bool isActive() const = 0;
+
+    /** @brief Set the active state of the plugin.
+     * @param active True to activate the plugin, false to deactivate it.
+     */
+    virtual void setActive(bool active) = 0;
 };

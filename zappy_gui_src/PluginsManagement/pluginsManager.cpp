@@ -53,7 +53,7 @@ void pluginsManager::loadPlugin(const std::string &path) {
 void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
     irr::video::IVideoDriver* driver) const {
     for (const auto &plugin : _plugins) {
-        if (plugin) {
+        if (plugin && plugin->isActive()) {
             try {
                 plugin->drawUI(font, driver);
             } catch (const std::exception &e) {
@@ -65,7 +65,7 @@ void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
 
 void pluginsManager::onEvent(const irr::SEvent &event) {
     for (const auto &plugin : _plugins) {
-        if (plugin) {
+        if (plugin && plugin->isActive()) {
             try {
                 pluginsData &datas = PluginsDataManager::i().getData();
                 bool newData = plugin->onEvent(event, datas);
@@ -88,7 +88,7 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
 
 void pluginsManager::update(pluginsData dataManager) {
     for (const auto &plugin : _plugins) {
-        if (plugin)
+        if (plugin && plugin->isActive())
             plugin->update(dataManager);
     }
 }

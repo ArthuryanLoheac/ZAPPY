@@ -9,11 +9,11 @@
 #include "zappy_gui_src/PluginsManagement/include/pluginA.hpp"
 
 /**
- * @class changeBatteryPlugin
+ * @class changeStylePlugin
  * @brief Plugin class for managing global data visualization and interaction.
  * @implements pluginA
  */
-class changeBatteryPlugin : public pluginA {
+class changeStylePlugin : public pluginA {
  public:
     /**
      * @brief Draws the UI elements for the plugin.

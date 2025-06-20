@@ -18,6 +18,7 @@ int graphic() {
         GUI::Window::i();
         pluginsManager::i().loadPlugins("./plugins");
         pluginsManager::i().sortPlugins();
+        GUI::Window::i().SetupSkybox();
         GUI::SoundsManager::i().playMusic("assets/Musics/Ambient.mp3");
         GUI::Window::i().update();
     } catch(const std::exception& e) {

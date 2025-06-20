@@ -23,6 +23,13 @@ class PathManager {
         _paths["Mat4"] = "Mat4";
         _paths["Mat5"] = "Mat5";
         _paths["Mat6"] = "Mat6";
+        // Skybox
+        _paths["skyboxTop"] = "skybox/top.png";
+        _paths["skyboxBottom"] = "skybox/bottom.png";
+        _paths["skyboxLeft"] = "skybox/left.png";
+        _paths["skyboxRight"] = "skybox/right.png";
+        _paths["skyboxFront"] = "skybox/front.png";
+        _paths["skyboxBack"] = "skybox/back.png";
     }
 
     // Delete copy constructor and assignment operator
@@ -42,8 +49,9 @@ class PathManager {
      */
     std::string getPath(const std::string &key) const {
         auto it = _paths.find(key);
-        if (it != _paths.end())
+        if (it != _paths.end()) {
             return it->second;
+        }
         return "";
     }
 
@@ -54,6 +62,7 @@ class PathManager {
      */
     void setPath(const std::string &key, const std::string &value) {
         _paths[key] = value;
+        printf("PathManager::setPath called with key: %s, value: %s\n", key.c_str(), value.c_str());
     }
 
     /**

@@ -11,6 +11,7 @@
 #include "include/logs.h"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
+#include "window.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -21,16 +22,24 @@ void Window::SetupSkybox() {
 
     Skybox = std::shared_ptr<irr::scene::ISceneNode>(
         smgr->addSkyBoxSceneNode(
-            driver->getTexture("assets/skybox/top.png"),
-            driver->getTexture("assets/skybox/bottom.png"),
-            driver->getTexture("assets/skybox/back.png"),
-            driver->getTexture("assets/skybox/front.png"),
-            driver->getTexture("assets/skybox/left.png"),
-            driver->getTexture("assets/skybox/right.png")),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxTop")).c_str()),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxBottom")).c_str()),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxFront")).c_str()),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxBack")).c_str()),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxRight")).c_str()),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxLeft")).c_str())),
         [](irr::scene::ISceneNode *) {});
     rotationSkybox = Vec3d((randSmall(gen) - 5.f) / 10.f,
-        (randSmall(gen) - 5.f) / 10.f, (randSmall(gen) - 5.f) / 10.f);
-    Skybox->setRotation(Vec3d(randRot(gen), randRot(gen), randRot(gen)));
+        (randSmall(gen) - 5.f) / 10.f, (randSmall(gen) - 5.f) / 10.f)
+        * speedRotationSkybox;
+    Skybox->setRotation(Vec3d(randRot(gen), randRot(gen), randRot(gen))
+        * speedRotationSkybox);
 }
 
 Window::Window() {
@@ -56,14 +65,13 @@ Window::Window() {
     font = std::shared_ptr<irr::gui::IGUIFont>(
         guienv->getFont("assets/fonts/DejaVuSansMono.png"),
         [](irr::gui::IGUIFont *) {});
-    SetupSkybox();
 }
 
 void Window::updateSkyBoxRotation() {
     if (!Skybox)
         return;
     irr::core::vector3df rotation = Skybox->getRotation();
-    rotation += rotationSkybox * frameDeltaTime;
+    rotation += rotationSkybox * frameDeltaTime * speedRotationSkybox;
     if (rotation.Y > 360.f) rotation.Y -= 360.f;
     Skybox->setRotation(rotation);
 }
@@ -102,7 +110,19 @@ void Window::windowUpdateNoFocus() {
     }
 }
 
-void Window::update() {
+void Window::setUpdatePlayer(bool b) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    needUpdatePlayers = b;
+}
+
+void Window::setRotationSpeedSkybox(float speed)
+{
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    speedRotationSkybox = speed;
+}
+
+void Window::update()
+{
     while (device->run()) {
         updateDeltaTime();
         if (device->isWindowActive())

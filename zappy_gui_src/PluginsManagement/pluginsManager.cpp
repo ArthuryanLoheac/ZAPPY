@@ -112,6 +112,15 @@ void pluginsManager::initPluginMesh(initPluginData meshData) {
     setPluginMeshData("Player", meshData.MeshPlayer);
     setPluginMeshData("Egg", meshData.MeshEgg);
     setPluginMeshData("Tile", meshData.MeshTile);
+    if (meshData.skyBox.isSet) {
+        GUI::PathManager::i().setPath("skyboxTop", meshData.skyBox.top);
+        GUI::PathManager::i().setPath("skyboxBottom", meshData.skyBox.bottom);
+        GUI::PathManager::i().setPath("skyboxLeft", meshData.skyBox.left);
+        GUI::PathManager::i().setPath("skyboxRight", meshData.skyBox.right);
+        GUI::PathManager::i().setPath("skyboxFront", meshData.skyBox.front);
+        GUI::PathManager::i().setPath("skyboxBack", meshData.skyBox.back);
+        GUI::Window::i().setRotationSpeedSkybox(meshData.skyBox.speedRotation);
+    }
 }
 
 void pluginsManager::setPluginMeshData(std::string key,

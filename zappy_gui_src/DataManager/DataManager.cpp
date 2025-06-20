@@ -86,4 +86,14 @@ void DataManager::setFrequency(int f) {
     frequency = f;
 }
 
+/**
+ * @brief Clears the DataManager state.
+ *
+ * This method resets frequency, and running state to their default values.
+ */
+void DataManager::clear()  {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    frequency = 0;
+    running = true;
+}
 }  // namespace GUI

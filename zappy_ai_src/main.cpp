@@ -23,11 +23,9 @@
 
 
 bool sigintReceived = false;
-bool usr1Received = false;
 
 void setupSignalHandlers() {
     std::signal(SIGINT, [](int) { sigintReceived = true; });
-    std::signal(SIGUSR1, [](int) { usr1Received = true; });
 }
 
 void printHelp() {
@@ -78,11 +76,11 @@ void parseArgs(const int argc, char **argv, std::string &ip, int &port,
         } else if (std::string(argv[i]) == "-h" && i + 1 < argc) {
             ip = argv[++i];
         } else if (std::string(argv[i]) == "-v") {
-            set_log_level(WARNING);
+            set_minimum_log_level(WARNING);
         } else if (std::string(argv[i]) == "-vv") {
-            set_log_level(INFO);
+            set_minimum_log_level(INFO);
         } else if (std::string(argv[i]) == "-vvv") {
-            set_log_level(DEBUG);
+            set_minimum_log_level(DEBUG);
         } else {
             throw AI::ArgumentsException("Unknown argument: " +
                 std::string(argv[i]));
@@ -143,6 +141,8 @@ int mainLoop(int port, const std::string &ip,
     const std::string &name) {
     std::vector<std::unique_ptr<Fork>> childs;
 
+    auto lastExecution = std::chrono::steady_clock::now();
+
     setupSignalHandlers();
     int lastErrorCode = 0;
 
@@ -160,19 +160,23 @@ int mainLoop(int port, const std::string &ip,
             }
         }
 
-        if (usr1Received) {
-            childs.push_back(
-                std::make_unique<Fork>(initChildProcess, port, ip, name));
-            usr1Received = false;
-        }
-
         if (childs.empty()) {
             if (lastErrorCode == 42) {
                 LOG_FATAL("The AI can't connect to the server, exiting.");
                 return 84;
             }
             std::cout << "No child processes running, exiting." << std::endl;
-            return 0;
+            return lastErrorCode;
+        }
+
+        auto currentTime = std::chrono::steady_clock::now();
+        auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>
+            (currentTime - lastExecution);
+
+        if (elapsedTime.count() > 1) {
+            childs.push_back(
+                std::make_unique<Fork>(initChildProcess, port, ip, name));
+            lastExecution = currentTime;
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));

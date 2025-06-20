@@ -113,6 +113,33 @@ void Window::update() {
     device->drop();
 }
 
+void Window::clearMeshes() {
+    for (auto &cube : cubes) {
+        smgr->addToDeletionQueue(cube);
+    }
+    cubes.clear();
+    for (int i = 0; i < GUI::GameDataManager::i().getWidth(); i++) {
+        for (int j = 0; j < GUI::GameDataManager::i().getHeight(); j++) {
+            GameTile &tile = GUI::GameDataManager::i().getTile(i, j);
+            tile.clear(smgr);
+        }
+    }
+    if (light) {
+        smgr->addToDeletionQueue(light);
+        light = nullptr;
+    }
+    for (auto &egg : GUI::GameDataManager::i().getEggs()) {
+        if (egg.EggMesh) {
+            smgr->addToDeletionQueue(egg.EggMesh.get());
+            egg.EggMesh = nullptr;
+        }
+    }
+    for (auto &player : GUI::GameDataManager::i().getPlayers()) {
+        player.clear(smgr);
+    }
+    worldSetuped = false;
+}
+
 void Window::setupWorld() {
     if (cubes.size() > 0) {
         for (auto &cube : cubes) {
@@ -269,7 +296,7 @@ void Window::worldSetupMesh() {
             }
         }
     }
-    smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
+    light = smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
         irr::video::SColorf(1.5f, 1.5f, 2.f), 2000.0f);
     smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
     worldSetuped = true;

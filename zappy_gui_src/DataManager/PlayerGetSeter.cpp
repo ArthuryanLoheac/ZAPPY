@@ -53,6 +53,20 @@ Player &Player::operator=(Player &&other) noexcept {
     return *this;
 }
 
+void Player::clear(irr::scene::ISceneManager *smgr) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    if (PlayerMesh && smgr) {
+        smgr->addToDeletionQueue(PlayerMesh.get());
+        PlayerMesh.reset();
+        PlayerMesh = nullptr;
+    }
+    for (auto &mesh : PlayerMeshesCylinder) {
+        smgr->addToDeletionQueue(mesh.get());
+    }
+    PlayerMeshesCylinder.clear();
+    PlayerMeshesCylinderRotation.clear();
+}
+
 float randRotation(int i) {
     i++;
     float r = random() % static_cast<int>(360 / i);

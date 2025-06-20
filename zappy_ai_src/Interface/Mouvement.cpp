@@ -28,7 +28,7 @@ void Interface::commandFORWARD(std::vector<std::string> &args,
 std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
-        LOG_ERROR("FORWARD: Expected no arguments, got %i\n.",
+        LOG_WARNING("FORWARD: Expected no arguments, got %i\n.",
             args.size() - 1);
         return;
     }
@@ -46,7 +46,7 @@ void Interface::commandLEFT(std::vector<std::string> &args,
 std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
-        LOG_ERROR("LEFT: Expected no arguments, got %i\n.",
+        LOG_WARNING("LEFT: Expected no arguments, got %i\n.",
             args.size() - 1);
         return;
     }
@@ -64,7 +64,7 @@ void Interface::commandRIGHT(std::vector<std::string> &args,
 std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
-        LOG_ERROR("RIGHT: Expected no arguments, got %i\n.",
+        LOG_WARNING("RIGHT: Expected no arguments, got %i\n.",
             args.size() - 1);
         return;
     }

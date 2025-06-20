@@ -32,5 +32,7 @@ class DataManager {
     void setIp(std::string ip);
     void setRunning(bool b);
     void setFrequency(int f);
+
+    void clear();
 };
 }  // namespace GUI

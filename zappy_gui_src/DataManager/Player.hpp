@@ -54,6 +54,14 @@ class Player {
            const std::shared_ptr<Mesh> &pMesh);
 
     /**
+     * @brief Clears the player resources
+     * and removes the player meshes from the scene.
+     *
+     * @param smgr Scene manager to handle deletion of the player mesh.
+     */
+    void clear(irr::scene::ISceneManager *smgr);
+
+    /**
      * @brief Move constructor.
      */
     Player(Player &&other) noexcept;

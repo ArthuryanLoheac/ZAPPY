@@ -90,9 +90,9 @@ void Interface::run() {
     try {
         handleQueues();
     } catch (const AI::CommandNotFoundException &e) {
-        LOG_ERROR("Command not found: %s", e.what());
+        LOG_WARNING("Command not found: %s", e.what());
     } catch (const AI::CommandArgumentsException &e) {
-        LOG_ERROR("Invalid command arguments: %s", e.what());
+        LOG_WARNING("Invalid command arguments: %s", e.what());
     } catch (const std::exception &e) {
         LOG_ERROR("Unexpected error while handling queues: %s", e.what());
     }
@@ -183,7 +183,7 @@ void Interface::commandWELCOME(std::vector<std::string> &args,
 std::vector<std::string> &command) {
     (void)command;
     if (args.size() != 1) {
-        LOG_ERROR("WELCOME: Expected no arguments, got %i\n.",
+        LOG_WARNING("WELCOME: Expected no arguments, got %i\n.",
             args.size() - 1);
         return;
     }
@@ -202,6 +202,7 @@ std::vector<std::string> &command) {
         if (output[0][0] == "KO") {
             LOG_ERROR("WELCOME: Too many players connected, try again later.");
             Data::i().isDead = true;
+            Data::i().isRunning = false;
             return;
         }
 
@@ -214,10 +215,6 @@ std::vector<std::string> &command) {
         if (followUpCommand[0].empty() || followUpCommand[1].size() < 2) {
             LOG_ERROR("WELCOME: Invalid response format");
             return;
-        }
-
-        if (std::stoi(followUpCommand[0][0]) != 1) {
-            kill(getppid(), SIGUSR1);
         }
 
         Data::i().mapX = std::stoi(followUpCommand[1][0]);

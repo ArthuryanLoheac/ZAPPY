@@ -1,9 +1,14 @@
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "Connection/ServerGUI.hpp"
+#include "DataManager/GameDataManager.hpp"
+#include "DataManager/DataManager.hpp"
 
 #include "include/logs.h"
 
 void PluginsDataManager::updatePluginsData() {
+    // Win
+    data.winner = GUI::GameDataManager::i().getWinner();
+    data.isGameOver = GUI::GameDataManager::i().getGameOver();
     // Map
     data.height = GUI::GameDataManager::i().getHeight();
     data.width = GUI::GameDataManager::i().getWidth();
@@ -12,10 +17,20 @@ void PluginsDataManager::updatePluginsData() {
     // Teams
     data.teams = GUI::GameDataManager::i().getTeams();
     data.teamColors.clear();
-    data.isConnected = GUI::ServerGUI::i().isConnectedToServer();
-    data.ping = GUI::ServerGUI::i().ping;
     for (const auto &team : data.teams)
         data.teamColors.push_back(MeshImporter::i().getColor(team));
+    // CONNECTION
+    data.isConnected = GUI::ServerGUI::i().isConnectedToServer();
+    data.ping = GUI::ServerGUI::i().ping;
+    // MESSAGES
+    data.messages.clear();
+    for (const auto &message : GUI::GameDataManager::i().getMessages())
+        data.messages.emplace_back(message.content, message.playerId);
+    data.messagesThisFrame.clear();
+    for (const auto &mess : GUI::GameDataManager::i().getMessagesThisFrame())
+        data.messagesThisFrame.emplace_back(mess.content, mess.playerId);
+    GUI::GameDataManager::i().getMessagesThisFrame().clear();
+    // OTHERS
     updatePlayers();
     updateTiles();
 }

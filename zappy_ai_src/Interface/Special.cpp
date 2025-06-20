@@ -31,15 +31,11 @@ namespace AI {
 void Interface::commandFORK(std::vector<std::string> &args,
 std::vector<std::string> &command) {
     if (args.size() != 1) {
-        LOG_ERROR("FORK: Expected no arguments, got %i\n.",
+        LOG_WARNING("FORK: Expected no arguments, got %i\n.",
             args.size() - 1);
         return;
     }
     (void)command;
-
-    if (args[0] == "OK") {
-        kill(getppid(), SIGUSR1);
-    }
 }
 
 /**
@@ -54,7 +50,7 @@ std::vector<std::string> &command) {
 void Interface::commandINCANTATION(std::vector<std::string> &args,
 std::vector<std::string> &command) {
     if (args.empty()) {
-        LOG_ERROR("INCANTATION: Expected at least one argument, got %i\n.",
+        LOG_WARNING("INCANTATION: Expected at least one argument, got %i\n.",
             args.size() - 1);
         return;
     }

@@ -20,7 +20,7 @@ class FrankLeboeufModule : public AIModule {
     /**
      * @brief Destroy the FrankLeboeufModule object.
      */
-    ~FrankLeboeufModule() = default;
+    ~FrankLeboeufModule() override = default;
 
     /**
      * @brief Execute the module's main action.

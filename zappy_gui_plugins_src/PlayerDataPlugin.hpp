@@ -32,7 +32,7 @@ class PlayerDataPlugin : public Aplugin {
     /**
      * @brief Detects collision with a player.
      */
-    void detectCollisionPlayer();
+    bool detectCollisionPlayer();
 
     /**
      * @brief Draws information about a specific player.
@@ -58,5 +58,9 @@ class PlayerDataPlugin : public Aplugin {
 
     std::string getName() const override {
         return "Player Data Plugin";
+    }
+
+    int getPriority() const override {
+        return 1;
     }
 };

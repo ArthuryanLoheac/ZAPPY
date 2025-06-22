@@ -290,7 +290,7 @@ void Window::initMeshEggs() {
                     std::to_string(egg.id)).c_str());
             }
         } else {
-            LOG_ERROR(("Egg mesh already exists for egg ID " +
+            LOG_DEBUG(("Egg mesh already exists for egg ID " +
                 std::to_string(egg.id)).c_str());
         }
     }

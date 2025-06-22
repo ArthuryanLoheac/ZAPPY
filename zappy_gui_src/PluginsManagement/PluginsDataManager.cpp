@@ -4,6 +4,7 @@
 #include "DataManager/DataManager.hpp"
 
 #include "include/logs.h"
+#include "PluginsDataManager.hpp"
 
 void PluginsDataManager::updatePluginsData() {
     // Win
@@ -32,6 +33,7 @@ void PluginsDataManager::updatePluginsData() {
     GUI::GameDataManager::i().getMessagesThisFrame().clear();
     // OTHERS
     updatePlayers();
+    updateEggs();
     updateTiles();
 }
 
@@ -86,5 +88,15 @@ void PluginsDataManager::updateTiles() {
         }
     } catch (std::exception &e) {
         LOG_ERROR("ERROR %s\n", e.what());
+    }
+}
+
+void PluginsDataManager::updateEggs() {
+    data.eggs.clear();
+    for (const auto &egg : GUI::GameDataManager::i().getEggs()) {
+        if (egg.isDead)
+            continue;
+        pluginsData::Eggs newEgg(egg.x, egg.y, egg.team, egg.EggMesh);
+        data.eggs.push_back(newEgg);
     }
 }

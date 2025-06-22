@@ -92,16 +92,16 @@ bool PlayerDataPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
             pressed = false;
         }
         if (pressed && !isPressedLastFrame)
-            detectCollisionPlayer();
+            return detectCollisionPlayer();
         isPressedLastFrame = pressed;
     }
     (void) datas;
     return false;
 }
 
-void PlayerDataPlugin::detectCollisionPlayer() {
+bool PlayerDataPlugin::detectCollisionPlayer() {
     if (data.players.size() <= 0)
-        return;
+        return false;
     irr::core::position2d<irr::s32> mousePos =
         device->getCursorControl()->getPosition();
     irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()
@@ -116,11 +116,11 @@ void PlayerDataPlugin::detectCollisionPlayer() {
         if (box.intersectsWithLine(ray)) {
             if (idPlayer == player.id) {
                 idPlayer = -1;
-                return;
+                return true;
             }
             idPlayer = player.id;
-            return;
+            return true;
         }
     }
-    return;
+    return false;
 }

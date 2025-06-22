@@ -6,6 +6,7 @@
 #include "DataManager/GameTile.hpp"
 #include "Graphic/Window/window.hpp"
 #include "tools/MeshImporter.hpp"
+#include "DataManager/PathManager.hpp"
 
 namespace GUI {
 GameTile::GameTile(int xCoord, int yCoord)
@@ -115,13 +116,20 @@ int GameTile::getRessource(int id) const {
 }
 
 void GameTile::updateMeshesRessources() {
-    updateMesh("Battery", food, meshesFood, 0.05f, 0.35f, 0.3f, 0.35f);
-    updateMesh("Mat1", r1, meshesR1, 0.1f, -0.35f, 0.15f, 0.35f);
-    updateMesh("Mat2", r2, meshesR2, 0.1f, 0.35f, 0.15f, -0.35f);
-    updateMesh("Mat3", r3, meshesR3, 0.1f, -0.35f, 0.15f, -0.35f);
-    updateMesh("Mat4", r4, meshesR4, 0.1f, 0.15f, 0.15f, 0.35f);
-    updateMesh("Mat5", r5, meshesR5, 0.1f, -0.15f, 0.15f, 0.35f);
-    updateMesh("Mat6", r6, meshesR6, 0.1f, 0.15f, 0.15f, -0.35f);
+    updateMesh(PathManager::i().getPath("Food"),
+        food, meshesFood, 0.05f, 0.35f, 0.3f, 0.35f);
+    updateMesh(PathManager::i().getPath("Mat1"),
+        r1, meshesR1, 0.1f, -0.35f, 0.15f, 0.35f);
+    updateMesh(PathManager::i().getPath("Mat2"),
+        r2, meshesR2, 0.1f, 0.35f, 0.15f, -0.35f);
+    updateMesh(PathManager::i().getPath("Mat3"),
+        r3, meshesR3, 0.1f, -0.35f, 0.15f, -0.35f);
+    updateMesh(PathManager::i().getPath("Mat4"),
+        r4, meshesR4, 0.1f, 0.15f, 0.15f, 0.35f);
+    updateMesh(PathManager::i().getPath("Mat5"),
+        r5, meshesR5, 0.1f, -0.15f, 0.15f, 0.35f);
+    updateMesh(PathManager::i().getPath("Mat6"),
+        r6, meshesR6, 0.1f, 0.15f, 0.15f, -0.35f);
 }
 
 void GameTile::updateMesh(std::string meshName, int count,
@@ -143,7 +151,8 @@ float offsetX, float offsetY, float offsetZ) {
         position.X += offsetX;
         position.Z += offsetZ;
         meshActual->setPosition(position);
-        meshActual->setScale(Vec3d(scale));
+        meshActual->setScale(Vec3d(scale) *
+            PathManager::i().getScale(meshName));
         meshActual->setVisible(true);
     }
 }

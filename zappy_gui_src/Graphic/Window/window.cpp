@@ -10,6 +10,7 @@
 #include "DataManager/SoundsManager.hpp"
 #include "include/logs.h"
 #include "PluginsManagement/PluginsDataManager.hpp"
+#include "DataManager/PathManager.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -20,16 +21,24 @@ void Window::SetupSkybox() {
 
     Skybox = std::shared_ptr<irr::scene::ISceneNode>(
         smgr->addSkyBoxSceneNode(
-            driver->getTexture("assets/skybox/top.png"),
-            driver->getTexture("assets/skybox/bottom.png"),
-            driver->getTexture("assets/skybox/back.png"),
-            driver->getTexture("assets/skybox/front.png"),
-            driver->getTexture("assets/skybox/left.png"),
-            driver->getTexture("assets/skybox/right.png")),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxTop")).c_str()),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxBottom")).c_str()),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxFront")).c_str()),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxBack")).c_str()),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxRight")).c_str()),
+            driver->getTexture(("assets/" +
+            GUI::PathManager::i().getPath("skyboxLeft")).c_str())),
         [](irr::scene::ISceneNode *) {});
     rotationSkybox = Vec3d((randSmall(gen) - 5.f) / 10.f,
-        (randSmall(gen) - 5.f) / 10.f, (randSmall(gen) - 5.f) / 10.f);
-    Skybox->setRotation(Vec3d(randRot(gen), randRot(gen), randRot(gen)));
+        (randSmall(gen) - 5.f) / 10.f, (randSmall(gen) - 5.f) / 10.f)
+        * speedRotationSkybox;
+    Skybox->setRotation(Vec3d(randRot(gen), randRot(gen), randRot(gen))
+        * speedRotationSkybox);
 }
 
 Window::Window() {
@@ -55,14 +64,13 @@ Window::Window() {
     font = std::shared_ptr<irr::gui::IGUIFont>(
         guienv->getFont("assets/fonts/DejaVuSansMono.png"),
         [](irr::gui::IGUIFont *) {});
-    SetupSkybox();
 }
 
 void Window::updateSkyBoxRotation() {
     if (!Skybox)
         return;
     irr::core::vector3df rotation = Skybox->getRotation();
-    rotation += rotationSkybox * frameDeltaTime;
+    rotation += rotationSkybox * frameDeltaTime * speedRotationSkybox;
     if (rotation.Y > 360.f) rotation.Y -= 360.f;
     Skybox->setRotation(rotation);
 }
@@ -99,6 +107,16 @@ void Window::windowUpdateNoFocus() {
         LOG_ERROR(("Error in windowUpdateNoFocus: " +
             std::string(e.what())).c_str());
     }
+}
+
+void Window::setUpdatePlayer(bool b) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    needUpdatePlayers = b;
+}
+
+void Window::setRotationSpeedSkybox(float speed) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    speedRotationSkybox = speed;
 }
 
 void Window::update() {
@@ -235,8 +253,9 @@ void Window::initMeshPlayers() {
                 .getTile(player.getX(), player.getY()).getWorldPos();
             position.Y += 0.5f;
             try {
-                auto mesh = MeshImporter::i().importMesh("Drone",
-                    player.getTeamName(), position, Vec3d(0.2f),
+                auto mesh = MeshImporter::i().importMesh(
+                    PathManager::i().getPath("Player"), player.getTeamName(),
+                    position, Vec3d(0.2f),
                     Vec3d(0, player.getOrientation() * 90, 0));
                 if (mesh && mesh->getMesh()) {
                     player.setMesh(mesh);
@@ -259,7 +278,8 @@ void Window::initMeshEggs() {
             Vec3d position = GUI::GameDataManager::i().
                 getTile(egg.x, egg.y).getWorldPos();
             position.Y += 0.2f;
-            auto mesh = MeshImporter::i().importMesh("DroneEgg", "",
+            auto mesh = MeshImporter::i().importMesh(
+                PathManager::i().getPath("Egg"), "",
                 position, Vec3d(0.2f), Vec3d(0, 0, 0));
             if (mesh && mesh->getMesh()) {
                 mesh->setVisible(!egg.isDead);
@@ -289,7 +309,8 @@ void Window::worldSetupMesh() {
                     (width % 2 == 0 ? 0.5f : 0), -2,
                     j - (height/2) + (height % 2 == 0 ? 0.5f : 0));
                 float rotation = std::rand() % 4;
-                auto mesh = MeshImporter::i().importMesh("Plane", "", position,
+                auto mesh = MeshImporter::i().importMesh(
+                    PathManager::i().getPath("Tile"), "", position,
                     irr::core::vector3df(0.18f),
                     irr::core::vector3df(0, rotation * 90, 0));
                 tile.setTileMesh(mesh);
@@ -297,7 +318,7 @@ void Window::worldSetupMesh() {
         }
     }
     light = smgr->addLightSceneNode(nullptr, irr::core::vector3df(30, 30, 0),
-        irr::video::SColorf(1.5f, 1.5f, 2.f), 2000.0f);
+        GUI::PathManager::i().getLightColor(), 2000.0f);
     smgr->setAmbientLight(irr::video::SColorf(0.2f, 0.2f, 0.2f));
     worldSetuped = true;
     needUpdateRessources = true;

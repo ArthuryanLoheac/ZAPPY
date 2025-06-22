@@ -14,6 +14,7 @@
 #include "Graphic/Window/window.hpp"
 #include "Connection/ServerGUI.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
+#include "DataManager/PathManager.hpp"
 
 
 void pluginsManager::loadPlugins(const std::string &path) {
@@ -25,22 +26,31 @@ void pluginsManager::loadPlugins(const std::string &path) {
         return;
     }
     while ((entry = readdir(dir)) != nullptr) {
-        if (entry->d_type == DT_REG)
+        if (entry->d_type == DT_REG && strcmp(entry->d_name, "save.txt") != 0)
             loadPlugin(path + "/" + entry->d_name);
     }
     closedir(dir);
+    loadActivePlugins();
+    initPlugins();
+}
+
+void pluginsManager::initPlugins() {
+    for (auto &plugin : _plugins) {
+        initPluginData data = plugin->init(GUI::Window::i().smgr,
+            GUI::Window::i().device, GUI::Window::i().cam);
+        if (plugin->isActive())
+            initPluginMesh(data);
+    }
 }
 
 void pluginsManager::loadPlugin(const std::string &path) {
     if (!dlLoader<pluginsInterface>::verifyLib(path, "createPlugin")) {
-        std::cerr << "Failed to load plugin from: " << path << std::endl;
+        LOG_ERROR("Plugin %s is not a valid plugin", path.c_str());
         return;
     }
     try {
         auto plugin = dlLoader<pluginsInterface>::getLib(path, "createPlugin");
         if (plugin) {
-            plugin->init(GUI::Window::i().smgr, GUI::Window::i().device,
-                GUI::Window::i().cam);
             _plugins.push_back(std::move(plugin));
         }
     } catch (const dlLoader<pluginsInterface>::dlError &e) {
@@ -49,9 +59,12 @@ void pluginsManager::loadPlugin(const std::string &path) {
 }
 
 void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
-    irr::video::IVideoDriver* driver) const {
+    irr::video::IVideoDriver* driver) {
+    if (windowOpened)
+        drawWindow(font, driver);
+
     for (const auto &plugin : _plugins) {
-        if (plugin) {
+        if (plugin && plugin->isActive()) {
             try {
                 plugin->drawUI(font, driver);
             } catch (const std::exception &e) {
@@ -62,8 +75,16 @@ void pluginsManager::drawPlugins(std::shared_ptr<irr::gui::IGUIFont> font,
 }
 
 void pluginsManager::onEvent(const irr::SEvent &event) {
+    if (event.EventType == irr::EET_KEY_INPUT_EVENT &&
+        event.KeyInput.Key == irr::KEY_TAB &&
+        event.KeyInput.PressedDown)
+        windowOpened = !windowOpened;
+    if (windowOpened) {
+        onEventWindow(event);
+        return;
+    }
     for (const auto &plugin : _plugins) {
-        if (plugin) {
+        if (plugin && plugin->isActive()) {
             try {
                 pluginsData &datas = PluginsDataManager::i().getData();
                 bool newData = plugin->onEvent(event, datas);
@@ -86,7 +107,7 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
 
 void pluginsManager::update(pluginsData dataManager) {
     for (const auto &plugin : _plugins) {
-        if (plugin)
+        if (plugin && plugin->isActive())
             plugin->update(dataManager);
     }
 }
@@ -97,4 +118,52 @@ void pluginsManager::sortPlugins() {
            const std::unique_ptr<pluginsInterface> &b) {
             return a->getPriority() > b->getPriority();
         });
+}
+
+void pluginsManager::initPluginMesh(initPluginData meshData) {
+    setPluginMeshData("Food", meshData.MeshBattery);
+    setPluginMeshData("Mat1", meshData.MeshMat1);
+    setPluginMeshData("Mat2", meshData.MeshMat2);
+    setPluginMeshData("Mat3", meshData.MeshMat3);
+    setPluginMeshData("Mat4", meshData.MeshMat4);
+    setPluginMeshData("Mat5", meshData.MeshMat5);
+    setPluginMeshData("Mat6", meshData.MeshMat6);
+    setPluginMeshData("Player", meshData.MeshPlayer);
+    setPluginMeshData("Egg", meshData.MeshEgg);
+    setPluginMeshData("Tile", meshData.MeshTile);
+    if (meshData.skyBox.isSet) {
+        GUI::PathManager::i().setPath("skyboxTop", meshData.skyBox.top);
+        GUI::PathManager::i().setPath("skyboxBottom", meshData.skyBox.bottom);
+        GUI::PathManager::i().setPath("skyboxLeft", meshData.skyBox.left);
+        GUI::PathManager::i().setPath("skyboxRight", meshData.skyBox.right);
+        GUI::PathManager::i().setPath("skyboxFront", meshData.skyBox.front);
+        GUI::PathManager::i().setPath("skyboxBack", meshData.skyBox.back);
+        GUI::Window::i().setRotationSpeedSkybox(meshData.skyBox.speedRotation);
+    }
+    setPluginSoundData("Ambient", meshData.Ambient);
+    setPluginSoundData("Spawn", meshData.Spawn);
+    setPluginSoundData("SpawnEgg", meshData.SpawnEgg);
+    setPluginSoundData("Death", meshData.Death);
+    setPluginSoundData("DeathEgg", meshData.DeathEgg);
+    setPluginSoundData("Drop", meshData.Drop);
+    setPluginSoundData("Take", meshData.Take);
+    setPluginSoundData("Elevation", meshData.Elevation);
+    setPluginSoundData("Push", meshData.Push);
+    if (meshData.light.isSet)
+        GUI::PathManager::i().setLightColor(meshData.light.color);
+}
+
+void pluginsManager::setPluginMeshData(std::string key,
+initPluginData::MeshInitPlugin meshData) {
+    if (meshData.isSet) {
+       GUI::PathManager::i().setPath(key, meshData.name);
+       GUI::PathManager::i().setScale(meshData.name, meshData.scale);
+    }
+}
+
+void pluginsManager::setPluginSoundData(std::string key,
+initPluginData::SoundInitPlugin soundData) {
+    if (soundData.isSet) {
+       GUI::PathManager::i().setPath(key, soundData.name);
+    }
 }

@@ -19,18 +19,16 @@ namespace GUI {
  * @brief Manages the graphical window and rendering for the application.
  */
 class Window {
- private:
-    /**
-     * @brief Sets up the skybox for the scene.
-     */
-    void SetupSkybox();
-
  public:
     std::mutex mutexDatas; /**< Mutex for thread-safe access. */
     /**
      * @brief Constructs a new Window object.
      */
     Window();
+    /**
+     * @brief Sets up the skybox for the scene.
+     */
+    void SetupSkybox();
     irr::IrrlichtDevice *device; /**<device for rendering the scene*/
     irr::video::IVideoDriver* driver; /**<video driver for rendering*/
     irr::scene::ISceneManager* smgr; /**<scene manager for managing the scene*/
@@ -57,6 +55,7 @@ class Window {
     std::shared_ptr<irr::scene::ISceneNode> Skybox;
         /**<skybox node forthe scene*/
     Vec3d rotationSkybox; /**<rotation of the skybox*/
+    float speedRotationSkybox = 1; /**<speed of the skybox rotation*/
 
     float rotationSpeedCamera = 100.f; /**<speed of camera rotation*/
     float zoomSpeedCamera = 20.f; /**<speed of camera zooming*/
@@ -220,10 +219,9 @@ class Window {
      *
      * @param b True if resources need updating, false otherwise.
      */
-    void setUpdatePlayer(bool b) {
-        std::lock_guard<std::mutex> lock(mutexDatas);
-        needUpdatePlayers = b;
-    }
+    void setUpdatePlayer(bool b);
+
+    void setRotationSpeedSkybox(float speed);
 };
 
 }  // namespace GUI

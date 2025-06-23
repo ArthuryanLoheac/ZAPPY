@@ -53,6 +53,7 @@ class pluginsData {
              /**< List of resources held by the player. */
         std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> PlayerMesh;
             /**< Mesh associated with the player. */
+        bool inElevation; /**< Flag indicating if the player is in elevation. */
     };
 
     class Eggs {

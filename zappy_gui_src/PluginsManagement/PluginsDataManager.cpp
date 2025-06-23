@@ -46,6 +46,9 @@ void PluginsDataManager::updatePlayers() {
         newPlayer.teamName = player.getTeamName();
         newPlayer.x = player.getX();
         newPlayer.y = player.getY();
+        newPlayer.inElevation = player.getState() == GUI::Player::IDLE_ELEVATION
+            || player.getState() == GUI::Player::END_ELEVATION
+            || player.getState() == GUI::Player::START_ELEVATION;
         newPlayer.level = player.getLevel();
         newPlayer.color = MeshImporter::i().getColor(player.getTeamName());
         newPlayer.PlayerMesh = player.getMesh();

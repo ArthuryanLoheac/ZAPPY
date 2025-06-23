@@ -64,6 +64,9 @@ Window::Window() {
     font = std::shared_ptr<irr::gui::IGUIFont>(
         guienv->getFont("assets/fonts/DejaVuSansMono.png"),
         [](irr::gui::IGUIFont *) {});
+    driver->beginScene(true, true,
+            irr::video::SColor(0, 0, 0, 0));
+    driver->endScene();
 }
 
 void Window::updateSkyBoxRotation() {

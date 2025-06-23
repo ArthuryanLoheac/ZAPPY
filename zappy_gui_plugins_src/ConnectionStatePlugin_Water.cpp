@@ -23,8 +23,8 @@ void ConnectionStatePlugin_Water::update(pluginsData data, float deltaTime) {
     }
 }
 
-void ConnectionStatePlugin_Water::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
-irr::video::IVideoDriver* driver) {
+void ConnectionStatePlugin_Water::drawUI(
+std::shared_ptr<irr::gui::IGUIFont> font, irr::video::IVideoDriver* driver) {
     if (!driver)
         return;
     int width = driver->getScreenSize().Width;
@@ -39,6 +39,7 @@ irr::video::IVideoDriver* driver) {
         drawImage("assets/UI/connected.png", width / 2 + 20, 10, 30, 30,
             driver);
     else
-        drawImage("assets/UI/WaterLoading/" + std::to_string(frame) + ".png", width / 2 + 20, 10, 30, 30,
+        drawImage("assets/UI/WaterLoading/" + std::to_string(frame) + ".png",
+            width / 2 + 20, 10, 30, 30,
             driver);
 }

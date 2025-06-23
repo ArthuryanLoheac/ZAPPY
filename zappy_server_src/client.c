@@ -72,6 +72,8 @@ static void remove_client_data(client_t **clients, int fd)
     client_t *current = *clients;
     client_t *prev = NULL;
 
+    if (current == NULL)
+        return;
     while (current != NULL && current->fd != fd) {
         prev = current;
         current = current->next;
@@ -107,6 +109,8 @@ void remove_client(zappy_t *zappy, int fd)
         display_error("Memory allocation failed for poll file descriptors");
     remove_client_data(&zappy->clients, fd);
     server->nb_fds--;
+    if (server->nb_fds == 0)
+        zappy->clients = NULL;
 }
 
 void destroy_clients(client_t *clients)

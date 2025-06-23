@@ -64,8 +64,8 @@ void parseArgs(const int argc, char **argv, std::string &ip, int &port,
         throw AI::ArgumentsException("Invalid number of arguments.");
     }
 
-    if (argc == 2 && std::string(argv[1]) == "--help" ||
-        std::string(argv[1]) == "-h") {
+    if (argc == 2 && (std::string(argv[1]) == "--help" ||
+        std::string(argv[1]) == "-h")) {
         printHelp();
         exit(0);
     }

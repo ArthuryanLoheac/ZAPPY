@@ -16,7 +16,8 @@ void Window::handleEvent() {
     int xMoveCam = receiver.getValBetween(irr::KEY_KEY_E, irr::KEY_KEY_A);
     int yMoveCenterCam = receiver.getValBetween(irr::KEY_KEY_D, irr::KEY_KEY_Q);
     int xMoveCenterCam = receiver.getValBetween(irr::KEY_KEY_S, irr::KEY_KEY_Z);
-    int zMoveCenterCam = receiver.getValBetween(irr::KEY_SPACE, irr::KEY_LCONTROL);
+    int zMoveCenterCam =
+        receiver.getValBetween(irr::KEY_SPACE, irr::KEY_LCONTROL);
     float zoom = 0;
 
     zoom = -receiver.ConsumeWheelDelta();

@@ -182,7 +182,8 @@ class Window {
      * @param radX Rotation in the X direction.
      * @param radZ Rotation in the Z direction.
      */
-    void updateMoveOrigin(float xMove, float yMove, float zMove, float radX, float radZ);
+    void updateMoveOrigin(float xMove, float yMove, float zMove,
+        float radX, float radZ);
 
     /**
      * @brief Updates the camera's rotation.

@@ -48,7 +48,7 @@ class pluginsManager {
     /** @brief Update all plugins with the datas of the game
      * @param dataManager The data structure contaning all datas
      */
-    void update(pluginsData dataManager);
+    void update(pluginsData dataManager, float deltaTime);
 
     /**
      * @brief Sort the plugins based on their priority.

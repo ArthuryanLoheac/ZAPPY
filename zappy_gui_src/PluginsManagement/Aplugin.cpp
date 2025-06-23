@@ -10,8 +10,9 @@ initPluginData Aplugin::init(irr::scene::ISceneManager* smgr,
     return initPluginData();
 }
 
-void Aplugin::update(pluginsData dataManager) {
+void Aplugin::update(pluginsData dataManager, float deltaTime) {
     data = dataManager;
+    (void)deltaTime;
 }
 
 bool Aplugin::onEvent(const irr::SEvent &event, pluginsData &datas) {

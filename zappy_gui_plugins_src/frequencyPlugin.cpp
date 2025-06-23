@@ -110,9 +110,10 @@ bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
     return false;
 }
 
-void frequencyPlugin::update(pluginsData _data) {
+void frequencyPlugin::update(pluginsData _data, float deltaTime) {
     data = _data;
     frequency = data.frequency;
+    (void)deltaTime;
 }
 
 int frequencyPlugin::getPriority() const {

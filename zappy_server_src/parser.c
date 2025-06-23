@@ -103,9 +103,9 @@ static void parse_one_arg(int ac, char **av, parser_t *parser, int i)
     if (strcmp(av[i], "-p") == 0 && i + 1 < ac)
         parser->port = parse_int(av[i + 1], 1024, 65535);
     if (strcmp(av[i], "-x") == 0 && i + 1 < ac)
-        parser->width = parse_int(av[i + 1], 1, 32767);
+        parser->width = parse_int(av[i + 1], 1, 10000);
     if (strcmp(av[i], "-y") == 0 && i + 1 < ac)
-        parser->height = parse_int(av[i + 1], 1, 32767);
+        parser->height = parse_int(av[i + 1], 1, 10000);
     if (strcmp(av[i], "-n") == 0)
         parser->team_names = parse_teams(av, &i, ac, &parser->nb_teams);
     if (strcmp(av[i], "-c") == 0 && i + 1 < ac)

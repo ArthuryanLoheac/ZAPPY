@@ -49,7 +49,7 @@ FLAGS_C_COMMON = -MMD -MP \
 	-I./libc/include \
 	-std=gnu17 -Wall -Wextra -Werror
 
-FLAGS_TEST = -lcriterion --coverage -include cstdint
+FLAGS_TEST = -lcriterion --coverage
 
 FLAGS_LINTER =	\
 	--repository=. \
@@ -79,7 +79,7 @@ SRC_SERVER = $(shell find zappy_server_src -type f -name "*.c" ! -name \
 	"main.c")
 SRC_GUI	= $(shell find zappy_gui_src -type f -name "*.cpp" ! -name "main.cpp")
 SRC_AI = $(shell find zappy_ai_src -type f -name "*.cpp" ! -name "main.cpp")
-SRC_TESTS = tests/test_1.cpp \
+SRC_TESTS = $(shell find tests -type f -name "*.c" ! -name "main.c")
 
 # ============= RULES ============= #
 
@@ -173,8 +173,9 @@ doxygen:
 
 # ============= TESTS ============= #
 
-unit_tests:
-	g++ -o unit_tests $(SRC_TESTS) $(FLAGS_TEST)
+unit_tests: $(COMMON_C_LIB)
+	gcc -o unit_tests $(SRC_SERVER) $(COMMON_C_LIB) $(SRC_TESTS) \
+	-I./zappy_server_src/include -I./libc/include $(FLAGS_TEST)
 
 tests_run: unit_tests
 	./unit_tests --verbose

@@ -63,7 +63,7 @@ class ServerGUI {
 
  private:
     bool sendPing = false; /**< Flag to indicate if BCT command has been sent */
-    std::chrono::_V2::system_clock::time_point timeForPing;
+    std::chrono::system_clock::time_point timeForPing;
     bool isConnected = false; /**< if the server connection is active */
 
     /**
@@ -229,7 +229,27 @@ class ServerGUI {
      */
     void pexCommand(std::vector<std::string> &args);
 
+    /**
+     * @brief Handles the "SUC" command when an hunknown command is received
+     *
+     * @param args Command arguments containing player ID and action details.
+     */
     void sucCommand(std::vector<std::string> &args);
+
+    /**
+     * @brief Handles the "SEG" Command that mark the end of the game
+     * giving us the winner
+     *
+     * @param args Command arguments containing game state details.
+     */
+    void segCommand(std::vector<std::string> &args);
+
+    /**
+     * @brief Handles the "PBC" command when a player broadcasts a message.
+     *
+     * @param args Command arguments containing the server time.
+     */
+    void pbcCommand(std::vector<std::string> &args);
 
     /**
      * @brief Map of server commands to their corresponding handler functions.
@@ -256,6 +276,8 @@ class ServerGUI {
         {"PGT", &ServerGUI::pgtCommand},
         {"PEX", &ServerGUI::pexCommand},
         {"SUC", &ServerGUI::sucCommand},
+        {"SEG", &ServerGUI::segCommand},
+        {"PBC", &ServerGUI::pbcCommand},
     };
 };
 

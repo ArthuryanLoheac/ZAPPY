@@ -9,7 +9,7 @@
 #include <string.h>
 #include "client.h"
 
-static void delete_egg(egg_t *prev, egg_t *current, zappy_t *zappy_ptr)
+void delete_egg(egg_t *prev, egg_t *current, zappy_t *zappy_ptr)
 {
     if (prev == NULL) {
         zappy_ptr->map->eggs = current->next;

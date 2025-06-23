@@ -30,7 +30,7 @@ namespace AI {
 void Interface::commandBROADCAST(std::vector<std::string> &args,
 std::vector<std::string> &command) {
     if (args.size() < 2) {
-        LOG_ERROR("BROADCAST: Expected at least one argument, got %i\n.",
+        LOG_WARNING("BROADCAST: Expected at least one argument, got %i\n.",
             args.size() - 1);
         return;
     }
@@ -45,9 +45,9 @@ std::vector<std::string> &command) {
  *
  * @param args The message arguments including direction
  */
-void Interface::receiveMessage(std::vector<std::string> &args) {
+void Interface::receiveMessage(const std::vector<std::string> &args) {
     if (args.size() != 3) {
-        LOG_ERROR("MESSAGE: Expected 3 arguments, got %i\n.",
+        LOG_WARNING("MESSAGE: Expected 3 arguments, got %i\n.",
             args.size() - 1);
         return;
     }
@@ -59,17 +59,14 @@ void Interface::receiveMessage(std::vector<std::string> &args) {
         return;
     }
 
-    // Extract the actual encrypted message (remove magic key)
     message = message.substr(Data::i().magicKey.length());
 
-    // Clean up any newlines from the message
     message.erase(std::remove(message.begin(), message.end(), '\n'),
         message.end());
 
-    // Decrypt the message using our improved decryption method
     message = decrypt(message, Data::i().magicKey);
 
-    Data::i().messageQueue.push({message, direction});
+    Data::i().messageQueue.emplace(message, direction);
 }
 
 /**

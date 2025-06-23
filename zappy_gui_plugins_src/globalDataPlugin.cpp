@@ -12,28 +12,6 @@ extern "C" {
     }
 }
 
-bool globalDataPlugin::init(irr::scene::ISceneManager* smgr,
-    irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) {
-    (void) device;
-    (void) smgr;
-    (void) cam;
-    printf("============= Initializing GlobalData Plugin =============\n");
-    return true;
-}
-
-void globalDataPlugin::drawOneBackground(const std::string &texture, int x,
-int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
-    irr::video::ITexture* bg = driver->getTexture(texture.c_str());
-    irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
-
-    irr::core::rect<irr::s32>destRect(x, y, x + sizeX, y + sizeY);
-    if (!bg) {
-        std::cerr << "Error: Texture not found: " << texture << std::endl;
-        return;
-    }
-    driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
-}
-
 void globalDataPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
 irr::video::IVideoDriver* driver) {
     int x = 30;
@@ -41,9 +19,10 @@ irr::video::IVideoDriver* driver) {
     int spaceBetween = 30;
     UICol white(255, 255, 255, 255);
 
-    if (!font || !isActive)
+    if (!font)
         return;
-    drawOneBackground("assets/UI/BottomRight.png", 0, 0, 150, 400, driver);
+    drawImage("assets/UI/BottomRight.png", 0, 0, 150,
+        80 + data.teams.size() * 30, driver);
     // FPS
     font->draw(("FPS : " + std::to_string(driver->getFPS())).c_str(),
         UIRect(x, y, 300, 50), white);
@@ -57,18 +36,4 @@ irr::video::IVideoDriver* driver) {
             data.teamColors[i % data.teamColors.size()]);
         i++;
     }
-}
-
-bool globalDataPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
-    (void) event;
-    (void) datas;
-    return false;
-}
-
-void globalDataPlugin::update(pluginsData _data) {
-    data = _data;
-}
-
-int globalDataPlugin::getPriority() const {
-    return 0;
 }

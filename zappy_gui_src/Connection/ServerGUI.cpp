@@ -11,6 +11,9 @@
 
 #include "Connection/ServerGUI.hpp"
 #include "DataManager/DataManager.hpp"
+#include "DataManager/GameDataManager.hpp"
+#include "Window/window.hpp"
+
 #include "include/logs.h"
 
 namespace GUI {
@@ -81,7 +84,7 @@ void ServerGUI::clockUpdate(std::chrono::system_clock::time_point &time,
 std::chrono::system_clock::time_point &timeNext,
 std::chrono::system_clock::time_point &timeNextPing) {
     time = std::chrono::system_clock::now();
-    if (time >= timeNext) {
+    if (time >= timeNext && !GUI::GameDataManager::i().getGameOver()) {
         timeNext = timeNext + std::chrono::seconds(updateMapTime);
         sendDatasToServer("mct\n");
     } else if (time >= timeNextPing) {
@@ -98,6 +101,9 @@ void ServerGUI::startServer() {
     auto timeNextPing = time + std::chrono::milliseconds(1);
     int ready = 0;
 
+    GUI::Window::i().clearMeshes();
+    GUI::GameDataManager::i().clear();
+    GUI::DataManager::i().clear();
     GUI::ServerGUI::i().setConnectedToServer(true);
     while (DataManager::i().running) {
         clockUpdate(time, timeNext, timeNextPing);

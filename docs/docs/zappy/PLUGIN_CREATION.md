@@ -23,7 +23,7 @@ class pluginsInterface {
     virtual ~pluginsInterface() = default;
     virtual bool init(irr::scene::ISceneManager* smgr,
         irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) = 0;
-    virtual void update(pluginsData dataManager) = 0;
+    virtual void update(pluginsData dataManager, float deltaTime) = 0;
     virtual void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
         irr::video::IVideoDriver* driver) = 0;
     virtual bool onEvent(const irr::SEvent &event, pluginsData &datas) = 0;
@@ -49,7 +49,7 @@ class MyPlugin : public pluginsInterface {
         return true;
     }
 
-    void update(pluginsData dataManager) override {
+    void update(pluginsData dataManager, float deltaTime) override {
         // Update logic using game data
     }
 
@@ -174,7 +174,7 @@ class ExamplePlugin : public pluginsInterface {
         return true;
     }
 
-    void update(pluginsData& _data) override {
+    void update(pluginsData _data, float deltaTime) override {
         data = _data;
         std::cout << "ExamplePlugin updated with new data!" << std::endl;
     }

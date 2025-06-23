@@ -28,18 +28,18 @@ class Fork {
  public:
     /**
      * @brief Default constructor
-     * 
+     *
      * Creates a new process by calling fork().
      * After construction, you can check isChild() or isParent() to determine
      * which process is executing.
-     * 
+     *
      * @throw std::runtime_error if fork() fails
      */
     Fork();
 
     /**
      * @brief Constructor that forks and executes the provided function in the child process
-     * 
+     *
      * @tparam Func Type of the function to execute
      * @tparam Args Types of the arguments to pass to the function
      * @param func Function to execute in the child process
@@ -60,8 +60,12 @@ class Fork {
         } else if (_pid == 0) {
             _isChild = true;
             _isForked = true;
-            func(std::forward<Args>(args)...);
-            exit(0);
+            auto result = func(std::forward<Args>(args)...);
+            if constexpr (std::is_same_v<decltype(result), void>) {
+                exit(0);
+            } else {
+                exit(static_cast<int>(result));
+            }
         } else {
             _isParent = true;
             _isForked = true;
@@ -70,7 +74,7 @@ class Fork {
 
     /**
      * @brief Destructor
-     * 
+     *
      * If this is the parent process, it will wait for the child to terminate.
      */
     ~Fork();
@@ -83,32 +87,32 @@ class Fork {
 
     /**
      * @brief Wait for the child process to terminate (blocking)
-     * 
+     *
      * Blocks until the child process terminates.
      */
     void wait();
 
     /**
      * @brief Terminate the child process by sending SIGKILL
-     * 
+     *
      * Sends SIGKILL signal to the child process to terminate it immediately.
      */
     void terminateChild();
 
     /**
      * @brief Non-blocking wait for child process
-     * 
+     *
      * Checks if the child process has terminated without blocking.
-     * 
+     *
      * @return true if the child has terminated, false otherwise
      */
     bool waitNoHang();
 
     /**
      * @brief Wait for child with timeout
-     * 
+     *
      * Waits for the child process to terminate for a specified number of seconds.
-     * 
+     *
      * @param seconds Maximum time to wait in seconds
      * @return true if the child terminated within the timeout, false otherwise
      */
@@ -116,7 +120,7 @@ class Fork {
 
     /**
      * @brief Send a signal to the child process
-     * 
+     *
      * @param signal Signal number to send
      * @return true if the signal was sent successfully, false otherwise
      */
@@ -124,56 +128,56 @@ class Fork {
 
     /**
      * @brief Check if the child process has exited
-     * 
+     *
      * @return true if the child has exited, false otherwise
      */
     bool hasExited() const;
 
     /**
      * @brief Get the exit status of the child process
-     * 
+     *
      * @return The exit status if the child exited normally, -1 otherwise
      */
     int getExitStatus() const;
 
     /**
      * @brief Check if the child process was terminated by a signal
-     * 
+     *
      * @return true if the child was terminated by a signal, false otherwise
      */
     bool wasSignaled() const;
 
     /**
      * @brief Get the signal that terminated the child process
-     * 
+     *
      * @return The terminating signal number if the child was terminated by a signal, -1 otherwise
      */
     int getTerminatingSignal() const;
 
     /**
      * @brief Check if this is the child process
-     * 
+     *
      * @return true if this is the child process, false otherwise
      */
     bool isChild() const;
 
     /**
      * @brief Check if this is the parent process
-     * 
+     *
      * @return true if this is the parent process, false otherwise
      */
     bool isParent() const;
 
     /**
      * @brief Get the process ID of the child
-     * 
+     *
      * @return The PID of the child process
      */
     pid_t getPid() const;
 
     /**
      * @brief Check if the fork was successful
-     * 
+     *
      * @return true if the fork was successful, false otherwise
      */
     bool isForked() const;

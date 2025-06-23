@@ -33,8 +33,8 @@ std::shared_ptr<irr::gui::IGUIFont> font) {
         player.color);
     // Level
     y += 20;
-    playerInfo = "\tLevel : " + std::to_string(player.level) + (player.inElevation ?
-        " (elevating)" : "");
+    playerInfo = "\tLevel : " + std::to_string(player.level)
+        + (player.inElevation ? " (elevating)" : "");
     font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
         UICol(255, 255, 255, 255));
     // Position

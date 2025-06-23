@@ -57,16 +57,16 @@ class pluginsData {
     };
 
     class Eggs {
-        /** @brief Represents an egg in the game, including its position and owner. */
-        public:
-            Eggs(int x, int y, int owner,
-                 std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> eggMesh)
-                : x(x), y(y), owner(owner), EggMesh(eggMesh) {}
-            int x; /**< X-coordinate of the egg. */
-            int y; /**< Y-coordinate of the egg. */
-            int owner; /**< Name of the team that owns the egg. */
-            std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> EggMesh;
-                /**< Mesh associated with the egg. */
+     /** @brief Represents an egg in game, including its position and owner */
+     public:
+        Eggs(int x, int y, int owner,
+                std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> eggMesh)
+            : x(x), y(y), owner(owner), EggMesh(eggMesh) {}
+        int x; /**< X-coordinate of the egg. */
+        int y; /**< Y-coordinate of the egg. */
+        int owner; /**< Name of the team that owns the egg. */
+        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> EggMesh;
+            /**< Mesh associated with the egg. */
     };
 
     int width; /**< Width of the game map. */

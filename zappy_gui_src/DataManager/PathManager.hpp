@@ -37,7 +37,7 @@ class PathManager {
         _paths["Death"] = "Musics/Death.mp3";
         _paths["DeathEgg"] = "Musics/DeathEgg.wav";
         _paths["Drop"] = "Musics/Drop.wav";
-        _paths["Take"] = "Musics/Drop.mp3";
+        _paths["Take"] = "Musics/Take.wav";
         _paths["Elevation"] = "Musics/Elevation.wav";
         _paths["Push"] = "Musics/Push.wav";
     }

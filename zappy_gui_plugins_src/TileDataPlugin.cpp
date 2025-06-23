@@ -5,7 +5,6 @@
 #include <vector>
 #include <iostream>
 #include <cstdio>
-#include "TileDataPlugin.hpp"
 #include <map>
 #include <algorithm>
 
@@ -77,7 +76,8 @@ void TileDataPlugin::drawEggs(pluginsData::Tile tile, int &y) {
     for (const auto &egg : data.eggs) {
         if (egg.x == tile.x && egg.y == tile.y) {
             eggOwners[egg.owner == -1 ? "No team" : data.teams[egg.owner]]++;
-            teamEgg[egg.owner == -1 ? "No team" : data.teams[egg.owner]] = egg.owner;
+            teamEgg[egg.owner == -1 ? "No team" : data.teams[egg.owner]]
+                = egg.owner;
         }
     }
     if (eggOwners.empty())
@@ -122,7 +122,8 @@ void TileDataPlugin::drawPlayers(pluginsData::Tile tile, int &y) {
             int index = std::distance(data.teams.begin(), it);
             playerColor = data.teamColors[index];
         }
-        font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300), playerColor);
+        font->draw(playerInfo.c_str(),
+            UIRect(width - 220, y, 300, 300), playerColor);
         y += 20;
     }
 }
@@ -177,7 +178,8 @@ bool TileDataPlugin::detectCollisionTile() {
 int TileDataPlugin::countTileRessource(pluginsData::Tile tile) {
     int count = 0;
 
-    for (int i = 0; i < 7; ++i) {        if (tile.resources[i] == 0)
+    for (int i = 0; i < 7; ++i) {
+        if (tile.resources[i] == 0)
             continue;
         count++;
     }

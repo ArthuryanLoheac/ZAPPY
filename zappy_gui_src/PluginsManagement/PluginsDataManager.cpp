@@ -4,7 +4,6 @@
 #include "DataManager/DataManager.hpp"
 
 #include "include/logs.h"
-#include "PluginsDataManager.hpp"
 
 void PluginsDataManager::updatePluginsData() {
     // Win

@@ -160,6 +160,12 @@ coding_style:
 	coding-style zappy_server_src/ .
 	cat coding-style-reports.log
 	rm -f coding-style-reports.log
+	coding-style libc/ .
+	cat coding-style-reports.log
+	rm -f coding-style-reports.log
+	coding-style libcpp/ .
+	cat coding-style-reports.log
+	rm -f coding-style-reports.log
 
 doxygen:
 	cd docs && doxygen Doxyfile
@@ -182,23 +188,29 @@ style_check:
 
 # ============ PLUGINS ============ #
 
-COMMON_PLUGINS = \
+COMMON_PLUGINS = zappy_gui_src/PluginsManagement/Aplugin.cpp \
 
 INCLUDE_SO = -I. \
 	-I./zappy_gui_src/include \
 	-I./zappy_gui_src/dlLoader/ \
 	-I./zappy_gui_src/PluginsManagement \
+	-I./zappy_gui_src/PluginsManagement/include \
 
 FLAGS_SO =  -std=c++17 -Wall -Wextra -Werror -lIrrlicht \
-			$(INCLUDE_SO) \
+			$(INCLUDE_SO) -Wno-return-type-c-linkage \
             -ldl -g
 
-TEST_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")
+PLUGIN_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")
 
 plugins_all:
+	rm -f plugins/*.so
 	@mkdir -p plugins
-	@for src in $(TEST_SRC); do \
+	@for src in $(PLUGIN_SRC); do \
 		plugin_name=$$(basename $$src .cpp); \
 		g++ -o plugins/$$plugin_name.so -shared -fPIC $(COMMON_PLUGINS) \
 			$$src $(FLAGS_SO); \
 	done
+
+plugins/%: zappy_gui_plugins_src/%.cpp
+	@mkdir -p plugins
+	g++ -o plugins/$*.so -shared -fPIC $(COMMON_PLUGINS) $< $(FLAGS_SO)

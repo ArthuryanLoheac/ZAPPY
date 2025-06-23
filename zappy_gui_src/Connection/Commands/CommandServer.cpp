@@ -9,6 +9,8 @@
 #include "DataManager/DataManager.hpp"
 #include "DataManager/SoundsManager.hpp"
 
+#include "include/logs.h"
+
 /**
  * @brief Prints an error message and the associated arguments.
  * @param e The exception that was thrown.
@@ -70,6 +72,7 @@ void GUI::ServerGUI::enwCommand(std::vector<std::string> &args) {
     if (team >= 0)
         GameDataManager::i().setEggAdded(true);
     GUI::Window::i().needUpdateEggs = true;
+    GUI::Window::i().addEggInitLst(id);
 }
 
 /**
@@ -184,6 +187,8 @@ void ServerGUI::pnwCommand(std::vector<std::string> &args) {
         pOrient = Player::SOUTH;
 
     GameDataManager::i().addPlayer(id, x, y, pOrient, level, teamName);
+    Window::i().addPlayerInitLst(id);
+    Window::i().setUpdatePlayer(true);
 }
 
 /**
@@ -214,7 +219,6 @@ void ServerGUI::ppoCommand(std::vector<std::string> &args) {
         pOrient = Player::SOUTH;
 
     GameDataManager::i().getPlayer(id).setPosition(x, y, pOrient);
-    GUI::Window::i().needUpdatePlayers = true;
 }
 
 /**
@@ -239,7 +243,6 @@ void ServerGUI::pinCommand(std::vector<std::string> &args) {
         p.setRessource(i - 4, r);
     }
     p.setPosition(x, y);
-    GUI::Window::i().needUpdatePlayers = true;
 }
 
 /**
@@ -288,7 +291,6 @@ void ServerGUI::picCommand(std::vector<std::string> &args) {
             GameDataManager::i().getPlayer(id).getOrientation(), true);
         GameDataManager::i().getPlayer(id).setElevation(true);
         GameDataManager::i().setElevationSound(true);
-        GUI::Window::i().needUpdatePlayers = true;
     }
 }
 
@@ -338,4 +340,22 @@ void GUI::ServerGUI::sucCommand(std::vector<std::string> &args) {
         ping = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - timeForPing).count();
     }
+}
+
+void GUI::ServerGUI::segCommand(std::vector<std::string> &args) {
+    if (args.size() < 2)
+        throw CommandParsingException("Invalid seg command format");
+    std::string winner = args[1];
+    GameDataManager::i().setGameOver(true);
+    GameDataManager::i().setWinner(winner);
+}
+
+void GUI::ServerGUI::pbcCommand(std::vector<std::string> &args) {
+    if (args.size() < 3)
+        throw CommandParsingException("Invalid pbc command format");
+    int id = std::stoi(args[1].substr(1));
+    std::string message = args[2];
+    for (size_t i = 3; i < args.size(); i++)
+        message += " " + args[i];
+    GameDataManager::i().addMessage(message, id);
 }

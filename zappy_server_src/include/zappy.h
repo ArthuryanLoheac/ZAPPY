@@ -13,6 +13,16 @@
     #include "parser.h"
     #include "server.h"
 
+    #define NORTH 1
+    #define EAST 2
+    #define SOUTH 3
+    #define WEST 4
+
+    #define FRONT 1
+    #define LEFT 3
+    #define BACK 5
+    #define RIGHT 7
+
 typedef struct client_s client_t;
 
 enum resource_type {

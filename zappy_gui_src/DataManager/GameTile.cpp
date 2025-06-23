@@ -6,6 +6,7 @@
 #include "DataManager/GameTile.hpp"
 #include "Graphic/Window/window.hpp"
 #include "tools/MeshImporter.hpp"
+#include "DataManager/PathManager.hpp"
 
 namespace GUI {
 GameTile::GameTile(int xCoord, int yCoord)
@@ -22,6 +23,35 @@ GameTile &GameTile::operator=(GameTile &&other) noexcept {
         tileMesh = std::move(other.tileMesh);
     }
     return *this;
+}
+
+void GameTile::clear(irr::scene::ISceneManager *smgr) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    if (!smgr)
+        return;
+    smgr->addToDeletionQueue(tileMesh.get());
+    tileMesh.reset();
+    for (auto &mesh : meshesFood)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesFood.clear();
+    for (auto &mesh : meshesR1)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR1.clear();
+    for (auto &mesh : meshesR2)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR2.clear();
+    for (auto &mesh : meshesR3)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR3.clear();
+    for (auto &mesh : meshesR4)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR4.clear();
+    for (auto &mesh : meshesR5)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR5.clear();
+    for (auto &mesh : meshesR6)
+        smgr->addToDeletionQueue(mesh.get());
+    meshesR6.clear();
 }
 
 int GameTile::getX() const {
@@ -53,9 +83,9 @@ std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> &mesh) {
     tileMesh = mesh;
 }
 
-Vec3d GameTile::getWorldPos() const {
+Vec3d GameTile::getWorldPos(Vec3d def) const {
     if (!tileMesh)
-        return Vec3d(0, 0, 0);
+        return def;
     return tileMesh->getPosition();
 }
 
@@ -86,13 +116,20 @@ int GameTile::getRessource(int id) const {
 }
 
 void GameTile::updateMeshesRessources() {
-    updateMesh("Battery", food, meshesFood, 0.05f, 0.35f, 0.3f, 0.35f);
-    updateMesh("Mat1", r1, meshesR1, 0.1f, -0.35f, 0.15f, 0.35f);
-    updateMesh("Mat2", r2, meshesR2, 0.1f, 0.35f, 0.15f, -0.35f);
-    updateMesh("Mat3", r3, meshesR3, 0.1f, -0.35f, 0.15f, -0.35f);
-    updateMesh("Mat4", r4, meshesR4, 0.1f, 0.15f, 0.15f, 0.35f);
-    updateMesh("Mat5", r5, meshesR5, 0.1f, -0.15f, 0.15f, 0.35f);
-    updateMesh("Mat6", r6, meshesR6, 0.1f, 0.15f, 0.15f, -0.35f);
+    updateMesh(PathManager::i().getPath("Food"),
+        food, meshesFood, 0.05f, 0.35f, 0.3f, 0.35f);
+    updateMesh(PathManager::i().getPath("Mat1"),
+        r1, meshesR1, 0.1f, -0.35f, 0.15f, 0.35f);
+    updateMesh(PathManager::i().getPath("Mat2"),
+        r2, meshesR2, 0.1f, 0.35f, 0.15f, -0.35f);
+    updateMesh(PathManager::i().getPath("Mat3"),
+        r3, meshesR3, 0.1f, -0.35f, 0.15f, -0.35f);
+    updateMesh(PathManager::i().getPath("Mat4"),
+        r4, meshesR4, 0.1f, 0.15f, 0.15f, 0.35f);
+    updateMesh(PathManager::i().getPath("Mat5"),
+        r5, meshesR5, 0.1f, -0.15f, 0.15f, 0.35f);
+    updateMesh(PathManager::i().getPath("Mat6"),
+        r6, meshesR6, 0.1f, 0.15f, 0.15f, -0.35f);
 }
 
 void GameTile::updateMesh(std::string meshName, int count,
@@ -114,7 +151,8 @@ float offsetX, float offsetY, float offsetZ) {
         position.X += offsetX;
         position.Z += offsetZ;
         meshActual->setPosition(position);
-        meshActual->setScale(Vec3d(scale));
+        meshActual->setScale(Vec3d(scale) *
+            PathManager::i().getScale(meshName));
         meshActual->setVisible(true);
     }
 }

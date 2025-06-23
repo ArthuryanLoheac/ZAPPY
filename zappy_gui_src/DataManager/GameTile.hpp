@@ -47,6 +47,13 @@ class GameTile {
     GameTile(int xCoord, int yCoord);
 
     /**
+     * @brief Clears the resources and meshes associated with the tile.
+     *
+     * @param smgr Scene manager to clear the meshes from.
+     */
+    void clear(irr::scene::ISceneManager *smgr);
+
+    /**
      * @brief Deleted copy constructor.
      */
     GameTile(const GameTile &) = delete;
@@ -113,7 +120,7 @@ class GameTile {
      *
      * @return Vec3d World position of the tile.
      */
-    Vec3d getWorldPos() const;
+    Vec3d getWorldPos(Vec3d def = Vec3d(0, 0, 0)) const;
 
     /**
      * @brief Sets the resources on the tile.

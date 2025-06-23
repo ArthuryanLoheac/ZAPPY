@@ -53,6 +53,20 @@ Player &Player::operator=(Player &&other) noexcept {
     return *this;
 }
 
+void Player::clear(irr::scene::ISceneManager *smgr) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    if (PlayerMesh && smgr) {
+        smgr->addToDeletionQueue(PlayerMesh.get());
+        PlayerMesh.reset();
+        PlayerMesh = nullptr;
+    }
+    for (auto &mesh : PlayerMeshesCylinder) {
+        smgr->addToDeletionQueue(mesh.get());
+    }
+    PlayerMeshesCylinder.clear();
+    PlayerMeshesCylinderRotation.clear();
+}
+
 float randRotation(int i) {
     i++;
     float r = random() % static_cast<int>(360 / i);
@@ -67,6 +81,16 @@ void Player::Init(std::string team, int level) {
     for (int i = 0; i < maxLevel; i++) {
         PlayerMeshesCylinderRotation.push_back(Vec3d(randRotation(i),
             randRotation(i), randRotation(i)));
+    }
+    if (PlayerMesh) {
+        posTarget = PlayerMesh->getPosition();
+    } else  {
+        int width = GUI::GameDataManager::i().getWidth();
+        int height = GUI::GameDataManager::i().getHeight();
+
+        Vec3d position(x - (width/2) + (width % 2 == 0 ? 0.5f : 0), -2,
+                    y - (height/2) + (height % 2 == 0 ? 0.5f : 0));
+        posTarget = GameDataManager::i().getTile(x, y).getWorldPos(position);
     }
 }
 
@@ -147,7 +171,10 @@ void Player::setPosition(int newX, int newY, Orientation new0, bool TP) {
         return;
 
     if (PlayerMesh) {
-        Vec3d position = GameDataManager::i().getTile(x, y).getWorldPos();
+        Vec3d position = GameDataManager::i().getTile(x, y).
+            getWorldPos(PlayerMesh->getPosition());
+        if (position.X == 0 && position.Z == 0 && position.Y == 0)
+            position = PlayerMesh->getPosition();
         position.Y += 0.5f;
         posTarget = Vec3d(position.X, position.Y, position.Z);
         speedMove = baseSpeedMove * DataManager::i().getFrequency() *
@@ -156,12 +183,12 @@ void Player::setPosition(int newX, int newY, Orientation new0, bool TP) {
         // check first set
         if (PlayerMesh->getPosition().Y == 0 || tp || TP) {
             PlayerMesh->setPosition(position);
+            posTarget = Vec3d(position.X, position.Y, position.Z);
             PlayerMesh->setRotation(Vec3d(0, o * 90, 0));
             for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++)
                 PlayerMeshesCylinder[i]->setPosition(position);
         }
     }
-    GUI::Window::i().needUpdatePlayers = true;
 }
 
 void Player::setPosition(int newX, int newY) {
@@ -169,8 +196,22 @@ void Player::setPosition(int newX, int newY) {
 }
 
 void Player::setMesh(const std::shared_ptr<Mesh> &mesh) {
-    std::lock_guard<std::mutex> lock(mutexDatas);
+    bool isInList = false;
+    for (auto &player : GUI::GameDataManager::i().getPlayers()) {
+        if (player.getId() == id) {
+            isInList = true;
+            break;
+        }
+    }
+    if (!isInList) {
+        mesh->remove();
+        return;
+    }
+
+    if (PlayerMesh)
+        PlayerMesh->setVisible(false);
     PlayerMesh = mesh;
+    Window::i().removePlayerInitLst(id);
 }
 
 std::shared_ptr<Mesh> Player::getMesh() const {

@@ -12,29 +12,6 @@ extern "C" {
     }
 }
 
-bool PlayerDataPlugin::init(irr::scene::ISceneManager* _smgr,
-    irr::IrrlichtDevice *_device, irr::scene::ICameraSceneNode *_cam) {
-    device = _device;
-    smgr = _smgr;
-    cam = _cam;
-    idPlayer = -1;
-    printf("============= Initializing PlayerData Plugin =============\n");
-    return true;
-}
-
-void PlayerDataPlugin::drawOneBackground(const std::string &texture, int x,
-int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver) {
-    irr::video::ITexture* bg = driver->getTexture(texture.c_str());
-    irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
-
-    irr::core::rect<irr::s32>destRect(x, y, x + sizeX, y + sizeY);
-    if (!bg) {
-        std::cerr << "Error: Texture not found: " << texture << std::endl;
-        return;
-    }
-    driver->draw2DImage(bg, destRect, sourceRect, 0, nullptr, true);
-}
-
 pluginsData::Tile PlayerDataPlugin::getTile(int x, int y) {
     for (auto tile : data.tiles) {
         if (tile.x == x && tile.y == y)
@@ -47,7 +24,7 @@ void PlayerDataPlugin::drawPlayerInfo(int id,
 std::shared_ptr<irr::gui::IGUIFont> font) {
     int width = driver->getScreenSize().Width;
     pluginsData::Player player = data.getPlayer(id);
-    int y = 330;
+    int y = 350;
 
     // Name
     std::string playerInfo = "Player " + std::to_string(id) + " : " +
@@ -56,7 +33,8 @@ std::shared_ptr<irr::gui::IGUIFont> font) {
         player.color);
     // Level
     y += 20;
-    playerInfo = "\tLevel : " + std::to_string(player.level);
+    playerInfo = "\tLevel : " + std::to_string(player.level)
+        + (player.inElevation ? " (elevating)" : "");
     font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
         UICol(255, 255, 255, 255));
     // Position
@@ -101,7 +79,7 @@ irr::video::IVideoDriver* _driver) {
         return;
     int width = driver->getScreenSize().Width;
     try {
-        drawOneBackground("assets/UI/All.png", width - 240, 300, 250, 200,
+        drawImage("assets/UI/All.png", width - 240, 320, 250, 200,
             driver);
         drawPlayerInfo(idPlayer, font);
     } catch (std::exception &e) {}
@@ -115,16 +93,16 @@ bool PlayerDataPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
             pressed = false;
         }
         if (pressed && !isPressedLastFrame)
-            detectCollisionPlayer();
+            return detectCollisionPlayer();
         isPressedLastFrame = pressed;
     }
     (void) datas;
     return false;
 }
 
-void PlayerDataPlugin::detectCollisionPlayer() {
+bool PlayerDataPlugin::detectCollisionPlayer() {
     if (data.players.size() <= 0)
-        return;
+        return false;
     irr::core::position2d<irr::s32> mousePos =
         device->getCursorControl()->getPosition();
     irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()
@@ -139,19 +117,11 @@ void PlayerDataPlugin::detectCollisionPlayer() {
         if (box.intersectsWithLine(ray)) {
             if (idPlayer == player.id) {
                 idPlayer = -1;
-                return;
+                return true;
             }
             idPlayer = player.id;
-            return;
+            return true;
         }
     }
-    return;
-}
-
-void PlayerDataPlugin::update(pluginsData _data) {
-    data = _data;
-}
-
-int PlayerDataPlugin::getPriority() const {
-    return 0;
+    return false;
 }

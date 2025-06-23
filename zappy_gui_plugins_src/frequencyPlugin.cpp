@@ -13,55 +13,6 @@ extern "C" {
     }
 }
 
-bool frequencyPlugin::init(irr::scene::ISceneManager* smgr,
-    irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) {
-    (void) device;
-    (void) smgr;
-    (void) cam;
-    printf("============= Initializing Frequency Plugin =============\n");
-    return true;
-}
-
-void frequencyPlugin::drawImage(const std::string &texture, int x,
-int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
-    irr::video::ITexture* bg = nullptr;
-
-    // Check if the texture with the given alpha is already cached
-    std::string cacheKey = texture + "_" + std::to_string(alpha);
-    auto it = cachedTextures.find(cacheKey);
-    if (it != cachedTextures.end()) {
-        bg = it->second;
-    } else {
-        irr::video::ITexture* originalTexture =
-            driver->getTexture(texture.c_str());
-        if (!originalTexture) {
-            std::cerr << "Error: Cant load texture: " << texture << std::endl;
-            return;
-        }
-
-        irr::video::IImage* image = driver->createImage(originalTexture,
-            irr::core::position2d<irr::s32>(0, 0), originalTexture->getSize());
-        if (image) {
-            for (irr::u32 y = 0; y < image->getDimension().Height; ++y) {
-                for (irr::u32 x = 0; x < image->getDimension().Width; ++x) {
-                    UICol imageColor = image->getPixel(x, y);
-                    imageColor.setAlpha(alpha);
-                    image->setPixel(x, y, imageColor);
-                }
-            }
-            bg = driver->addTexture(cacheKey.c_str(), image);
-            cachedTextures[cacheKey] = bg;
-            image->drop();
-        }
-    }
-
-    if (bg) {
-        irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
-        irr::core::rect<irr::s32> destRect(x, y, x + sizeX, y + sizeY);
-        driver->draw2DImage(bg, destRect, sourceRect, nullptr, 0, true);
-    }
-}
-
 void frequencyPlugin::drawButton(const std::string &texture, int x, int y,
 irr::video::IVideoDriver *driver, stateButton buttonState,
 const std::string &text, std::shared_ptr<irr::gui::IGUIFont> font) {
@@ -80,26 +31,26 @@ const std::string &text, std::shared_ptr<irr::gui::IGUIFont> font) {
 
 void frequencyPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
 irr::video::IVideoDriver *driver) {
-    int x = 30;
     int y = 630;
     UICol white(255, 255, 255, 255);
-
     if (!font || !driver)
         return;
+
+    int x = driver->getScreenSize().Width - 150;
+    widthSaved = x + 20;
     heightSaved = driver->getScreenSize().Height;
     y = heightSaved - 140;
-    drawImage("assets/UI/All.png", 0, y, 150, 110, driver, 125);
+    drawImage("assets/UI/All.png", x + 5, y, 150, 110, driver);
     y += 20;
+    x += 20;
     // Frequency
     font->draw(("Freq : " + std::to_string(data.frequency)).c_str(),
-        UIRect(x, y, 300, 50), white);
+        UIRect(x + 10, y, 300, 50), white);
     // Buttons
     y += 40;
-    // MINUS
-    drawButton("assets/UI/AllRed.png", 30, y, driver, minusButtonState, "-",
+    drawButton("assets/UI/AllRed.png", x + 20, y, driver, minusButtonState, "-",
         font);
-    // PLUS
-    drawButton("assets/UI/AllRed.png", 90, y, driver, plusButtonState, "+",
+    drawButton("assets/UI/AllRed.png", x + 80, y, driver, plusButtonState, "+",
         font);
 }
 
@@ -128,15 +79,16 @@ stateButton &buttonState, int x, int y, int width, int height) {
 }
 
 bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
-    (void) datas;
     if (data.frequency <= 1) {
         minusButtonState = DISABLED;
     } else {
-        checkHoverButton(event, minusButtonState, 30, heightSaved - 80, 40, 40);
+        checkHoverButton(event, minusButtonState, widthSaved + 20,
+            heightSaved - 80, 40, 40);
         if (minusButtonState == CLICKED) {
             if (frequency > 1) {
                 frequency--;
                 data.frequency = frequency;
+                datas.frequency = frequency;
             }
             return true;
         }
@@ -144,11 +96,13 @@ bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
     if (data.frequency >= 200) {
         plusButtonState = DISABLED;
     } else {
-        checkHoverButton(event, plusButtonState, 90, heightSaved - 80, 40, 40);
+        checkHoverButton(event, plusButtonState, widthSaved + 80,
+            heightSaved - 80, 40, 40);
         if (plusButtonState == CLICKED) {
             if (frequency < 200) {
                 frequency++;
                 data.frequency = frequency;
+                datas.frequency = frequency;
             }
             return true;
         }
@@ -156,7 +110,12 @@ bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
     return false;
 }
 
-void frequencyPlugin::update(pluginsData _data) {
+void frequencyPlugin::update(pluginsData _data, float deltaTime) {
     data = _data;
     frequency = data.frequency;
+    (void)deltaTime;
+}
+
+int frequencyPlugin::getPriority() const {
+    return 10;
 }

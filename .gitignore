@@ -20,6 +20,7 @@ docs/static/
 zappy_ref-v3.0.0
 .vscode/
 private/
+plugins/
 build/
 .idea/
 obj/

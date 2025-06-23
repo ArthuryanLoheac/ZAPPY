@@ -270,7 +270,7 @@ class Interface {
      * @brief Processes received broadcast messages
      * @param args The message arguments including direction
      */
-    void receiveMessage(std::vector<std::string> &args);
+    void receiveMessage(const std::vector<std::string> &args);
 
     /**
      * @brief Attempts to start an incantation ritual
@@ -288,14 +288,14 @@ class Interface {
      * @param input The binary data to encode
      * @return Base64 encoded string
      */
-    std::string base64Encode(const std::string& input);
+    static std::string base64Encode(const std::string& input);
 
     /**
      * @brief Decode a Base64 encoded string
      * @param encoded The Base64 encoded string
      * @return Decoded binary data
      */
-    std::string base64Decode(const std::string& encoded);
+    static std::string base64Decode(const std::string& encoded);
 
     /**
      * @brief Simple encryption function for command strings
@@ -303,7 +303,8 @@ class Interface {
      * @param key The encryption key
      * @return The encrypted string
      */
-    std::string encrypt(const std::string& input, const std::string& key);
+    static std::string encrypt(const std::string& input,
+        const std::string& key);
 
     /**
      * @brief Simple decryption function for command strings
@@ -311,7 +312,14 @@ class Interface {
      * @param key The decryption key
      * @return The decrypted string
      */
-    std::string decrypt(const std::string& encrypted, const std::string& key);
+    static std::string decrypt(const std::string& encrypted,
+        const std::string& key);
+
+    /**
+     * @brief Sends a message to the other players by using the broadcast command
+     * @param message The message string to send
+     */
+    void sendMessage(const std::string &message);
 };
 
 }  // namespace AI

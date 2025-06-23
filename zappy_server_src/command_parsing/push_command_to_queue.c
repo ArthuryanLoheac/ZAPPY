@@ -120,6 +120,12 @@ static int get_command_duration(client_t *client, char **args)
 
 static void send_unknown(client_t *client, char **args)
 {
+    if (args && strcmp(args[0], "PING") == 0) {
+        if (client->is_graphic) {
+            add_to_buffer(&client->out_buffer, "suc\n");
+            return;
+        }
+    }
     LOG_WARNING("[%i]: Received unknown command: %s\n",
         client->fd, args[0]);
     if (client->is_graphic)

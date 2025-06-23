@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <queue>
 
 #include "DataManager/GameDataManager.hpp"
 #include "Exceptions/GraphicalExceptions.hpp"
@@ -8,8 +9,46 @@
 #include "Window/window.hpp"
 
 namespace GUI {
+
+void GameDataManager::clear() {
+    width = -1;
+    height = -1;
+    tiles.clear();
+    eggs.clear();
+    teams.clear();
+    players.clear();
+    playerAdded = false;
+    eggAdded = false;
+    playerDead = false;
+    eggDead = false;
+    elevation = false;
+    Collecting = false;
+    Dropping = false;
+    Pushed = false;
+    messages.clear();
+    messagesThisFrame.clear();
+}
+
 int GameDataManager::getWidth() const {
     return width;
+}
+
+bool GameDataManager::getGameOver() const {
+    return isGameOver;
+}
+
+void GameDataManager::setGameOver(bool over) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    isGameOver = over;
+}
+
+const std::string &GameDataManager::getWinner() {
+    return winner;
+}
+
+void GameDataManager::setWinner(const std::string &winnerName) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    winner = winnerName;
 }
 
 int GameDataManager::getHeight() const {
@@ -38,7 +77,8 @@ GameTile &GameDataManager::addTile(int x, int y) {
 
 GameTile &GameDataManager::getTile(int x, int y) {
     if (x < 0 || x >= width || y < 0 || y >= height)
-        throw std::out_of_range("Tile coordinates out of bounds");
+        throw std::out_of_range("Tile coordinates out of bounds " +
+            std::to_string(x) + " / " + std::to_string(y));
     for (auto &tile : tiles) {
         if (tile.getX() == x && tile.getY() == y)
             return tile;
@@ -55,6 +95,22 @@ std::vector<Egg> &GameDataManager::getEggs() {
     return eggs;
 }
 
+void GameDataManager::addMessage(const std::string &message, int id) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    messages.emplace_back(message, id);
+    messagesThisFrame.emplace_back(message, id);
+    if (messages.size() > 5)
+        messages.erase(messages.begin());
+}
+
+std::vector<GameDataManager::Message> &GameDataManager::getMessages() {
+    return messages;
+}
+
+std::vector<GameDataManager::Message> &GameDataManager::getMessagesThisFrame() {
+    return messagesThisFrame;
+}
+
 void GameDataManager::addEgg(int id, int team, int x, int y) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     Vec3d position = getTile(x, y).getWorldPos();
@@ -66,10 +122,12 @@ void GameDataManager::removeEgg(int id) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     for (size_t i = 0; i < eggs.size(); i++) {
         if (eggs[i].id == id) {
+            eggs[i].isDead = true;
             if (eggs[i].EggMesh) {
                 int idM = eggs[i].EggMesh->getID();
                 auto sceneNode = GUI::Window::i().smgr->getSceneNodeFromId(idM);
                 sceneNode->setVisible(false);
+                return;
             }
         }
     }
@@ -92,7 +150,6 @@ Player::Orientation o, int level, const std::string &teamName) {
     position.Y += 0.5f;
     players.emplace_back(id, x, y, o, level, teamName, nullptr);
     playerAdded = true;
-    GUI::Window::i().needUpdatePlayers = true;
 }
 
 Player &GameDataManager::getPlayer(int id) {

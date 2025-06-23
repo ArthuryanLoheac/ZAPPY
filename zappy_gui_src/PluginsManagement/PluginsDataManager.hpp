@@ -21,6 +21,7 @@ class PluginsDataManager {
     void updatePlayers();
     /** @brief Updates the tiles data in the plugins data. */
     void updateTiles();
+    void updateEggs();
 
     /** @brief Retrieves the current plugins data.
      * @return Reference to the pluginsData object containing the game state.

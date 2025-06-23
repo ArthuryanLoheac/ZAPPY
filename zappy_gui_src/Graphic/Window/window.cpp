@@ -50,6 +50,7 @@ Window::Window() {
     if (!device)
         throw GUI::WindowCreationException("Error creating device");
     device->setWindowCaption(L"Zappy");
+    windowOptionMenu::i().device = device;
     driver = device->getVideoDriver();
     smgr = device->getSceneManager();
     guienv = device->getGUIEnvironment();

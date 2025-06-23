@@ -80,7 +80,7 @@ void graphRessourcesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
     int y = 300;
     int spaceBetween = 20;
     UICol white(255, 255, 255, 255);
-    std::vector<int> ressources = {0, 0, 0, 0, 0, 0, 0, 0};
+    std::vector<int> ressources = {0, 0, 0, 0, 0, 0, 0};
 
     if (!font || !driver || lstRessources.size() < 1)
         return;

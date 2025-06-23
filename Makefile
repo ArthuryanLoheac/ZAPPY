@@ -200,13 +200,17 @@ FLAGS_SO =  -std=c++17 -Wall -Wextra -Werror -lIrrlicht \
 			$(INCLUDE_SO) -Wno-return-type-c-linkage \
             -ldl -g
 
-TEST_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")
+PLUGIN_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")
 
 plugins_all:
 	rm -f plugins/*.so
 	@mkdir -p plugins
-	@for src in $(TEST_SRC); do \
+	@for src in $(PLUGIN_SRC); do \
 		plugin_name=$$(basename $$src .cpp); \
 		g++ -o plugins/$$plugin_name.so -shared -fPIC $(COMMON_PLUGINS) \
 			$$src $(FLAGS_SO); \
 	done
+
+plugins/%: zappy_gui_plugins_src/%.cpp
+	@mkdir -p plugins
+	g++ -o plugins/$*.so -shared -fPIC $(COMMON_PLUGINS) $< $(FLAGS_SO)

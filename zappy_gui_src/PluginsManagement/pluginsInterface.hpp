@@ -32,7 +32,7 @@ class pluginsInterface {
     /** @brief Update the plugin with the current game data.
      * @param dataManager Reference to the pluginsData object containing all the datas
      */
-    virtual void update(pluginsData dataManager) = 0;
+    virtual void update(pluginsData dataManager, float deltaTime) = 0;
 
     /** @brief Draw the plugin's UI elements.
      * @param font Pointer to the GUI font used for rendering text.

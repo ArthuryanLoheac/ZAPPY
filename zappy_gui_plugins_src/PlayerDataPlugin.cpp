@@ -24,7 +24,7 @@ void PlayerDataPlugin::drawPlayerInfo(int id,
 std::shared_ptr<irr::gui::IGUIFont> font) {
     int width = driver->getScreenSize().Width;
     pluginsData::Player player = data.getPlayer(id);
-    int y = 330;
+    int y = 350;
 
     // Name
     std::string playerInfo = "Player " + std::to_string(id) + " : " +
@@ -33,7 +33,8 @@ std::shared_ptr<irr::gui::IGUIFont> font) {
         player.color);
     // Level
     y += 20;
-    playerInfo = "\tLevel : " + std::to_string(player.level);
+    playerInfo = "\tLevel : " + std::to_string(player.level)
+        + (player.inElevation ? " (elevating)" : "");
     font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
         UICol(255, 255, 255, 255));
     // Position
@@ -78,7 +79,7 @@ irr::video::IVideoDriver* _driver) {
         return;
     int width = driver->getScreenSize().Width;
     try {
-        drawImage("assets/UI/All.png", width - 240, 300, 250, 200,
+        drawImage("assets/UI/All.png", width - 240, 320, 250, 200,
             driver);
         drawPlayerInfo(idPlayer, font);
     } catch (std::exception &e) {}
@@ -92,16 +93,16 @@ bool PlayerDataPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
             pressed = false;
         }
         if (pressed && !isPressedLastFrame)
-            detectCollisionPlayer();
+            return detectCollisionPlayer();
         isPressedLastFrame = pressed;
     }
     (void) datas;
     return false;
 }
 
-void PlayerDataPlugin::detectCollisionPlayer() {
+bool PlayerDataPlugin::detectCollisionPlayer() {
     if (data.players.size() <= 0)
-        return;
+        return false;
     irr::core::position2d<irr::s32> mousePos =
         device->getCursorControl()->getPosition();
     irr::core::line3d<irr::f32> ray = smgr->getSceneCollisionManager()
@@ -116,11 +117,11 @@ void PlayerDataPlugin::detectCollisionPlayer() {
         if (box.intersectsWithLine(ray)) {
             if (idPlayer == player.id) {
                 idPlayer = -1;
-                return;
+                return true;
             }
             idPlayer = player.id;
-            return;
+            return true;
         }
     }
-    return;
+    return false;
 }

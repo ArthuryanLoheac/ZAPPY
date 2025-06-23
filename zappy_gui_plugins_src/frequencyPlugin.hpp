@@ -82,7 +82,7 @@ class frequencyPlugin : public Aplugin {
      * @brief Updates the plugin with the latest data.
      * @param dataManager Reference to the data manager.
      */
-    void update(pluginsData dataManager) override;
+    void update(pluginsData dataManager, float deltaTime) override;
 
     std::string getName() const override {
         return "Frequency Plugin";

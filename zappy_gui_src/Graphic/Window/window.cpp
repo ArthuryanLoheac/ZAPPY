@@ -80,7 +80,8 @@ void Window::windowUpdateFocus() {
     updateSkyBoxRotation();
     GameDataManager::i().Update(frameDeltaTime);
     PluginsDataManager::i().updatePluginsData();
-    pluginsManager::i().update(PluginsDataManager::i().getData());
+    pluginsManager::i().update(PluginsDataManager::i().getData(),
+        frameDeltaTime);
     SoundsManager::i().Update();
     driver->beginScene(true, true,
         irr::video::SColor(255, 100, 101, 140));
@@ -290,7 +291,7 @@ void Window::initMeshEggs() {
                     std::to_string(egg.id)).c_str());
             }
         } else {
-            LOG_ERROR(("Egg mesh already exists for egg ID " +
+            LOG_DEBUG(("Egg mesh already exists for egg ID " +
                 std::to_string(egg.id)).c_str());
         }
     }

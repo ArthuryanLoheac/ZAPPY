@@ -32,6 +32,7 @@ void PluginsDataManager::updatePluginsData() {
     GUI::GameDataManager::i().getMessagesThisFrame().clear();
     // OTHERS
     updatePlayers();
+    updateEggs();
     updateTiles();
 }
 
@@ -44,6 +45,9 @@ void PluginsDataManager::updatePlayers() {
         newPlayer.teamName = player.getTeamName();
         newPlayer.x = player.getX();
         newPlayer.y = player.getY();
+        newPlayer.inElevation = player.getState() == GUI::Player::IDLE_ELEVATION
+            || player.getState() == GUI::Player::END_ELEVATION
+            || player.getState() == GUI::Player::START_ELEVATION;
         newPlayer.level = player.getLevel();
         newPlayer.color = MeshImporter::i().getColor(player.getTeamName());
         newPlayer.PlayerMesh = player.getMesh();
@@ -86,5 +90,15 @@ void PluginsDataManager::updateTiles() {
         }
     } catch (std::exception &e) {
         LOG_ERROR("ERROR %s\n", e.what());
+    }
+}
+
+void PluginsDataManager::updateEggs() {
+    data.eggs.clear();
+    for (const auto &egg : GUI::GameDataManager::i().getEggs()) {
+        if (egg.isDead)
+            continue;
+        pluginsData::Eggs newEgg(egg.x, egg.y, egg.team, egg.EggMesh);
+        data.eggs.push_back(newEgg);
     }
 }

@@ -16,6 +16,8 @@ class TileDataPlugin : public Aplugin {
  private:
     int xTile = -1; /**< X position of the selected tile. */
     int yTile = -1; /**< Y position of the selected tile. */
+    std::shared_ptr<irr::gui::IGUIFont> font;
+    irr::video::IVideoDriver* driver;
 
     bool pressed = false; /**< Indicates if the mouse is currently pressed. */
     bool isPressedLastFrame = false;
@@ -32,13 +34,13 @@ class TileDataPlugin : public Aplugin {
     /**
      * @brief Detects collision with a tile.
      */
-    void detectCollisionTile();
+    bool detectCollisionTile();
 
-    /**
-     * @brief Detects collision with a player.
-     * @return True if a collision with a player is detected, false otherwise.
-     */
-    bool detectCollisionPlayer();
+    int countTileRessource(pluginsData::Tile tile);
+
+    void drawRessources(pluginsData::Tile tile, int &y);
+    void drawEggs(pluginsData::Tile tile, int &y);
+    void drawPlayers(pluginsData::Tile tile, int &y);
 
  public:
     /**
@@ -57,5 +59,9 @@ class TileDataPlugin : public Aplugin {
 
     std::string getName() const override {
         return "Tile Data Plugin";
+    }
+
+    int getPriority() const override {
+        return 0;
     }
 };

@@ -105,10 +105,10 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
     }
 }
 
-void pluginsManager::update(pluginsData dataManager) {
+void pluginsManager::update(pluginsData dataManager, float deltaTime) {
     for (const auto &plugin : _plugins) {
         if (plugin && plugin->isActive())
-            plugin->update(dataManager);
+            plugin->update(dataManager, deltaTime);
     }
 }
 

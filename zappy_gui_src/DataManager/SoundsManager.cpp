@@ -8,6 +8,7 @@
 #include "Exceptions/SoundsManagerExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/PathManager.hpp"
+#include "SoundsManager.hpp"
 
 namespace GUI {
 bool SoundsManager::playMusic(std::string path) {
@@ -47,6 +48,7 @@ bool SoundsManager::playSound(std::string path) {
         return false;
     }
 }
+
 void SoundsManager::Update() {
     try {
         for (size_t i = 0; i < sounds.size(); i++) {
@@ -91,5 +93,24 @@ void SoundsManager::Update() {
         GameDataManager::i().setPushed(false);
         playSound("assets/" + GUI::PathManager::i().getPath("Push"));
     }
+}
+
+void SoundsManager::AddVolumeMusic(int volume) {
+    volumeMusic += volume;
+    if (volumeMusic < 0)
+        volumeMusic = 0;
+    if (volumeMusic > 100)
+        volumeMusic = 100;
+    music.setVolume(volumeMusic);
+}
+
+void SoundsManager::AddVolumeSound(int volume) {
+    volumeSound += volume;
+    if (volumeSound < 0)
+        volumeSound = 0;
+    if (volumeSound > 100)
+        volumeSound = 100;
+    for (auto &sound : sounds)
+        sound.setVolume(volumeSound);
 }
 }  // namespace GUI

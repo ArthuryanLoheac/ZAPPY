@@ -11,6 +11,7 @@
 #include "include/logs.h"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
+#include "Window/windowOptionMenu.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -88,9 +89,9 @@ void Window::windowUpdateFocus() {
     SoundsManager::i().Update();
     driver->beginScene(true, true,
         irr::video::SColor(255, 100, 101, 140));
-
     updateMesh();
     smgr->drawAll();
+    windowOptionMenu::i().draw(driver, font);
     pluginsManager::i().drawPlugins(font, driver);
     guienv->drawAll();
 }
@@ -105,6 +106,7 @@ void Window::windowUpdateNoFocus() {
 
         updateMesh();
         smgr->drawAll();
+        windowOptionMenu::i().draw(driver, font);
         pluginsManager::i().drawPlugins(font, driver);
         guienv->drawAll();
     } catch (const std::exception &e) {

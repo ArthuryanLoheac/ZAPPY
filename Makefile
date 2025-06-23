@@ -173,8 +173,9 @@ doxygen:
 
 # ============= TESTS ============= #
 
-unit_tests: $(COMMON_C_LIB) $(OBJ_SRC_SERVER)
-	gcc -o unit_tests $(OBJ_SRC_SERVER) $(COMMON_C_LIB) $(SRC_TESTS) $(FLAGS_TEST)
+unit_tests: $(COMMON_C_LIB)
+	gcc -o unit_tests $(SRC_SERVER) $(COMMON_C_LIB) $(SRC_TESTS) \
+	-I./zappy_server_src/include -I./libc/include $(FLAGS_TEST)
 
 tests_run: unit_tests
 	./unit_tests --verbose

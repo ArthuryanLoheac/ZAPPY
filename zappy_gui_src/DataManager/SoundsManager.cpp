@@ -8,7 +8,6 @@
 #include "Exceptions/SoundsManagerExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/PathManager.hpp"
-#include "SoundsManager.hpp"
 
 namespace GUI {
 bool SoundsManager::playMusic(std::string path) {

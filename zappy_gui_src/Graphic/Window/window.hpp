@@ -162,8 +162,9 @@ class Window {
      * @param zoom Zoom level.
      * @param xMove Horizontal movement of the camera target.
      * @param yMove Vertical movement of the camera target.
+     * @param zMove Depth movement of the camera target.
      */
-    void moveCamera(float x, float zoom, float xMove, float yMove);
+    void moveCamera(float x, float zoom, float xMove, float yMove, float zMove);
 
     /**
      * @brief Updates the zoom level of the camera.
@@ -177,10 +178,12 @@ class Window {
      *
      * @param xMove Horizontal movement.
      * @param yMove Vertical movement.
+     * @param zMove Depth movement.
      * @param radX Rotation in the X direction.
      * @param radZ Rotation in the Z direction.
      */
-    void updateMoveOrigin(float xMove, float yMove, float radX, float radZ);
+    void updateMoveOrigin(float xMove, float yMove, float zMove,
+        float radX, float radZ);
 
     /**
      * @brief Updates the camera's rotation.

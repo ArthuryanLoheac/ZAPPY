@@ -24,6 +24,8 @@ class graphRessourcesPlugin : public Aplugin {
         int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver,
         irr::video::SColor replace);
 
+    float getMaxRessource();
+
  public:
     /**
      * @brief Draws the UI elements for the plugin.

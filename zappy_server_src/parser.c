@@ -103,15 +103,15 @@ static void parse_one_arg(int ac, char **av, parser_t *parser, int i)
     if (strcmp(av[i], "-p") == 0 && i + 1 < ac)
         parser->port = parse_int(av[i + 1], 1024, 65535);
     if (strcmp(av[i], "-x") == 0 && i + 1 < ac)
-        parser->width = parse_int(av[i + 1], 10, 42);
+        parser->width = parse_int(av[i + 1], 1, 40000);
     if (strcmp(av[i], "-y") == 0 && i + 1 < ac)
-        parser->height = parse_int(av[i + 1], 10, 42);
+        parser->height = parse_int(av[i + 1], 1, 40000);
     if (strcmp(av[i], "-n") == 0)
         parser->team_names = parse_teams(av, &i, ac, &parser->nb_teams);
     if (strcmp(av[i], "-c") == 0 && i + 1 < ac)
         parser->clients_per_team = parse_int(av[i + 1], 1, 200);
     if (strcmp(av[i], "-f") == 0 && i + 1 < ac)
-        parser->freq = parse_int(av[i + 1], 1, 10000);
+        parser->freq = parse_int(av[i + 1], 1, 200);
     if (strcmp(av[i], "-v") == 0)
         set_minimum_log_level(WARNING);
     if (strcmp(av[i], "-vv") == 0)

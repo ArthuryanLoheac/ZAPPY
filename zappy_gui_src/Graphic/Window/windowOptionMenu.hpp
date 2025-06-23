@@ -10,8 +10,10 @@
 
 #include "Exceptions/GraphicalExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
-#include "Graphic/Events/MyEventReceiver.hpp"
 #include "DataManager/SoundsManager.hpp"
+
+#define UIRect irr::core::rect<irr::s32>
+#define UICol irr::video::SColor
 
 class windowOptionMenu {
  public:

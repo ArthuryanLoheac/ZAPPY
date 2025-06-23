@@ -252,6 +252,20 @@ class ServerGUI {
     void pbcCommand(std::vector<std::string> &args);
 
     /**
+     * @brief Handles the "smg" command to process a message from the server.
+     *
+     * @param args Command arguments containing the message details.
+     */
+    void smgCommand(std::vector<std::string> &args);
+
+    /**
+     * @brief Handles the "SBP" command when badly formatted command was sent
+     *
+     * @param args Command arguments containing the broadcast message.
+     */
+    void sbpCommand(std::vector<std::string> &args);
+
+    /**
      * @brief Map of server commands to their corresponding handler functions.
      */
     std::map<std::string,
@@ -278,6 +292,8 @@ class ServerGUI {
         {"SUC", &ServerGUI::sucCommand},
         {"SEG", &ServerGUI::segCommand},
         {"PBC", &ServerGUI::pbcCommand},
+        {"SMG", &ServerGUI::smgCommand},
+        {"SBP", &ServerGUI::sbpCommand}
     };
 };
 

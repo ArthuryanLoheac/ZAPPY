@@ -1,14 +1,18 @@
 <h1 align=center>🎮 Zappy - Virtual World Simulator</h1>
 <p align="center">
-    <img src="https://img.shields.io/badge/Game-Simulation-orange" alt="Game"/>
+    <img src="https://img.shields.io/badge/Game-Simulation-purple" alt="Game"/>
     <img src="https://img.shields.io/badge/Language-C/C++-blue" alt="Language"/>
     <img src="https://img.shields.io/badge/Status-In%20Development-green" alt="Status"/>
 </p>
 
 <p align="center">
     <a href="https://arthuryanloheac.github.io/ZAPPY/" target="_blank">
-        <img src="https://img.shields.io/badge/Documentation-Visit%20Here-blue" alt="Documentation" style="transform: scale(1.5);" />
+        <img src="https://img.shields.io/badge/Documentation-Visit%20Here-red" alt="Documentation" style="transform: scale(1.5);" />
     </a>
+</p>
+
+<p align="center">
+    <img src="docs/static/img/game-screenshot.png" alt="Trantor World" width="720"/>
 </p>
 
 # <p align=center> 📜 Overview </p>
@@ -131,7 +135,7 @@ If you want to compile only one part, you can use
 make <name-of-the-binary>
 ```
 
-Name of the binary is either `zappy-server`, `zappy-ai` or `zappy-gui`.
+Name of the binary is either `zappy_server`, `zappy_ai` or `zappy_gui`.
 
 </details>
 

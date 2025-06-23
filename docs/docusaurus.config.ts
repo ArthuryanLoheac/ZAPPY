@@ -68,15 +68,14 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'docusorusTutorialSidebar',
+          sidebarId: 'zappySidebar',
           position: 'right',
-          label: 'Docusorus Tutorial',
+          label: "Documentation"
         },
         {
-          type: 'docSidebar',
-          sidebarId: 'zappySidebar',
+          href: 'https://github.com/ArthuryanLoheac/ZAPPY',
           position: 'left',
-          label: "Zappy docs"
+          label: 'Contribute'
         },
         {
           href: '/ZAPPY/doxygen/index.html',
@@ -104,7 +103,7 @@ const config: Config = {
           ],
         }
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Zappy docs, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Zappytto team.`,
     },
     prism: {
       theme: prismThemes.github,

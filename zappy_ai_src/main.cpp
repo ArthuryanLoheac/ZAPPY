@@ -17,7 +17,9 @@
 #include "modules/FoodGatheringModule.hpp"
 #include "modules/CommunicationModule.hpp"
 #include "modules/ElevationModule.hpp"
-
+#include "modules/RoleAttributionModule.hpp"
+#include "modules/DisruptionModule.hpp"
+#include "modules/RessourceGatheringSpawning.hpp"
 
 bool sigintReceived = false;
 bool usr1Received = false;
@@ -88,9 +90,12 @@ int initChildProcess(int port, const std::string &ip,
     }
 
     Logic& logic = Logic::getInstance();
-    logic.addModule(std::make_unique<FoodGatheringModule>());
-    logic.addModule(std::make_unique<CommunicationModule>());
-    logic.addModule(std::make_unique<ElevationModule>());
+    // logic.addModule(std::make_unique<FoodGatheringModule>());
+    // logic.addModule(std::make_unique<CommunicationModule>());
+    // logic.addModule(std::make_unique<ElevationModule>());
+    logic.addModule(std::make_unique<RoleAttributionModule>());
+    // logic.addModule(std::make_unique<DisruptionModule>());
+    logic.addModule(std::make_unique<RessourceGatheringSpawning>());
 
     while (AI::Data::i().isDead == false) {
         try {

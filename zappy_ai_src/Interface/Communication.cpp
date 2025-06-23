@@ -29,7 +29,7 @@ namespace AI {
  */
 void Interface::commandBROADCAST(std::vector<std::string> &args,
 std::vector<std::string> &command) {
-    if (args.size() < 2) {
+    if (args.size() != 1) {
         LOG_ERROR("BROADCAST: Expected at least one argument, got %i\n.",
             args.size() - 1);
         return;
@@ -52,8 +52,8 @@ void Interface::receiveMessage(std::vector<std::string> &args) {
         return;
     }
 
-    std::string message = args[1];
-    int direction = std::stoi(args[2]);
+    std::string message = args[2];
+    int direction = std::stoi(args[1]);
 
     if (needFilter(message)) {
         return;
@@ -235,7 +235,8 @@ void Interface::sendMessage(const std::string &message) {
 
     std::string encryptedMessage = encrypt(message, Data::i().magicKey);
     encryptedMessage = Data::i().magicKey + encryptedMessage;
-    sendCommand("BROADCAST " + encryptedMessage + "\n");
+    std::cout << "Sending encrypted message: " << encryptedMessage << std::endl;
+    sendCommand("Broadcast " + encryptedMessage + "\n");
 }
 
 }  // namespace AI

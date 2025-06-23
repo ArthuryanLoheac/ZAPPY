@@ -5,6 +5,7 @@
 #include <memory>
 #include <queue>
 #include <string>
+#include <typeinfo>
 #include <utility>
 #include <vector>
 
@@ -55,7 +56,14 @@ void Logic::executeHighestPriorityModule() {
             const std::unique_ptr<AIModule>& b) {
             return a->getPriority() > b->getPriority();
         });
-    (*highestPriorityModuleIt)->execute();
+    
+    // Get the module type name using typeid
+    const auto& module = *highestPriorityModuleIt;
+    std::cout << "Executing module: " << typeid(*module).name() 
+              << " with priority: " << module->getPriority() << std::endl;
+    
+    // Execute the highest priority module
+    module->execute();
 }
 
 void Logic::queueCommand(const std::string& command) {

@@ -34,9 +34,8 @@ ElevationModule::ElevationModule() {
 float ElevationModule::getPriority() {
     checkResources();
 
-    return 1.0f;
-    // TEMP above
-    if (foodCount < 3 || !hasLinemate || !foundSpot) {
+    if (foodCount < 3) {
+        std::cout << "no elevation" << std::endl;
         return 1.0f;
     }
 

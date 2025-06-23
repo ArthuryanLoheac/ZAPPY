@@ -41,7 +41,7 @@ class windowOptionMenu {
     Button minusMusicButton;
     Button plusSoundButton;
     Button minusSoundButton;
-    irr::IrrlichtDevice *device;
+    irr::IrrlichtDevice *device = nullptr;
 
     windowOptionMenu();
 

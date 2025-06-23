@@ -46,6 +46,8 @@ const irr::SEvent &event) {
 }
 
 void windowOptionMenu::handleEvent(const irr::SEvent &event) {
+    if (!device)
+        return;
     if (event.EventType == irr::EET_KEY_INPUT_EVENT &&
         event.KeyInput.Key == irr::KEY_ESCAPE && event.KeyInput.PressedDown)
         opened = !opened;
@@ -84,7 +86,7 @@ int yOffset, std::string txt, int xOffset) {
 
 void windowOptionMenu::draw(irr::video::IVideoDriver *driver,
     std::shared_ptr<irr::gui::IGUIFont> font)  {
-    if (!opened)
+    if (!opened || !device || !driver || !font)
         return;
     int width = driver->getScreenSize().Width;
     int height = driver->getScreenSize().Height;

@@ -1,8 +1,8 @@
 #pragma once
-
 #include <irrlicht/irrlicht.h>
+
 #include "PluginsManagement/pluginsManager.hpp"
-#include "Window/windowOptionMenu.hpp" // Corrected include path
+#include "Window/windowOptionMenu.hpp"
 
 /**
  * @brief Handles user input events for the graphical interface.

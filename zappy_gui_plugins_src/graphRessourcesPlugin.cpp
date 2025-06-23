@@ -53,6 +53,18 @@ irr::video::SColor replace) {
     }
 }
 
+float graphRessourcesPlugin::getMaxRessource() {
+    int max = 90;
+
+    for (auto ressource : lstRessources) {
+        for (size_t i = 0; i < ressource.size(); ++i) {
+            if (ressource[i] > max)
+                max = ressource[i];
+        }
+    }
+    return static_cast<float>(max);
+}
+
 std::vector<int> graphRessourcesPlugin::computeRessources() {
     std::vector<int> ressources(7, 0);
     for (auto tile : data.tiles) {
@@ -95,9 +107,11 @@ void graphRessourcesPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
     }
     y += 100;
     for (size_t i = 0; i < lstRessources.size(); ++i) {
-        for (int c = 0; c < 7; c++)
+        for (int c = 0; c < 7; c++) {
             drawImageReplace("assets/UI/graphPoint.png", i + 2,
-                y - lstRessources[i][c], 1, 1, driver, lstColors[c]);
+                y - ((lstRessources[i][c] / getMaxRessource()) * 90.f), 1, 1,
+                driver, lstColors[c]);
+        }
     }
 }
 

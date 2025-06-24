@@ -141,7 +141,7 @@ void broadcast_command(zappy_t *zappy, client_t *client, char **args)
 
     for (int i = 0; i < 2560; i++)
         textBuffer[i] = '\0';
-    if (args[0] == NULL) {
+    if (!args || args[0] == NULL) {
         add_to_buffer(&client->out_buffer, "ko\n");
         return;
     }

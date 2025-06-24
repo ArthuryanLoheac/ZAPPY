@@ -92,10 +92,8 @@ static void process_command_line(client_t *client, char *command_line,
 {
     char **args = parse_command(command_line);
 
-    if (!args || !args[0]) {
-        free_command_args(args);
+    if (!args || !args[0])
         return;
-    }
     process_command(args, client, zappy_ptr);
     free_command_args(args);
 }

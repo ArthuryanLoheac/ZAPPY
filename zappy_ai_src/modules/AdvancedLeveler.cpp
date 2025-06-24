@@ -83,6 +83,8 @@ double AdvancedLeveler::computePriority(int level,
 }
 
 float AdvancedLeveler::getPriority() {
+    if (AI::Data::i().level < 2)
+        return 1.0f;
     return computePriority(AI::Data::i().level, AI::Data::i().inventory);
 }
 

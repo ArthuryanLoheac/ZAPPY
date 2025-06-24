@@ -139,6 +139,10 @@ void broadcast_command(zappy_t *zappy, client_t *client, char **args)
 {
     char *textBuffer = malloc(sizeof(char) * 256);
 
+    if (client == NULL || zappy == NULL)
+        return;
+    for (int i = 0; i < 2560; i++)
+        textBuffer[i] = '\0';
     if (!args || args[0] == NULL) {
         add_to_buffer(&client->out_buffer, "ko\n");
         return;

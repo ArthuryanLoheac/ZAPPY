@@ -10,12 +10,21 @@
 #include "client.h"
 #include "command.h"
 
+static char *safe_strdup(const char *s)
+{
+    if (s == NULL) {
+        fprintf(stderr, "safe_strdup: NULL pointer\n");
+        abort();
+    }
+    return strdup(s);
+}
+
 static int count_tokens(char *str)
 {
     char *temp = strdup(str);
     char *temp_ptr = temp;
     char *token = NULL;
-    int count = 0;
+    int count = 1;
 
     if (!temp)
         return -1;
@@ -42,11 +51,15 @@ static int fill_args_array(char **args, char *command, int count)
 
     if (!temp)
         return -1;
+
     token = strtok(temp, " ");
     while (token != NULL && i < count) {
-        args[i] = strdup(token);
+        args[i] = safe_strdup(token);
         if (!args[i]) {
-            free(temp_ptr);
+            for (int j = 0; j < i; j++)
+                free(args[j]);  // FREE les strdup précédents
+            free(args);         // FREE tableau
+            free(temp_ptr);     // FREE temporaire
             return -1;
         }
         i++;
@@ -78,6 +91,21 @@ static char **parse_command(char *command)
     return args;
 }
 
+static void free_command_args(char **args)
+{
+    if (!args)
+        return;
+    int i = 0;
+    while (args[i] != NULL) {
+        if (args[i] == NULL)
+            break;
+        free(args[i]);
+        i++;
+    }
+
+    free(args);
+}
+
 static void process_command_line(client_t *client, char *command_line,
     zappy_t *zappy_ptr)
 {
@@ -86,6 +114,7 @@ static void process_command_line(client_t *client, char *command_line,
     if (!args || !args[0])
         return;
     process_command(args, client, zappy_ptr);
+    free_command_args(args);
 }
 
 void extract_commands(client_t *client, zappy_t *zappy_ptr)

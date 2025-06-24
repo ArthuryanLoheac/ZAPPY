@@ -34,8 +34,10 @@ void append_client_out_buffer(client_t *client, const char *format, ...)
     va_end(args);
     if (client->out_buffer == NULL)
         client->out_buffer = new_buffer;
-    else
+    else {
         add_to_buffer(&client->out_buffer, new_buffer);
+        free(new_buffer);
+    }
 }
 
 static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
@@ -56,8 +58,10 @@ static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
     buffer[bytes_read] = '\0';
     if (client->in_buffer == NULL)
         client->in_buffer = buffer;
-    else
+    else {
         add_to_buffer(&client->in_buffer, buffer);
+        free(buffer);
+    }
     extract_commands(client, zappy);
     return true;
 }

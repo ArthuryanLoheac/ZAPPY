@@ -30,7 +30,7 @@ std::vector<std::string> ParrotModule::chooseRandomMessages(int count) {
     std::shuffle(allMessages.begin(), allMessages.end(), g);
     count = std::min<size_t>(count, allMessages.size());
     messages.assign(allMessages.begin(), allMessages.begin() + count);
-    while (messages.size() < 5 && !allMessages.empty()) {
+    while (messages.size() < count && !allMessages.empty()) {
         messages.push_back(allMessages[messages.size() % allMessages.size()]);
     }
     return messages;
@@ -39,7 +39,7 @@ std::vector<std::string> ParrotModule::chooseRandomMessages(int count) {
 void ParrotModule::fuckUpMessages(const std::vector<std::string>& messages) {
     for (const auto& message : messages) {
         std::string modified = message;
-        for (int i = std::max<int>(0, modified.size() - 5); i
+        for (size_t i = std::max<int>(0, modified.size() - 5); i
             < modified.size(); ++i) {
             if (std::isdigit(modified[i])) {
                 modified[i] = ((modified[i] - '0' + 1) % 10) + '0';

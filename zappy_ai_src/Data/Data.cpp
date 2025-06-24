@@ -16,18 +16,29 @@ Data::Data() {
     vision = {};
 
     inventory = {
-        {"food", 10},
-        {"linemate", 0},
-        {"deraumere", 0},
-        {"sibur", 0},
-        {"mendiane", 0},
-        {"phiras", 0},
-        {"thystame", 0}
+        {Food, 10},
+        {Linemate, 0},
+        {Deraumere, 0},
+        {Sibur, 0},
+        {Mendiane, 0},
+        {Phiras, 0},
+        {Thystame, 0}
     };
 }
 
 Data::~Data() {
 }
+
+const std::unordered_map<std::string, AI::Data::Material_t>
+    AI::Data::stringToMaterial = {
+    {"food", Food},
+    {"linemate", Linemate},
+    {"deraumere", Deraumere},
+    {"sibur", Sibur},
+    {"mendiane", Mendiane},
+    {"phiras", Phiras},
+    {"thystame", Thystame}
+};
 
 // ————————————————————————— Definition of methods ————————————————————————
 

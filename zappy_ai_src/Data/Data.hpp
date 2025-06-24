@@ -25,8 +25,18 @@ class Data {
     int mapY;
     int level;
 
+    typedef enum Material_e {
+        Food,
+        Linemate,
+        Deraumere,
+        Sibur,
+        Mendiane,
+        Phiras,
+        Thystame
+    } Material_t;
     // Inventory
-    std::unordered_map<std::string, int> inventory;
+    std::unordered_map<Material_t, int> inventory;
+    static const std::unordered_map<std::string, Material_t> stringToMaterial;
 
     // representation of the vision given by the LOOK command, first vector for
     // depth, second for the direction and third is the objects and the number

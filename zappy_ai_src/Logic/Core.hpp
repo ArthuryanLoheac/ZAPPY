@@ -15,6 +15,7 @@
 #include <memory>
 #include <cstdint>
 #include "../modules/AIModule.hpp"
+#include "../modules/RoleAttributionModule.hpp"
 
 class CommandHistory {
  public:
@@ -52,6 +53,11 @@ class Logic {
     const std::map<std::string, int>& getInventory() const;
     void setLevel(int16_t newLevel);
     int16_t getLevel() const;
+    
+    // New methods for role-based module management
+    RoleAttributionModule* getRoleModule();
+    void setupRoleBasedModules();
+    bool hasRoleBasedModulesSetup() const;
 
  private:
     std::vector<std::unique_ptr<AIModule>> modules;
@@ -59,6 +65,7 @@ class Logic {
     CommandHistory commandHistory;
     std::map<std::string, int> inventory;
     int16_t level;
+    bool roleModulesSetup;
     std::string extractMessageType(const std::string& command,
         const std::string& response);
 };

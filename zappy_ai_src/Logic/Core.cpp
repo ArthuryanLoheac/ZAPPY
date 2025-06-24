@@ -12,6 +12,12 @@
 #include "Logic/PrioritySystem.hpp"
 #include "../modules/CommunicationModule.hpp"
 #include "../modules/FoodGatheringModule.hpp"
+#include "../modules/KirbyModule.hpp"
+#include "../modules/RoleAttributionModule.hpp"
+#include "../modules/ElevationModule.hpp"
+#include "../modules/DisruptionModule.hpp"
+#include "../modules/RessourceGatheringSpawning.hpp"
+#include "../modules/FeederModule.hpp"
 
 void CommandHistory::addCommandResponse(const std::string& command,
                                        const std::string& response) {
@@ -34,7 +40,7 @@ std::pair<std::string, std::string> CommandHistory::getLastCommandResponse()
     return history.back();
 }
 
-Logic::Logic() : level(1) {
+Logic::Logic() : level(1), roleModulesSetup(false) {
     inventory["Food"] = 10;
 }
 
@@ -144,4 +150,71 @@ void Logic::setLevel(int16_t newLevel) {
 
 int16_t Logic::getLevel() const {
     return level;
+}
+
+/**
+ * @brief Get the RoleAttributionModule instance
+ * @return Pointer to the RoleAttributionModule, or nullptr if not found
+ */
+RoleAttributionModule* Logic::getRoleModule() {
+    for (auto& module : modules) {
+        // Use dynamic cast to check if the module is a RoleAttributionModule
+        if (auto roleModule = dynamic_cast<RoleAttributionModule*>(module.get())) {
+            return roleModule;
+        }
+    }
+    return nullptr;
+}
+
+/**
+ * @brief Setup modules based on the assigned role
+ */
+void Logic::setupRoleBasedModules() {
+    auto roleModule = getRoleModule();
+    if (!roleModule || !roleModule->isRoleAssigned()) {
+        return;
+    }
+
+    Role currentRole = roleModule->getCurrentRole();
+    std::cout << "Setting up modules for role: ";
+    
+    switch (currentRole) {
+        case Role::HARVESTER:
+            std::cout << "HARVESTER" << std::endl;
+            addModule(std::make_unique<KirbyModule>());
+            break;
+            
+        case Role::LEVELER:
+            std::cout << "LEVELER" << std::endl;
+            addModule(std::make_unique<DisruptionModule>());
+            addModule(std::make_unique<RessourceGatheringSpawning>());
+            addModule(std::make_unique<ElevationModule>());
+            addModule(std::make_unique<FoodGatheringModule>());
+            break;
+
+        case Role::DISRUPTER:
+            std::cout << "DISRUPTER" << std::endl;
+            addModule(std::make_unique<DisruptionModule>());
+            addModule(std::make_unique<CommunicationModule>());
+            break;
+
+        case Role::FEEDER:
+            std::cout << "FEEDER" << std::endl;
+            addModule(std::make_unique<FeederModule>());
+            break;
+
+        default:
+            std::cout << "UNKNOWN (no additional modules added)" << std::endl;
+            return;
+    }
+
+    roleModulesSetup = true;
+}
+
+/**
+ * @brief Check if role-based modules have been set up
+ * @return True if modules have been set up
+ */
+bool Logic::hasRoleBasedModulesSetup() const {
+    return roleModulesSetup;
 }

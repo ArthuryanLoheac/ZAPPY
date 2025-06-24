@@ -23,6 +23,7 @@
 #include "modules/RoleAttributionModule.hpp"
 #include "modules/DisruptionModule.hpp"
 #include "modules/RessourceGatheringSpawning.hpp"
+#include "modules/KirbyModule.hpp"
 
 bool sigintReceived = false;
 
@@ -111,12 +112,8 @@ int initChildProcess(const int port, const std::string &ip,
     }
 
     Logic& logic = Logic::getInstance();
-    // logic.addModule(std::make_unique<FoodGatheringModule>());
-    // logic.addModule(std::make_unique<CommunicationModule>());
-    // logic.addModule(std::make_unique<ElevationModule>());
+    // Start with only the role attribution module
     logic.addModule(std::make_unique<RoleAttributionModule>());
-    // logic.addModule(std::make_unique<DisruptionModule>());
-    logic.addModule(std::make_unique<RessourceGatheringSpawning>());
 
     while (AI::Data::i().isDead == false) {
         try {
@@ -130,6 +127,12 @@ int initChildProcess(const int port, const std::string &ip,
         }
         if (AI::Data::i().isRunning) {
             try {
+                // Check if we need to add role-specific modules
+                if (!logic.hasRoleBasedModulesSetup()) {
+                    logic.setupRoleBasedModules();
+                }
+                
+                // Execute the highest priority module
                 if (!interface.isWaitingForResponse()) {
                     logic.executeHighestPriorityModule();
                 }

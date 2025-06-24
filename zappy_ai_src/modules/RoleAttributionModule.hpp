@@ -21,6 +21,7 @@ enum class Role {
     HARVESTER,  // Focused on gathering food resources
     DISRUPTER,  // Focused on exploring and disrupting enemy elevation
     LEVELER,    // Focused on collecting materials for elevation
+    FEEDER,     // Focused on providing food to other players
 };
 
 /**
@@ -64,6 +65,12 @@ class RoleAttributionModule : public AIModule {
      * @return Role The current role
      */
     Role getCurrentRole() const;
+
+    /**
+     * @brief Check if a role has been assigned
+     * @return bool True if role is assigned
+     */
+    bool isRoleAssigned() const;
 
     /**
      * @brief Reassign role using new random ID

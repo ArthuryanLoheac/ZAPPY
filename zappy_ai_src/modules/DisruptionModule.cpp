@@ -54,7 +54,7 @@ void DisruptionModule::execute() {
  */
 float DisruptionModule::getPriority() {
     // Lower priority than crucial modules like food gathering
-    return 0.2f;
+    return 0.7f;
 }
 
 /**

@@ -47,7 +47,12 @@ class RessourceGatheringSpawning : public AIModule {
     void assignRoleToNewPlayer();
 
     /**
-     * @brief Determine which role is most needed (always harvester)
+     * @brief Handle the food collection from a feeder
+     */
+    void collectFoodFromFeeder();
+
+    /**
+     * @brief Determine which role is needed
      * @return string representing the needed role
      */
     std::string determineNeededRole() const;
@@ -60,6 +65,15 @@ class RessourceGatheringSpawning : public AIModule {
 
     /// Whether a player was recently spawned
     bool recentlySpawned;
+
+    /// Whether we need to feed
+    bool needToFeed;
+
+    /// Counter for food collection
+    int foodCollectionCounter;
+
+    /// Role of the spawned player
+    std::string spawnedRole;
 };
 
 #endif  // ZAPPY_AI_SRC_MODULES_RESSOURCEGATHERINGSPAWNING_HPP_

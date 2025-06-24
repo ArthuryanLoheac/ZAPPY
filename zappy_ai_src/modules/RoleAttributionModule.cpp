@@ -110,7 +110,7 @@ void RoleAttributionModule::execute() {
  * @return float Priority value between 0.0 and 1.0
  */
 float RoleAttributionModule::getPriority() {
-    return (currentPhase != AttributionPhase::ROLE_ASSIGNED) ? 0.9f : 0.3f;
+    return (currentPhase == AttributionPhase::ROLE_ASSIGNED) ? 1.0f : 0.3f;
 }
 
 /**
@@ -136,7 +136,7 @@ void RoleAttributionModule::assignRoleFromId() {
 
 
     currentRole = Role::LEVELER;
-
+    currentPhase = AttributionPhase::ROLE_ASSIGNED;
     std::cout << "Role assigned based on random ID: "
               << roleToString(currentRole) << std::endl;
 }
@@ -223,6 +223,9 @@ void RoleAttributionModule::processInitialPhase(
     } else if (content.find("NEED_LEVELER") != std::string::npos) {
         currentRole = Role::LEVELER;
         roleAssigned = true;
+    } else if (content.find("NEED_FEEDER") != std::string::npos) {
+        currentRole = Role::FEEDER;
+        roleAssigned = true;
     }
     
     // Update phase and log if role was assigned
@@ -303,7 +306,17 @@ std::string RoleAttributionModule::roleToString(Role role) const {
             return "DISRUPTER";
         case Role::LEVELER:
             return "LEVELER";
+        case Role::FEEDER:
+            return "FEEDER";
         default:
             return "INVALID_ROLE";
     }
+}
+
+/**
+ * @brief Check if a role has been assigned
+ * @return bool True if role is assigned
+ */
+bool RoleAttributionModule::isRoleAssigned() const {
+    return currentPhase == AttributionPhase::ROLE_ASSIGNED;
 }

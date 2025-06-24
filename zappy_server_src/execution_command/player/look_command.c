@@ -133,7 +133,7 @@ void look_command(zappy_t *zappy, client_t *client, char **args)
     int xyi_cpy[3] = {client->stats.x, client->stats.y, 0};
     char *buffer = malloc(2 * sizeof(char));
 
-    if (client == NULL || zappy == NULL)
+    if (client == NULL || zappy == NULL || buffer == NULL)
         return;
     (void) args;
     fill_variable(&variables, client);

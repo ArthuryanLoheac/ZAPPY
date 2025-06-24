@@ -71,20 +71,16 @@ void add_to_buffer(char **buffer, const char *data)
 {
     if (*buffer == NULL) {
         *buffer = strdup(data);
-        if (*buffer == NULL) {
-            perror("strdup");
-            exit(84);
-        }
+        if (*buffer == NULL)
+            display_error("Failed to allocate memory for buffer");
         return;
     }
 
     size_t old_size = strlen(*buffer);
     size_t new_size = old_size + strlen(data) + 1;
     char *new_buffer = malloc(new_size);
-    if (new_buffer == NULL) {
-        perror("malloc");
-        exit(84);
-    }
+    if (new_buffer == NULL)
+        display_error("Failed to allocate memory for new buffer");
     strcpy(new_buffer, *buffer);
     strcpy(new_buffer + old_size, data);
     free(*buffer);

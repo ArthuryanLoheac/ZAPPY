@@ -59,6 +59,7 @@ This document describes the client/server communication protocol used in the Zap
 | `smg M` | Server message |
 | `suc` | Unknown command |
 | `sbp` | Command parameter error |
+| `ping` | Wait the response to see the delay with the server |
 
 ---
 

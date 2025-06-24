@@ -162,6 +162,9 @@ RFC 222                   Zappy GUI Protocol              Jun 2025
 
    sbp <CRLF> ->
       Command parameter error
+   
+   ping <CRLF> ->
+      Ping the server
 
                                                                [Page 5]
 

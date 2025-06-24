@@ -1,0 +1,187 @@
+Network Working Group                                        A. Loheac
+Request for Comments: EPITECH-RFC-223                        L. Pintard
+Category: Standards Track                                    J. Bizeul
+ISSN: 2070-1721                                             N. Bezard
+                                                            M. Guillet-Arnaud
+                                                            M. Fillion
+
+                            Zappy AI Protocol
+
+Abstract
+
+   This document defines the communication protocol between the Zappy
+   server and its AI client. It describes the format, structure, and
+   semantics of messages exchanged over the network. The protocol is
+   designed to support real-time decision-making and actions by AI
+   players.
+
+Status of This Memo
+
+   This document is a product of EPITECH and represents information
+   deemed valuable to provide for permanent record. It is published
+   for informational purposes and is not a candidate for any level of
+   Internet Standard.
+
+Table of Contents
+
+   1. Introduction ...................................................3
+   2. Terminology and Symbols ........................................4
+   3. Server to Client Messages ......................................5
+   4. Client to Server Messages ......................................7
+   5. Message Format and Semantics ...................................8
+   6. Versioning .....................................................9
+   7. Security Considerations ........................................9
+   8. References ....................................................10
+   9. Authors' Addresses ............................................11
+
+                                                               [Page 1]
+
+RFC 223                   Zappy AI Protocol              Jun 2025
+
+
+--- Page 2 ---
+1. Introduction
+
+   The Zappy AI protocol enables AI clients to interact with the game
+   server. It provides a set of ASCII-based textual commands for player
+   actions, resource management, and team coordination. All messages are
+   line-based and terminated by a newline character ('\n').
+
+                                                               [Page 2]
+
+RFC 223                   Zappy AI Protocol              Jun 2025
+
+
+--- Page 3 ---
+3. Server to Client Messages
+
+   The following commands are sent by the server to the AI client:
+
+   WELCOME <CRLF> ->
+      Initial connection message
+
+   DEAD <CRLF> ->
+      Player death notification
+
+   {map_x} <SP> {map_y} <CRLF> ->
+      Map dimensions
+
+   {slots_available} <CRLF> ->
+      Number of available slots for the team
+
+                                                               [Page 3]
+
+RFC 223                   Zappy AI Protocol              Jun 2025
+
+
+--- Page 4 ---
+4. Client to Server Messages
+
+   The AI client may send the following commands to the server:
+
+   Forward <CRLF> ->
+      Move up one tile
+
+   Right <CRLF> ->
+      Turn 90° right
+
+   Left <CRLF> ->
+      Turn 90° left
+
+   Look <CRLF> ->
+      Look around
+
+   Inventory <CRLF> ->
+      Request player inventory
+
+   Broadcast <SP> {Message} <CRLF> ->
+      Broadcast a message
+
+   Connect_nbr <CRLF> ->
+      Request number of unused team slots
+
+   Fork <CRLF> ->
+      Fork a new player
+
+   Eject <CRLF> ->
+      Eject players from the current tile
+
+   Take <SP> object <CRLF> ->
+      Take an object from the current tile
+
+   Set <SP> object <CRLF> ->
+      Set an object down on the current tile
+
+   Incantation <CRLF> ->
+      Start an incantation
+
+                                                               [Page 4]
+
+RFC 223                   Zappy AI Protocol              Jun 2025
+
+
+--- Page 5 ---
+5. Message Format and Semantics
+
+   - All messages are encoded in UTF-8 and terminated by a newline
+      character ('\n').
+   - All messages are case insensitive.
+   - Commands must follow exact spelling and spacing. Any deviation may
+      result in:
+      - 'ko' (bad or unknown command)
+
+
+6. Versioning
+
+   Protocol Version: 1.0
+   Future protocol changes must increment the version number.
+   Compatibility is not guaranteed between major versions.
+
+7. Security Considerations
+
+   This protocol assumes a trusted local network environment. No
+   authentication, encryption, or integrity checks are built-in.
+   It's strongly advised not to expose the protocol interface to public
+   networks without an external secure layer (e.g., SSH tunnel, VPN).
+
+                                                               [Page 5]
+
+RFC 223                   Zappy AI Protocol              Jun 2025
+
+
+--- Page 6 ---
+8. References
+
+Normative References:
+   [RFC793]  Postel, J., "Transmission Control Protocol", STD 7,
+             RFC 793, September 1981. (Obsoleted by RFC 9293)
+
+   [RFC2119] Bradner, S., "Key words for use in RFCs to Indicate
+             Requirement Levels", BCP 14, RFC 2119, March 1997.
+
+Informative References:
+   None.
+
+9. Authors' Addresses
+
+   Arthuryan Loheac de Sainte Marie
+   EMail: arthuryan.loheac-de-sainte-marie@epitech.eu
+
+   Léopold Pintard
+   EMail: leopold.pintard@epitech.eu
+
+   Jean Bizeul
+   EMail: jean.bizeul@epitech.eu
+
+   Nathan Bezard
+   EMail: nathan.bezard@epitech.eu
+
+   Matthieu Guillet-Arnaud
+   EMail: matthieu.guillet-arnaud@epitech.eu
+
+   Mathys Fillion
+   EMail: mathys.fillion@epitech.eu
+
+                                                            [Page 6]
+
+RFC 223                   Zappy AI Protocol              Jun 2025

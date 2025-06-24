@@ -116,12 +116,12 @@ void destroy_clients(client_t *clients)
 
     while (current != NULL) {
         next = current->next;
-        if (close(current->fd) == -1)
-            display_error("Failed to close client socket");
         if (current->in_buffer != NULL)
             free(current->in_buffer);
         if (current->out_buffer != NULL)
             free(current->out_buffer);
+        if (close(current->fd) == -1)
+            display_error("Failed to close client socket");
         free(current);
         current = next;
     }

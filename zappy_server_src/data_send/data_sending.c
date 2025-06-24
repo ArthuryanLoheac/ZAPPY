@@ -69,16 +69,19 @@ void send_data(zappy_t *zappy, client_t *c)
 
 void add_to_buffer(char **buffer, const char *data)
 {
+    size_t old_size;
+    size_t new_size;
+    char *new_buffer;
+
     if (*buffer == NULL) {
         *buffer = strdup(data);
         if (*buffer == NULL)
             display_error("Failed to allocate memory for buffer");
         return;
     }
-
-    size_t old_size = strlen(*buffer);
-    size_t new_size = old_size + strlen(data) + 1;
-    char *new_buffer = malloc(new_size);
+    old_size = strlen(*buffer);
+    new_size = old_size + strlen(data) + 1;
+    new_buffer = malloc(new_size);
     if (new_buffer == NULL)
         display_error("Failed to allocate memory for new buffer");
     strcpy(new_buffer, *buffer);

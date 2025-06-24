@@ -42,6 +42,15 @@ static char **allocate_args_array(int count)
     return malloc(sizeof(char *) * (count + 1));
 }
 
+static int free_args_array(char **args, char *temp_ptr, int i)
+{
+    for (int j = 0; j < i; j++)
+        free(args[j]);
+    free(args);
+    free(temp_ptr);
+    return -1;
+}
+
 static int fill_args_array(char **args, char *command, int count)
 {
     char *temp = strdup(command);
@@ -49,19 +58,13 @@ static int fill_args_array(char **args, char *command, int count)
     char *token = NULL;
     int i = 0;
 
-    if (!temp)
+    if (!temp || !args)
         return -1;
-
     token = strtok(temp, " ");
     while (token != NULL && i < count) {
         args[i] = safe_strdup(token);
-        if (!args[i]) {
-            for (int j = 0; j < i; j++)
-                free(args[j]);  // FREE les strdup précédents
-            free(args);         // FREE tableau
-            free(temp_ptr);     // FREE temporaire
-            return -1;
-        }
+        if (!args[i])
+            return free_args_array(args, temp_ptr, i);
         i++;
         token = strtok(NULL, " ");
     }
@@ -93,16 +96,16 @@ static char **parse_command(char *command)
 
 static void free_command_args(char **args)
 {
+    int i = 0;
+
     if (!args)
         return;
-    int i = 0;
     while (args[i] != NULL) {
         if (args[i] == NULL)
             break;
         free(args[i]);
         i++;
     }
-
     free(args);
 }
 

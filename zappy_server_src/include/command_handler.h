@@ -11,6 +11,12 @@
     #include "zappy.h"
     #include "client.h"
 
+typedef struct look_variable_s {
+    int level;
+    int x;
+    int y;
+} look_variable_t;
+
 typedef void (*command_handler_t)
 (zappy_t *zappy, client_t *client, char **args);
 
@@ -32,6 +38,7 @@ void start_incantation_command(zappy_t *zappy, client_t *client, char **args);
 void incantation_command(zappy_t *zappy, client_t *client, char **args);
 void eject_command(zappy_t *zappy, client_t *client, char **args);
 void broadcast_command(zappy_t *zappy, client_t *client, char **args);
+void inventory_command(zappy_t *zappy, client_t *client, char **args);
 
 // GUI commands
 void msz_command(zappy_t *zappy, client_t *client, char **args);

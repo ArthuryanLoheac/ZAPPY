@@ -20,6 +20,7 @@ const command_func_t player_command_association_list[] = {
     {"INCANTATION", incantation_command},
     {"EJECT", eject_command},
     {"BROADCAST", broadcast_command},
+    {"INVENTORY", inventory_command},
     {NULL, NULL}
 };
 

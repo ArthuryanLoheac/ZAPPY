@@ -13,10 +13,13 @@
 void connect_nbr_command(zappy_t *zappy, client_t *client, char **args)
 {
     int connect_nbr = 0;
-    egg_t *egg = zappy->map->eggs;
+    egg_t *egg;
     char response[50];
 
+    if (client == NULL || zappy == NULL)
+        return;
     (void)args;
+    egg = zappy->map->eggs;
     while (egg != NULL) {
         if (strcmp(egg->team_name, client->stats.team_name) == 0)
             connect_nbr++;

@@ -1,6 +1,8 @@
-#include "AdvancedLeveler.hpp"
+#include "modules/AdvancedLeveler.hpp"
 
 #include <cmath>
+#include <unordered_map>
+#include <algorithm>
 
 static const std::unordered_map<AdvancedLeveler::Material_t, double> Rarety = {
     {AdvancedLeveler::Linemate, 0.3},
@@ -48,8 +50,7 @@ static const std::unordered_map<unsigned int,
 };
 
 double AdvancedLeveler::computePriority(int level,
-    const std::unordered_map<Material_t, int> &inventory)
-{
+    const std::unordered_map<Material_t, int> &inventory) {
     if (ElevationRequirementsMap.find(level) == ElevationRequirementsMap.end())
         return -1.0;
 

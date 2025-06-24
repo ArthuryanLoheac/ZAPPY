@@ -1,8 +1,6 @@
 #pragma once
 
 #include <unordered_map>
-#include <string>
-
 #include "modules/AIModule.hpp"
 
 /**
@@ -27,7 +25,6 @@
  */
 class AdvancedLeveler : public AIModule {
  public:
-
     AdvancedLeveler() = default;
     ~AdvancedLeveler() override = default;
 
@@ -58,6 +55,7 @@ class AdvancedLeveler : public AIModule {
         int playerCount;
         std::unordered_map<Material_t, int> materialsCount;
     } ElevationRequirements_t;
+
  private:
     double computePriority(int level, const std::unordered_map
         <Material_t, int> &inventory);

@@ -233,13 +233,16 @@ static void update_pos_all_client(zappy_t *zappy,
  */
 void eject_command(zappy_t *zappy, client_t *client, char **args)
 {
-    stats_t *self = &client->stats;
-    int xFinal = self->x;
-    int yFinal = self->y;
+    stats_t *self;
+    int xFinal;
+    int yFinal;
 
     if (client == NULL || zappy == NULL)
         return;
     (void) args;
+    self = &client->stats;
+    xFinal = self->x;
+    yFinal = self->y;
     compute_forward_pos(&xFinal, &yFinal, self, zappy);
     if (!is_player_at_pos(zappy, client, self->x, self->y)
         && !is_egg_at_pos(zappy, self->x, self->y)) {

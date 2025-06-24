@@ -28,11 +28,12 @@ static void move_player(zappy_t *zappy, stats_t *stats)
 
 void forward_command(zappy_t *zappy, client_t *client, char **args)
 {
-    stats_t *stats = &client->stats;
+    stats_t *stats;
 
     if (client == NULL || zappy == NULL)
         return;
     (void) args;
+    stats = &client->stats;
     move_player(zappy, stats);
     update_pos_player(zappy, &client->stats);
     add_to_buffer(&client->out_buffer, "ok\n");

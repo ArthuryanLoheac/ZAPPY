@@ -11,6 +11,12 @@
     #include "zappy.h"
     #include "client.h"
 
+typedef struct look_variable_s {
+    int level;
+    int x;
+    int y;
+} look_variable_t;
+
 typedef void (*command_handler_t)
 (zappy_t *zappy, client_t *client, char **args);
 

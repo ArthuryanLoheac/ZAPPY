@@ -120,24 +120,30 @@ static void modifie_xyi_cpy(int *xyi_cpy, int x, int y, int j)
     xyi_cpy[2] = j;
 }
 
+static void fill_variable(look_variable_t *variables, client_t *client)
+{
+    variables->level = client->stats.level;
+    variables->x = client->stats.x;
+    variables->y = client->stats.y;
+}
+
 void look_command(zappy_t *zappy, client_t *client, char **args)
 {
-    int level = client->stats.level;
-    int x = client->stats.x;
-    int y = client->stats.y;
+    look_variable_t variables;
     int xyi_cpy[3] = {client->stats.x, client->stats.y, 0};
     char *buffer = malloc(2 * sizeof(char));
 
     if (client == NULL || zappy == NULL)
         return;
     (void) args;
+    fill_variable(&variables, client);
     init_buffer(buffer);
-    for (int i = 0; i <= level; i++) {
+    for (int i = 0; i <= variables.level; i++) {
         for (int j = -i; j <= i; j++) {
-            modifie_xyi_cpy(xyi_cpy, x, y, j);
+            modifie_xyi_cpy(xyi_cpy, variables.x, variables.y, j);
             move_forward_side(client, xyi_cpy, zappy, &buffer);
         }
-        move_forward_x(&client->stats, &x, &y, zappy);
+        move_forward_x(&client->stats, &variables.x, &variables.y, zappy);
     }
     add_to_buffer(&buffer, "]\n");
     add_to_buffer(&client->out_buffer, buffer);

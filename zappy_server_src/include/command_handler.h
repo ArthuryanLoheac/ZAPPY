@@ -32,6 +32,7 @@ void start_incantation_command(zappy_t *zappy, client_t *client, char **args);
 void incantation_command(zappy_t *zappy, client_t *client, char **args);
 void eject_command(zappy_t *zappy, client_t *client, char **args);
 void broadcast_command(zappy_t *zappy, client_t *client, char **args);
+void inventory_command(zappy_t *zappy, client_t *client, char **args);
 
 // GUI commands
 void msz_command(zappy_t *zappy, client_t *client, char **args);

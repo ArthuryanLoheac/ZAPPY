@@ -156,3 +156,23 @@ void broadcast_command(zappy_t *zappy, client_t *client, char **args)
     }
     broadcast_every_client(zappy, client, textBuffer);
 }
+
+void inventory_command(zappy_t *zappy, client_t *client, char **args)
+{
+    (void)zappy;
+    (void)args;
+    char buffer[256];
+
+    if (!client || client->is_graphic || client->is_waiting_id) {
+        add_to_buffer(&client->out_buffer, "ko\n");
+        return;
+    }
+    snprintf(buffer, sizeof(buffer),
+        "[ food %d, linemate %d, sibur %d, phiras %d,"
+        " mendiane %d, thystame %d, deraumere %d ]\n",
+        client->stats.inventory.food, client->stats.inventory.linemate,
+        client->stats.inventory.sibur, client->stats.inventory.phiras,
+        client->stats.inventory.mendiane, client->stats.inventory.thystame,
+        client->stats.inventory.deraumere);
+    add_to_buffer(&client->out_buffer, buffer);
+}

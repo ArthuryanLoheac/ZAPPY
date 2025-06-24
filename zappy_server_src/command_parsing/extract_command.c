@@ -78,15 +78,6 @@ static char **parse_command(char *command)
     return args;
 }
 
-static void free_command_args(char **args)
-{
-    if (!args)
-        return;
-    for (int i = 0; args[i] != NULL; i++)
-        free(args[i]);
-    free(args);
-}
-
 static void process_command_line(client_t *client, char *command_line,
     zappy_t *zappy_ptr)
 {
@@ -95,7 +86,6 @@ static void process_command_line(client_t *client, char *command_line,
     if (!args || !args[0])
         return;
     process_command(args, client, zappy_ptr);
-    free_command_args(args);
 }
 
 void extract_commands(client_t *client, zappy_t *zappy_ptr)

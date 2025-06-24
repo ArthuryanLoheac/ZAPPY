@@ -94,7 +94,7 @@ class Socket {
      * @param message The message to send
      * @throws std::runtime_error If sending data fails
      */
-    void sendDatasToServer(const std::string &message) const;
+    void sendDatasToServer(const std::string &message);
 
     /**
      * @brief Get the list of processed commands
@@ -128,6 +128,8 @@ class Socket {
 
     /// List of processed command outputs
     std::vector<std::vector<std::string>> listOuputs;
+    std::string writeBuffer;
+    void flushWriteBuffer();
 };
 
 }  // namespace Network

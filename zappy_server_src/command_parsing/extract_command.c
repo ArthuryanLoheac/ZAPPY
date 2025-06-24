@@ -14,7 +14,7 @@ static char *safe_strdup(const char *s)
 {
     if (s == NULL) {
         fprintf(stderr, "safe_strdup: NULL pointer\n");
-        abort();
+        display_error("Memory allocation failed");
     }
     return strdup(s);
 }

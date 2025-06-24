@@ -212,6 +212,17 @@ static void destroy_eggs_on_tile(zappy_t *zappy, int x, int y)
     }
 }
 
+static void update_pos_all_client(zappy_t *zappy,
+    stats_t *self, int xFinal, int yFinal)
+{
+    for (client_t *zappyClient = zappy->clients; zappyClient != NULL;
+        zappyClient = zappyClient->next) {
+        if (zappyClient->stats.x == self->x && zappyClient->stats.y == self->y
+            && zappyClient->stats.id != self->id)
+            update_pos_client_ejected(zappyClient, xFinal, yFinal, zappy);
+    }
+}
+
 /**
  * @brief This function handles the eject command,
  * The player pushes another player in front of him
@@ -222,11 +233,16 @@ static void destroy_eggs_on_tile(zappy_t *zappy, int x, int y)
  */
 void eject_command(zappy_t *zappy, client_t *client, char **args)
 {
-    stats_t *self = &client->stats;
-    int xFinal = self->x;
-    int yFinal = self->y;
+    stats_t *self;
+    int xFinal;
+    int yFinal;
 
+    if (client == NULL || zappy == NULL)
+        return;
     (void) args;
+    self = &client->stats;
+    xFinal = self->x;
+    yFinal = self->y;
     compute_forward_pos(&xFinal, &yFinal, self, zappy);
     if (!is_player_at_pos(zappy, client, self->x, self->y)
         && !is_egg_at_pos(zappy, self->x, self->y)) {
@@ -235,11 +251,6 @@ void eject_command(zappy_t *zappy, client_t *client, char **args)
     }
     add_to_buffer(&client->out_buffer, "ok\n");
     send_pex_to_graphics(zappy, client);
-    for (client_t *zappyClient = zappy->clients; zappyClient != NULL;
-        zappyClient = zappyClient->next) {
-        if (zappyClient->stats.x == self->x && zappyClient->stats.y == self->y
-            && zappyClient->stats.id != self->id)
-            update_pos_client_ejected(zappyClient, xFinal, yFinal, zappy);
-    }
+    update_pos_all_client(zappy, self, xFinal, yFinal);
     destroy_eggs_on_tile(zappy, self->x, self->y);
 }

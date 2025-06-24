@@ -13,55 +13,6 @@ extern "C" {
     }
 }
 
-bool frequencyPlugin::init(irr::scene::ISceneManager* smgr,
-    irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) {
-    (void) device;
-    (void) smgr;
-    (void) cam;
-    printf("============= Initializing Frequency Plugin =============\n");
-    return true;
-}
-
-void frequencyPlugin::drawImage(const std::string &texture, int x,
-int y, int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha) {
-    irr::video::ITexture* bg = nullptr;
-
-    // Check if the texture with the given alpha is already cached
-    std::string cacheKey = texture + "_" + std::to_string(alpha);
-    auto it = cachedTextures.find(cacheKey);
-    if (it != cachedTextures.end()) {
-        bg = it->second;
-    } else {
-        irr::video::ITexture* originalTexture =
-            driver->getTexture(texture.c_str());
-        if (!originalTexture) {
-            std::cerr << "Error: Cant load texture: " << texture << std::endl;
-            return;
-        }
-
-        irr::video::IImage* image = driver->createImage(originalTexture,
-            irr::core::position2d<irr::s32>(0, 0), originalTexture->getSize());
-        if (image) {
-            for (irr::u32 y = 0; y < image->getDimension().Height; ++y) {
-                for (irr::u32 x = 0; x < image->getDimension().Width; ++x) {
-                    UICol imageColor = image->getPixel(x, y);
-                    imageColor.setAlpha(alpha);
-                    image->setPixel(x, y, imageColor);
-                }
-            }
-            bg = driver->addTexture(cacheKey.c_str(), image);
-            cachedTextures[cacheKey] = bg;
-            image->drop();
-        }
-    }
-
-    if (bg) {
-        irr::core::rect<irr::s32> sourceRect(0, 0, 1000, 1000);
-        irr::core::rect<irr::s32> destRect(x, y, x + sizeX, y + sizeY);
-        driver->draw2DImage(bg, destRect, sourceRect, nullptr, 0, true);
-    }
-}
-
 void frequencyPlugin::drawButton(const std::string &texture, int x, int y,
 irr::video::IVideoDriver *driver, stateButton buttonState,
 const std::string &text, std::shared_ptr<irr::gui::IGUIFont> font) {
@@ -89,7 +40,7 @@ irr::video::IVideoDriver *driver) {
     widthSaved = x + 20;
     heightSaved = driver->getScreenSize().Height;
     y = heightSaved - 140;
-    drawImage("assets/UI/All.png", x + 5, y, 150, 110, driver, 125);
+    drawImage("assets/UI/All.png", x + 5, y, 150, 110, driver);
     y += 20;
     x += 20;
     // Frequency
@@ -159,9 +110,10 @@ bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
     return false;
 }
 
-void frequencyPlugin::update(pluginsData _data) {
+void frequencyPlugin::update(pluginsData _data, float deltaTime) {
     data = _data;
     frequency = data.frequency;
+    (void)deltaTime;
 }
 
 int frequencyPlugin::getPriority() const {

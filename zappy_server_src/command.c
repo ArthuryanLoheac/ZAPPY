@@ -34,8 +34,20 @@ void append_client_out_buffer(client_t *client, const char *format, ...)
     va_end(args);
     if (client->out_buffer == NULL)
         client->out_buffer = new_buffer;
-    else
+    else {
         add_to_buffer(&client->out_buffer, new_buffer);
+        free(new_buffer);
+    }
+}
+
+static bool return_bytes_read(ssize_t bytes_read, char *buffer,
+    client_t *client)
+{
+    if (bytes_read == -1)
+        perror("Read error");
+    free(buffer);
+    client->is_connected = false;
+    return false;
 }
 
 static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
@@ -46,18 +58,15 @@ static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
     if (buffer == NULL)
         display_error("Memory allocation failed for client buffer");
     bytes_read = read(fd, buffer, 1023);
-    if (bytes_read <= 0) {
-        if (bytes_read == -1)
-            perror("Read error");
-        free(buffer);
-        client->is_connected = false;
-        return false;
-    }
+    if (bytes_read <= 0)
+        return return_bytes_read(bytes_read, buffer, client);
     buffer[bytes_read] = '\0';
     if (client->in_buffer == NULL)
         client->in_buffer = buffer;
-    else
+    else {
         add_to_buffer(&client->in_buffer, buffer);
+        free(buffer);
+    }
     extract_commands(client, zappy);
     return true;
 }

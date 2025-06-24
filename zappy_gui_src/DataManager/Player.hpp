@@ -326,6 +326,10 @@ class Player {
 
     void initMeshRings();
 
+    PlayerState getState() const {
+        return state;
+    }
+
  private:
     int id; /**< Player ID. */
     int x; /**< X-coordinate of the player. */

@@ -91,9 +91,9 @@ bool Fork::waitNoHang() {
 
 /**
  * @brief Wait for the child process to terminate with a timeout
- * 
+ *
  * Waits for the child to terminate, but only for the specified number of seconds.
- * 
+ *
  * @param seconds Maximum time to wait in seconds
  * @return true if the child terminated within the timeout, false otherwise
  */
@@ -114,7 +114,7 @@ bool Fork::waitTimeout(unsigned int seconds) {
 
 /**
  * @brief Send a signal to the child process
- * 
+ *
  * @param signal Signal number to send
  * @return true if the signal was sent successfully, false otherwise
  */
@@ -127,7 +127,7 @@ bool Fork::sendSignal(int signal) const {
 
 /**
  * @brief Check if the child process has exited
- * 
+ *
  * @return true if the child has exited, false otherwise
  */
 bool Fork::hasExited() const {
@@ -136,7 +136,7 @@ bool Fork::hasExited() const {
 
 /**
  * @brief Get the exit status of the child process
- * 
+ *
  * @return The exit status if the child exited normally, -1 otherwise
  */
 int Fork::getExitStatus() const {
@@ -147,7 +147,7 @@ int Fork::getExitStatus() const {
 
 /**
  * @brief Check if the child process was terminated by a signal
- * 
+ *
  * @return true if the child was terminated by a signal, false otherwise
  */
 bool Fork::wasSignaled() const {
@@ -156,7 +156,7 @@ bool Fork::wasSignaled() const {
 
 /**
  * @brief Get the signal that terminated the child process
- * 
+ *
  * @return The terminating signal number if the child was terminated by a signal, -1 otherwise
  */
 int Fork::getTerminatingSignal() const {
@@ -167,7 +167,7 @@ int Fork::getTerminatingSignal() const {
 
 /**
  * @brief Check if this is the child process
- * 
+ *
  * @return true if this is the child process, false otherwise
  */
 bool Fork::isChild() const {
@@ -176,7 +176,7 @@ bool Fork::isChild() const {
 
 /**
  * @brief Check if this is the parent process
- * 
+ *
  * @return true if this is the parent process, false otherwise
  */
 bool Fork::isParent() const {
@@ -185,7 +185,7 @@ bool Fork::isParent() const {
 
 /**
  * @brief Get the process ID of the child
- * 
+ *
  * @return The PID of the child process
  */
 pid_t Fork::getPid() const {
@@ -194,7 +194,7 @@ pid_t Fork::getPid() const {
 
 /**
  * @brief Check if the fork was successful
- * 
+ *
  * @return true if the fork was successful, false otherwise
  */
 bool Fork::isForked() const {
@@ -203,7 +203,7 @@ bool Fork::isForked() const {
 
 /**
  * @brief Terminate the child process by sending SIGKILL
- * 
+ *
  * Sends SIGKILL signal to the child process and updates state variables.
  */
 void Fork::terminateChild() {

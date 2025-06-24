@@ -53,6 +53,20 @@ class pluginsData {
              /**< List of resources held by the player. */
         std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> PlayerMesh;
             /**< Mesh associated with the player. */
+        bool inElevation; /**< Flag indicating if the player is in elevation. */
+    };
+
+    class Eggs {
+     /** @brief Represents an egg in game, including its position and owner */
+     public:
+        Eggs(int x, int y, int owner,
+                std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> eggMesh)
+            : x(x), y(y), owner(owner), EggMesh(eggMesh) {}
+        int x; /**< X-coordinate of the egg. */
+        int y; /**< Y-coordinate of the egg. */
+        int owner; /**< Name of the team that owns the egg. */
+        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> EggMesh;
+            /**< Mesh associated with the egg. */
     };
 
     int width; /**< Width of the game map. */
@@ -62,6 +76,7 @@ class pluginsData {
     std::vector<irr::video::SColor> teamColors; /**< List of team colors. */
     std::vector<Tile> tiles; /**< List of tiles in the game map. */
     std::vector<Player> players; /**< List of players in the game. */
+    std::vector<Eggs> eggs; /**< List of eggs in the game. */
     int ping = 0; /**< Ping time to the server. */
 
 

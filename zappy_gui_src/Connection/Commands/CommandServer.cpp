@@ -336,10 +336,6 @@ void ServerGUI::pexCommand(std::vector<std::string> &args) {
 
 void GUI::ServerGUI::sucCommand(std::vector<std::string> &args) {
     (void) args;
-    if (sendPing) {
-        ping = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now() - timeForPing).count();
-    }
 }
 
 void GUI::ServerGUI::segCommand(std::vector<std::string> &args) {
@@ -358,4 +354,28 @@ void GUI::ServerGUI::pbcCommand(std::vector<std::string> &args) {
     for (size_t i = 3; i < args.size(); i++)
         message += " " + args[i];
     GameDataManager::i().addMessage(message, id);
+}
+
+void GUI::ServerGUI::smgCommand(std::vector<std::string> &args) {
+    if (args.size() < 2)
+        throw CommandParsingException("Invalid msg command format");
+    std::string message;
+    for (size_t i = 1; i < args.size(); i++) {
+        if (i > 1)
+            message += " ";
+        message += args[i];
+    }
+    (void) message;
+}
+
+void GUI::ServerGUI::sbpCommand(std::vector<std::string> &args) {
+    (void) args;
+}
+
+void GUI::ServerGUI::pingCommand(std::vector<std::string> &args) {
+    (void) args;
+    if (sendPing) {
+        ping = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now() - timeForPing).count();
+    }
 }

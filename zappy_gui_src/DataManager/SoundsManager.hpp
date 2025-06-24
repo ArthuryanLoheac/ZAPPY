@@ -19,6 +19,8 @@ class SoundsManager {
 
     int volumeMusic = 50;
     int volumeSound = 50;
+    void AddVolumeMusic(int volume);
+    void AddVolumeSound(int volume);
  private:
     std::vector<sf::Sound> sounds;
     std::vector<sf::SoundBuffer> soundBuffers;

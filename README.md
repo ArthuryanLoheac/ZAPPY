@@ -115,7 +115,17 @@ USAGE: ./zappy_ai -p port -n name -h machine
 
 </details>
 
+<details> <summary> <b><span style="font-size: 1.2em;">🛜 Install Irrlicht 3D</span></b> </summary>
+
+#### Ubuntu/Debian
+```sh
+# Install core
+sudo apt-get update
+sudo apt-get install irrlicht irrlicht-dev
+```
+</details>
 <details> <summary> <b><span style="font-size: 1.2em;">🛜 Installation</span></b> </summary>
+
 
 1. Clone the repository
 ```sh
@@ -136,6 +146,12 @@ make <name-of-the-binary>
 ```
 
 Name of the binary is either `zappy_server`, `zappy_ai` or `zappy_gui`.
+
+To compile without the plugins :
+```sh
+make no_plugins
+```
+
 
 </details>
 
@@ -162,11 +178,13 @@ Name of the binary is either `zappy_server`, `zappy_ai` or `zappy_gui`.
 # <p align=center> 🏗️ Project Structure </p>
 
 ```sh
-├── zappy_server_src/  # Server implementation
-├── zappy_ai_src/      # AI client implementation
-├── zappy_gui_src/     # GUI implementation
-├── docs/              # Documentation
-└── tests/             # Test files
+├── zappy_server_src/       # Server implementation
+├── zappy_ai_src/           # AI client implementation
+├── zappy_gui_src/          # GUI implementation
+├── zappy_gui_plugin_src/   # GUI plugins implementation
+├── docs/                   # Documentation
+├── plugins/                # All plugins .so for GUI
+└── tests/                  # Test files
 ```
 
 # <p align=center> 👥 Contributors </p>

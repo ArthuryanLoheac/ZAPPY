@@ -7,6 +7,7 @@
 #include "DataManager/SoundsManager.hpp"
 #include "Exceptions/SoundsManagerExceptions.hpp"
 #include "DataManager/GameDataManager.hpp"
+#include "DataManager/PathManager.hpp"
 
 namespace GUI {
 bool SoundsManager::playMusic(std::string path) {
@@ -46,6 +47,7 @@ bool SoundsManager::playSound(std::string path) {
         return false;
     }
 }
+
 void SoundsManager::Update() {
     try {
         for (size_t i = 0; i < sounds.size(); i++) {
@@ -60,35 +62,54 @@ void SoundsManager::Update() {
     }
     if (GameDataManager::i().isPlayerAdded()) {
         GameDataManager::i().setPlayerAdded(false);
-        playSound("assets/Musics/Spawn.wav");
+        playSound("assets/" + GUI::PathManager::i().getPath("Spawn"));
     }
     if (GameDataManager::i().isElevation()) {
         GameDataManager::i().setElevationSound(false);
-        playSound("assets/Musics/Elevation.wav");
+        playSound("assets/" + GUI::PathManager::i().getPath("Elevation"));
     }
     if (GameDataManager::i().isPlayerDead()) {
         GameDataManager::i().setPlayerDead(false);
-        playSound("assets/Musics/Death.mp3");
+        playSound("assets/" + GUI::PathManager::i().getPath("Death"));
     }
     if (GameDataManager::i().isCollecting()) {
         GameDataManager::i().setCollecting(false);
-        playSound("assets/Musics/Take.wav");
+        playSound("assets/" + GUI::PathManager::i().getPath("Take"));
     }
     if (GameDataManager::i().isDropping()) {
         GameDataManager::i().setDropping(false);
-        playSound("assets/Musics/Drop.wav");
+        playSound("assets/" + GUI::PathManager::i().getPath("Drop"));
     }
     if (GameDataManager::i().isEggDead()) {
         GameDataManager::i().setEggDead(false);
-        playSound("assets/Musics/DeathEgg.wav");
+        playSound("assets/" + GUI::PathManager::i().getPath("DeathEgg"));
     }
     if (GameDataManager::i().isEggAdded()) {
         GameDataManager::i().setEggAdded(false);
-        playSound("assets/Musics/SpawnEgg.wav");
+        playSound("assets/" + GUI::PathManager::i().getPath("SpawnEgg"));
     }
     if (GameDataManager::i().isPushed()) {
         GameDataManager::i().setPushed(false);
-        playSound("assets/Musics/Push.wav");
+        playSound("assets/" + GUI::PathManager::i().getPath("Push"));
     }
+}
+
+void SoundsManager::AddVolumeMusic(int volume) {
+    volumeMusic += volume;
+    if (volumeMusic < 0)
+        volumeMusic = 0;
+    if (volumeMusic > 100)
+        volumeMusic = 100;
+    music.setVolume(volumeMusic);
+}
+
+void SoundsManager::AddVolumeSound(int volume) {
+    volumeSound += volume;
+    if (volumeSound < 0)
+        volumeSound = 0;
+    if (volumeSound > 100)
+        volumeSound = 100;
+    for (auto &sound : sounds)
+        sound.setVolume(volumeSound);
 }
 }  // namespace GUI

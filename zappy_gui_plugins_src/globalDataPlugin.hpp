@@ -1,43 +1,19 @@
 #pragma once
+#include <irrlicht/irrlicht.h>
+
 #include <string>
 #include <memory>
 #include <vector>
 
-#include "zappy_gui_src/PluginsManagement/pluginsInterface.hpp"
+#include "zappy_gui_src/PluginsManagement/include/Aplugin.hpp"
 
 /**
  * @class globalDataPlugin
  * @brief Plugin class for managing global data visualization and interaction.
- * @implements pluginsInterface
+ * @implements Aplugin
  */
-class globalDataPlugin : public pluginsInterface {
- private:
-    pluginsData data; /**< Data manager for the plugin. */
-    bool isActive = true; /**< Indicates if the plugin is currently active. */
-
-    /**
-     * @brief Draws a background texture at a specified position and size.
-     * @param texture The texture file path.
-     * @param x The X position.
-     * @param y The Y position.
-     * @param sizeX The width of the background.
-     * @param sizeY The height of the background.
-     * @param driver Pointer to the video driver.
-     */
-    void drawOneBackground(const std::string &texture, int x, int y,
-      int sizeX, int sizeY, irr::video::IVideoDriver* driver);
-
+class globalDataPlugin : public Aplugin {
  public:
-    /**
-     * @brief Initializes the plugin with the necessary Irrlicht components.
-     * @param smgr Pointer to the scene manager.
-     * @param device Pointer to the Irrlicht device.
-     * @param cam Pointer to the camera scene node.
-     * @return True if initialization is successful, false otherwise.
-     */
-    bool init(irr::scene::ISceneManager* smgr,
-    irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) override;
-
     /**
      * @brief Draws the UI elements for the plugin.
      * @param font Shared pointer to the GUI font.
@@ -46,21 +22,29 @@ class globalDataPlugin : public pluginsInterface {
     void drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
       irr::video::IVideoDriver* driver) override;
 
-    /**
-     * @brief Handles events for the plugin.
-     * @param event The event to handle.
-     */
-    bool onEvent(const irr::SEvent &event, pluginsData &datas) override;
+    std::string getName() const override {
+        return "Global Data Plugin";
+    }
 
     /**
-     * @brief Gets the priority of the plugin.
-     * @return The priority level of the plugin.
+     * @brief Count the number of players on a specific team.
+     * @param teamName The name of the team.
+     * @return The number of players on the team.
      */
-    int getPriority() const override;
+    int countNbPlayersOnTeam(const std::string &teamName);
 
     /**
-     * @brief Updates the plugin with the latest data.
-     * @param dataManager Reference to the data manager.
+     * @brief Count the number of players on a specific team at a given level.
+     * @param teamName The name of the team.
+     * @param level The level to check.
+     * @return The number of players on the team at the specified level.
      */
-    void update(pluginsData dataManager) override;
+    int countNbPlayersOnTeam(const std::string &teamName, int level);
+
+    /**
+     * @brief Count the number of different levels for players on a team.
+     * @param teamName The name of the team.
+     * @return The number of different levels for players on the team.
+     */
+    int countNbLevelDifferentTeams(const std::string &teamName);
 };

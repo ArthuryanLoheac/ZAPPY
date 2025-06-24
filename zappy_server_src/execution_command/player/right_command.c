@@ -9,6 +9,8 @@
 
 void right_command(zappy_t *zappy, client_t *client, char **args)
 {
+    if (client == NULL || zappy == NULL)
+        return;
     (void) args;
     client->stats.orientation++;
     if (client->stats.orientation > 4)

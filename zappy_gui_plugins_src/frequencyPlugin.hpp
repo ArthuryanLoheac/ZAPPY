@@ -1,17 +1,19 @@
 #pragma once
+#include <irrlicht/irrlicht.h>
+
 #include <string>
 #include <memory>
 #include <unordered_map>
 #include <vector>
 
-#include "zappy_gui_src/PluginsManagement/pluginsInterface.hpp"
+#include "zappy_gui_src/PluginsManagement/include/Aplugin.hpp"
 
 /**
  * @class frequencyPlugin
  * @brief Plugin class for managing global data visualization and interaction.
- * @implements pluginsInterface
+ * @implements Aplugin
  */
-class frequencyPlugin : public pluginsInterface {
+class frequencyPlugin : public Aplugin {
  private:
     enum stateButton {
         DISABLED, /**< Button is disabled. */
@@ -27,21 +29,6 @@ class frequencyPlugin : public pluginsInterface {
     stateButton plusButtonState = DISABLED; /**< State of the plus button. */
     int heightSaved = 0; /**< Height of the window. */
     int widthSaved = 0; /**< Height of the window. */
-
-    std::unordered_map<std::string, irr::video::ITexture *> cachedTextures;
-        /**< Cache for textures to avoid reloading. */
-
-    /**
-     * @brief Draws a background texture at a specified position and size.
-     * @param texture The texture file path.
-     * @param x The X position.
-     * @param y The Y position.
-     * @param sizeX The width of the background.
-     * @param sizeY The height of the background.
-     * @param driver Pointer to the video driver.
-     */
-    void drawImage(const std::string &texture, int x, int y,
-    int sizeX, int sizeY, irr::video::IVideoDriver* driver, int alpha = 255);
 
     /**
      * @brief Draws a button with a texture and text at a specified position.
@@ -72,16 +59,6 @@ class frequencyPlugin : public pluginsInterface {
 
  public:
     /**
-     * @brief Initializes the plugin with the necessary Irrlicht components.
-     * @param smgr Pointer to the scene manager.
-     * @param device Pointer to the Irrlicht device.
-     * @param cam Pointer to the camera scene node.
-     * @return True if initialization is successful, false otherwise.
-     */
-    bool init(irr::scene::ISceneManager* smgr,
-    irr::IrrlichtDevice *device, irr::scene::ICameraSceneNode *cam) override;
-
-    /**
      * @brief Gets the priority of the plugin.
      * @return The priority level of the plugin.
      */
@@ -105,5 +82,9 @@ class frequencyPlugin : public pluginsInterface {
      * @brief Updates the plugin with the latest data.
      * @param dataManager Reference to the data manager.
      */
-    void update(pluginsData dataManager) override;
+    void update(pluginsData dataManager, float deltaTime) override;
+
+    std::string getName() const override {
+        return "Frequency Plugin";
+    }
 };

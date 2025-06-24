@@ -25,4 +25,10 @@ class globalDataPlugin : public Aplugin {
     std::string getName() const override {
         return "Global Data Plugin";
     }
+
+    int countNbPlayersOnTeam(const std::string &teamName);
+
+    int countNbPlayersOnTeam(const std::string &teamName, int level);
+
+    int countNbLevelDifferentTeams(const std::string &teamName);
 };

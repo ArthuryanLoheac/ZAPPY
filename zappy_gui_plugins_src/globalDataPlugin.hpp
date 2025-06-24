@@ -26,9 +26,25 @@ class globalDataPlugin : public Aplugin {
         return "Global Data Plugin";
     }
 
+    /**
+     * @brief Count the number of players on a specific team.
+     * @param teamName The name of the team.
+     * @return The number of players on the team.
+     */
     int countNbPlayersOnTeam(const std::string &teamName);
 
+    /**
+     * @brief Count the number of players on a specific team at a given level.
+     * @param teamName The name of the team.
+     * @param level The level to check.
+     * @return The number of players on the team at the specified level.
+     */
     int countNbPlayersOnTeam(const std::string &teamName, int level);
 
+    /**
+     * @brief Count the number of different levels for players on a team.
+     * @param teamName The name of the team.
+     * @return The number of different levels for players on the team.
+     */
     int countNbLevelDifferentTeams(const std::string &teamName);
 };

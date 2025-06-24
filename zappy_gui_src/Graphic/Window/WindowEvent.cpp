@@ -6,12 +6,11 @@
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "Graphic/Window/window.hpp"
 #include "PluginsManagement/pluginsManager.hpp"
+#include "Window/windowOptionMenu.hpp"
 
 namespace GUI {
 void Window::handleEvent() {
-    if (receiver.IsKeyDown(irr::KEY_ESCAPE))
-        device->closeDevice();
-    if (pluginsManager::i().isWindowOpened())
+    if (pluginsManager::i().isWindowOpened() || windowOptionMenu::i().opened)
         return;
     int xMoveCam = receiver.getValBetween(irr::KEY_KEY_E, irr::KEY_KEY_A);
     int yMoveCenterCam = receiver.getValBetween(irr::KEY_KEY_D, irr::KEY_KEY_Q);

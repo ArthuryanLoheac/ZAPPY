@@ -11,6 +11,7 @@
 #include "include/logs.h"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
+#include "Window/windowOptionMenu.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -49,6 +50,7 @@ Window::Window() {
     if (!device)
         throw GUI::WindowCreationException("Error creating device");
     device->setWindowCaption(L"Zappy");
+    windowOptionMenu::i().device = device;
     driver = device->getVideoDriver();
     smgr = device->getSceneManager();
     guienv = device->getGUIEnvironment();
@@ -64,6 +66,9 @@ Window::Window() {
     font = std::shared_ptr<irr::gui::IGUIFont>(
         guienv->getFont("assets/fonts/DejaVuSansMono.png"),
         [](irr::gui::IGUIFont *) {});
+    driver->beginScene(true, true,
+            irr::video::SColor(0, 0, 0, 0));
+    driver->endScene();
 }
 
 void Window::updateSkyBoxRotation() {
@@ -85,9 +90,9 @@ void Window::windowUpdateFocus() {
     SoundsManager::i().Update();
     driver->beginScene(true, true,
         irr::video::SColor(255, 100, 101, 140));
-
     updateMesh();
     smgr->drawAll();
+    windowOptionMenu::i().draw(driver, font);
     pluginsManager::i().drawPlugins(font, driver);
     guienv->drawAll();
 }
@@ -102,6 +107,7 @@ void Window::windowUpdateNoFocus() {
 
         updateMesh();
         smgr->drawAll();
+        windowOptionMenu::i().draw(driver, font);
         pluginsManager::i().drawPlugins(font, driver);
         guienv->drawAll();
     } catch (const std::exception &e) {

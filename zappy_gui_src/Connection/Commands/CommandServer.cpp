@@ -359,3 +359,19 @@ void GUI::ServerGUI::pbcCommand(std::vector<std::string> &args) {
         message += " " + args[i];
     GameDataManager::i().addMessage(message, id);
 }
+
+void GUI::ServerGUI::smgCommand(std::vector<std::string> &args) {
+    if (args.size() < 2)
+        throw CommandParsingException("Invalid msg command format");
+    std::string message;
+    for (size_t i = 1; i < args.size(); i++) {
+        if (i > 1)
+            message += " ";
+        message += args[i];
+    }
+    (void) message;
+}
+
+void GUI::ServerGUI::sbpCommand(std::vector<std::string> &args) {
+    (void) args;
+}

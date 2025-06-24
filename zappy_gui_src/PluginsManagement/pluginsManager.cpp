@@ -79,7 +79,7 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
         event.KeyInput.Key == irr::KEY_TAB &&
         event.KeyInput.PressedDown)
         windowOpened = !windowOpened;
-    if (windowOpened) {
+    if (windowOpened || windowOptionMenu::i().opened) {
         onEventWindow(event);
         return;
     }

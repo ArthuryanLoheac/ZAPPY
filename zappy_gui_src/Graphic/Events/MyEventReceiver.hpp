@@ -1,7 +1,8 @@
 #pragma once
-
 #include <irrlicht/irrlicht.h>
+
 #include "PluginsManagement/pluginsManager.hpp"
+#include "Window/windowOptionMenu.hpp"
 
 /**
  * @brief Handles user input events for the graphical interface.
@@ -23,6 +24,7 @@ class MyEventReceiver : public irr::IEventReceiver {
                 MouseWheelDelta = event.MouseInput.Wheel;
             }
         }
+        windowOptionMenu::i().handleEvent(event);
         pluginsManager::i().onEvent(event);
         return false;
     }

@@ -137,24 +137,20 @@ static void broadcast_every_client(zappy_t *zappy, client_t *client,
  */
 void broadcast_command(zappy_t *zappy, client_t *client, char **args)
 {
-    char textBuffer[2560];
+    char *textBuffer = malloc(sizeof(char) * 256);
 
     if (client == NULL || zappy == NULL)
         return;
     for (int i = 0; i < 2560; i++)
         textBuffer[i] = '\0';
-    if (args[0] == NULL) {
+    if (!args || args[0] == NULL) {
         add_to_buffer(&client->out_buffer, "ko\n");
         return;
     }
     for (int i = 0; args[i] != NULL; i++) {
         if (i > 0)
-            strcat(textBuffer, " ");
-        if (strlen(textBuffer) + strlen(args[i]) >= 2560) {
-            add_to_buffer(&client->out_buffer, "ko\n");
-            return;
-        }
-        strcat(textBuffer, args[i]);
+            add_to_buffer(&textBuffer, " ");
+        add_to_buffer(&textBuffer, args[i]);
     }
     broadcast_every_client(zappy, client, textBuffer);
 }

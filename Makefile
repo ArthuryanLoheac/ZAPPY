@@ -203,11 +203,17 @@ FLAGS_SO =  -std=c++17 -Wall -Wextra -Werror -lIrrlicht \
 
 PLUGIN_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")
 
+PLUGIN_COUNT := $(words $(PLUGIN_SRC))
+
 plugins_all:
 	rm -f plugins/*.so
 	@mkdir -p plugins
-	@for src in $(PLUGIN_SRC); do \
+	@i=0; \
+	total=$(PLUGIN_COUNT); \
+	for src in $(PLUGIN_SRC); do \
+		i=$$((i + 1));	\
 		plugin_name=$$(basename $$src .cpp); \
+		echo "[$$i/$$total] Compiling plugins/$$plugin_name";	\
 		g++ -o plugins/$$plugin_name.so -shared -fPIC $(COMMON_PLUGINS) \
 			$$src $(FLAGS_SO); \
 	done

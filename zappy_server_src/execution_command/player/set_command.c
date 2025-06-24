@@ -85,11 +85,19 @@ static int get_ressource_id(const char *object)
     return -1;
 }
 
+static void send_all_data(zappy_t *zappy, char *buffer, char *buffer2)
+{
+    send_data_to_graphics(zappy, buffer);
+    send_data_to_graphics(zappy, buffer2);
+}
+
 void set_command(zappy_t *zappy, client_t *client, char **args)
 {
     char buffer[256];
     char buffer2[256];
 
+    if (client == NULL || zappy == NULL)
+        return;
     if (!put_object(zappy, &client->stats,
         &zappy->map->grid[client->stats.y][client->stats.x], args[0])) {
         remove_object_inventory(&client->stats, args[0]);
@@ -102,9 +110,7 @@ void set_command(zappy_t *zappy, client_t *client, char **args)
         client->stats.inventory.deraumere, client->stats.inventory.sibur,
         client->stats.inventory.mendiane, client->stats.inventory.phiras,
         client->stats.inventory.thystame);
-        send_data_to_graphics(zappy, buffer);
-        send_data_to_graphics(zappy, buffer2);
-    } else {
+        send_all_data(zappy, buffer, buffer2);
+    } else
         add_to_buffer(&client->out_buffer, "ko\n");
-    }
 }

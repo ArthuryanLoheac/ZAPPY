@@ -8,11 +8,8 @@
 #include <stdio.h>
 #include "command_handler.h"
 
-void forward_command(zappy_t *zappy, client_t *client, char **args)
+static void move_player(zappy_t *zappy, stats_t *stats)
 {
-    stats_t *stats = &client->stats;
-
-    (void) args;
     if (stats->orientation == 3)
         stats->y = (stats->y + 1) % zappy->parser->height;
     if (stats->orientation == 2)
@@ -27,6 +24,16 @@ void forward_command(zappy_t *zappy, client_t *client, char **args)
         if (stats->x < 0)
             stats->x = zappy->parser->width - 1;
     }
+}
+
+void forward_command(zappy_t *zappy, client_t *client, char **args)
+{
+    stats_t *stats = &client->stats;
+
+    if (client == NULL || zappy == NULL)
+        return;
+    (void) args;
+    move_player(zappy, stats);
     update_pos_player(zappy, &client->stats);
     add_to_buffer(&client->out_buffer, "ok\n");
 }

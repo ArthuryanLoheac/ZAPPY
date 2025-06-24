@@ -120,6 +120,13 @@ static void add_pos_elevation_failed(zappy_t *zappy, int x, int y, int level)
     zappy->pos_elevationsFail = new_pos;
 }
 
+static void handle_fail(zappy_t *zappy, client_t *client)
+{
+    add_pos_elevation_failed(zappy, client->stats.x, client->stats.y,
+            client->stats.level);
+    add_to_buffer(&client->out_buffer, "ko\n");
+}
+
 /**
  * @brief Execute the incantation command for a client.
  * @param zappy Pointer to the zappy server structure.
@@ -131,6 +138,8 @@ void incantation_command(zappy_t *zappy, client_t *client, char **args)
     char buffer[256];
     char buffer2[256];
 
+    if (client == NULL || zappy == NULL)
+        return;
     (void) args;
     if (check_incantation_valid(zappy, client, client->stats.level)) {
         add_pos_elevation(zappy, client->stats.x, client->stats.y,
@@ -144,8 +153,6 @@ void incantation_command(zappy_t *zappy, client_t *client, char **args)
         if (client->stats.level == 8)
             check_win(zappy);
     } else {
-        add_pos_elevation_failed(zappy, client->stats.x, client->stats.y,
-            client->stats.level);
-        add_to_buffer(&client->out_buffer, "ko\n");
+        handle_fail(zappy, client);
     }
 }

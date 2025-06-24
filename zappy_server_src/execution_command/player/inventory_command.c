@@ -21,6 +21,8 @@ void inventory_command(zappy_t *zappy, client_t *client, char **args)
 {
     char buffer[256];
 
+    if (client == NULL)
+        return;
     (void) args;
     (void) zappy;
     sprintf(buffer, "[food %d, linemate %d, deraumere %d, sibur %d, "

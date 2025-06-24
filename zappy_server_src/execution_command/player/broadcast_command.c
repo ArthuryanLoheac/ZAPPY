@@ -139,6 +139,8 @@ void broadcast_command(zappy_t *zappy, client_t *client, char **args)
 {
     char textBuffer[2560];
 
+    if (client == NULL || zappy == NULL)
+        return;
     for (int i = 0; i < 2560; i++)
         textBuffer[i] = '\0';
     if (args[0] == NULL) {

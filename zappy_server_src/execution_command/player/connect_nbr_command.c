@@ -16,6 +16,8 @@ void connect_nbr_command(zappy_t *zappy, client_t *client, char **args)
     egg_t *egg = zappy->map->eggs;
     char response[50];
 
+    if (client == NULL || zappy == NULL)
+        return;
     (void)args;
     while (egg != NULL) {
         if (strcmp(egg->team_name, client->stats.team_name) == 0)

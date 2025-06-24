@@ -29,6 +29,8 @@ static void lay_egg(zappy_t *zappy, client_t *client)
 
 void fork_command(zappy_t *zappy, client_t *client, char **args)
 {
+    if (client == NULL || zappy == NULL)
+        return;
     (void) args;
     lay_egg(zappy, client);
     add_to_buffer(&client->out_buffer, "ok\n");

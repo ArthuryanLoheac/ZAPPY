@@ -230,7 +230,7 @@ class ServerGUI {
     void pexCommand(std::vector<std::string> &args);
 
     /**
-     * @brief Handles the "SUC" command when an hunknown command is received
+     * @brief Handles the "SUC" command when an unknown command is received
      *
      * @param args Command arguments containing player ID and action details.
      */
@@ -266,6 +266,13 @@ class ServerGUI {
     void sbpCommand(std::vector<std::string> &args);
 
     /**
+     * @brief Handles the "PING" command when an PING is received
+     *
+     * @param args Command arguments containing player ID and action details.
+     */
+    void pingCommand(std::vector<std::string> &args);
+
+    /**
      * @brief Map of server commands to their corresponding handler functions.
      */
     std::map<std::string,
@@ -293,7 +300,8 @@ class ServerGUI {
         {"SEG", &ServerGUI::segCommand},
         {"PBC", &ServerGUI::pbcCommand},
         {"SMG", &ServerGUI::smgCommand},
-        {"SBP", &ServerGUI::sbpCommand}
+        {"SBP", &ServerGUI::sbpCommand},
+        {"PING", &ServerGUI::sucCommand}
     };
 };
 

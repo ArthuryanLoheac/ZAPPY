@@ -336,10 +336,6 @@ void ServerGUI::pexCommand(std::vector<std::string> &args) {
 
 void GUI::ServerGUI::sucCommand(std::vector<std::string> &args) {
     (void) args;
-    if (sendPing) {
-        ping = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now() - timeForPing).count();
-    }
 }
 
 void GUI::ServerGUI::segCommand(std::vector<std::string> &args) {
@@ -374,4 +370,12 @@ void GUI::ServerGUI::smgCommand(std::vector<std::string> &args) {
 
 void GUI::ServerGUI::sbpCommand(std::vector<std::string> &args) {
     (void) args;
+}
+
+void GUI::ServerGUI::pingCommand(std::vector<std::string> &args) {
+    (void) args;
+    if (sendPing) {
+        ping = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now() - timeForPing).count();
+    }
 }

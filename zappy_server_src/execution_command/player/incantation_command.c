@@ -28,6 +28,7 @@ static void send_elevation(char *buffer, client_t *c)
     add_to_buffer(&c->out_buffer, "Elevation underway\n");
     add_command_second(300, command, c);
     free(buffercpy);
+    free(command);
 }
 
 /**

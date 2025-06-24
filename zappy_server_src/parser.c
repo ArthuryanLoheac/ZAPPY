@@ -120,7 +120,7 @@ static void parse_one_arg(int ac, char **av, parser_t *parser, int i)
         set_minimum_log_level(DEBUG);
 }
 
-static check_teams(char **team_names, int nb_teams, int i)
+static int check_teams_line(char **team_names, int nb_teams, int i)
 {
     for (int j = i + 1; j < nb_teams; j++) {
         if (strcmp(team_names[i], team_names[j]) == 0) {
@@ -138,7 +138,7 @@ static int check_teams(char **team_names, int nb_teams)
         return 1;
     }
     for (int i = 0; i < nb_teams; i++) {
-        if (check_teams(team_names, nb_teams, i) == 1)
+        if (check_teams_line(team_names, nb_teams, i) == 1)
             return 1;
     }
     return 0;

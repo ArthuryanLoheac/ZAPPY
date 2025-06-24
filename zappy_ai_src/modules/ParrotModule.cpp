@@ -30,7 +30,8 @@ std::vector<std::string> ParrotModule::chooseRandomMessages(int count) {
     std::shuffle(allMessages.begin(), allMessages.end(), g);
     count = std::min<size_t>(count, allMessages.size());
     messages.assign(allMessages.begin(), allMessages.begin() + count);
-    while (messages.size() < count && !allMessages.empty()) {
+    while (messages.size() < static_cast<size_t>(count) &&
+        !allMessages.empty()) {
         messages.push_back(allMessages[messages.size() % allMessages.size()]);
     }
     return messages;

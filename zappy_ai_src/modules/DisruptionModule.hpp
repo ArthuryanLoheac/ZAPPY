@@ -53,6 +53,18 @@ class DisruptionModule : public AIModule   {
      */
     void updateLookProbability();
 
+    /**
+     * @brief Check if there is an elevation nearby
+     * if there is one send the number of the case of the elevation
+     */
+    int checkVisionElevation();
+
+    /**
+     * @brief Check if there is a elevation in a specific cell
+     * if there is one send true
+     */
+    int checkCellElevation();
+
     /// Current probability of sending a LOOK command (0, 40, 80, 100)
     int lookProbability;
 

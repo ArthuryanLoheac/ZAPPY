@@ -98,6 +98,8 @@ void Socket::run() {
         throw std::runtime_error("Poll error occurred");
     if (fd.revents & POLLIN)
         readDatasFromServer();
+    if (fd.revents & POLLOUT)
+        flushWriteBuffer();
 }
 
 /**

@@ -108,7 +108,8 @@ static void check_add_egg(zappy_t *zappy, client_t *removed)
             nb_egg++;
         egg = egg->next;
     }
-    for (int i = nb_egg; i < zappy->parser->clients_per_team; i++)
+    for (int i = nb_egg + nb_client_in_team;
+        i < zappy->parser->clients_per_team; i++)
         create_egg_and_send(zappy, removed);
 }
 

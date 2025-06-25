@@ -16,7 +16,6 @@
 #include "Window/window.hpp"
 
 #include "include/logs.h"
-#include "NetworkForGui.hpp"
 
 namespace GUI {
 NetworkForGui::NetworkForGui() : pollWrapper() {
@@ -49,8 +48,9 @@ void GUI::NetworkForGui::handleCommand() {
     }
 }
 
-void NetworkForGui::execCommand(std::map<std::string, void(GUI::NetworkForGui::*)
-(std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
+void NetworkForGui::execCommand(
+std::map<std::string, void(GUI::NetworkForGui::*)(std::vector<std::string> &)>
+::iterator it, std::vector<std::string> &args) {
     std::string errStr;
 
     if (it != commands.end()) {
@@ -156,7 +156,6 @@ void NetworkForGui::sendBufferToServer() {
 }
 
 void NetworkForGui::sendDatasToServer(const std::string &message) {
-
     outbuffer += message;
 }
 

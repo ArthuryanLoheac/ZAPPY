@@ -1,11 +1,12 @@
 #pragma once
 #include <poll.h>
-#include "Connection/PollWrapper.hpp"
 
 #include <string>
 #include <map>
 #include <vector>
 #include <chrono>
+
+#include "Connection/PollWrapper.hpp"
 
 namespace GUI {
 
@@ -74,7 +75,7 @@ class NetworkForGui {
     void setConnectedToServer(bool connected);
 
  private:
-    PollWrapper pollWrapper; /**< PollWrapper member for managing poll operations. */
+    PollWrapper pollWrapper; /**< PollWrapper member for managing poll. */
     bool sendPing = false; /**< Flag to indicate if BCT command has been sent */
     std::chrono::system_clock::time_point timeForPing;
     bool isConnected = false; /**< if the server connection is active */

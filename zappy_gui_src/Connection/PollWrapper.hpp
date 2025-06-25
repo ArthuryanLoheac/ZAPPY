@@ -1,6 +1,4 @@
-#ifndef POLLWRAPPER_HPP
-#define POLLWRAPPER_HPP
-
+#pragma once
 #include <sys/poll.h>
 #include <stdexcept>
 
@@ -23,7 +21,4 @@ class PollWrapper {
     bool isWritable() const {
         return fd.revents & POLLOUT;
     }
-
 };
-
-#endif  // POLLWRAPPER_HPP

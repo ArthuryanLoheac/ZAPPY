@@ -109,7 +109,7 @@ static void move_forward_side(client_t *client, int *xyi, zappy_t *zappy,
 static void init_buffer(char **buffer)
 {
     for (int i = 0; i < 2; i++)
-        buffer[i] = '\0';
+        (*buffer)[i] = '\0';
     add_to_buffer(buffer, "[");
 }
 

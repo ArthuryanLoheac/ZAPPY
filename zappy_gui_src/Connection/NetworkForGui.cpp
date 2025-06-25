@@ -9,27 +9,27 @@
 #include <map>
 #include <cstdio>
 
-#include "Connection/ServerGUI.hpp"
+#include "Connection/NetworkForGui.hpp"
 #include "Connection/PollWrapper.hpp"
 #include "DataManager/DataManager.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "Window/window.hpp"
 
 #include "include/logs.h"
-#include "ServerGUI.hpp"
+#include "NetworkForGui.hpp"
 
 namespace GUI {
-ServerGUI::ServerGUI() : pollWrapper() {
+NetworkForGui::NetworkForGui() : pollWrapper() {
 }
 
-void ServerGUI::InitServer() {
+void NetworkForGui::InitServer() {
     toClear = true;
     GUI::GameDataManager::i().clear();
     GUI::DataManager::i().clear();
-    GUI::ServerGUI::i().setConnectedToServer(true);
+    GUI::NetworkForGui::i().setConnectedToServer(true);
 }
 
-void GUI::ServerGUI::handleCommand() {
+void GUI::NetworkForGui::handleCommand() {
     while (buffer.find("\n") != std::string::npos) {
         size_t pos = buffer.find("\n");
         std::string command = buffer.substr(0, pos);
@@ -49,13 +49,13 @@ void GUI::ServerGUI::handleCommand() {
     }
 }
 
-void ServerGUI::execCommand(std::map<std::string, void(GUI::ServerGUI::*)
+void NetworkForGui::execCommand(std::map<std::string, void(GUI::NetworkForGui::*)
 (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args) {
     std::string errStr;
 
     if (it != commands.end()) {
         try {
-            (GUI::ServerGUI::i().*(it->second))(args);
+            (GUI::NetworkForGui::i().*(it->second))(args);
             std::string logMessage = "\033[1;32m[OK]\033[0m Received Command: "
                 + args[0];
             for (size_t i = 1; i < args.size(); i++)
@@ -76,7 +76,7 @@ void ServerGUI::execCommand(std::map<std::string, void(GUI::ServerGUI::*)
     }
 }
 
-void ServerGUI::readDatasFromServer() {
+void NetworkForGui::readDatasFromServer() {
     char bufferTemp[1024];
     ssize_t bytes_read = 0;
 
@@ -89,7 +89,7 @@ void ServerGUI::readDatasFromServer() {
     handleCommand();
 }
 
-void ServerGUI::clockUpdate(std::chrono::system_clock::time_point &time,
+void NetworkForGui::clockUpdate(std::chrono::system_clock::time_point &time,
 std::chrono::system_clock::time_point &timeNext,
 std::chrono::system_clock::time_point &timeNextPing) {
     time = std::chrono::system_clock::now();
@@ -104,7 +104,7 @@ std::chrono::system_clock::time_point &timeNextPing) {
     }
 }
 
-void ServerGUI::startServer() {
+void NetworkForGui::startServer() {
     auto time = std::chrono::system_clock::now();
     auto timeNext = time + std::chrono::seconds(updateMapTime);
     auto timeNextPing = time + std::chrono::milliseconds(1);
@@ -122,15 +122,15 @@ void ServerGUI::startServer() {
     }
 }
 
-bool ServerGUI::isConnectedToServer() const {
+bool NetworkForGui::isConnectedToServer() const {
     return isConnected;
 }
 
-void ServerGUI::setConnectedToServer(bool connected) {
+void NetworkForGui::setConnectedToServer(bool connected) {
     isConnected = connected;
 }
 
-std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
+std::vector<std::string> NetworkForGui::parseCommands(std::string &command) {
     std::vector<std::string> args;
     size_t pos = 0;
 
@@ -146,7 +146,7 @@ std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
     return args;
 }
 
-void ServerGUI::sendBufferToServer() {
+void NetworkForGui::sendBufferToServer() {
     ssize_t bytes_sent = write(server_fd,
         outbuffer.c_str(), outbuffer.size());
     if (bytes_sent <= 0)
@@ -155,12 +155,12 @@ void ServerGUI::sendBufferToServer() {
     LOG_DEBUG("[OK] Sent data: %s\n", outbuffer.c_str());
 }
 
-void ServerGUI::sendDatasToServer(const std::string &message) {
+void NetworkForGui::sendDatasToServer(const std::string &message) {
 
     outbuffer += message;
 }
 
-void ServerGUI::initNetwork(int sockfd) {
+void NetworkForGui::initNetwork(int sockfd) {
     server_fd = sockfd;
     pollWrapper.fd = {server_fd, .events = POLLIN | POLLOUT, 0};
 }

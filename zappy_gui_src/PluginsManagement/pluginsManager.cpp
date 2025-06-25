@@ -12,7 +12,7 @@
 #include "PluginsManagement/pluginsManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
-#include "Connection/ServerGUI.hpp"
+#include "Connection/NetworkForGui.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
 
@@ -91,7 +91,7 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
                 if (datas.frequency > 0 &&
                     datas.frequency != GUI::DataManager::i().getFrequency()) {
                     GUI::DataManager::i().setFrequency(datas.frequency);
-                    GUI::ServerGUI::i().outbuffer += "sst " +
+                    GUI::NetworkForGui::i().outbuffer += "sst " +
                         std::to_string(datas.frequency) + "\n";
                     PluginsDataManager::i().updatePluginsData();
                 }

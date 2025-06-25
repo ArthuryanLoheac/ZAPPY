@@ -8,11 +8,11 @@ namespace GUI {
 /**
  * @brief Base class for all server GUI exceptions
  */
-class ServerGUIException : public std::exception {
+class NetworkForGuiException : public std::exception {
  public:
-    explicit ServerGUIException(const std::string& message) :
+    explicit NetworkForGuiException(const std::string& message) :
         _message(message) {}
-    virtual ~ServerGUIException() = default;
+    virtual ~NetworkForGuiException() = default;
 
     const char* what() const noexcept override {
         return _message.c_str();
@@ -25,28 +25,28 @@ class ServerGUIException : public std::exception {
 /**
  * @brief Exception thrown when parsing commands fails
  */
-class CommandParsingException : public ServerGUIException {
+class CommandParsingException : public NetworkForGuiException {
  public:
     explicit CommandParsingException(const std::string& message)
-        : ServerGUIException("Command parsing error: " + message) {}
+        : NetworkForGuiException("Command parsing error: " + message) {}
 };
 
 /**
  * @brief Exception thrown when sending data to the server fails
  */
-class SendingException : public ServerGUIException {
+class SendingException : public NetworkForGuiException {
  public:
     explicit SendingException(const std::string& message)
-        : ServerGUIException("Sending error: " + message) {}
+        : NetworkForGuiException("Sending error: " + message) {}
 };
 
 /**
  * @brief Exception thrown when receiving data from the server fails
  */
-class ReceivingException : public ServerGUIException {
+class ReceivingException : public NetworkForGuiException {
  public:
     explicit ReceivingException(const std::string& message)
-        : ServerGUIException("Receiving error: " + message) {}
+        : NetworkForGuiException("Receiving error: " + message) {}
 };
 
 }  // namespace GUI

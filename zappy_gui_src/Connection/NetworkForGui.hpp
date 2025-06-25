@@ -12,7 +12,7 @@ namespace GUI {
 /**
  * @brief Manages the server communication and command handling for the GUI.
  */
-class ServerGUI {
+class NetworkForGui {
  public:
     int server_fd; /**< Server socket file descriptor. */
     int nb_fds; /**< Number of file descriptors. */
@@ -24,19 +24,19 @@ class ServerGUI {
     bool toClear;
 
     /**
-     * @brief Constructs a new ServerGUI object.
+     * @brief Constructs a new NetworkForGui object.
      */
-    ServerGUI();
+    NetworkForGui();
 
     void InitServer();
 
     /**
-     * @brief Provides a singleton instance of the ServerGUI class.
+     * @brief Provides a singleton instance of the NetworkForGui class.
      *
-     * @return ServerGUI& Reference to the singleton instance.
+     * @return NetworkForGui& Reference to the singleton instance.
      */
-    static ServerGUI &i() {
-        static ServerGUI i;
+    static NetworkForGui &i() {
+        static NetworkForGui i;
         return i;
     }
 
@@ -113,7 +113,7 @@ class ServerGUI {
      * @param it Iterator pointing to the command in the command map.
      * @param args Arguments for the command.
      */
-    void execCommand(std::map<std::string, void(GUI::ServerGUI::*)
+    void execCommand(std::map<std::string, void(GUI::NetworkForGui::*)
     (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args);
 
     /**
@@ -289,32 +289,32 @@ class ServerGUI {
      * @brief Map of server commands to their corresponding handler functions.
      */
     std::map<std::string,
-     void(ServerGUI::*)(std::vector<std::string> &)> commands = {
-        {"WELCOME", &ServerGUI::welcomeCommand},
-        {"MSZ", &ServerGUI::mszCommand},
-        {"ENW", &ServerGUI::enwCommand},
-        {"TNA", &ServerGUI::tnaCommand},
-        {"BCT", &ServerGUI::bctCommand},
-        {"SGT", &ServerGUI::sgtCommand},
-        {"SST", &ServerGUI::sgtCommand},
-        {"EBO", &ServerGUI::eboCommand},
-        {"EDI", &ServerGUI::ediCommand},
-        {"PNW", &ServerGUI::pnwCommand},
-        {"PPO", &ServerGUI::ppoCommand},
-        {"PIN", &ServerGUI::pinCommand},
-        {"PDI", &ServerGUI::pdiCommand},
-        {"PLV", &ServerGUI::plvCommand},
-        {"PIC", &ServerGUI::picCommand},
-        {"PIE", &ServerGUI::pieCommand},
-        {"PDR", &ServerGUI::pdrCommand},
-        {"PGT", &ServerGUI::pgtCommand},
-        {"PEX", &ServerGUI::pexCommand},
-        {"SUC", &ServerGUI::sucCommand},
-        {"SEG", &ServerGUI::segCommand},
-        {"PBC", &ServerGUI::pbcCommand},
-        {"SMG", &ServerGUI::smgCommand},
-        {"SBP", &ServerGUI::sbpCommand},
-        {"PING", &ServerGUI::sucCommand}
+     void(NetworkForGui::*)(std::vector<std::string> &)> commands = {
+        {"WELCOME", &NetworkForGui::welcomeCommand},
+        {"MSZ", &NetworkForGui::mszCommand},
+        {"ENW", &NetworkForGui::enwCommand},
+        {"TNA", &NetworkForGui::tnaCommand},
+        {"BCT", &NetworkForGui::bctCommand},
+        {"SGT", &NetworkForGui::sgtCommand},
+        {"SST", &NetworkForGui::sgtCommand},
+        {"EBO", &NetworkForGui::eboCommand},
+        {"EDI", &NetworkForGui::ediCommand},
+        {"PNW", &NetworkForGui::pnwCommand},
+        {"PPO", &NetworkForGui::ppoCommand},
+        {"PIN", &NetworkForGui::pinCommand},
+        {"PDI", &NetworkForGui::pdiCommand},
+        {"PLV", &NetworkForGui::plvCommand},
+        {"PIC", &NetworkForGui::picCommand},
+        {"PIE", &NetworkForGui::pieCommand},
+        {"PDR", &NetworkForGui::pdrCommand},
+        {"PGT", &NetworkForGui::pgtCommand},
+        {"PEX", &NetworkForGui::pexCommand},
+        {"SUC", &NetworkForGui::sucCommand},
+        {"SEG", &NetworkForGui::segCommand},
+        {"PBC", &NetworkForGui::pbcCommand},
+        {"SMG", &NetworkForGui::smgCommand},
+        {"SBP", &NetworkForGui::sbpCommand},
+        {"PING", &NetworkForGui::sucCommand}
     };
 };
 

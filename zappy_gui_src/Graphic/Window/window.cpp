@@ -142,9 +142,9 @@ void Window::update() {
         }
         updateDeltaTime();
         if (device->isWindowActive())
-        windowUpdateFocus();
+            windowUpdateFocus();
         else
-        windowUpdateNoFocus();
+            windowUpdateNoFocus();
         driver->endScene();
     }
     device->drop();

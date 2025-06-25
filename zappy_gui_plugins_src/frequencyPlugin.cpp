@@ -78,7 +78,7 @@ stateButton &buttonState, int x, int y, int width, int height) {
     }
 }
 
-bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
+bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData datas, std::string &outBuffer) {
     if (data.frequency <= 1) {
         minusButtonState = DISABLED;
     } else {
@@ -86,10 +86,10 @@ bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
             heightSaved - 80, 40, 40);
         if (minusButtonState == CLICKED) {
             if (frequency > 1) {
-                frequency--;
+                frequency = datas.frequency - 1;
                 data.frequency = frequency;
-                datas.frequency = frequency;
             }
+            outBuffer += "sst " + std::to_string(data.frequency) + "\n";
             return true;
         }
     }
@@ -100,10 +100,10 @@ bool frequencyPlugin::onEvent(const irr::SEvent &event, pluginsData &datas) {
             heightSaved - 80, 40, 40);
         if (plusButtonState == CLICKED) {
             if (frequency < 200) {
-                frequency++;
+                frequency = datas.frequency + 1;
                 data.frequency = frequency;
-                datas.frequency = frequency;
             }
+            outBuffer += "sst " + std::to_string(data.frequency) + "\n";
             return true;
         }
     }

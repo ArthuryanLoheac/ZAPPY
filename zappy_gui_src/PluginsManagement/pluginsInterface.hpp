@@ -44,7 +44,7 @@ class pluginsInterface {
     /** @brief Handle events for the plugin.
      * @param event The event to handle.
      */
-    virtual bool onEvent(const irr::SEvent &event, pluginsData &datas) = 0;
+    virtual bool onEvent(const irr::SEvent &event, pluginsData datas, std::string &outBuffer) = 0;
 
     /** @brief Get the priority of the plugin.
      * The priority determines the order in which plugins are processed.

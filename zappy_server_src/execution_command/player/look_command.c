@@ -60,7 +60,6 @@ static void add_to_buffer_tile(char **buffer, zappy_t *zappy, int x, int y)
     add_value_buffer(&str, cell->nbr_mendiane, " mendiane");
     add_value_buffer(&str, cell->nbr_phiras, " phiras");
     add_value_buffer(&str, cell->nbr_thystame, " thystame");
-    add_to_buffer(&str, ",");
     add_to_buffer(buffer, str);
 }
 
@@ -142,6 +141,9 @@ void look_command(zappy_t *zappy, client_t *client, char **args)
         for (int j = -i; j <= i; j++) {
             modifie_xyi_cpy(xyi_cpy, variables.x, variables.y, j);
             move_forward_side(client, xyi_cpy, zappy, &buffer);
+            if (j == i && i == variables.level)
+                continue;
+            add_to_buffer(&buffer, ",");
         }
         move_forward_x(&client->stats, &variables.x, &variables.y, zappy);
     }

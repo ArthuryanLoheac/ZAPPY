@@ -23,15 +23,16 @@ class PlayerDataPlugin : public Aplugin {
         std::string name; /**< Name of the button. */
         irr::core::rect<irr::s32> rect; /**< Rectangle defining the button's area. */
         bool hover = false;
+        bool blocked = false;
 
         void draw(std::shared_ptr<irr::gui::IGUIFont> font,
           irr::video::IVideoDriver* driver, PlayerDataPlugin plug) {
             if (!font || !driver)
                 return;
             plug.drawImage("assets/UI/AllRed.png",
-              rect.UpperLeftCorner.X - 10, rect.UpperLeftCorner.Y - 5,
-              rect.getWidth() + 20, rect.getHeight() + 15, driver, hover ? 120 : 255);
-            font->draw(name.c_str(), rect, irr::video::SColor(255, 255, 255, 255));
+              rect.UpperLeftCorner.X, rect.UpperLeftCorner.Y,
+              rect.getWidth(), rect.getHeight(), driver, blocked ? 50 : (hover ? 120 : 255));
+            font->draw(name.c_str(), rect, irr::video::SColor(blocked ? 100 : 255, 255, 255, 255), true, true);
         }
 
         bool isHover(irr::IrrlichtDevice *device) {
@@ -46,7 +47,7 @@ class PlayerDataPlugin : public Aplugin {
     };
 
     Button LevelUpButton = Button("Level Up",
-      irr::core::rect<irr::s32>(10, 10, 100, 20));
+      irr::core::rect<irr::s32>(0, 0, 150, 30));
 
     int idPlayer = -1; /**< ID of the selected player. */
 

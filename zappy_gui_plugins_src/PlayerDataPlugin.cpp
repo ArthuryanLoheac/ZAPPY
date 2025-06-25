@@ -26,6 +26,8 @@ std::shared_ptr<irr::gui::IGUIFont> font) {
     pluginsData::Player player = data.getPlayer(id);
     int y = 350;
 
+    LevelUpButton.blocked = player.level >= 8;
+
     // Name
     std::string playerInfo = "Player " + std::to_string(id) + " : " +
         player.teamName;
@@ -72,7 +74,7 @@ std::shared_ptr<irr::gui::IGUIFont> font) {
     // BUTTONS
     y += 20;
     LevelUpButton.updatePos(irr::core::position2d<irr::s32>(
-        width - 180, y));
+        width - 200, y));
     LevelUpButton.draw(font, driver, *this);
 }
 

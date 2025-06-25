@@ -1,1 +1,1 @@
-./zappy_server -x 10 -y 10 -c 6 -f 3 -p 4040 -n t1 t2 -vvv
+./zappy_server -x 10 -y 10 -c 3 -f 3 -p 4040 -n t1 t2 -vvv

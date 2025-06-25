@@ -21,6 +21,7 @@ class ServerGUI {
     int updateMapTime = 30; /**< Time interval for map updates. */
     int updatePingTime = 3; /**< Time interval for map updates. */
     int ping = 0; /**< Ping counter for server communication. */
+    bool toClear;
 
     /**
      * @brief Constructs a new ServerGUI object.

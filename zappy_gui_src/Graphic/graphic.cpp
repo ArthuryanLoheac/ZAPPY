@@ -26,9 +26,6 @@ int graphic() {
     } catch(const std::exception& e) {
         std::cerr << "Error in graphic(): " << e.what() << '\n';
         return 84;
-    } catch(...) {
-        std::cerr << "Unknown error occurred in graphic()" << '\n';
-        return 84;
     }
     pluginsManager::i().saveActivePlugins();
     GUI::DataManager::i().setRunning(false);

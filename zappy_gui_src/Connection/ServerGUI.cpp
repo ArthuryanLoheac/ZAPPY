@@ -101,7 +101,7 @@ void ServerGUI::startServer() {
     auto timeNextPing = time + std::chrono::milliseconds(1);
     int ready = 0;
 
-    GUI::Window::i().clearMeshes();
+    toClear = true;
     GUI::GameDataManager::i().clear();
     GUI::DataManager::i().clear();
     GUI::ServerGUI::i().setConnectedToServer(true);
@@ -149,9 +149,8 @@ void ServerGUI::sendDatasToServer(const std::string &message) {
     if (fd.revents & POLLOUT) {
         ssize_t bytes_sent = write(server_fd,
             message.c_str(), message.size());
-        if (bytes_sent == -1) {
+        if (bytes_sent <= 0)
             throw std::runtime_error("Error sending data to server");
-        }
         LOG_DEBUG("[OK] Sent data: %s\n", message.c_str());
     }
 }

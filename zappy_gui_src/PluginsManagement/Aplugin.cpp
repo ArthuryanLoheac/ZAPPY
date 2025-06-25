@@ -15,7 +15,8 @@ void Aplugin::update(pluginsData dataManager, float deltaTime) {
     (void)deltaTime;
 }
 
-bool Aplugin::onEvent(const irr::SEvent &event, pluginsData datas, std::string &outBuffer) {
+bool Aplugin::onEvent(const irr::SEvent &event, pluginsData datas,
+std::string &outBuffer) {
     (void)event;
     (void)datas;
     (void)outBuffer;

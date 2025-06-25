@@ -128,7 +128,8 @@ void TileDataPlugin::drawPlayers(pluginsData::Tile tile, int &y) {
     }
 }
 
-bool TileDataPlugin::onEvent(const irr::SEvent &event, pluginsData datas, std::string &outBuffer) {
+bool TileDataPlugin::onEvent(const irr::SEvent &event, pluginsData datas,
+std::string &outBuffer) {
     if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
         if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
             pressed = true;

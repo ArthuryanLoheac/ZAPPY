@@ -87,7 +87,8 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
         if (plugin && plugin->isActive()) {
             try {
                 pluginsData &datas = PluginsDataManager::i().getData();
-                if (plugin->onEvent(event, datas, GUI::NetworkForGui::i().outbuffer))
+                if (plugin->onEvent(event, datas,
+                    GUI::NetworkForGui::i().outbuffer))
                     return;
             } catch (const std::exception &e) {
                 LOG_ERROR("Error while processing event in plugin: %s",

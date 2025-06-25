@@ -21,7 +21,7 @@ class PlayerDataPlugin : public Aplugin {
         : name(name), rect(rect) {}
 
         std::string name; /**< Name of the button. */
-        irr::core::rect<irr::s32> rect; /**< Rectangle defining the button's area. */
+        irr::core::rect<irr::s32> rect; /**< Rectangle defining the button's. */
         bool hover = false;
         bool blocked = false;
 
@@ -31,12 +31,15 @@ class PlayerDataPlugin : public Aplugin {
                 return;
             plug.drawImage("assets/UI/AllRed.png",
               rect.UpperLeftCorner.X, rect.UpperLeftCorner.Y,
-              rect.getWidth(), rect.getHeight(), driver, blocked ? 50 : (hover ? 120 : 255));
-            font->draw(name.c_str(), rect, irr::video::SColor(blocked ? 100 : 255, 255, 255, 255), true, true);
+              rect.getWidth(), rect.getHeight(), driver,
+              blocked ? 50 : (hover ? 120 : 255));
+            font->draw(name.c_str(), rect, irr::video::SColor(
+              blocked ? 100 : 255, 255, 255, 255), true, true);
         }
 
         bool isHover(irr::IrrlichtDevice *device) {
-            hover = rect.isPointInside(device->getCursorControl()->getPosition());
+            hover = rect.isPointInside(
+                device->getCursorControl()->getPosition());
             return hover;
         }
 
@@ -88,7 +91,8 @@ class PlayerDataPlugin : public Aplugin {
      * @brief Handles events for the plugin.
      * @param event The event to handle.
      */
-    bool onEvent(const irr::SEvent &event, pluginsData datas, std::string &outBuffer) override;
+    bool onEvent(const irr::SEvent &event, pluginsData datas,
+        std::string &outBuffer) override;
 
     std::string getName() const override {
         return "Player Data Plugin";

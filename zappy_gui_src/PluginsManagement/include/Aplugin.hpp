@@ -69,7 +69,8 @@ class Aplugin : public pluginsInterface {
     /** @brief Handle events for the plugin.
      * @param event The event to handle.
      */
-    bool onEvent(const irr::SEvent &event, pluginsData datas, std::string &outBuffer) override;
+    bool onEvent(const irr::SEvent &event, pluginsData datas,
+        std::string &outBuffer) override;
 
     /** @brief Get the priority of the plugin.
      * @return The priority level of the plugin.

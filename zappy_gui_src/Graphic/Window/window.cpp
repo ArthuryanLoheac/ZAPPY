@@ -140,12 +140,11 @@ void Window::update() {
             cam->setFarValue(10000.0f);
             SetupSkybox();
         }
-
         updateDeltaTime();
         if (device->isWindowActive())
-            windowUpdateFocus();
+        windowUpdateFocus();
         else
-            windowUpdateNoFocus();
+        windowUpdateNoFocus();
         driver->endScene();
     }
     device->drop();

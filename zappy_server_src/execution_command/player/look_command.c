@@ -112,13 +112,6 @@ static void init_buffer(char **buffer)
     add_to_buffer(buffer, "[");
 }
 
-static void modifie_xyi_cpy(int *xyi_cpy, int x, int y, int j)
-{
-    xyi_cpy[0] = x;
-    xyi_cpy[1] = y;
-    xyi_cpy[2] = j;
-}
-
 static void fill_variable(look_variable_t *variables, client_t *client)
 {
     variables->level = client->stats.level;
@@ -139,14 +132,15 @@ void look_command(zappy_t *zappy, client_t *client, char **args)
     int xyi_cpy[3] = {client->stats.x, client->stats.y, 0};
     char *buffer = malloc(2 * sizeof(char));
 
-    if (client == NULL || zappy == NULL || buffer == NULL)
+    if (client == NULL || zappy == NULL || buffer == NULL || !args)
         return;
-    (void) args;
     fill_variable(&variables, client);
     init_buffer(&buffer);
     for (int i = 0; i <= variables.level; i++) {
         for (int j = -i; j <= i; j++) {
-            modifie_xyi_cpy(xyi_cpy, variables.x, variables.y, j);
+            xyi_cpy[0] = variables.x;
+            xyi_cpy[1] = variables.y;
+            xyi_cpy[2] = j;
             move_forward_side(client, xyi_cpy, zappy, &buffer);
             check_add_comma(&buffer, i, j, variables.level);
         }

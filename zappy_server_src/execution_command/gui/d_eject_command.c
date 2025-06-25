@@ -223,6 +223,24 @@ static void update_pos_all_client(zappy_t *zappy,
     }
 }
 
+static client_t *get_client(zappy_t *zappy, char **args)
+{
+    client_t *c = zappy->clients;
+    int id = -1;
+
+    if (zappy == NULL || !args || args[0] == NULL || strlen(args[0]) < 2)
+        return NULL;
+    id = atoi(args[0] + 1);
+    if (id < 0)
+        return NULL;
+    while (c != NULL) {
+        if (c->stats.id == id)
+            return c;
+        c = c->next;
+    }
+    return NULL;
+}
+
 /**
  * @brief This function handles the eject command,
  * The player pushes another player in front of him
@@ -231,26 +249,30 @@ static void update_pos_all_client(zappy_t *zappy,
  * @param client Pointer to the client executing the eject command.
  * @param args Arguments passed with the command (not used).
  */
-void eject_command(zappy_t *zappy, client_t *client, char **args)
+void d_eject_command(zappy_t *zappy, client_t *client, char **args)
 {
+    client_t *target = NULL;
     stats_t *self;
     int xFinal;
     int yFinal;
 
     if (client == NULL || zappy == NULL)
         return;
-    (void) args;
-    self = &client->stats;
+    target = get_client(zappy, args);
+    if (target == NULL) {
+        add_to_buffer(&client->out_buffer, "ko\n");
+        return;
+    }
+    self = &target->stats;
     xFinal = self->x;
     yFinal = self->y;
     compute_forward_pos(&xFinal, &yFinal, self, zappy);
-    if (!is_player_at_pos(zappy, client, self->x, self->y)
+    if (!is_player_at_pos(zappy, target, self->x, self->y)
         && !is_egg_at_pos(zappy, self->x, self->y)) {
         add_to_buffer(&client->out_buffer, "ko\n");
         return;
     }
-    add_to_buffer(&client->out_buffer, "ok\n");
-    send_pex_to_graphics(zappy, client);
+    send_pex_to_graphics(zappy, target);
     update_pos_all_client(zappy, self, xFinal, yFinal);
     destroy_eggs_on_tile(zappy, self->x, self->y);
 }

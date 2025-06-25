@@ -111,40 +111,40 @@ irr::video::IVideoDriver* _driver) {
     } catch (std::exception &e) {}
 }
 
-bool PlayerDataPlugin::handleClick(std::string &outBuffer) {
+bool PlayerDataPlugin::handleClick(std::string &outBuffer, irr::core::vector2d<irr::s32> pos) {
     if (detectCollisionPlayer())
         return true;
-    if (LevelUpButton.isHover(device)) {
+    if (LevelUpButton.isHover(pos)) {
         LevelUpButton.hover = false;
         outBuffer += "levelUp #" + std::to_string(idPlayer) + "\n";
         return true;
     }
-    if (ForwardButton.isHover(device)) {
+    if (ForwardButton.isHover(pos)) {
         ForwardButton.hover = false;
         outBuffer += "d_forward #" + std::to_string(idPlayer) + "\n";
         return true;
     }
-    if (BackwardButton.isHover(device)) {
+    if (BackwardButton.isHover(pos)) {
         BackwardButton.hover = false;
         outBuffer += "d_backward #" + std::to_string(idPlayer) + "\n";
         return true;
     }
-    if (LeftButton.isHover(device)) {
+    if (LeftButton.isHover(pos)) {
         LeftButton.hover = false;
         outBuffer += "d_right #" + std::to_string(idPlayer) + "\n";
         return true;
     }
-    if (RightButton.isHover(device)) {
+    if (RightButton.isHover(pos)) {
         RightButton.hover = false;
         outBuffer += "d_left #" + std::to_string(idPlayer) + "\n";
         return true;
     }
-    if (ForkButton.isHover(device)) {
+    if (ForkButton.isHover(pos)) {
         ForkButton.hover = false;
         outBuffer += "d_fork #" + std::to_string(idPlayer) + "\n";
         return true;
     }
-    if (EjectButton.isHover(device)) {
+    if (EjectButton.isHover(pos)) {
         EjectButton.hover = false;
         outBuffer += "d_eject #" + std::to_string(idPlayer) + "\n";
         return true;
@@ -155,13 +155,15 @@ bool PlayerDataPlugin::handleClick(std::string &outBuffer) {
 bool PlayerDataPlugin::onEvent(const irr::SEvent &event, pluginsData datas,
 std::string &outBuffer) {
     if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
-        LevelUpButton.isHover(device);
-        ForkButton.isHover(device);
-        EjectButton.isHover(device);
-        ForwardButton.isHover(device);
-        BackwardButton.isHover(device);
-        LeftButton.isHover(device);
-        RightButton.isHover(device);
+        irr::core::vector2d<irr::s32> pos =
+            device->getCursorControl()->getPosition();
+        LevelUpButton.isHover(pos);
+        ForkButton.isHover(pos);
+        EjectButton.isHover(pos);
+        ForwardButton.isHover(pos);
+        BackwardButton.isHover(pos);
+        LeftButton.isHover(pos);
+        RightButton.isHover(pos);
 
         if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
             pressed = true;
@@ -169,7 +171,7 @@ std::string &outBuffer) {
             pressed = false;
         }
         if (pressed && !isPressedLastFrame) {
-            if (handleClick(outBuffer))
+            if (handleClick(outBuffer, pos))
                 return true;
         }
         isPressedLastFrame = pressed;
@@ -217,8 +219,8 @@ irr::video::IVideoDriver *driver, PlayerDataPlugin plug) {
         blocked ? 100 : 255, 255, 255, 255), true, true);
 }
 
-bool PlayerDataPlugin::Button::isHover(irr::IrrlichtDevice *device) {
-    hover = rect.isPointInside(device->getCursorControl()->getPosition());
+bool PlayerDataPlugin::Button::isHover(irr::core::vector2di pos) {
+    hover = rect.isPointInside(pos);
     return hover;
 }
 

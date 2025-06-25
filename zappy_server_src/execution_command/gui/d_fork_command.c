@@ -42,11 +42,37 @@ static void lay_egg(zappy_t *zappy, client_t *client)
     send_data_to_graphics(zappy, buffer);
 }
 
-void fork_command(zappy_t *zappy, client_t *client, char **args)
+static client_t *get_client(zappy_t *zappy, char **args)
 {
-    if (client == NULL || zappy == NULL)
+    client_t *c = zappy->clients;
+    int id = -1;
+
+    if (zappy == NULL || !args || args[0] == NULL || strlen(args[0]) < 2)
+        return NULL;
+    id = atoi(args[0] + 1);
+    if (id < 0)
+        return NULL;
+    while (c != NULL) {
+        if (c->stats.id == id)
+            return c;
+        c = c->next;
+    }
+    return NULL;
+}
+
+void d_fork_command(zappy_t *zappy, client_t *client, char **args)
+{
+    client_t *target = NULL;
+    char buffer[256];
+
+    if (client == NULL || zappy == NULL || args == NULL || args[0] == NULL)
         return;
-    (void) args;
-    lay_egg(zappy, client);
-    add_to_buffer(&client->out_buffer, "ok\n");
+    target = get_client(zappy, args);
+    if (target == NULL) {
+        add_to_buffer(&client->out_buffer, "ko\n");
+        return;
+    }
+    lay_egg(zappy, target);
+    sprintf(buffer, "pfk #%d\n", target->stats.id);
+    send_data_to_graphics(zappy, buffer);
 }

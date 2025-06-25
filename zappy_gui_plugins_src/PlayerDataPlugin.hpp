@@ -38,7 +38,7 @@ class PlayerDataPlugin : public Aplugin {
          * @param device Pointer to the Irrlicht device.
          * @return True if the button is hovered, false otherwise.
          */
-        bool isHover(irr::IrrlichtDevice *device);
+        bool isHover(irr::core::vector2di pos);
 
         /** @brief Updates the button's position.
          * @param pos The new position of the button.
@@ -87,7 +87,7 @@ class PlayerDataPlugin : public Aplugin {
      */
     void drawPlayerInfo(int id, std::shared_ptr<irr::gui::IGUIFont> font);
 
-    bool handleClick(std::string &outBuffer);
+    bool handleClick(std::string &outBuffer, irr::core::vector2d<irr::s32> pos);
 
  public:
     /**

@@ -30,7 +30,7 @@ class PlayerDataPlugin : public Aplugin {
                 return;
             plug.drawImage("assets/UI/AllRed.png",
               rect.UpperLeftCorner.X - 10, rect.UpperLeftCorner.Y - 5,
-              rect.getWidth() + 20, rect.getHeight() + 10, driver, hover ? 120 : 255);
+              rect.getWidth() + 20, rect.getHeight() + 15, driver, hover ? 120 : 255);
             font->draw(name.c_str(), rect, irr::video::SColor(255, 255, 255, 255));
         }
 

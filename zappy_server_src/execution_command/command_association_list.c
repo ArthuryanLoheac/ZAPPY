@@ -34,5 +34,6 @@ const command_func_t gui_command_association_list[] = {
     {"PIN", pin_command},
     {"SGT", sgt_command},
     {"SST", sst_command},
+    {"LEVELUP", levelup_command},
     {NULL, NULL}
 };

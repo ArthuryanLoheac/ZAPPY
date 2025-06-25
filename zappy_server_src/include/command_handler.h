@@ -50,6 +50,7 @@ void plv_command(zappy_t *zappy, client_t *client, char **args);
 void pin_command(zappy_t *zappy, client_t *client, char **args);
 void sgt_command(zappy_t *zappy, client_t *client, char **args);
 void sst_command(zappy_t *zappy, client_t *client, char **args);
+void levelup_command(zappy_t *zappy, client_t *client, char **args);
 
 typedef struct command_func_s {
     char *name;

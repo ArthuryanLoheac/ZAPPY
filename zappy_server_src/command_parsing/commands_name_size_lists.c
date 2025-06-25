@@ -33,6 +33,7 @@ const command_name_size_t gui_command_name_size_list[] = {
     {"TNA", 0},
     {"SGT", 0},
     {"SST", 0},
+    {"LEVELUP", 0},
     {NULL, -1}
 };
 

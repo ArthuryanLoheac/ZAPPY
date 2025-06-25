@@ -23,8 +23,7 @@
  */
 int loopClient(int sockfd) {
     try {
-        GUI::ServerGUI::i().server_fd = sockfd;
-        GUI::ServerGUI::i().fd = {sockfd, .events = POLLIN | POLLOUT, 0};
+        GUI::ServerGUI::i().initNetwork(sockfd);
 
         GUI::ServerGUI::i().startServer();
     } catch (const std::exception &e) {

@@ -16,6 +16,7 @@
 #include "Window/window.hpp"
 
 #include "include/logs.h"
+#include "ServerGUI.hpp"
 
 namespace GUI {
 ServerGUI::ServerGUI() : pollWrapper() {
@@ -112,12 +113,11 @@ void ServerGUI::startServer() {
     while (DataManager::i().running) {
         clockUpdate(time, timeNext, timeNextPing);
 
-        pollWrapper.waitForEvent(&GUI::ServerGUI::i().fd);
-        if (pollWrapper.isReadable(fd))
+        pollWrapper.waitForEvent();
+        if (pollWrapper.isReadable())
             readDatasFromServer();
-        if (pollWrapper.isWritable(fd) && !outbuffer.empty()) {
-            sendDatasToServer(outbuffer);
-            outbuffer.clear();
+        if (pollWrapper.isWritable() && !outbuffer.empty()) {
+            sendBufferToServer();
         }
     }
 }
@@ -146,14 +146,23 @@ std::vector<std::string> ServerGUI::parseCommands(std::string &command) {
     return args;
 }
 
+void ServerGUI::sendBufferToServer() {
+    ssize_t bytes_sent = write(server_fd,
+        outbuffer.c_str(), outbuffer.size());
+    if (bytes_sent <= 0)
+        throw std::runtime_error("Error sending data to server");
+    outbuffer.erase(0, bytes_sent);
+    LOG_DEBUG("[OK] Sent data: %s\n", outbuffer.c_str());
+}
+
 void ServerGUI::sendDatasToServer(const std::string &message) {
-    if (fd.revents & POLLOUT) {
-        ssize_t bytes_sent = write(server_fd,
-            message.c_str(), message.size());
-        if (bytes_sent <= 0)
-            throw std::runtime_error("Error sending data to server");
-        LOG_DEBUG("[OK] Sent data: %s\n", message.c_str());
-    }
+
+    outbuffer += message;
+}
+
+void ServerGUI::initNetwork(int sockfd) {
+    server_fd = sockfd;
+    pollWrapper.fd = {server_fd, .events = POLLIN | POLLOUT, 0};
 }
 
 }  // namespace GUI

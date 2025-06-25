@@ -16,7 +16,6 @@ class ServerGUI {
  public:
     int server_fd; /**< Server socket file descriptor. */
     int nb_fds; /**< Number of file descriptors. */
-    struct pollfd fd; /**< Poll file descriptor structure. */
     std::string buffer; /**< Buffer for storing incoming data. */
     std::string outbuffer = ""; /**< Buffer for outgoing data. */
     int updateMapTime = 30; /**< Time interval for map updates. */
@@ -42,11 +41,20 @@ class ServerGUI {
     }
 
     /**
+     * @brief Initializes the network connection to the server.
+     *
+     * @param sockfd The socket file descriptor for the server connection.
+     */
+    void initNetwork(int sockfd);
+
+    /**
      * @brief Sends data to the server.
      *
      * @param message The message to send.
      */
     void sendDatasToServer(const std::string &message);
+
+    void sendBufferToServer();
 
     /**
      * @brief Starts the server communication loop.

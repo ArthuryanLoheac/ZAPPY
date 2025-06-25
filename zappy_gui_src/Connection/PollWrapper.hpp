@@ -6,22 +6,21 @@
 
 class PollWrapper {
  public:
-
-        
+    struct pollfd fd;
 
     PollWrapper() = default;
 
-    void waitForEvent(pollfd *fds) {
-        int ready = poll(fds, 1, -1);
+    void waitForEvent() {
+        int ready = poll(&fd, 1, -1);
         if (ready == -1)
             throw std::runtime_error("Poll error occurred");
     }
 
-    bool isReadable(pollfd fd) const {
+    bool isReadable() const {
         return fd.revents & POLLIN;
     }
 
-    bool isWritable(pollfd fd) const {
+    bool isWritable() const {
         return fd.revents & POLLOUT;
     }
 

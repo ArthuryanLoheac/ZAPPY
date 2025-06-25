@@ -143,7 +143,7 @@ class Window {
     /**
      * @brief Sets up the game world.
      */
-    void setupWorld();
+    void setupWorldData();
 
     /**
      * @brief Handles user input events.

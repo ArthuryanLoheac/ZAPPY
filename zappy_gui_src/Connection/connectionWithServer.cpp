@@ -34,7 +34,7 @@ int loopClient(int sockfd) {
         bool reconnected = false;
         while (!reconnected) {
             try {
-                 reconnected = (client_connection(sockfd) != 84);
+                reconnected = (client_connection(sockfd) != 84);
             } catch (const GUI::InvalidDataException &e) {
                 sleep(1);
             }

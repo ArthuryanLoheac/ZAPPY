@@ -20,6 +20,13 @@ namespace GUI {
 ServerGUI::ServerGUI() {
 }
 
+void ServerGUI::InitServer() {
+    toClear = true;
+    GUI::GameDataManager::i().clear();
+    GUI::DataManager::i().clear();
+    GUI::ServerGUI::i().setConnectedToServer(true);
+}
+
 void GUI::ServerGUI::handleCommand() {
     while (buffer.find("\n") != std::string::npos) {
         size_t pos = buffer.find("\n");
@@ -101,15 +108,11 @@ void ServerGUI::startServer() {
     auto timeNextPing = time + std::chrono::milliseconds(1);
     int ready = 0;
 
-    GUI::Window::i().clearMeshes();
-    GUI::GameDataManager::i().clear();
-    GUI::DataManager::i().clear();
-    GUI::ServerGUI::i().setConnectedToServer(true);
+    InitServer();
     while (DataManager::i().running) {
         clockUpdate(time, timeNext, timeNextPing);
 
-        ready = poll(
-            &GUI::ServerGUI::i().fd, 1, -1);
+        ready = poll(&GUI::ServerGUI::i().fd, 1, -1);
         if (ready == -1)
             throw std::runtime_error("Poll error occurred");
         if (fd.revents & POLLIN)
@@ -149,9 +152,8 @@ void ServerGUI::sendDatasToServer(const std::string &message) {
     if (fd.revents & POLLOUT) {
         ssize_t bytes_sent = write(server_fd,
             message.c_str(), message.size());
-        if (bytes_sent == -1) {
+        if (bytes_sent <= 0)
             throw std::runtime_error("Error sending data to server");
-        }
         LOG_DEBUG("[OK] Sent data: %s\n", message.c_str());
     }
 }

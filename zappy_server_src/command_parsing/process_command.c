@@ -9,6 +9,8 @@
 #include <string.h>
 #include "client.h"
 
+#include "logs.h"
+
 static bool check_enough_space(char *get, zappy_t *zappy)
 {
     egg_t *egg = zappy->map->eggs;
@@ -118,6 +120,7 @@ void process_command(char **args, client_t *client, zappy_t *zappy_ptr)
     if (client == NULL || args == NULL || args[0] == NULL)
         return;
     if (client->is_waiting_id) {
+        LOG_DEBUG("Received teams name : %s", args[0]);
         if (is_in_teams(args[0], zappy_ptr->parser->team_names, zappy_ptr)){
             client->is_graphic = false;
             client->is_waiting_id = false;

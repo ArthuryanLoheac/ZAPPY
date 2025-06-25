@@ -28,6 +28,8 @@ class ServerGUI {
      */
     ServerGUI();
 
+    void InitServer();
+
     /**
      * @brief Provides a singleton instance of the ServerGUI class.
      *

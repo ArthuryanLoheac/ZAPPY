@@ -50,7 +50,7 @@ void ServerGUI::mszCommand(std::vector<std::string> &args) {
     GameDataManager::i().setWidth(width);
     GameDataManager::i().setHeight(height);
 
-    GUI::Window::i().setupWorld();
+    GUI::Window::i().setupWorldData();
 }
 
 /**

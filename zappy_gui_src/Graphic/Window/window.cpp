@@ -178,7 +178,7 @@ void Window::clearMeshes() {
     worldSetuped = false;
 }
 
-void Window::setupWorld() {
+void Window::setupWorldData() {
     if (cubes.size() > 0) {
         for (auto &cube : cubes) {
             cube->remove();

@@ -20,7 +20,15 @@ namespace GUI {
 ServerGUI::ServerGUI() {
 }
 
-void GUI::ServerGUI::handleCommand() {
+void ServerGUI::InitServer() {
+    toClear = true;
+    GUI::GameDataManager::i().clear();
+    GUI::DataManager::i().clear();
+    GUI::ServerGUI::i().setConnectedToServer(true);
+}
+
+void GUI::ServerGUI::handleCommand()
+{
     while (buffer.find("\n") != std::string::npos) {
         size_t pos = buffer.find("\n");
         std::string command = buffer.substr(0, pos);
@@ -101,15 +109,11 @@ void ServerGUI::startServer() {
     auto timeNextPing = time + std::chrono::milliseconds(1);
     int ready = 0;
 
-    toClear = true;
-    GUI::GameDataManager::i().clear();
-    GUI::DataManager::i().clear();
-    GUI::ServerGUI::i().setConnectedToServer(true);
+    InitServer();
     while (DataManager::i().running) {
         clockUpdate(time, timeNext, timeNextPing);
 
-        ready = poll(
-            &GUI::ServerGUI::i().fd, 1, -1);
+        ready = poll(&GUI::ServerGUI::i().fd, 1, -1);
         if (ready == -1)
             throw std::runtime_error("Poll error occurred");
         if (fd.revents & POLLIN)

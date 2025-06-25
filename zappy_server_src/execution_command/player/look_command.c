@@ -126,6 +126,13 @@ static void fill_variable(look_variable_t *variables, client_t *client)
     variables->y = client->stats.y;
 }
 
+static void check_add_comma(char **buffer, int i, int j, int level)
+{
+    if (j == i && i == level)
+        return;
+    add_to_buffer(&buffer, ",");
+}
+
 void look_command(zappy_t *zappy, client_t *client, char **args)
 {
     look_variable_t variables;
@@ -141,9 +148,7 @@ void look_command(zappy_t *zappy, client_t *client, char **args)
         for (int j = -i; j <= i; j++) {
             modifie_xyi_cpy(xyi_cpy, variables.x, variables.y, j);
             move_forward_side(client, xyi_cpy, zappy, &buffer);
-            if (j == i && i == variables.level)
-                continue;
-            add_to_buffer(&buffer, ",");
+            check_add_comma(&buffer, i, j, variables.level);
         }
         move_forward_x(&client->stats, &variables.x, &variables.y, zappy);
     }

@@ -69,6 +69,11 @@ std::shared_ptr<irr::gui::IGUIFont> font) {
             lstColors[i]);
         y += 20;
     }
+    // BUTTONS
+    y += 20;
+    LevelUpButton.updatePos(irr::core::position2d<irr::s32>(
+        width - 180, y));
+    LevelUpButton.draw(font, driver, *this);
 }
 
 void PlayerDataPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
@@ -85,19 +90,28 @@ irr::video::IVideoDriver* _driver) {
     } catch (std::exception &e) {}
 }
 
-bool PlayerDataPlugin::onEvent(const irr::SEvent &event, pluginsData datas, std::string &outBuffer) {
+bool PlayerDataPlugin::onEvent(const irr::SEvent &event, pluginsData datas,
+std::string &outBuffer) {
     if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
+        LevelUpButton.isHover(device);
+
         if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
             pressed = true;
         } else if (event.MouseInput.Event == irr::EMIE_LMOUSE_LEFT_UP) {
             pressed = false;
         }
-        if (pressed && !isPressedLastFrame)
-            return detectCollisionPlayer();
+        if (pressed && !isPressedLastFrame) {
+            if (detectCollisionPlayer())
+                return true;
+            if (LevelUpButton.isHover(device)) {
+                LevelUpButton.hover = false;
+                outBuffer += "levelUp #" + std::to_string(idPlayer) + "\n";
+                return true;
+            }
+        }
         isPressedLastFrame = pressed;
     }
     (void) datas;
-    (void) outBuffer;
     return false;
 }
 

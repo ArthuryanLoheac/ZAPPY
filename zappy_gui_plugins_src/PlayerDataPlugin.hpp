@@ -15,6 +15,39 @@
  */
 class PlayerDataPlugin : public Aplugin {
  private:
+    class Button {
+     public:
+        Button(const std::string &name, const irr::core::rect<irr::s32> &rect)
+        : name(name), rect(rect) {}
+
+        std::string name; /**< Name of the button. */
+        irr::core::rect<irr::s32> rect; /**< Rectangle defining the button's area. */
+        bool hover = false;
+
+        void draw(std::shared_ptr<irr::gui::IGUIFont> font,
+          irr::video::IVideoDriver* driver, PlayerDataPlugin plug) {
+            if (!font || !driver)
+                return;
+            plug.drawImage("assets/UI/AllRed.png",
+              rect.UpperLeftCorner.X - 10, rect.UpperLeftCorner.Y - 5,
+              rect.getWidth() + 20, rect.getHeight() + 10, driver, hover ? 120 : 255);
+            font->draw(name.c_str(), rect, irr::video::SColor(255, 255, 255, 255));
+        }
+
+        bool isHover(irr::IrrlichtDevice *device) {
+            hover = rect.isPointInside(device->getCursorControl()->getPosition());
+            return hover;
+        }
+
+        void updatePos(const irr::core::position2d<irr::s32> &pos) {
+            rect = irr::core::rect<irr::s32>(pos.X, pos.Y,
+              pos.X + rect.getWidth(), pos.Y + rect.getHeight());
+        }
+    };
+
+    Button LevelUpButton = Button("Level Up",
+      irr::core::rect<irr::s32>(10, 10, 100, 20));
+
     int idPlayer = -1; /**< ID of the selected player. */
 
     bool pressed = false; /**< Indicates if the mouse is currently pressed. */

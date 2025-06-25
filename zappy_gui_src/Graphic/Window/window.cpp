@@ -12,7 +12,7 @@
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
 #include "Window/windowOptionMenu.hpp"
-#include "Connection/ServerGUI.hpp"
+#include "Connection/NetworkForGui.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -129,8 +129,8 @@ void Window::setRotationSpeedSkybox(float speed) {
 
 void Window::update() {
     while (device->run()) {
-        if (GUI::ServerGUI::i().toClear) {
-            GUI::ServerGUI::i().toClear = false;
+        if (GUI::NetworkForGui::i().toClear) {
+            GUI::NetworkForGui::i().toClear = false;
             smgr->clear();
             cam = smgr->addCameraSceneNode(nullptr,
                 irr::core::vector3df(0, 0, 0),

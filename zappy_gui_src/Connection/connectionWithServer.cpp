@@ -10,7 +10,7 @@
 #include <iostream>
 
 #include "include/GuiConnection.hpp"
-#include "Connection/ServerGUI.hpp"
+#include "Connection/NetworkForGui.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Exceptions/DataManagerExceptions.hpp"
 #include "include/logs.h"
@@ -23,12 +23,11 @@
  */
 int loopClient(int sockfd) {
     try {
-        GUI::ServerGUI::i().server_fd = sockfd;
-        GUI::ServerGUI::i().fd = {sockfd, .events = POLLIN | POLLOUT, 0};
+        GUI::NetworkForGui::i().initNetwork(sockfd);
 
-        GUI::ServerGUI::i().startServer();
+        GUI::NetworkForGui::i().startServer();
     } catch (const std::exception &e) {
-        GUI::ServerGUI::i().setConnectedToServer(false);
+        GUI::NetworkForGui::i().setConnectedToServer(false);
         LOG_WARNING("Server closed");
         close(sockfd);
         bool reconnected = false;

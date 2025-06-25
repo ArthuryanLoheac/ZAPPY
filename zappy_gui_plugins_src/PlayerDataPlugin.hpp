@@ -56,6 +56,10 @@ class PlayerDataPlugin : public Aplugin {
       irr::core::rect<irr::s32>(0, 0, 30, 30));
     Button RightButton = Button("R",
       irr::core::rect<irr::s32>(0, 0, 30, 30));
+    Button ForkButton = Button("Fork",
+      irr::core::rect<irr::s32>(0, 0, 60, 30));
+    Button EjectButton = Button("Eject",
+      irr::core::rect<irr::s32>(0, 0, 60, 30));
 
     int idPlayer = -1; /**< ID of the selected player. */
 

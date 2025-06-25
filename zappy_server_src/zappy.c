@@ -79,10 +79,19 @@ static void message_start_server(zappy_t *zappy)
     printf("===================================\n");
 }
 
+static void handle_client(zappy_t *zappy, bool *last_cycle)
+{
+    check_for_new_client(zappy);
+    check_for_client_command(zappy);
+    if (zappy->end_game == true)
+        *last_cycle = true;
+}
+
 void start_server(zappy_t *zappy)
 {
     server_t *server = zappy->server;
     int ready = 0;
+    bool last_cycle = false;
 
     zappy->durationTick = 1.0 / zappy->parser->freq;
     zappy->durationTickLeft = zappy->durationTick;
@@ -96,8 +105,8 @@ void start_server(zappy_t *zappy)
             perror("Poll error occurred");
             continue;
         }
-        check_for_new_client(zappy);
-        check_for_client_command(zappy);
+        if (zappy->end_game != true || last_cycle == false)
+            handle_client(zappy, &last_cycle);
     }
 }
 

@@ -62,7 +62,6 @@ static void add_to_buffer_tile(char **buffer, zappy_t *zappy, int x, int y)
     add_value_buffer(&str, cell->nbr_thystame, "thystame ");
     add_to_buffer(&str, ",");
     add_to_buffer(buffer, str);
-    free(str);
 }
 
 static void move_forward_x(stats_t *stats, int *x, int *y, zappy_t *zappy)
@@ -148,5 +147,4 @@ void look_command(zappy_t *zappy, client_t *client, char **args)
     }
     add_to_buffer(&buffer, "]\n");
     add_to_buffer(&client->out_buffer, buffer);
-    free(buffer);
 }

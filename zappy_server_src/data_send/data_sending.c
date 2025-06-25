@@ -86,7 +86,6 @@ void add_to_buffer(char **buffer, const char *data)
         display_error("Failed to allocate memory for new buffer");
     strcpy(new_buffer, *buffer);
     strcpy(new_buffer + old_size, data);
-    free(*buffer);
     *buffer = new_buffer;
 }
 

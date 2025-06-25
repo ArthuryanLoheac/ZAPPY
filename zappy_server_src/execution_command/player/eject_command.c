@@ -158,12 +158,11 @@ static void send_pex_to_graphics(zappy_t *zappy, client_t *client)
 static bool is_player_at_pos(zappy_t *zappy, client_t *client, int xCheck,
     int yCheck)
 {
-    for (client_t *zappyClient = zappy->clients; client != NULL;
-        client = client->next) {
+    for (client_t *zappyClient = zappy->clients; zappyClient != NULL;
+        zappyClient = zappyClient->next) {
         if (zappyClient->stats.x == xCheck && zappyClient->stats.y == yCheck
             && zappyClient->stats.id != client->stats.id)
             return true;
-        zappyClient = zappyClient->next;
     }
     return false;
 }

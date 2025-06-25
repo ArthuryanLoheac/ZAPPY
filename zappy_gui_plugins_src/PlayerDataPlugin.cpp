@@ -5,7 +5,6 @@
 #include <vector>
 #include <iostream>
 #include <cstdio>
-#include "PlayerDataPlugin.hpp"
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
@@ -33,27 +32,35 @@ std::shared_ptr<irr::gui::IGUIFont> font) {
     LevelUpButton.blocked = player.level >= 8;
 
     // Precompute player info strings
-    std::string playerInfo = "Player " + std::to_string(id) + " : " + player.teamName;
-    std::string levelInfo = "\tLevel : " + std::to_string(player.level) + (player.inElevation ? " (elevating)" : "");
-    std::string positionInfo = "\tPos : " + std::to_string(player.x) + ", " + std::to_string(player.y) + " - ";
+    std::string playerInfo = "Player " + std::to_string(id) + " : " +
+        player.teamName;
+    std::string levelInfo = "\tLevel : " + std::to_string(player.level) +
+        (player.inElevation ? " (elevating)" : "");
+    std::string positionInfo = "\tPos : " + std::to_string(player.x) + ", " +
+        std::to_string(player.y) + " - ";
 
     // Direction
     static const std::string directions[] = {"North", "South", "East", "West"};
     positionInfo += directions[static_cast<int>(player.orientation)];
 
     // Draw player info
-    font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300), player.color);
+    font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
+        player.color);
     y += 20;
-    font->draw(levelInfo.c_str(), UIRect(width - 220, y, 300, 300), UICol(255, 255, 255, 255));
+    font->draw(levelInfo.c_str(), UIRect(width - 220, y, 300, 300),
+        UICol(255, 255, 255, 255));
     y += 20;
-    font->draw(positionInfo.c_str(), UIRect(width - 220, y, 300, 300), UICol(255, 255, 255, 255));
+    font->draw(positionInfo.c_str(), UIRect(width - 220, y, 300, 300),
+        UICol(255, 255, 255, 255));
 
     // Inventory
     y += 20;
     for (int i = 0; i < 7; ++i) {
         if (player.ressources[i] > 0) {
-            playerInfo = "\t - " + lstNames[i] + " : " + std::to_string(player.ressources[i]);
-            font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300), lstColors[i]);
+            playerInfo = "\t - " + lstNames[i] + " : " +
+                std::to_string(player.ressources[i]);
+            font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
+                lstColors[i]);
             y += 20;
         }
     }
@@ -96,7 +103,8 @@ irr::video::IVideoDriver* _driver) {
     }
 }
 
-bool PlayerDataPlugin::handleClick(std::string &outBuffer, irr::core::vector2d<irr::s32> pos) {
+bool PlayerDataPlugin::handleClick(std::string &outBuffer,
+irr::core::vector2d<irr::s32> pos) {
     if (detectCollisionPlayer())
         return true;
     if (LevelUpButton.isHover(pos)) {

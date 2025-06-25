@@ -31,8 +31,7 @@ void d_left_command(zappy_t *zappy, client_t *client, char **args)
     char buffer[256];
     int id = -1;
 
-    if (client == NULL || zappy == NULL || args == NULL || args[0] == NULL ||
-        strlen(args[0]) < 2)
+    if (!client || !zappy || !args || args[0] == NULL || strlen(args[0]) < 2)
         return;
     id = atoi(args[0] + 1);
     target_client = get_client(id, zappy);
@@ -49,4 +48,3 @@ void d_left_command(zappy_t *zappy, client_t *client, char **args)
         target_client->stats.y, target_client->stats.orientation);
     send_data_to_graphics(zappy, buffer);
 }
-

@@ -158,12 +158,11 @@ static void send_pex_to_graphics(zappy_t *zappy, client_t *client)
 static bool is_player_at_pos(zappy_t *zappy, client_t *client, int xCheck,
     int yCheck)
 {
-    for (client_t *zappyClient = zappy->clients; client != NULL;
-        client = client->next) {
+    for (client_t *zappyClient = zappy->clients; zappyClient != NULL;
+        zappyClient = zappyClient->next) {
         if (zappyClient->stats.x == xCheck && zappyClient->stats.y == yCheck
             && zappyClient->stats.id != client->stats.id)
             return true;
-        zappyClient = zappyClient->next;
     }
     return false;
 }
@@ -213,32 +212,19 @@ static void destroy_eggs_on_tile(zappy_t *zappy, int x, int y)
 }
 
 static void update_pos_all_client(zappy_t *zappy,
-    stats_t *self, int xFinal, int yFinal)
+    client_t *target, int xFinal, int yFinal)
 {
+    stats_t *self;
+
+    self = &target->stats;
+    send_pex_to_graphics(zappy, target);
     for (client_t *zappyClient = zappy->clients; zappyClient != NULL;
         zappyClient = zappyClient->next) {
         if (zappyClient->stats.x == self->x && zappyClient->stats.y == self->y
             && zappyClient->stats.id != self->id)
             update_pos_client_ejected(zappyClient, xFinal, yFinal, zappy);
     }
-}
-
-static client_t *get_client(zappy_t *zappy, char **args)
-{
-    client_t *c = zappy->clients;
-    int id = -1;
-
-    if (zappy == NULL || !args || args[0] == NULL || strlen(args[0]) < 2)
-        return NULL;
-    id = atoi(args[0] + 1);
-    if (id < 0)
-        return NULL;
-    while (c != NULL) {
-        if (c->stats.id == id)
-            return c;
-        c = c->next;
-    }
-    return NULL;
+    destroy_eggs_on_tile(zappy, self->x, self->y);
 }
 
 /**
@@ -258,11 +244,9 @@ void d_eject_command(zappy_t *zappy, client_t *client, char **args)
 
     if (client == NULL || zappy == NULL)
         return;
-    target = get_client(zappy, args);
-    if (target == NULL) {
-        add_to_buffer(&client->out_buffer, "ko\n");
+    target = get_client_from_args(zappy, args);
+    if (target == NULL)
         return;
-    }
     self = &target->stats;
     xFinal = self->x;
     yFinal = self->y;
@@ -272,7 +256,5 @@ void d_eject_command(zappy_t *zappy, client_t *client, char **args)
         add_to_buffer(&client->out_buffer, "ko\n");
         return;
     }
-    send_pex_to_graphics(zappy, target);
-    update_pos_all_client(zappy, self, xFinal, yFinal);
-    destroy_eggs_on_tile(zappy, self->x, self->y);
+    update_pos_all_client(zappy, target, xFinal, yFinal);
 }

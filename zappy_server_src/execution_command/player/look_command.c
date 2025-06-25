@@ -130,7 +130,7 @@ static void check_add_comma(char **buffer, int i, int j, int level)
 {
     if (j == i && i == level)
         return;
-    add_to_buffer(&buffer, ",");
+    add_to_buffer(buffer, ",");
 }
 
 void look_command(zappy_t *zappy, client_t *client, char **args)

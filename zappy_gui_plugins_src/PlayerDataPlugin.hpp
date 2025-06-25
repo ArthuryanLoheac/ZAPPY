@@ -26,31 +26,17 @@ class PlayerDataPlugin : public Aplugin {
         bool blocked = false;
 
         void draw(std::shared_ptr<irr::gui::IGUIFont> font,
-          irr::video::IVideoDriver* driver, PlayerDataPlugin plug) {
-            if (!font || !driver)
-                return;
-            plug.drawImage("assets/UI/AllRed.png",
-              rect.UpperLeftCorner.X, rect.UpperLeftCorner.Y,
-              rect.getWidth(), rect.getHeight(), driver,
-              blocked ? 50 : (hover ? 120 : 255));
-            font->draw(name.c_str(), rect, irr::video::SColor(
-              blocked ? 100 : 255, 255, 255, 255), true, true);
-        }
+          irr::video::IVideoDriver* driver, PlayerDataPlugin plug);
 
-        bool isHover(irr::IrrlichtDevice *device) {
-            hover = rect.isPointInside(
-                device->getCursorControl()->getPosition());
-            return hover;
-        }
+        bool isHover(irr::IrrlichtDevice *device);
 
-        void updatePos(const irr::core::position2d<irr::s32> &pos) {
-            rect = irr::core::rect<irr::s32>(pos.X, pos.Y,
-              pos.X + rect.getWidth(), pos.Y + rect.getHeight());
-        }
+        void updatePos(const irr::core::position2d<irr::s32> &pos);
     };
 
     Button LevelUpButton = Button("Level Up",
       irr::core::rect<irr::s32>(0, 0, 150, 30));
+    Button Forward = Button("↑",
+      irr::core::rect<irr::s32>(0, 0, 30, 30));
 
     int idPlayer = -1; /**< ID of the selected player. */
 

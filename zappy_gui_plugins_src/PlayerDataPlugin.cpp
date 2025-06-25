@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <cstdio>
+#include "PlayerDataPlugin.hpp"
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
@@ -141,4 +142,28 @@ bool PlayerDataPlugin::detectCollisionPlayer() {
         }
     }
     return false;
+}
+
+// BUTTON
+
+void PlayerDataPlugin::Button::draw(std::shared_ptr<irr::gui::IGUIFont> font,
+irr::video::IVideoDriver *driver, PlayerDataPlugin plug) {
+    if (!font || !driver)
+        return;
+    plug.drawImage("assets/UI/AllRed.png", rect.UpperLeftCorner.X,
+        rect.UpperLeftCorner.Y, rect.getWidth(), rect.getHeight(), driver,
+        blocked ? 50 : (hover ? 120 : 255));
+    font->draw(name.c_str(), rect, irr::video::SColor(
+        blocked ? 100 : 255, 255, 255, 255), true, true);
+}
+
+bool PlayerDataPlugin::Button::isHover(irr::IrrlichtDevice *device) {
+    hover = rect.isPointInside(device->getCursorControl()->getPosition());
+    return hover;
+}
+
+void PlayerDataPlugin::Button::updatePos(
+const irr::core::position2d<irr::s32> &pos) {
+    rect = irr::core::rect<irr::s32>(pos.X, pos.Y,
+        pos.X + rect.getWidth(), pos.Y + rect.getHeight());
 }

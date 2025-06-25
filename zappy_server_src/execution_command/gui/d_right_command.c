@@ -39,9 +39,9 @@ void d_right_command(zappy_t *zappy, client_t *client, char **args)
         add_to_buffer(&client->out_buffer, "ko\n");
         return;
     }
-    target_client->stats.orientation--;
-    if (target_client->stats.orientation < 1)
-        target_client->stats.orientation = 4;
+    target_client->stats.orientation++;
+    if (target_client->stats.orientation > 4)
+        target_client->stats.orientation = 1;
     update_pos_player(zappy, &target_client->stats);
     snprintf(buffer, sizeof(buffer), "ppo #%d %d %d %d\n",
         target_client->stats.id, target_client->stats.x,

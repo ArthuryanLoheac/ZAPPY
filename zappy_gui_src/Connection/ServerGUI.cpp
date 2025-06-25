@@ -27,8 +27,7 @@ void ServerGUI::InitServer() {
     GUI::ServerGUI::i().setConnectedToServer(true);
 }
 
-void GUI::ServerGUI::handleCommand()
-{
+void GUI::ServerGUI::handleCommand() {
     while (buffer.find("\n") != std::string::npos) {
         size_t pos = buffer.find("\n");
         std::string command = buffer.substr(0, pos);

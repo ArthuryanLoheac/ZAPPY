@@ -36,10 +36,10 @@ static void lay_egg(zappy_t *zappy, client_t *client)
     new_egg->team_name = strdup(client->stats.team_name);
     new_egg->next = zappy->map->eggs;
     zappy->map->eggs = new_egg;
-    zappy->map->id_egg += 1;
-    sprintf(buffer, "enw #%d #%d %d %d\n", zappy->map->id_egg,
+    sprintf(buffer, "enw #%d #%d %d %d\n", new_egg->id,
         get_id_team(zappy, client->stats.team_name), new_egg->x, new_egg->y);
     send_data_to_graphics(zappy, buffer);
+    zappy->map->id_egg += 1;
 }
 
 void fork_command(zappy_t *zappy, client_t *client, char **args)

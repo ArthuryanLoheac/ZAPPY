@@ -31,7 +31,7 @@ int loopClient(int sockfd) {
         LOG_WARNING("Server closed");
         close(sockfd);
         bool reconnected = false;
-        while (!reconnected) {
+        while (!reconnected && GUI::DataManager::i().running) {
             try {
                 reconnected = (client_connection(sockfd) != 84);
             } catch (const GUI::InvalidDataException &e) {

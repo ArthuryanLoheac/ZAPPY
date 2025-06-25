@@ -7,6 +7,7 @@
 
 #include "modules/DisruptionModule.hpp"
 #include <iostream>
+#include <string>
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
 
@@ -48,6 +49,43 @@ void DisruptionModule::execute() {
 }
 
 /**
+ * @brief Send an attack command to a specific tile
+ * @param x The x coordinate of the tile
+ * @param relativeY The relative y coordinate of the tile
+ */
+void DisruptionModule::attack(size_t x, int relativeY) {
+    // Move forward x times to reach the correct row
+    for (size_t i = 0; i < x; ++i) {
+        AI::Interface::i().sendCommand(FORWARD);
+    }
+    if (relativeY != 0) {
+        std::string direction = (relativeY > 0) ? "RIGHT" : "LEFT";
+        AI::Interface::i().sendCommand(direction);
+        for (int i = 0; i < std::abs(relativeY); ++i) {
+            AI::Interface::i().sendCommand(FORWARD);
+        }
+    }
+    AI::Interface::i().sendCommand(EJECT);
+}
+
+/**
+ * @brief Get the number of stones in a tile
+ * @param tile The tile to check
+ * @return int Number of stones in the tile
+ */
+int DisruptionModule::getNumberStone(std::unordered_map<std::string, int>
+    &tile) {
+    int numberStone = 0;
+
+    for (const auto &item : tile) {
+        if (item.first != "food" && item.first != "player") {
+            numberStone += item.second;
+        }
+    }
+    return numberStone;
+}
+
+/**
  * @brief Check if there is an elevation nearby
  * if there is one send the number of the case of the elevation
  */
@@ -57,16 +95,15 @@ int DisruptionModule::checkVisionElevation() {
             for (size_t y = 0; y < AI::Data::i().vision[x].size(); y++) {
                 int relativeY = static_cast<int>(y) - static_cast<int>(midY);
 
-                auto& tileContents = AI::Data::i().vision[x][y];
+                auto& tile = AI::Data::i().vision[x][y];
+
+                if (tile["player"] > 2 && getNumberStone(tile) > 2) {
+                    std::cout << "Disruption Module found elevation at: "
+                              << x << ", " << relativeY << std::endl;
+                    attack(x, relativeY);
+                }
             }
     }
-}
-
-/**
- * @brief Check if there is a elevation in a specific cell
- * if there is one send true
- */
-int DisruptionModule::checkCellElevation() {
 }
 
 /**

@@ -76,7 +76,19 @@ std::shared_ptr<irr::gui::IGUIFont> font) {
     y += 20;
     LevelUpButton.updatePos(irr::core::position2d<irr::s32>(
         width - 200, y));
+    ForwardButton.updatePos(irr::core::position2d<irr::s32>(
+        width - 180, y + 40));
+    BackwardButton.updatePos(irr::core::position2d<irr::s32>(
+        width - 180, y + 80));
+    LeftButton.updatePos(irr::core::position2d<irr::s32>(
+        width - 220, y + 80));
+    RightButton.updatePos(irr::core::position2d<irr::s32>(
+        width - 140, y + 80));
     LevelUpButton.draw(font, driver, *this);
+    ForwardButton.draw(font, driver, *this);
+    BackwardButton.draw(font, driver, *this);
+    LeftButton.draw(font, driver, *this);
+    RightButton.draw(font, driver, *this);
 }
 
 void PlayerDataPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
@@ -87,16 +99,51 @@ irr::video::IVideoDriver* _driver) {
         return;
     int width = driver->getScreenSize().Width;
     try {
-        drawImage("assets/UI/All.png", width - 240, 320, 250, 200,
+        drawImage("assets/UI/All.png", width - 240, 320, 250, 260,
             driver);
         drawPlayerInfo(idPlayer, font);
     } catch (std::exception &e) {}
+}
+
+bool PlayerDataPlugin::handleClick(std::string &outBuffer) {
+    if (detectCollisionPlayer())
+        return true;
+    if (LevelUpButton.isHover(device)) {
+        LevelUpButton.hover = false;
+        outBuffer += "levelUp #" + std::to_string(idPlayer) + "\n";
+        return true;
+    }
+    if (ForwardButton.isHover(device)) {
+        ForwardButton.hover = false;
+        outBuffer += "forward #" + std::to_string(idPlayer) + "\n";
+        return true;
+    }
+    if (BackwardButton.isHover(device)) {
+        BackwardButton.hover = false;
+        outBuffer += "backward #" + std::to_string(idPlayer) + "\n";
+        return true;
+    }
+    if (LeftButton.isHover(device)) {
+        LeftButton.hover = false;
+        outBuffer += "left #" + std::to_string(idPlayer) + "\n";
+        return true;
+    }
+    if (RightButton.isHover(device)) {
+        RightButton.hover = false;
+        outBuffer += "right #" + std::to_string(idPlayer) + "\n";
+        return true;
+    }
+    return false;
 }
 
 bool PlayerDataPlugin::onEvent(const irr::SEvent &event, pluginsData datas,
 std::string &outBuffer) {
     if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
         LevelUpButton.isHover(device);
+        ForwardButton.isHover(device);
+        BackwardButton.isHover(device);
+        LeftButton.isHover(device);
+        RightButton.isHover(device);
 
         if (event.MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN) {
             pressed = true;
@@ -104,13 +151,8 @@ std::string &outBuffer) {
             pressed = false;
         }
         if (pressed && !isPressedLastFrame) {
-            if (detectCollisionPlayer())
+            if (handleClick(outBuffer))
                 return true;
-            if (LevelUpButton.isHover(device)) {
-                LevelUpButton.hover = false;
-                outBuffer += "levelUp #" + std::to_string(idPlayer) + "\n";
-                return true;
-            }
         }
         isPressedLastFrame = pressed;
     }
@@ -144,7 +186,7 @@ bool PlayerDataPlugin::detectCollisionPlayer() {
     return false;
 }
 
-// BUTTON
+// ============ BUTTON ============
 
 void PlayerDataPlugin::Button::draw(std::shared_ptr<irr::gui::IGUIFont> font,
 irr::video::IVideoDriver *driver, PlayerDataPlugin plug) {

@@ -22,20 +22,39 @@ class PlayerDataPlugin : public Aplugin {
 
         std::string name; /**< Name of the button. */
         irr::core::rect<irr::s32> rect; /**< Rectangle defining the button's. */
-        bool hover = false;
-        bool blocked = false;
+        bool hover = false; /**< Indicates if the button is hovered. */
+        bool blocked = false; /** Indicates if the button is blocked. */
 
+        /** @brief Draws the button on the screen.
+         * @param font Shared pointer to the GUI font.
+         * @param driver Pointer to the video driver.
+         * @param plug Reference to the PlayerDataPlugin instance.
+         */
         void draw(std::shared_ptr<irr::gui::IGUIFont> font,
           irr::video::IVideoDriver* driver, PlayerDataPlugin plug);
 
+        /**
+         * @brief Checks if the button is hovered by the mouse.
+         * @param device Pointer to the Irrlicht device.
+         * @return True if the button is hovered, false otherwise.
+         */
         bool isHover(irr::IrrlichtDevice *device);
 
+        /** @brief Updates the button's position.
+         * @param pos The new position of the button.
+         */
         void updatePos(const irr::core::position2d<irr::s32> &pos);
     };
 
     Button LevelUpButton = Button("Level Up",
       irr::core::rect<irr::s32>(0, 0, 150, 30));
-    Button Forward = Button("↑",
+    Button ForwardButton = Button("F",
+      irr::core::rect<irr::s32>(0, 0, 30, 30));
+    Button BackwardButton = Button("B",
+      irr::core::rect<irr::s32>(0, 0, 30, 30));
+    Button LeftButton = Button("L",
+      irr::core::rect<irr::s32>(0, 0, 30, 30));
+    Button RightButton = Button("R",
       irr::core::rect<irr::s32>(0, 0, 30, 30));
 
     int idPlayer = -1; /**< ID of the selected player. */
@@ -63,6 +82,8 @@ class PlayerDataPlugin : public Aplugin {
      * @param font Shared pointer to the GUI font.
      */
     void drawPlayerInfo(int id, std::shared_ptr<irr::gui::IGUIFont> font);
+
+    bool handleClick(std::string &outBuffer);
 
  public:
     /**

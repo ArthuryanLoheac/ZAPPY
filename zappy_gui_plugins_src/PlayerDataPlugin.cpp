@@ -23,92 +23,77 @@ pluginsData::Tile PlayerDataPlugin::getTile(int x, int y) {
 
 void PlayerDataPlugin::drawPlayerInfo(int id,
 std::shared_ptr<irr::gui::IGUIFont> font) {
+    if (!font || id < 0 || id >= static_cast<int>(data.players.size()))
+        return;
+
     int width = driver->getScreenSize().Width;
     pluginsData::Player player = data.getPlayer(id);
     int y = 350;
 
     LevelUpButton.blocked = player.level >= 8;
 
-    // Name
-    std::string playerInfo = "Player " + std::to_string(id) + " : " +
-        player.teamName;
-    font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
-        player.color);
-    // Level
-    y += 20;
-    playerInfo = "\tLevel : " + std::to_string(player.level)
-        + (player.inElevation ? " (elevating)" : "");
-    font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
-        UICol(255, 255, 255, 255));
-    // Position
-    playerInfo = "\tPos : " + std::to_string(player.x) +
-        ", " + std::to_string(player.y) + " - ";
+    // Precompute player info strings
+    std::string playerInfo = "Player " + std::to_string(id) + " : " + player.teamName;
+    std::string levelInfo = "\tLevel : " + std::to_string(player.level) + (player.inElevation ? " (elevating)" : "");
+    std::string positionInfo = "\tPos : " + std::to_string(player.x) + ", " + std::to_string(player.y) + " - ";
+
     // Direction
-    switch (player.orientation) {
-        case pluginsData::Player::Orientation::NORTH:
-            playerInfo += "North";
-            break;
-        case pluginsData::Player::Orientation::SOUTH:
-            playerInfo += "South";
-            break;
-        case pluginsData::Player::Orientation::EAST:
-            playerInfo += "East";
-            break;
-        case pluginsData::Player::Orientation::WEST:
-            playerInfo += "West";
-            break;
-    }
+    static const std::string directions[] = {"North", "South", "East", "West"};
+    positionInfo += directions[static_cast<int>(player.orientation)];
+
+    // Draw player info
+    font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300), player.color);
     y += 20;
-    font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
-        UICol(255, 255, 255, 255));
+    font->draw(levelInfo.c_str(), UIRect(width - 220, y, 300, 300), UICol(255, 255, 255, 255));
+    y += 20;
+    font->draw(positionInfo.c_str(), UIRect(width - 220, y, 300, 300), UICol(255, 255, 255, 255));
+
     // Inventory
     y += 20;
     for (int i = 0; i < 7; ++i) {
-        if (player.ressources[i] == 0)
-            continue;
-        playerInfo = "\t - " + lstNames[i] + " : " +
-            std::to_string(player.ressources[i]);
-        font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300),
-            lstColors[i]);
-        y += 20;
+        if (player.ressources[i] > 0) {
+            playerInfo = "\t - " + lstNames[i] + " : " + std::to_string(player.ressources[i]);
+            font->draw(playerInfo.c_str(), UIRect(width - 220, y, 300, 300), lstColors[i]);
+            y += 20;
+        }
     }
+
     // BUTTONS
-    y += 20;
-    LevelUpButton.updatePos(irr::core::position2d<irr::s32>(
-        width - 200, y));
-    ForwardButton.updatePos(irr::core::position2d<irr::s32>(
-        width - 140, y + 40));
-    BackwardButton.updatePos(irr::core::position2d<irr::s32>(
-        width - 140, y + 80));
-    LeftButton.updatePos(irr::core::position2d<irr::s32>(
-        width - 180, y + 80));
-    RightButton.updatePos(irr::core::position2d<irr::s32>(
-        width - 100, y + 80));
-    ForkButton.updatePos(irr::core::position2d<irr::s32>(
-        width - 200, y + 120));
-    EjectButton.updatePos(irr::core::position2d<irr::s32>(
-        width - 200, y + 160));
-    LevelUpButton.draw(font, driver, *this);
-    ForwardButton.draw(font, driver, *this);
-    BackwardButton.draw(font, driver, *this);
-    LeftButton.draw(font, driver, *this);
-    RightButton.draw(font, driver, *this);
-    ForkButton.draw(font, driver, *this);
-    EjectButton.draw(font, driver, *this);
+    LevelUpButton.updatePos({width - 200, y});
+    ForwardButton.updatePos({width - 140, y + 40});
+    BackwardButton.updatePos({width - 140, y + 80});
+    LeftButton.updatePos({width - 180, y + 80});
+    RightButton.updatePos({width - 100, y + 80});
+    ForkButton.updatePos({width - 200, y + 120});
+    EjectButton.updatePos({width - 200, y + 160});
+
+    LevelUpButton.draw(font, driver);
+    ForwardButton.draw(font, driver);
+    BackwardButton.draw(font, driver);
+    LeftButton.draw(font, driver);
+    RightButton.draw(font, driver);
+    ForkButton.draw(font, driver);
+    EjectButton.draw(font, driver);
 }
 
 void PlayerDataPlugin::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
 irr::video::IVideoDriver* _driver) {
     driver = _driver;
 
-    if (data.tiles.size() <= 0 || idPlayer == -1 || !font || !driver)
+    if (data.tiles.empty() || idPlayer == -1 || !font || !driver)
         return;
+
     int width = driver->getScreenSize().Width;
+
     try {
-        drawImage("assets/UI/All.png", width - 240, 320, 250, 360,
-            driver);
+        // Preload UI image once
+        static const std::string uiImagePath = "assets/UI/All.png";
+        drawImage(uiImagePath, width - 240, 320, 250, 360, driver);
+
         drawPlayerInfo(idPlayer, font);
-    } catch (std::exception &e) {}
+    } catch (const std::exception &e) {
+        std::cerr << "Error in drawUI: " << e.what() << std::endl;
+    }
 }
 
 bool PlayerDataPlugin::handleClick(std::string &outBuffer, irr::core::vector2d<irr::s32> pos) {
@@ -209,12 +194,11 @@ bool PlayerDataPlugin::detectCollisionPlayer() {
 // ============ BUTTON ============
 
 void PlayerDataPlugin::Button::draw(std::shared_ptr<irr::gui::IGUIFont> font,
-irr::video::IVideoDriver *driver, PlayerDataPlugin plug) {
+irr::video::IVideoDriver *driver) {
     if (!font || !driver)
         return;
-    plug.drawImage("assets/UI/AllRed.png", rect.UpperLeftCorner.X,
-        rect.UpperLeftCorner.Y, rect.getWidth(), rect.getHeight(), driver,
-        blocked ? 50 : (hover ? 120 : 255));
+    driver->draw2DRectangle(irr::video::SColor(
+        blocked ? 100 : (hover ? 120 : 255), 87, 46, 47), rect);
     font->draw(name.c_str(), rect, irr::video::SColor(
         blocked ? 100 : 255, 255, 255, 255), true, true);
 }

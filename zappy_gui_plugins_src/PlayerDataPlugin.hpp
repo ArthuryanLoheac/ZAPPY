@@ -31,7 +31,7 @@ class PlayerDataPlugin : public Aplugin {
          * @param plug Reference to the PlayerDataPlugin instance.
          */
         void draw(std::shared_ptr<irr::gui::IGUIFont> font,
-          irr::video::IVideoDriver* driver, PlayerDataPlugin plug);
+          irr::video::IVideoDriver* driver);
 
         /**
          * @brief Checks if the button is hovered by the mouse.

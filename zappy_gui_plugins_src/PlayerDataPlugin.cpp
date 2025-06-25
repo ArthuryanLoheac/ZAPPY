@@ -115,22 +115,22 @@ bool PlayerDataPlugin::handleClick(std::string &outBuffer) {
     }
     if (ForwardButton.isHover(device)) {
         ForwardButton.hover = false;
-        outBuffer += "forward #" + std::to_string(idPlayer) + "\n";
+        outBuffer += "d_forward #" + std::to_string(idPlayer) + "\n";
         return true;
     }
     if (BackwardButton.isHover(device)) {
         BackwardButton.hover = false;
-        outBuffer += "backward #" + std::to_string(idPlayer) + "\n";
+        outBuffer += "d_backward #" + std::to_string(idPlayer) + "\n";
         return true;
     }
     if (LeftButton.isHover(device)) {
         LeftButton.hover = false;
-        outBuffer += "left #" + std::to_string(idPlayer) + "\n";
+        outBuffer += "d_right #" + std::to_string(idPlayer) + "\n";
         return true;
     }
     if (RightButton.isHover(device)) {
         RightButton.hover = false;
-        outBuffer += "right #" + std::to_string(idPlayer) + "\n";
+        outBuffer += "d_left #" + std::to_string(idPlayer) + "\n";
         return true;
     }
     return false;

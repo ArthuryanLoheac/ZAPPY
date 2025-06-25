@@ -35,5 +35,9 @@ const command_func_t gui_command_association_list[] = {
     {"SGT", sgt_command},
     {"SST", sst_command},
     {"LEVELUP", levelup_command},
+    {"D_FORWARD", d_forward_command},
+    {"D_BACKWARD", d_backward_command},
+    {"D_RIGHT", d_right_command},
+    {"D_LEFT", d_left_command},
     {NULL, NULL}
 };

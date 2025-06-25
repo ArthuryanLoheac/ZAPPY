@@ -1,5 +1,6 @@
 #pragma once
 #include <poll.h>
+#include "Connection/PollWrapper.hpp"
 
 #include <string>
 #include <map>
@@ -65,6 +66,7 @@ class ServerGUI {
     void setConnectedToServer(bool connected);
 
  private:
+    PollWrapper pollWrapper; /**< PollWrapper member for managing poll operations. */
     bool sendPing = false; /**< Flag to indicate if BCT command has been sent */
     std::chrono::system_clock::time_point timeForPing;
     bool isConnected = false; /**< if the server connection is active */

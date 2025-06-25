@@ -10,6 +10,7 @@
 #include <cstdio>
 
 #include "Connection/ServerGUI.hpp"
+#include "Connection/PollWrapper.hpp"
 #include "DataManager/DataManager.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "Window/window.hpp"
@@ -17,7 +18,7 @@
 #include "include/logs.h"
 
 namespace GUI {
-ServerGUI::ServerGUI() {
+ServerGUI::ServerGUI() : pollWrapper() {
 }
 
 void ServerGUI::InitServer() {
@@ -106,18 +107,15 @@ void ServerGUI::startServer() {
     auto time = std::chrono::system_clock::now();
     auto timeNext = time + std::chrono::seconds(updateMapTime);
     auto timeNextPing = time + std::chrono::milliseconds(1);
-    int ready = 0;
 
     InitServer();
     while (DataManager::i().running) {
         clockUpdate(time, timeNext, timeNextPing);
 
-        ready = poll(&GUI::ServerGUI::i().fd, 1, -1);
-        if (ready == -1)
-            throw std::runtime_error("Poll error occurred");
-        if (fd.revents & POLLIN)
+        pollWrapper.waitForEvent(&GUI::ServerGUI::i().fd);
+        if (pollWrapper.isReadable(fd))
             readDatasFromServer();
-        if (fd.revents & POLLOUT && !outbuffer.empty()) {
+        if (pollWrapper.isWritable(fd) && !outbuffer.empty()) {
             sendDatasToServer(outbuffer);
             outbuffer.clear();
         }

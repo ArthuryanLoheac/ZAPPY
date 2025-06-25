@@ -1,0 +1,30 @@
+#ifndef POLLWRAPPER_HPP
+#define POLLWRAPPER_HPP
+
+#include <sys/poll.h>
+#include <stdexcept>
+
+class PollWrapper {
+ public:
+
+        
+
+    PollWrapper() = default;
+
+    void waitForEvent(pollfd *fds) {
+        int ready = poll(fds, 1, -1);
+        if (ready == -1)
+            throw std::runtime_error("Poll error occurred");
+    }
+
+    bool isReadable(pollfd fd) const {
+        return fd.revents & POLLIN;
+    }
+
+    bool isWritable(pollfd fd) const {
+        return fd.revents & POLLOUT;
+    }
+
+};
+
+#endif  // POLLWRAPPER_HPP

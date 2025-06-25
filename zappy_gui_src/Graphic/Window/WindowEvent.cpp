@@ -31,6 +31,7 @@ void Window::updateDeltaTime() {
 
 void Window::moveCamera(float x, float zoom, float xMove, float yMove,
 float zMove) {
+    if (!cam) return;
     // rotate around
     updateRotation(x);
     float radAngleX = std::cos(angleXCamera * (M_PI / 180.0f));
@@ -65,8 +66,10 @@ float radZ) {
     posTarget.X += xMove * frameDeltaTime * moveSpeedCamera;
     posTarget.Z += yMove * frameDeltaTime * moveSpeedCamera;
     posTarget.Y += zMove * frameDeltaTime * moveSpeedCamera;
-    posTarget.X = std::clamp(posTarget.X, -(width / 2.f), (width / 2.f));
-    posTarget.Z = std::clamp(posTarget.Z, -(height / 2.f), (height / 2.f));
+    if (width > 0)
+        posTarget.X = std::clamp(posTarget.X, -(width / 2.f), (width / 2.f));
+    if (height > 0)
+        posTarget.Z = std::clamp(posTarget.Z, -(height / 2.f), (height / 2.f));
     posTarget.Y = std::clamp(posTarget.Y, -4.5f, 1000.f);
     cam->setTarget(posTarget);
 }

@@ -33,6 +33,13 @@ const command_name_size_t gui_command_name_size_list[] = {
     {"TNA", 0},
     {"SGT", 0},
     {"SST", 0},
+    {"LEVELUP", 0},
+    {"D_FORWARD", 0},
+    {"D_BACKWARD", 0},
+    {"D_RIGHT", 0},
+    {"D_LEFT", 0},
+    {"D_EJECT", 0},
+    {"D_FORK", 0},
     {NULL, -1}
 };
 

@@ -50,6 +50,15 @@ void plv_command(zappy_t *zappy, client_t *client, char **args);
 void pin_command(zappy_t *zappy, client_t *client, char **args);
 void sgt_command(zappy_t *zappy, client_t *client, char **args);
 void sst_command(zappy_t *zappy, client_t *client, char **args);
+void levelup_command(zappy_t *zappy, client_t *client, char **args);
+void d_forward_command(zappy_t *zappy, client_t *client, char **args);
+void d_backward_command(zappy_t *zappy, client_t *client, char **args);
+void d_right_command(zappy_t *zappy, client_t *client, char **args);
+void d_left_command(zappy_t *zappy, client_t *client, char **args);
+void d_eject_command(zappy_t *zappy, client_t *client, char **args);
+void d_fork_command(zappy_t *zappy, client_t *client, char **args);
+
+client_t *get_client_from_args(zappy_t *zappy, char **args);
 
 typedef struct command_func_s {
     char *name;

@@ -87,15 +87,8 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
         if (plugin && plugin->isActive()) {
             try {
                 pluginsData &datas = PluginsDataManager::i().getData();
-                bool newData = plugin->onEvent(event, datas);
-                if (datas.frequency > 0 &&
-                    datas.frequency != GUI::DataManager::i().getFrequency()) {
-                    GUI::DataManager::i().setFrequency(datas.frequency);
-                    GUI::NetworkForGui::i().outbuffer += "sst " +
-                        std::to_string(datas.frequency) + "\n";
-                    PluginsDataManager::i().updatePluginsData();
-                }
-                if (newData)
+                if (plugin->onEvent(event, datas,
+                    GUI::NetworkForGui::i().outbuffer))
                     return;
             } catch (const std::exception &e) {
                 LOG_ERROR("Error while processing event in plugin: %s",

@@ -19,7 +19,7 @@ function HomepageHeader() {
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>
           <Link
-            className="button button--secondary button--lg"
+            className="button button--secondary button--lg zoup-text"
             to="/docs/zappy/CONTRIBUTING">
             Zoup Zoup !
           </Link>
@@ -43,7 +43,16 @@ export default function Home(): ReactNode {
           <p>
             This website contains the documentation of the project (protocols, API, contributions rules) <br />
             You can just take a look at the <Link href='https://github.com/ArthuryanLoheac/ZAPPY'>Github</Link> of the project to have more information about it !
+          </p> <br />
+          <p>
+            The project is seperated in three main parts:
+            <ul>
+              <li> The server, which is the core of the project, it handles the communication between the clients and the AI</li>
+              <li> The AI, which is the brain of the project, it handles the logic of the robots</li>
+              <li> The GUI, which is the interface of the project, it handles the display of the world and the robots</li>
+            </ul>
           </p>
+
         </div>
       </main>
     </Layout>

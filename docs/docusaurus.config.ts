@@ -7,7 +7,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Zappy docs',
   tagline: 'Zip Zap Zoup ?',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/zappy.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -63,7 +63,7 @@ const config: Config = {
       title: 'Zappy docs',
       logo: {
         alt: 'Zappy Logo',
-        src: 'img/logo.svg',
+        src: 'img/zappy.svg',
       },
       items: [
         {
@@ -91,10 +91,6 @@ const config: Config = {
         {
           title: 'Docs',
           items: [
-            {
-              label: 'Docusorus Tutorial',
-              to: '/docs/tutorial/intro',
-            },
             {
               label: 'API Reference',
               href: '/ZAPPY/doxygen/index.html',

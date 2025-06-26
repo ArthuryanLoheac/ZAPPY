@@ -134,6 +134,28 @@ void handle_client_command(zappy_t *zappy, int fd)
     }
 }
 
+static void try_to_send_command(zappy_t *zappy, int fd, client_t *current)
+{
+    ssize_t bytes_written = 0;
+
+    bytes_written = write(fd, current->out_buffer,
+        strlen(current->out_buffer));
+    if (bytes_written == -1) {
+        perror("Write error");
+        LOG_INFO("[%i]: Failed to send command %s",
+            current->fd, current->out_buffer);
+    }
+    if (bytes_written < (ssize_t)strlen(current->out_buffer)) {
+        LOG_INFO("[%i]: Partial write, remaining: %s",
+            current->fd, current->out_buffer + bytes_written);
+        memmove(current->out_buffer, current->out_buffer + bytes_written,
+                strlen(current->out_buffer) - bytes_written + 1);
+    } else {
+        free(current->out_buffer);
+        current->out_buffer = NULL;
+    }
+}
+
 void send_client_command(zappy_t *zappy, int fd)
 {
     client_t *current = zappy->clients;
@@ -144,13 +166,5 @@ void send_client_command(zappy_t *zappy, int fd)
         return;
     if (fcntl(fd, F_GETFD) == -1 && errno == EBADF)
         return;
-    if (write(fd, current->out_buffer, strlen(current->out_buffer)) == -1) {
-        perror("Write error");
-        LOG_INFO("[%i]: Failed to send command %s",
-            current->fd, current->out_buffer);
-    } else {
-        LOG_INFO("[%i]: Sent %s", current->fd, current->out_buffer);
-    }
-    free(current->out_buffer);
-    current->out_buffer = NULL;
+    try_to_send_command(zappy, fd, current);
 }

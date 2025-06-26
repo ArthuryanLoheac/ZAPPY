@@ -33,7 +33,7 @@ static int min_quantity(int original, int add)
 }
 
 static void update_cell_command(cell_t *cell, const char *resource,
-    int quantity, client_t *client)
+    int quantity)
 {
     if (strcmp(resource, "food") == 0)
         cell->nbr_food = min_quantity(cell->nbr_food, quantity);
@@ -103,7 +103,7 @@ void d_ressource_command(zappy_t *zappy, client_t *client, char **args)
     cell = get_cell(zappy, x, y);
     if (cell == NULL)
         return;
-    update_cell_command(cell, resource, quantity, client);
+    update_cell_command(cell, resource, quantity);
     send_ressource_update(zappy, client, cell);
     free(resource);
 }

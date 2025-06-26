@@ -122,6 +122,7 @@ void pluginsManager::initPluginMesh(initPluginData meshData) {
     setPluginMeshData("Mat5", meshData.MeshMat5);
     setPluginMeshData("Mat6", meshData.MeshMat6);
     setPluginMeshData("Player", meshData.MeshPlayer);
+    setPluginMeshData("Ring", meshData.MeshRing);
     setPluginMeshData("Egg", meshData.MeshEgg);
     setPluginMeshData("Tile", meshData.MeshTile);
     if (meshData.skyBox.isSet) {

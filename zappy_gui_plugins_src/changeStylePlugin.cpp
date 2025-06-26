@@ -26,14 +26,17 @@ initPluginData changeStylePlugin::init(irr::scene::ISceneManager* smgr,
     this->cam = cam;
     initPluginData pluginData;
     pluginData.MeshBattery = initPluginData::MeshInitPlugin("Battery2", 2.f);
+    pluginData.MeshPlayer = initPluginData::MeshInitPlugin("Kirby", 0.8f);
+    pluginData.MeshEgg = initPluginData::MeshInitPlugin("KirbyEgg", 0.8f);
+    pluginData.MeshRing = initPluginData::MeshInitPlugin("Star", 0.8f);
     pluginData.Ambient = initPluginData::SoundInitPlugin(
         "Musics/SC_WorldPyro.mp3");
     pluginData.skyBox = initPluginData::SkyBox(
-        "skybox/skybox2/skybox_py.jpg", "skybox/skybox2/skybox_ny.jpg",
-        "skybox/skybox2/skybox_nx.jpg", "skybox/skybox2/skybox_px.jpg",
-        "skybox/skybox2/skybox_pz.jpg", "skybox/skybox2/skybox_nz.jpg", 0);
+        "kirbySkybox.jpg", "kirbySkybox.jpg",
+        "kirbySkybox.jpg", "kirbySkybox.jpg",
+        "kirbySkybox.jpg", "kirbySkybox.jpg", 0);
     // RED
     pluginData.light = initPluginData::LightPlugin(
-        irr::video::SColorf(2, 1.5f, 1.5f, 1.f));
+        irr::video::SColorf(1.5f, 1.5f, 2.f, 1.5f));
     return pluginData;
 }

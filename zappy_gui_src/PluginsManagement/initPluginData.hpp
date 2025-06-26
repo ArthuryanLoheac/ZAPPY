@@ -116,6 +116,7 @@ class initPluginData {
     MeshInitPlugin MeshMat5; /**< Path to the fifth material mesh. */
     MeshInitPlugin MeshMat6; /**< Path to the sixth material mesh. */
     MeshInitPlugin MeshPlayer; /**< Path to the player mesh. */
+    MeshInitPlugin MeshRing; /**< Path to the ring mesh. */
     MeshInitPlugin MeshEgg; /**< Path to the egg mesh. */
     MeshInitPlugin MeshTile; /**< Path to the tile mesh. */
 

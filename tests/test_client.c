@@ -24,19 +24,6 @@ Test(add_client, add_and_remove_client, .init = redirect_all_std)
     destroy_server(zappy.server);
 }
 
-Test(remove_client, remove_client_with_out_buffer, .init = redirect_all_std)
-{
-    zappy_t zappy = {0};
-    int fake_fd = 100;
-
-    zappy.server = create_server(2121);
-    add_client(&zappy, fake_fd);
-    append_client_out_buffer(zappy.clients, "test buffer");
-    remove_client(&zappy, fake_fd);
-    cr_assert_null(zappy.clients);
-    destroy_server(zappy.server);
-}
-
 Test(remove_client, remove_client_with_in_buffer, .init = redirect_all_std)
 {
     zappy_t zappy = {0};

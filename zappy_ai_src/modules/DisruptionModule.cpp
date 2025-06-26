@@ -50,16 +50,15 @@ void DisruptionModule::execute() {
 
 /**
  * @brief Send an attack command to a specific tile
- * @param x The x coordinate of the tile
- * @param relativeY The relative y coordinate of the tile
+ * @param x The x coordinate of the tile (forward steps from current position)
+ * @param relativeY The relative y coordinate of the tile (positive values mean right, negative mean left; coordinates are relative to the player's current position)
  */
 void DisruptionModule::attack(size_t x, int relativeY) {
-    // Move forward x times to reach the correct row
     for (size_t i = 0; i < x; ++i) {
         AI::Interface::i().sendCommand(FORWARD);
     }
     if (relativeY != 0) {
-        std::string direction = (relativeY > 0) ? "RIGHT" : "LEFT";
+        std::string direction = (relativeY > 0) ? RIGHT : LEFT;
         AI::Interface::i().sendCommand(direction);
         for (int i = 0; i < std::abs(relativeY); ++i) {
             AI::Interface::i().sendCommand(FORWARD);
@@ -90,20 +89,22 @@ int DisruptionModule::getNumberStone(std::unordered_map<std::string, int>
  * if there is one send the number of the case of the elevation
  */
 int DisruptionModule::checkVisionElevation() {
-        for (size_t x = 0; x < AI::Data::i().vision.size(); x++) {
-            const size_t midY = AI::Data::i().vision[x].size() / 2;
-            for (size_t y = 0; y < AI::Data::i().vision[x].size(); y++) {
-                int relativeY = static_cast<int>(y) - static_cast<int>(midY);
+    for (size_t x = 0; x < AI::Data::i().vision.size(); x++) {
+        const size_t midY = AI::Data::i().vision[x].size() / 2;
+        for (size_t y = 0; y < AI::Data::i().vision[x].size(); y++) {
+            int relativeY = static_cast<int>(y) - static_cast<int>(midY);
 
-                auto& tile = AI::Data::i().vision[x][y];
+            auto& tile = AI::Data::i().vision[x][y];
 
-                if (tile["player"] > 2 && getNumberStone(tile) > 2) {
-                    std::cout << "Disruption Module found elevation at: "
-                              << x << ", " << relativeY << std::endl;
-                    attack(x, relativeY);
-                }
+            if (tile["player"] > 2 && getNumberStone(tile) > 2) {
+                std::cout << "Disruption Module found elevation at: "
+                            << x << ", " << relativeY << std::endl;
+                attack(x, relativeY);
+                return 1;
             }
+        }
     }
+    return 0;
 }
 
 /**

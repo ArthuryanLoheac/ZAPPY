@@ -26,7 +26,7 @@ pluginsData::Tile TileDataPluginDebug::getTile(int x, int y) {
 void TileDataPluginDebug::drawUI(std::shared_ptr<irr::gui::IGUIFont> font,
 irr::video::IVideoDriver* driver) {
     int width = driver->getScreenSize().Width;
-    int y = 30;
+    int y = 20;
 
     if (!font || !driver || data.tiles.size() <= 0)
         return;
@@ -44,7 +44,7 @@ irr::video::IVideoDriver* driver) {
             std::to_string(tile.y) + " :";
         font->draw(tileInfo.c_str(), UIRect(width - 220, y, 300, 300),
             UICol(255, 255, 255, 255));
-        y += 40;
+        y += 30;
 
         drawDoubleButtons(FoodMinusButton, FoodPlusButton, font, driver,
             0, tile, y);

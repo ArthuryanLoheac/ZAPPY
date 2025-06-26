@@ -45,7 +45,7 @@ export default function Home(): ReactNode {
             You can just take a look at the <Link href='https://github.com/ArthuryanLoheac/ZAPPY'>Github</Link> of the project to have more information about it !
           </p> <br />
           <p>
-            The project is seperated in three main parts:
+            The project is separated in three main parts:
             <ul>
               <li> The server, which is the core of the project, it handles the communication between the clients and the AI</li>
               <li> The AI, which is the brain of the project, it handles the logic of the robots</li>

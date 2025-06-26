@@ -41,5 +41,6 @@ const command_func_t gui_command_association_list[] = {
     {"D_LEFT", d_left_command},
     {"D_EJECT", d_eject_command},
     {"D_FORK", d_fork_command},
+    {"D_RESSOURCE", d_ressource_command},
     {NULL, NULL}
 };

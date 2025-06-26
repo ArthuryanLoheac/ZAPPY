@@ -57,6 +57,7 @@ void d_right_command(zappy_t *zappy, client_t *client, char **args);
 void d_left_command(zappy_t *zappy, client_t *client, char **args);
 void d_eject_command(zappy_t *zappy, client_t *client, char **args);
 void d_fork_command(zappy_t *zappy, client_t *client, char **args);
+void d_ressource_command(zappy_t *zappy, client_t *client, char **args);
 
 client_t *get_client_from_args(zappy_t *zappy, char **args);
 

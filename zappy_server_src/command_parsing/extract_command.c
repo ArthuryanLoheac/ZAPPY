@@ -39,7 +39,7 @@ static int count_tokens(char *str)
 
 static char **allocate_args_array(int count)
 {
-    return malloc(sizeof(char *) * (count + 1));
+    return malloc(sizeof(char *) * (count));
 }
 
 static int free_args_array(char **args, char *temp_ptr, int i)
@@ -69,7 +69,6 @@ static int fill_args_array(char **args, char *command, int count)
         token = strtok(NULL, " ");
     }
     args[i] = NULL;
-    free(temp_ptr);
     return 0;
 }
 
@@ -114,6 +113,7 @@ static void process_command_line(client_t *client, char *command_line,
 {
     char **args = parse_command(command_line);
 
+    for (int i = 0; args && args[i] != NULL; i++)
     if (!args || !args[0])
         return;
     process_command(args, client, zappy_ptr);

@@ -40,6 +40,7 @@ const command_name_size_t gui_command_name_size_list[] = {
     {"D_LEFT", 0},
     {"D_EJECT", 0},
     {"D_FORK", 0},
+    {"D_RESSOURCE", 0},
     {NULL, -1}
 };
 

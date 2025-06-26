@@ -24,6 +24,7 @@ void PlayerDataPlugin::drawPlayerInfo(int id,
 std::shared_ptr<irr::gui::IGUIFont> font) {
     if (!font || id < 0 || id >= static_cast<int>(data.players.size()))
         return;
+    printf("Drawing player info for player %d\n", id);
 
     int width = driver->getScreenSize().Width;
     pluginsData::Player player = data.getPlayer(id);

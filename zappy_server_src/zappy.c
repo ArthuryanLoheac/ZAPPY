@@ -87,7 +87,7 @@ static void handle_client(zappy_t *zappy, bool *last_cycle)
         *last_cycle = true;
 }
 
-void start_server(zappy_t *zappy)
+void start_server(zappy_t *zappy, bool *running)
 {
     server_t *server = zappy->server;
     int ready = 0;
@@ -97,7 +97,7 @@ void start_server(zappy_t *zappy)
     zappy->durationTickLeft = zappy->durationTick;
     zappy->tickCount = 0;
     message_start_server(zappy);
-    while (1) {
+    while (*running) {
         check_ticks(zappy);
         ready = poll(server->fds, server->nb_fds,
             (1.0 / zappy->parser->freq) * 1000);

@@ -45,7 +45,6 @@ static bool return_bytes_read(ssize_t bytes_read, char *buffer,
 {
     if (bytes_read == -1)
         perror("Read error");
-    //free(buffer);
     (void) buffer;
     client->is_connected = false;
     return false;

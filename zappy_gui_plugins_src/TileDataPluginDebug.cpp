@@ -7,7 +7,6 @@
 #include <cstdio>
 #include <map>
 #include <algorithm>
-#include "TileDataPluginDebug.hpp"
 
 extern "C" {
     std::unique_ptr<pluginsInterface> createPlugin() {
@@ -60,14 +59,14 @@ irr::video::IVideoDriver* driver) {
             5, tile, y);
         drawDoubleButtons(ThystameMinusButton, ThystamePlusButton, font,
             driver, 6, tile, y);
-
-    } catch (std::exception &e) {}
+    } catch (std::exception &e) {
+    }
 }
 
 void TileDataPluginDebug::drawDoubleButtons(TileDataPluginDebug::Button &bMinus,
 TileDataPluginDebug::Button &bPlus, std::shared_ptr<irr::gui::IGUIFont> font,
-irr::video::IVideoDriver *driver, int ressource, pluginsData::Tile tile, int &y)
-{
+irr::video::IVideoDriver *driver, int ressource, pluginsData::Tile tile,
+int &y) {
     int width = driver->getScreenSize().Width;
 
     bMinus.updatePos({width - 220, y});
@@ -140,8 +139,7 @@ irr::core::vector2d<irr::s32> pos) {
 
 bool TileDataPluginDebug::updateDoubleButton(std::string ressourceName,
 TileDataPluginDebug::Button &bMinus, TileDataPluginDebug::Button &bPlus,
-std::string &outBuffer, irr::core::vector2d<irr::s32> pos)
-{
+std::string &outBuffer, irr::core::vector2d<irr::s32> pos) {
     if (bPlus.isHover(pos)) {
         bPlus.hover = false;
         outBuffer += "D_ressource " + std::to_string(xTile) + " " +
@@ -159,8 +157,7 @@ std::string &outBuffer, irr::core::vector2d<irr::s32> pos)
 
 
 bool TileDataPluginDebug::onEvent(const irr::SEvent &event, pluginsData datas,
-                                  std::string &outBuffer)
-{
+                                  std::string &outBuffer) {
     if (event.EventType == irr::EET_MOUSE_INPUT_EVENT) {
         irr::core::vector2d<irr::s32> pos =
             device->getCursorControl()->getPosition();

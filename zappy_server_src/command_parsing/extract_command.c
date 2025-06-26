@@ -51,7 +51,7 @@ static int free_args_array(char **args, char *temp_ptr, int i)
         args[j] = NULL;
     }
     if (args)
-       free(args);
+        free(args);
     args = NULL;
     if (temp_ptr)
         free(temp_ptr);
@@ -94,7 +94,7 @@ static char **parse_command(char *command)
     result = fill_args_array(args, command, count);
     if (result < 0) {
         for (int i = 0; args[i] != NULL; i++)
-          free(args[i]);
+            free(args[i]);
         free(args);
         return NULL;
     }

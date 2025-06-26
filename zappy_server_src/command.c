@@ -134,7 +134,7 @@ void handle_client_command(zappy_t *zappy, int fd)
     }
 }
 
-static void try_to_send_command(zappy_t *zappy, int fd, client_t *current)
+static void try_to_send_command(client_t *current, int fd)
 {
     ssize_t bytes_written = 0;
 
@@ -166,5 +166,5 @@ void send_client_command(zappy_t *zappy, int fd)
         return;
     if (fcntl(fd, F_GETFD) == -1 && errno == EBADF)
         return;
-    try_to_send_command(zappy, fd, current);
+    try_to_send_command(current, fd);
 }

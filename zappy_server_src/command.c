@@ -45,7 +45,8 @@ static bool return_bytes_read(ssize_t bytes_read, char *buffer,
 {
     if (bytes_read == -1)
         perror("Read error");
-    free(buffer);
+    //free(buffer);
+    (void) buffer;
     client->is_connected = false;
     return false;
 }
@@ -65,7 +66,7 @@ static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
         client->in_buffer = buffer;
     else {
         add_to_buffer(&client->in_buffer, buffer);
-        free(buffer);
+        //free(buffer);
     }
     extract_commands(client, zappy);
     return true;

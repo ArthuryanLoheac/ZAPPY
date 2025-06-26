@@ -69,27 +69,33 @@ static cell_t *get_cell(zappy_t *zappy, int x, int y)
 
 void d_ressource_command(zappy_t *zappy, client_t *client, char **args)
 {
-    int x;
-    int y;
+    int x, y, quantity;
     char *resource;
-    int quantity;
+    int nb_args = 0;
+    cell_t *cell;
 
-    if (client == NULL || zappy == NULL || args == NULL ||
-        !args[0] || !args[1] || !args[2] || !args[3])
-        return;
-    x = atoi(args[0]);
-    y = atoi(args[1]);
-    resource = args[2];
-    quantity = atoi(args[3]);
-    if (x < 0 || y < 0) {
+    while (args[nb_args] != NULL)
+        nb_args++;
+    if (client == NULL || zappy == NULL || args == NULL || nb_args != 4) {
         add_to_buffer(&client->out_buffer, "ko\n");
         return;
     }
-    cell_t *cell = get_cell(zappy, x, y);
+    x = atoi(args[0]);
+    y = atoi(args[1]);
+    resource = strdup(args[2]);
+    quantity = atoi(args[3]);
+
+    if (x < 0 || y < 0 || resource == NULL) {
+        add_to_buffer(&client->out_buffer, "ko\n");
+        return;
+    }
+    cell = get_cell(zappy, x, y);
     if (cell == NULL) {
         add_to_buffer(&client->out_buffer, "ko\n");
         return;
     }
     update_cell_command(cell, resource, quantity, client);
     send_ressource_update(zappy, client, cell);
+    if (resource)
+        free(resource);
 }

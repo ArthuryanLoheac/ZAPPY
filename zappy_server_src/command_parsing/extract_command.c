@@ -44,10 +44,18 @@ static char **allocate_args_array(int count)
 
 static int free_args_array(char **args, char *temp_ptr, int i)
 {
-    for (int j = 0; j < i; j++)
+    for (int j = 0; j < i; j++) {
+        if (args[j] == NULL)
+            continue;
         free(args[j]);
-    free(args);
-    free(temp_ptr);
+        args[j] = NULL;
+    }
+    if (args)
+       free(args);
+    args = NULL;
+    if (temp_ptr)
+        free(temp_ptr);
+    temp_ptr = NULL;
     return -1;
 }
 
@@ -85,15 +93,15 @@ static char **parse_command(char *command)
         return NULL;
     result = fill_args_array(args, command, count);
     if (result < 0) {
-        for (int i = 0; args[i] != NULL; i++)
-            free(args[i]);
-        free(args);
+        //for (int i = 0; args[i] != NULL; i++)
+        //  free(args[i]);
+        //free(args);
         return NULL;
     }
     return args;
 }
 
-static void free_command_args(char **args)
+void free_command_args(char **args)
 {
     int i = 0;
 
@@ -103,9 +111,11 @@ static void free_command_args(char **args)
         if (args[i] == NULL)
             break;
         free(args[i]);
+        args[i] = NULL;
         i++;
     }
     free(args);
+    args = NULL;
 }
 
 static void process_command_line(client_t *client, char *command_line,
@@ -117,7 +127,7 @@ static void process_command_line(client_t *client, char *command_line,
     if (!args || !args[0])
         return;
     process_command(args, client, zappy_ptr);
-    free_command_args(args);
+    //free_command_args(args);
 }
 
 void extract_commands(client_t *client, zappy_t *zappy_ptr)
@@ -133,7 +143,7 @@ void extract_commands(client_t *client, zappy_t *zappy_ptr)
         command_line = strdup(client->in_buffer);
         if (command_line) {
             process_command_line(client, command_line, zappy_ptr);
-            free(command_line);
+            //free(command_line);
         }
         memmove(client->in_buffer, newline_pos + 1,
                 strlen(newline_pos + 1) + 1);

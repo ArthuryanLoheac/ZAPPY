@@ -66,7 +66,6 @@ static bool get_client_buffer(client_t *client, int fd, zappy_t *zappy)
         client->in_buffer = buffer;
     else {
         add_to_buffer(&client->in_buffer, buffer);
-        //free(buffer);
     }
     extract_commands(client, zappy);
     return true;
@@ -152,6 +151,5 @@ void send_client_command(zappy_t *zappy, int fd)
     } else {
         LOG_INFO("[%i]: Sent %s", current->fd, current->out_buffer);
     }
-    free(current->out_buffer);
     current->out_buffer = NULL;
 }

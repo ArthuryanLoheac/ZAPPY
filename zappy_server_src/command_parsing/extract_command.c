@@ -93,9 +93,9 @@ static char **parse_command(char *command)
         return NULL;
     result = fill_args_array(args, command, count);
     if (result < 0) {
-        //for (int i = 0; args[i] != NULL; i++)
-        //  free(args[i]);
-        //free(args);
+        for (int i = 0; args[i] != NULL; i++)
+          free(args[i]);
+        free(args);
         return NULL;
     }
     return args;
@@ -127,7 +127,7 @@ static void process_command_line(client_t *client, char *command_line,
     if (!args || !args[0])
         return;
     process_command(args, client, zappy_ptr);
-    //free_command_args(args);
+    free_command_args(args);
 }
 
 void extract_commands(client_t *client, zappy_t *zappy_ptr)
@@ -143,7 +143,7 @@ void extract_commands(client_t *client, zappy_t *zappy_ptr)
         command_line = strdup(client->in_buffer);
         if (command_line) {
             process_command_line(client, command_line, zappy_ptr);
-            //free(command_line);
+            free(command_line);
         }
         memmove(client->in_buffer, newline_pos + 1,
                 strlen(newline_pos + 1) + 1);

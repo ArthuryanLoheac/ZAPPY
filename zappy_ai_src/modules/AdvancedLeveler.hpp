@@ -63,6 +63,7 @@ class AdvancedLeveler : public AIModule {
  private:
     ModuleState_t _moduleState = Idling;
     std::unordered_map<int, AI::Data::Inventory_t> _othersInv;
+    bool _isCaller;
 
     double computePriority(int level,
         const std::unordered_map<AI::Data::Material_t, int> &inventory);

@@ -116,7 +116,7 @@ static const char defaultInvContentMsgForErr[] ="InvContent[id] "
     "Linemate,Deraumere,Sibur,Mendiane,Phiras,Thystame";
 
 /**
- * @return Optional pair with id;inventory
+ * @return Optional pair with id;AI::Data::Inventory_t
  */
 static std::optional<std::pair<int, AI::Data::Inventory_t>>
 parseInventoryMessage(const std::string &msg) {
@@ -170,14 +170,14 @@ parseInventoryMessage(const std::string &msg) {
  * located on the AI's current tile.
  */
 static bool isRequiredMaterialsOnGround(int ritualLevel) {
-    const AI::Data::Inventory_t &inv = AI::Data::i().inventory;
+    const auto &tile = AI::Data::i().vision.at(0).at(0);
     const AdvancedLeveler::ElevationRequirements_t &requiredMaterials =
         ElevationRequirementsMap.at(AI::Data::i().level);
 
     for (const auto &[material, amount] : requiredMaterials.materialsCount) {
-        if (inv.count(material) == 0)
+        if (tile.count(AI::Data::materialToString(material)) == 0)
             return false;
-        if (inv.at(material) >= amount)
+        if (tile.at(AI::Data::materialToString(material)) >= amount)
             return true;
     }
     return false;
@@ -198,6 +198,25 @@ int ritualLevel) {
             return false;
         if (inv.at(material) >= amount)
             return true;
+    }
+}
+
+/**
+ * @brief Spits one material required for the required elevation ritual based
+ * on actual items on the ground.
+ *
+ * If all items are already present on the ground, does nothing.
+ */
+static void spitRequiredMaterial(int ritualLevel) {
+    const auto &tile = AI::Data::i().vision.at(0).at(0);
+    const AdvancedLeveler::ElevationRequirements_t &requiredMaterials =
+        ElevationRequirementsMap.at(ritualLevel);
+
+    for (const auto &[material, amount] : requiredMaterials.materialsCount) {
+        const AI::Data::Inventory_t &inv = AI::Data::i().inventory;
+        if (inv.count(material) == 0 || inv.at(material) < amount)
+            AI::Interface::i().sendCommand(std::format("SET {}",
+                AI::Data::materialToString(material)));
     }
 }
 
@@ -242,6 +261,7 @@ void AdvancedLeveler::execute() {
             break;
 
         case Listening: {
+            _isCaller = true;
             auto &queue = AI::Data::i().messageQueue;
 
             if (!queue.empty()) {
@@ -264,8 +284,10 @@ void AdvancedLeveler::execute() {
                 }
                 if (isRequiredMaterialsInInv(totalInv, AI::Data::i().level))
                     _moduleState = Calling;
-                else
+                else {
+                    _isCaller = false;
                     _moduleState = Idling;
+                }
             }
         }
             break;
@@ -274,8 +296,7 @@ void AdvancedLeveler::execute() {
             if (AI::Data::i().vision.at(0).at(0).count("player")
                 && AI::Data::i().vision.at(0).at(0).at("player") >= 6) {
                 if (isRequiredMaterialsOnGround(AI::Data::i().level)) {
-                    AI::Interface::i().sendCommand(INCANTATION);
-                    _moduleState = Elevating;
+                    _moduleState = Spitting;
                 }
                 break;
             } else {
@@ -296,12 +317,18 @@ void AdvancedLeveler::execute() {
             break;
 
         case Spitting: {
-            if (isRequiredMaterialsOnGround(AI::Data::i().level))
-                break;
+            if (isRequiredMaterialsOnGround(AI::Data::i().level)) {
+                if (_isCaller)
+                    AI::Interface::i().sendCommand(INCANTATION);
+                _moduleState = Elevating;
+            } else {
+                spitRequiredMaterial(AI::Data::i().level);
+            }
         }
             break;
 
         case Elevating:
+            // Dunno
             break;
     }
 }

@@ -38,6 +38,9 @@ int checkArgs(int ac, char **av) {
         } else if (std::string(av[i]) == "-vvv") {
             set_minimum_log_level(DEBUG);
             i++;
+        } else if (std::string(av[i]) == "-o") {
+            GUI::DataManager::i().setOptimized(true);
+            i++;
         } else {
             return 84;
         }
@@ -72,7 +75,7 @@ int main(int ac, char **av) {
         GUI::GameDataManager::i();
 
         try {
-            if (!(ac == 5 || ac == 6))
+            if (!(ac >= 5 && ac <= 7))
                 return returnHelp();
             if (checkArgs(ac, av) == 84)
                 return returnHelp();

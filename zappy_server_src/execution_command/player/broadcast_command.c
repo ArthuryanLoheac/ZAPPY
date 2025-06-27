@@ -124,7 +124,7 @@ static void broadcast_every_client(zappy_t *zappy, client_t *client,
     buffer = malloc(sizeof(char) * (30 + strlen(textBuffer)));
     if (buffer == NULL)
         display_error("Failed to allocate memory for broadcast buffer");
-    memset(buffer, 0, sizeof(char) * (30 + strlen(textBuffer))));
+    memset(buffer, 0, sizeof(char) * (30 + strlen(textBuffer)));
     sprintf(buffer, "pbc #%d %s\n", client->stats.id, textBuffer);
     send_data_to_graphics(zappy, buffer);
     while (curr_client != NULL) {

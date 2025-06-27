@@ -84,7 +84,7 @@ class KirbyModule : public AIModule {
     int tickUsed;              ///< Number of ticks consumed so far
     int timeRemaining;         ///< Total time budget for the module
     int forwardCount;          ///< Number of forward steps taken
-    bool suckMode;             ///< True if in collection mode, false if returning
+    bool suckMode;             ///< True if collecting, false if returning
     bool hasMadeHisWill;       ///< True if return journey has been initiated
-    bool shouldLoopAround;     ///< True if should loop around map instead of turning back
+    bool shouldLoopAround;     ///< True if should loop around map
 };

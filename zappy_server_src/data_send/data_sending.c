@@ -71,7 +71,7 @@ void add_to_buffer(char **buffer, const char *data)
 {
     size_t old_size;
     size_t new_size;
-    char *new_buffer;
+    char *new_buffer = NULL;
 
     if (*buffer == NULL) {
         *buffer = strdup(data);

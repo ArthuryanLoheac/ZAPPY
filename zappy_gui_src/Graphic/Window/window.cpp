@@ -208,6 +208,22 @@ void Window::updateMesh() {
     }
     if (!worldSetuped)
         return;
+    for (size_t i = 0; i < GUI::GameDataManager::i().getPlayers().size(); i++) {
+        if (GUI::GameDataManager::i().getPlayers()[i].isDead) {
+            if (GUI::GameDataManager::i().getPlayers()[i].getMesh()) {
+                smgr->addToDeletionQueue(
+                    GUI::GameDataManager::i().getPlayers()[i].getMesh().get());
+                for (auto &mesh : GUI::GameDataManager::i()
+                    .getPlayers()[i].getPlayerMeshesCylinder()) {
+                    smgr->addToDeletionQueue(mesh.get());
+                }
+                GUI::GameDataManager::i().getPlayers()[i].setMesh(nullptr);
+                GUI::GameDataManager::i().getPlayers().erase(
+                    GUI::GameDataManager::i().getPlayers().begin() + i);
+                i--;
+            }
+        }
+    }
 
     if (needUpdateRessources)
         initMeshRessources();

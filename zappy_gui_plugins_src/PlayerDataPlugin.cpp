@@ -186,7 +186,7 @@ bool PlayerDataPlugin::detectCollisionPlayer() {
             continue;
         std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> playerMesh =
             player.PlayerMesh;
-        if (!playerMesh)
+        if (!playerMesh || player.isDead)
             continue;
         irr::core::vector3df Pos = playerMesh->getPosition();
         irr::core::aabbox3d<irr::f32> box(Pos.X - 0.1f, Pos.Y - 0.1f,

@@ -169,8 +169,7 @@ void GameDataManager::removePlayer(int id) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     for (size_t i = 0; i < players.size(); i++) {
         if (players[i].getId() == id) {
-            players[i].destroy();
-            players.erase(players.begin() + i);
+            players[i].isDead = true;
             return;
         }
     }

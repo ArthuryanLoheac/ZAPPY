@@ -45,6 +45,7 @@ void PluginsDataManager::updatePlayers() {
         newPlayer.teamName = player.getTeamName();
         newPlayer.x = player.getX();
         newPlayer.y = player.getY();
+        newPlayer.isDead = player.isDead;
         newPlayer.inElevation = player.getState() == GUI::Player::IDLE_ELEVATION
             || player.getState() == GUI::Player::END_ELEVATION
             || player.getState() == GUI::Player::START_ELEVATION;

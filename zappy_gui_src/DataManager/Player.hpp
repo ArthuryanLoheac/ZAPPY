@@ -16,6 +16,7 @@ namespace GUI {
 class Player {
  public:
     bool firstSet = true;
+    bool isDead = false;
 
     /**
      * @brief Enum for player states.
@@ -328,6 +329,10 @@ class Player {
 
     PlayerState getState() const {
         return state;
+    }
+
+    std::vector<std::shared_ptr<Mesh>> &getPlayerMeshesCylinder() {
+        return PlayerMeshesCylinder;
     }
 
  private:

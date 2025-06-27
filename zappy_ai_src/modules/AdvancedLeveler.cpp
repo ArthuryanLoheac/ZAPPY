@@ -5,6 +5,10 @@
 #include <algorithm>
 #include <string>
 #include <format>
+#include <tuple>
+#include <regex>
+#include <vector>
+#include <utility>
 
 #include "Data/Data.hpp"
 #include "Interface/Interface.hpp"
@@ -87,20 +91,12 @@ double AdvancedLeveler::computePriority(int level,
 /**
  * This function is temporary.
  */
-static bool isInvRequestCmd(std::string msg) {
-    return msg == InvRequestCmd;
-}
-
-/**
- * This function is temporary.
- */
 static int getId() {
     return 10;
 }
 
 static std::string getInvString() {
-    return std::format("InvContent {}: {},{},{},{},{},{},{}", getId(),
-        AI::Data::i().inventory.at(AI::Data::Food),
+    return std::format("InvContent[{}] {},{},{},{},{},{}", getId(),
         AI::Data::i().inventory.at(AI::Data::Linemate),
         AI::Data::i().inventory.at(AI::Data::Deraumere),
         AI::Data::i().inventory.at(AI::Data::Sibur),
@@ -109,12 +105,74 @@ static std::string getInvString() {
         AI::Data::i().inventory.at(AI::Data::Thystame));
 }
 
+static const char defaultInvContentMsgForErr[] ="InvContent[id] "
+    "Linemate,Deraumere,Sibur,Mendiane,Phiras,Thystame";
+/**
+ * @return Optional pair with id;inventory
+ */
+static std::optional<std::pair<int, AI::Data::Inventory_t>>
+parseInventoryMessage(const std::string &msg) {
+    std::regex pattern(R"(InvContent\[(\d+)\]\s+(\d+,\d+,\d+,\d+,\d+,\d+))");
+    std::smatch match;
+    int id;
+
+    if (!std::regex_match(msg, match, pattern) || match.size() != 3)
+        return std::nullopt;
+    try {
+        id = std::stoi(match[1].str());
+    } catch (...) {
+        LOG_ERROR("Failed to parse invContentStr id:"
+            "got '%s' but expected '%s'", msg, defaultInvContentMsgForErr);
+        return std::nullopt;
+    }
+
+    std::string inventoryStr = match[2].str();
+    std::istringstream ss(inventoryStr);
+    std::string token;
+    std::vector<int> parsedInv;
+
+    while (std::getline(ss, token, ',')) {
+        try {
+            parsedInv.push_back(std::stoi(token));
+        } catch (...) {
+            LOG_ERROR("Failed to parse invContentStr itemAmount:"
+                "got '%s' but expected '%s'", msg, defaultInvContentMsgForErr);
+            return std::nullopt;
+        }
+    }
+    if (parsedInv.size() != 6) {
+        LOG_ERROR("Failed to parse invContentStr wrong ressources type count:"
+            "got '%s' but expected '%s'", msg, defaultInvContentMsgForErr);
+        return std::nullopt;
+    }
+
+    AI::Data::Inventory_t inv;
+    inv[AI::Data::Linemate] = parsedInv[0];
+    inv[AI::Data::Deraumere] = parsedInv[0];
+    inv[AI::Data::Sibur] = parsedInv[0];
+    inv[AI::Data::Mendiane] = parsedInv[0];
+    inv[AI::Data::Phiras] = parsedInv[0];
+    inv[AI::Data::Thystame] = parsedInv[0];
+
+    return std::make_pair(id, inv);
+}
+
 float AdvancedLeveler::getPriority() {
+    auto &msgQueue = AI::Data::i().messageQueue;
+
     if (AI::Data::i().level < 2)
         return 1.0f;
-    if (isInvRequestCmd("How do I get the last msg ToT")) {
+    if (!msgQueue.empty() && msgQueue.front().first == InvRequestCmd) {
         _moduleState = Answering;
         return 0.0f;
+    }
+    if (_moduleState == Listening) {
+        if (!msgQueue.empty()
+            && parseInventoryMessage(msgQueue.front().first) != std::nullopt) {
+            return 0.0f;
+        } else {
+            return 1.0f;
+        }
     }
     return computePriority(AI::Data::i().level, AI::Data::i().inventory);
 }
@@ -122,15 +180,30 @@ float AdvancedLeveler::getPriority() {
 void AdvancedLeveler::execute() {
     switch (_moduleState) {
         case Idling:
-            _moduleState = Listening;
             LOG_INFO("Prerequisites met, sending invitation for ritual");
             AI::Interface::i().sendCommand(InvRequestCmd);
+            _moduleState = Listening;
             break;
         case Answering:
             AI::Interface::i().sendCommand(getInvString());
             _moduleState = Idling;
             break;
-        case Listening:
+        case Listening: {
+            auto &queue = AI::Data::i().messageQueue;
+
+            if (!queue.empty()) {
+                const auto &[msg, direction] = queue.front();
+                auto parsed = parseInventoryMessage(msg);
+
+                if (parsed != std::nullopt) {
+                    int id = std::get<0>(parsed.value());
+                    std::pair<int, AI::Data::Inventory_t> inv = {
+                        direction, std::get<1>(parsed.value())};
+                    _othersInv[id] = inv;
+                    queue.pop();
+                }
+            }
+        }
             break;
         case Calling:
             break;

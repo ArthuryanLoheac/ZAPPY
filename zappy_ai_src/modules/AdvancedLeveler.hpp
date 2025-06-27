@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <utility>
 
 #include "modules/AIModule.hpp"
 #include "Data/Data.hpp"
@@ -59,7 +60,9 @@ class AdvancedLeveler : public AIModule {
     } ModuleState_t;
 
  private:
+    ModuleState_t _moduleState = Idling;
+    std::unordered_map<int, std::pair<int, AI::Data::Inventory_t>> _othersInv;
+
     double computePriority(int level,
         const std::unordered_map<AI::Data::Material_t, int> &inventory);
-    ModuleState_t _moduleState = Idling;
 };

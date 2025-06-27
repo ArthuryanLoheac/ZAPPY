@@ -35,7 +35,8 @@ class Data {
         Thystame
     } Material_t;
     // Inventory
-    std::unordered_map<Material_t, int> inventory;
+    typedef std::unordered_map<Material_t, int> Inventory_t;
+    Inventory_t inventory;
     static const std::unordered_map<std::string, Material_t> stringToMaterial;
 
     // representation of the vision given by the LOOK command, first vector for

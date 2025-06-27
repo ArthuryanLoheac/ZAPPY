@@ -49,13 +49,13 @@ float ElevationModule::getPriority() {
  * Updates status flags based on current inventory contents
  */
 void ElevationModule::checkResources() {
-    foodCount = AI::Data::i().inventory.find("food") !=
+    foodCount = AI::Data::i().inventory.find(AI::Data::Food) !=
         AI::Data::i().inventory.end() ?
-        AI::Data::i().inventory.at("food") : 0;
+        AI::Data::i().inventory.at(AI::Data::Food) : 0;
 
-    hasLinemate = AI::Data::i().inventory.find("linemate") !=
+    hasLinemate = AI::Data::i().inventory.find(AI::Data::Linemate) !=
                   AI::Data::i().inventory.end() &&
-                  AI::Data::i().inventory.at("linemate") > 0;
+                  AI::Data::i().inventory.at(AI::Data::Linemate) > 0;
 
     hasSufficientFood = (foodCount >= 3);
 }

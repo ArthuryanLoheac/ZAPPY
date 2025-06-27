@@ -30,7 +30,7 @@ Data::~Data() {
 }
 
 const std::unordered_map<std::string, AI::Data::Material_t>
-    AI::Data::stringToMaterial = {
+AI::Data::stringToMaterial = {
     {"food", Food},
     {"linemate", Linemate},
     {"deraumere", Deraumere},

@@ -1,7 +1,9 @@
 #pragma once
 
 #include <unordered_map>
+
 #include "modules/AIModule.hpp"
+#include "Data/Data.hpp"
 
 /**
  * @class AdvancedLeveler
@@ -42,21 +44,21 @@ class AdvancedLeveler : public AIModule {
      */
     float getPriority() override;
 
-    typedef enum Material_e {
-        Linemate,
-        Deraumere,
-        Sibur,
-        Mendiane,
-        Phiras,
-        Thystame
-    } Material_t;
-
     typedef struct ElevationRequirements_s {
         int playerCount;
-        std::unordered_map<Material_t, int> materialsCount;
+        std::unordered_map<AI::Data::Material_t, int> materialsCount;
     } ElevationRequirements_t;
 
+    typedef enum ModuleState_e {
+        Idling,
+        Listening,
+        Calling,
+        Moving,
+        Elevating
+    } ModuleState_t;
+
  private:
-    double computePriority(int level, const std::unordered_map
-        <Material_t, int> &inventory);
+    double computePriority(int level,
+        const std::unordered_map<AI::Data::Material_t, int> &inventory);
+    ModuleState_t _moduleState = Idling;
 };

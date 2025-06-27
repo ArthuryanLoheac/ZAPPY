@@ -105,6 +105,9 @@ void Window::windowUpdateNoFocus() {
         updateSkyBoxRotation();
         GameDataManager::i().Update(frameDeltaTime);
         SoundsManager::i().Update();
+        PluginsDataManager::i().updatePluginsData();
+        pluginsManager::i().update(PluginsDataManager::i().getData(),
+            frameDeltaTime);
         driver->beginScene(true, true,
             irr::video::SColor(255, 100, 101, 140));
 

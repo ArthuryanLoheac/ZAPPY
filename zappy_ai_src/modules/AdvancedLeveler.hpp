@@ -51,6 +51,7 @@ class AdvancedLeveler : public AIModule {
 
     typedef enum ModuleState_e {
         Idling,
+        Answering,
         Listening,
         Calling,
         Moving,

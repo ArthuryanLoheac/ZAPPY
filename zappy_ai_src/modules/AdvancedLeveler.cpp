@@ -3,6 +3,8 @@
 #include <cmath>
 #include <unordered_map>
 #include <algorithm>
+#include <string>
+#include <format>
 
 #include "Data/Data.hpp"
 #include "Interface/Interface.hpp"
@@ -82,9 +84,38 @@ double AdvancedLeveler::computePriority(int level,
     return priority;
 }
 
+/**
+ * This function is temporary.
+ */
+static bool isInvRequestCmd(std::string msg) {
+    return msg == InvRequestCmd;
+}
+
+/**
+ * This function is temporary.
+ */
+static int getId() {
+    return 10;
+}
+
+static std::string getInvString() {
+    return std::format("InvContent {}: {},{},{},{},{},{},{}", getId(),
+        AI::Data::i().inventory.at(AI::Data::Food),
+        AI::Data::i().inventory.at(AI::Data::Linemate),
+        AI::Data::i().inventory.at(AI::Data::Deraumere),
+        AI::Data::i().inventory.at(AI::Data::Sibur),
+        AI::Data::i().inventory.at(AI::Data::Mendiane),
+        AI::Data::i().inventory.at(AI::Data::Phiras),
+        AI::Data::i().inventory.at(AI::Data::Thystame));
+}
+
 float AdvancedLeveler::getPriority() {
     if (AI::Data::i().level < 2)
         return 1.0f;
+    if (isInvRequestCmd("How do I get the last msg ToT")) {
+        _moduleState = Answering;
+        return 0.0f;
+    }
     return computePriority(AI::Data::i().level, AI::Data::i().inventory);
 }
 
@@ -92,8 +123,12 @@ void AdvancedLeveler::execute() {
     switch (_moduleState) {
         case Idling:
             _moduleState = Listening;
-            LOG_DEBUG("Prerequisites met, sending invitation for ritual");
+            LOG_INFO("Prerequisites met, sending invitation for ritual");
             AI::Interface::i().sendCommand(InvRequestCmd);
+            break;
+        case Answering:
+            AI::Interface::i().sendCommand(getInvString());
+            _moduleState = Idling;
             break;
         case Listening:
             break;

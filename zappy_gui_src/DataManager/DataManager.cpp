@@ -1,7 +1,6 @@
 #include <string>
 
 #include "DataManager/DataManager.hpp"
-#include "DataManager.hpp"
 
 namespace GUI {
 

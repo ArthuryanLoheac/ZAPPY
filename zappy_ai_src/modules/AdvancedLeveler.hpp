@@ -13,7 +13,7 @@
  * This modules is low prio by default, it will awaken itself when the
  * conditions to start the process of the Elevation ritual are satisfied.
  *
- * Once awaken, it ask all of the other AIs their inventory content, this will
+ * Once awake, it asks all of the other AIs their inventory content, this will
  * allow the levelers to know if the total of required ressources is satisfied.
  * If this total amount of resources is satifying, the leveler with the lowest
  * level will start spamming broadcasts to allow the other AIs to reunite

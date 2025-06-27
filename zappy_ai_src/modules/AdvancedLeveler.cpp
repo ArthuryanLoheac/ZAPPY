@@ -226,7 +226,8 @@ float AdvancedLeveler::getPriority() {
 
     if (AI::Data::i().level < 2)
         return 1.0f;
-    if (!msgQueue.empty() && msgQueue.front().first == InvRequestCmd) {
+    if (!msgQueue.empty() && msgQueue.front().first == InvRequestCmd
+        && !_isCaller) {
         _moduleState = Answering;
         return 0.0f;
     }
@@ -239,10 +240,12 @@ float AdvancedLeveler::getPriority() {
         }
     }
     if (!msgQueue.empty()
-        && msgQueue.front().first == std::string(CallingMsg)) {
+        && msgQueue.front().first == std::string(CallingMsg)
+        && !msgQueue.front().second) {
         _moduleState = Moving;
         return 0.3f;
     }
+    
     return computePriority(AI::Data::i().level, AI::Data::i().inventory);
 }
 
@@ -276,8 +279,8 @@ void AdvancedLeveler::execute() {
                     queue.pop();
                 }
             }
-            if (_othersInv.size() >= 6) {
-                AI::Data::Inventory_t totalInv;
+            if (_othersInv.size() >= 5) {
+                AI::Data::Inventory_t totalInv = AI::Data::i().inventory;
                 for (const auto &inv : _othersInv) {
                     for (const auto &[material, count] : inv.second) {
                         totalInv[material] += count;

@@ -44,7 +44,9 @@ void Window::SetupSkybox() {
 }
 
 Window::Window() {
-    device = irr::createDevice(irr::video::EDT_BURNINGSVIDEO,
+    bool optimized = GUI::DataManager::i().isOptimized();
+    device = irr::createDevice(
+        optimized ? irr::video::EDT_OPENGL : irr::video::EDT_BURNINGSVIDEO,
         irr::core::dimension2d<irr::u32>(1280, 720), 16, false, false, false,
         &receiver);
 

@@ -1,6 +1,5 @@
 #include "Logic/Core.hpp"
 
-#include <iostream>
 #include <map>
 #include <memory>
 #include <queue>
@@ -218,4 +217,5 @@ void Logic::setupRoleBasedModules() {
  */
 bool Logic::hasRoleBasedModulesSetup() const {
     return roleModulesSetup;
+}
 }

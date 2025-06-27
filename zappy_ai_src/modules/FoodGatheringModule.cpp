@@ -6,7 +6,6 @@
 */
 
 #include "modules/FoodGatheringModule.hpp"
-#include <iostream>
 #include <random>
 #include <map>
 #include "../Logic/AIBase.hpp"
@@ -53,9 +52,7 @@ float FoodGatheringModule::getPriority() {
                  (static_cast<float>(level) / 8.0f);
     if (prio < 0.0f) prio = 0.0f;
     if (prio > 1.0f) prio = 1.0f;
-    std::cout << "Food Gathering Module Priority: " << prio
-              << "with food count: " << foodCount
-              << " and level: " << level << std::endl;
+    LOG_INFO("Food Gathering Module Priority: %.2f with food count: %d and level: %d", prio, foodCount, level);
     return prio;
 }
 
@@ -95,8 +92,7 @@ bool FoodGatheringModule::checkCurrentTileForFood() {
 
         if (currentTile.find("food") != currentTile.end() &&
             currentTile["food"] > 0) {
-            std::cout << "Food found on current tile: "
-                      << currentTile["food"] << std::endl;
+            LOG_INFO("Food found on current tile: %d", currentTile["food"]);
 
             for (int i = 0; i < currentTile["food"]; i++) {
                 AI::Interface::i().sendCommand("Take food\n");
@@ -104,7 +100,7 @@ bool FoodGatheringModule::checkCurrentTileForFood() {
 
             return true;
         } else {
-            std::cout << "No food on current tile." << std::endl;
+            LOG_INFO("No food on current tile.");
         }
     }
     return false;
@@ -159,8 +155,7 @@ float FoodGatheringModule::calculateFoodWeight(size_t x, int relativeY,
     // Special case: current tile (0,0) should be HEAVILY prioritized
     if (x == 0 && relativeY == 0) {
         weight += CURRENT_TILE_BONUS;
-        std::cout << "Adding special weight for food on current tile!"
-                  << std::endl;
+        LOG_INFO("Adding special weight for food on current tile!");
     }
 
     // Bonus for additional food on the same tile
@@ -213,9 +208,7 @@ FoodGatheringModule::FoodSource FoodGatheringModule::evaluateFoodSources(
                     bestSource.weight = weight;
                 }
 
-                std::cout << "Food at (" << x << "," << relativeY << "): "
-                          << foodCount << " items, weight = " << weight
-                          << std::endl;
+                LOG_INFO("Food at (%zu,%d): %d items, weight = %.2f", x, relativeY, foodCount, weight);
             }
         }
     }
@@ -334,9 +327,7 @@ void FoodGatheringModule::collectFood() {
 
     // If we found food with sufficient weight, collect all food along the path
     if (bestSource.weight >= WEIGHT_THRESHOLD) {
-        std::cout << "Best food source at (" << bestSource.x << ","
-                  << bestSource.y << ") with weight " << bestSource.weight
-                  << std::endl;
+        LOG_INFO("Best food source at (%d,%d) with weight %.2f", bestSource.x, bestSource.y, bestSource.weight);
         collectFoodAlongPath(bestSource.x, bestSource.y, foodLocations);
     } else {
         exploreRandomly();

@@ -16,8 +16,7 @@
  */
 DisruptionModule::DisruptionModule(): lookProbability(0), actionCounter(0),
     rng(std::random_device {} ()) {
-    std::cout << "Disruption Module initialized with "
-              << "look probability: " << lookProbability << "%" << std::endl;
+    LOG_INFO("Disruption Module initialized with look probability: %d%%", lookProbability);
 }
 
 /**
@@ -97,4 +96,5 @@ void DisruptionModule::updateLookProbability() {
     }
     LOG_INFO("Disruption Module updated look probability to: %d%%",
              lookProbability);
+}
 }

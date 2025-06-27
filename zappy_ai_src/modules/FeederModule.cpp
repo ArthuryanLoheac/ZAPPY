@@ -73,8 +73,7 @@ bool FeederModule::executeInitialFoodDrop() {
         return true;
     }
     if (hasFood()) {
-        LOG_INFO("Dropping initial food item ") << (foodDropCounter + 1)
-            << "/2" << std::endl;
+        LOG_INFO("Dropping initial food item %d/2", foodDropCounter + 1);
         AI::Interface::i().sendCommand("Set food\n");
         foodDropCounter++;
         if (foodDropCounter >= 2) {
@@ -139,12 +138,10 @@ bool FeederModule::executeBroadcast() {
  */
 void FeederModule::executeContinuousFeeding() {
     if (hasFood()) {
-        LOG_INFO("Continuously feeding: placing food on ground...")
-            << std::endl;
+        LOG_INFO("Continuously feeding: placing food on ground...");
         AI::Interface::i().sendCommand("Set food\n");
     } else {
-        LOG_INFO("No food available for continuous feeding...")
-            << std::endl;
+        LOG_INFO("No food available for continuous feeding...");
     }
 }
 
@@ -179,6 +176,9 @@ void FeederModule::checkInventory() {
  * @brief Get the current state of the feeder sequence
  * @return Current state enum value
  */
+FeederState FeederModule::getCurrentState() const {
+    return currentState;
+}
 FeederState FeederModule::getCurrentState() const {
     return currentState;
 }

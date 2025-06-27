@@ -182,9 +182,12 @@ bool PlayerDataPlugin::detectCollisionPlayer() {
         ->getRayFromScreenCoordinates(mousePos, cam);
 
     for (auto &player : data.players) {
-        if (!player.PlayerMesh)
+        if (!player.PlayerMesh || !player.PlayerMesh)
             continue;
-        irr::core::vector3df Pos = player.PlayerMesh->getPosition();
+        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> playerMesh = player.PlayerMesh;
+        if (!playerMesh)
+            continue;
+        irr::core::vector3df Pos = playerMesh->getPosition();
         irr::core::aabbox3d<irr::f32> box(Pos.X - 0.1f, Pos.Y - 0.1f,
             Pos.Z - 0.5f, Pos.X + 0.5f, Pos.Y + 0.1f, Pos.Z + 0.5f);
         if (box.intersectsWithLine(ray)) {

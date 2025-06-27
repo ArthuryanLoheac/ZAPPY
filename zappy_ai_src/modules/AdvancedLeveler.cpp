@@ -198,6 +198,7 @@ int ritualLevel) {
         if (inv.at(material) >= amount)
             return true;
     }
+    return true;
 }
 
 /**
@@ -211,8 +212,7 @@ static void spitRequiredMaterial(AI::Data::Inventory_t &inv, int ritualLevel) {
         ElevationRequirementsMap.at(ritualLevel);
 
     for (const auto &[material, amount] : requiredMaterials.materialsCount) {
-        const AI::Data::Inventory_t &inv = AI::Data::i().inventory;
-        if (inv.count(material) == 0 || inv.at(material) < amount
+        if ((inv.count(material) == 0 || inv.at(material) < amount)
             && inv.count(material) > 0) {
             AI::Interface::i().sendCommand(std::format("SET {}",
                 AI::Data::materialToString(material)));
@@ -283,9 +283,9 @@ void AdvancedLeveler::execute() {
                         totalInv[material] += count;
                     }
                 }
-                if (isRequiredMaterialsInInv(totalInv, AI::Data::i().level))
+                if (isRequiredMaterialsInInv(totalInv, AI::Data::i().level)) {
                     _moduleState = Calling;
-                else {
+                } else {
                     _isCaller = false;
                     _moduleState = Idling;
                 }

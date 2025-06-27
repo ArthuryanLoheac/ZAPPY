@@ -35,4 +35,20 @@ std::vector<std::string> &command) {
     }
 }
 
+void Interface::receiveEject(const std::vector<std::string> &args) {
+    if (args.size() < 2) {
+        LOG_WARNING("EJECT: Invalid arguments received");
+        return;
+    }
+
+    int direction = std::stoi(args[1]);
+    if (direction < -1 || direction > 1) {
+        LOG_WARNING("EJECT: Invalid direction value %d", direction);
+        return;
+    }
+
+    Data::i().kickVector.push_back({direction, 0});
+    LOG_INFO("EJECT: Player ejected in direction %d", direction);
+}
+
 }  // namespace AI

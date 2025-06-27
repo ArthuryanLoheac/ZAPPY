@@ -85,6 +85,11 @@ void Interface::run() {
             receiveMessage(outputCopy);
             continue;
         }
+        if (output[0] == "EJECT:") {
+            auto outputCopy = output;
+            receiveEject(outputCopy);
+            continue;
+        }
         outputQueue.push(output);
     }
     try {

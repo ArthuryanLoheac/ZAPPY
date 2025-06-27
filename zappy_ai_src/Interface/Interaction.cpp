@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 #include "Interface/Interface.hpp"
 #include "Exceptions/Commands.hpp"

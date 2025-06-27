@@ -45,13 +45,14 @@ void Interface::receiveEject(const std::vector<std::string> &args) {
     try {
         direction = std::stoi(args[1]);
     } catch (const std::invalid_argument &e) {
-        LOG_WARNING("EJECT: Invalid argument for direction: %s", args[1].c_str());
+        LOG_WARNING("EJECT: Invalid argument for direction: %s",
+            args[1].c_str());
         return;
     } catch (const std::out_of_range &e) {
         LOG_WARNING("EJECT: Direction value out of range: %s", args[1].c_str());
         return;
     }
-    if (direction < -1 || direction > 1) {
+    if (direction < 1 || direction > 8) {
         LOG_WARNING("EJECT: Invalid direction value %d", direction);
         return;
     }

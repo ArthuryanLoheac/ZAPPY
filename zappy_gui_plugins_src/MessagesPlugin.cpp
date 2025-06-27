@@ -109,8 +109,10 @@ pluginsData::Player p) {
     for (auto &player : data.players) {
         if (player.id == p.id || !player.PlayerMesh || !p.PlayerMesh)
             continue;
-        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> playerMesh = player.PlayerMesh;
-        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> pplayerMesh = p.PlayerMesh;
+        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> playerMesh =
+            player.PlayerMesh;
+        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> pplayerMesh =
+            p.PlayerMesh;
         if (!playerMesh || !pplayerMesh)
             continue;
         irr::core::vector3df pos = playerMesh->getPosition();

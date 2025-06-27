@@ -184,7 +184,8 @@ bool PlayerDataPlugin::detectCollisionPlayer() {
     for (auto &player : data.players) {
         if (!player.PlayerMesh || !player.PlayerMesh)
             continue;
-        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> playerMesh = player.PlayerMesh;
+        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> playerMesh =
+            player.PlayerMesh;
         if (!playerMesh)
             continue;
         irr::core::vector3df Pos = playerMesh->getPosition();

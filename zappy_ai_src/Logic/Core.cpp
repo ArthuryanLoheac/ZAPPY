@@ -9,8 +9,9 @@
 #include <utility>
 #include <vector>
 
+#include "../Logic/AIBase.hpp"
+#include "../Interface/Interface.hpp"
 #include "Logic/PrioritySystem.hpp"
-#include "../modules/CommunicationModule.hpp"
 #include "../modules/FoodGatheringModule.hpp"
 #include "../modules/KirbyModule.hpp"
 #include "../modules/RoleAttributionModule.hpp"
@@ -55,6 +56,12 @@ void Logic::addModule(std::unique_ptr<AIModule> module) {
 
 void Logic::executeHighestPriorityModule() {
     if (modules.empty()) return;
+    static int inventoryCheckCounter = 0;
+    if (++inventoryCheckCounter >= 10) {
+        inventoryCheckCounter = 0;
+        AI::Interface::i().sendCommand(INVENTORY);
+        return;
+    }
 
     auto highestPriorityModuleIt = std::max_element(
         modules.begin(), modules.end(),
@@ -62,13 +69,9 @@ void Logic::executeHighestPriorityModule() {
             const std::unique_ptr<AIModule>& b) {
             return a->getPriority() > b->getPriority();
         });
-    
-    // Get the module type name using typeid
     const auto& module = *highestPriorityModuleIt;
-    std::cout << "Executing module: " << typeid(*module).name() 
+    std::cout << "Executing module: " << typeid(*module).name()
               << " with priority: " << module->getPriority() << std::endl;
-    
-    // Execute the highest priority module
     module->execute();
 }
 
@@ -158,8 +161,8 @@ int16_t Logic::getLevel() const {
  */
 RoleAttributionModule* Logic::getRoleModule() {
     for (auto& module : modules) {
-        // Use dynamic cast to check if the module is a RoleAttributionModule
-        if (auto roleModule = dynamic_cast<RoleAttributionModule*>(module.get())) {
+        if (auto roleModule =
+            dynamic_cast<RoleAttributionModule*>(module.get())) {
             return roleModule;
         }
     }
@@ -177,25 +180,23 @@ void Logic::setupRoleBasedModules() {
 
     Role currentRole = roleModule->getCurrentRole();
     std::cout << "Setting up modules for role: ";
-    
+
     switch (currentRole) {
         case Role::HARVESTER:
             std::cout << "HARVESTER" << std::endl;
             addModule(std::make_unique<KirbyModule>());
             break;
-            
+
         case Role::LEVELER:
             std::cout << "LEVELER" << std::endl;
             addModule(std::make_unique<DisruptionModule>());
             addModule(std::make_unique<RessourceGatheringSpawning>());
             addModule(std::make_unique<ElevationModule>());
-            addModule(std::make_unique<FoodGatheringModule>());
             break;
 
         case Role::DISRUPTER:
             std::cout << "DISRUPTER" << std::endl;
             addModule(std::make_unique<DisruptionModule>());
-            addModule(std::make_unique<CommunicationModule>());
             break;
 
         case Role::FEEDER:

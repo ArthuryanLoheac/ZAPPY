@@ -5,6 +5,7 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
+#include <algorithm>
 
 #include "Interface/Interface.hpp"
 #include "Data/Data.hpp"
@@ -15,7 +16,7 @@
  */
 KirbyModule::KirbyModule() : tickUsed(0), timeRemaining(FOOD_TICK * 10),
     forwardCount(0), suckMode(true), hasMadeHisWill(false) {
-    std::cout << "KirbyModule initialized: suckMode=" << suckMode 
+    std::cout << "KirbyModule initialized: suckMode=" << suckMode
               << ", timeRemaining=" << timeRemaining << std::endl;
 }
 
@@ -33,7 +34,6 @@ void KirbyModule::execute() {
     std::cout << "Kirby PID " << getpid() << " executing with "
               << timeRemaining - tickUsed << " ticks remaining, "
               << (suckMode ? "SUCK mode" : "SPIT mode") << std::endl;
-
     if (suckMode) {
         suck();
     } else {
@@ -52,25 +52,68 @@ float KirbyModule::getPriority() {
 /**
  * @brief Computes whether the KirbyModule should remain in suck mode.
  *
- * Updates the suckMode flag based on time and actions left.
+ * Updates the suckMode flag based on time, map size, and actions left.
  */
 void KirbyModule::computeSuckMode() {
-    // Calculate ticks needed to return and drop items
-    int ticksForRotation = 2 * 7;  // 180 degrees turn (LEFT twice)
-    int ticksForReturn = forwardCount * 7;  // Each step back costs 7 ticks
-    int ticksForDropping = getNbObjects() * 7;  // Each item drop costs 7 ticks
-    
-    int ticksNeededToReturn = ticksForRotation + ticksForReturn + ticksForDropping;
+    int mapX = AI::Data::i().mapX;
+    int mapY = AI::Data::i().mapY;
+    int ticksForRotation = 2 * 7;
+    int ticksForReturn = forwardCount * 7;
+    int ticksForDropping = getNbObjects() * 7;
+    int ticksNeededToReturnByTurning = ticksForRotation + ticksForReturn
+        + ticksForDropping;
     int ticksRemaining = timeRemaining - tickUsed;
-    
-    const int SAFETY_MARGIN = 35; // Safety margin in ticks
-    
+    const int SAFETY_MARGIN = 35;
+    bool canLoopAround = false;
+    int ticksNeededToReturnByLooping = 0;
+
+    if (mapX > 0 && mapY > 0) {
+        bool isSquareMap = (mapX == mapY);
+        if (isSquareMap) {
+            int stepsToLoopAround = mapX - forwardCount;
+            ticksNeededToReturnByLooping =
+                (stepsToLoopAround * 7) + ticksForDropping;
+            canLoopAround =
+                (ticksNeededToReturnByLooping < ticksNeededToReturnByTurning);
+            std::cout << "Map is " << mapX << "x" << mapY << " (square). ";
+            std::cout << "Steps taken: " << forwardCount << ". ";
+            std::cout << "Ticks to loop around: " <<
+                ticksNeededToReturnByLooping << ". ";
+            std::cout << "Ticks to turn back: " <<
+                ticksNeededToReturnByTurning << std::endl;
+            if (forwardCount >= mapX) {
+                std::cout << "Reached full map circuit, stopping to drop items"
+                    << std::endl;
+                suckMode = false;
+                shouldLoopAround = (ticksNeededToReturnByLooping <
+                    ticksNeededToReturnByTurning);
+                hasMadeHisWill = false;
+                return;
+            }
+        } else {
+            int longestDimension = std::max(mapX, mapY);
+            if (forwardCount >= longestDimension) {
+                std::cout << "Reached longest dimension (" << longestDimension
+                          << "), turning back" << std::endl;
+                suckMode = false;
+                shouldLoopAround = false;
+                hasMadeHisWill = false;
+                return;
+            }
+        }
+    }
+    int ticksNeededToReturn = canLoopAround ?
+                             ticksNeededToReturnByLooping :
+                             ticksNeededToReturnByTurning;
     if (ticksRemaining - ticksNeededToReturn <= SAFETY_MARGIN) {
         if (suckMode) {
-            LOG_INFO("Kirby PID %i switching to SPIT mode (ticks remaining: %i, " 
-                    "ticks needed: %i, safety margin: %i)\n", 
-                    getpid(), ticksRemaining, ticksNeededToReturn, SAFETY_MARGIN);
+            LOG_INFO("Kirby PID %i switching to SPIT mode (ticks remaining: %i"
+                    ", ticks needed: %i, safety margin: %i)\n",
+                    getpid(), ticksRemaining, ticksNeededToReturn,
+                        SAFETY_MARGIN);
+            hasMadeHisWill = false;
             suckMode = false;
+            shouldLoopAround = canLoopAround;
         }
     }
 }
@@ -79,73 +122,73 @@ void KirbyModule::computeSuckMode() {
  * @brief Performs the "suck" action: looks, takes objects, and moves forward.
  */
 void KirbyModule::suck() {
-    // Check if we should switch to spit mode
     computeSuckMode();
-    
-    // If we've switched to spit mode, return immediately
-    if (!suckMode) {
+    if (!suckMode)
         return;
-    }
-    
-    // Look for objects
     AI::Interface::i().sendCommand(LOOK);
     tickUsed += 7;
-
-    // Take objects from the current location
     takeObjects();
-
-    // Move forward
     AI::Interface::i().sendCommand(FORWARD);
     tickUsed += 7;
     forwardCount++;
-    
-    std::cout << "Kirby moved forward, now at step " << forwardCount 
+    std::cout << "Kirby moved forward, now at step " << forwardCount
               << ", used " << tickUsed << " ticks" << std::endl;
 }
 
 /**
- * @brief Performs the "spit" action: retraces steps and drops collected objects.
+ * @brief Returns to base and drops collected objects.
  */
 void KirbyModule::spit() {
     if (hasMadeHisWill) {
         return;
     }
-
     hasMadeHisWill = true;
-    std::cout << "Kirby returning home to drop " << getNbObjects() 
-              << " objects after moving " << forwardCount << " steps" << std::endl;
-
-    // Turn around (180 degrees)
-    AI::Interface::i().sendCommand(LEFT);
-    AI::Interface::i().sendCommand(LEFT);
-    tickUsed += 14;  // 7 ticks per turn
-
-    // Return to base (walk backward)
-    for (int i = 0; i < forwardCount; i++) {
-        AI::Interface::i().sendCommand(FORWARD);
-        tickUsed += 7;
+    int mapX = AI::Data::i().mapX;
+    int mapY = AI::Data::i().mapY;
+    bool isSquareMap = (mapX == mapY) && (mapX > 0) && (mapY > 0);
+    int objectsToDrop = getNbObjects();
+    std::cout << "Kirby returning to drop " << objectsToDrop
+              << " objects after moving " << forwardCount << " steps"
+              << std::endl;
+    std::cout << "Map size: " << mapX << "x" << mapY
+              << ", is square: " << (isSquareMap ? "yes" : "no")
+              << ", Should loop around: " << (shouldLoopAround ? "yes" : "no")
+              << std::endl;
+    if (shouldLoopAround && isSquareMap && forwardCount <= mapX) {
+        int stepsToLoopAround = mapX - forwardCount;
+        if (stepsToLoopAround == 0) {
+            std::cout << "Back to starting position" << std::endl;
+        } else {
+            std::cout << "Looping around the map! Taking " << stepsToLoopAround
+                << " more steps forward instead of turning back" << std::endl;
+            for (int i = 0; i < stepsToLoopAround; i++) {
+                AI::Interface::i().sendCommand(FORWARD);
+                tickUsed += 7;
+            }
+        }
+    } else {
+        std::cout << "Turning around and going back " << forwardCount <<
+            " steps" << std::endl;
+        AI::Interface::i().sendCommand(LEFT);
+        AI::Interface::i().sendCommand(LEFT);
+        tickUsed += 14;
+        for (int i = 0; i < forwardCount; i++) {
+            AI::Interface::i().sendCommand(FORWARD);
+            tickUsed += 7;
+        }
     }
-
-    // Drop all items
     int itemsDropped = 0;
     for (auto &item : AI::Data::i().inventory) {
         const std::string itemName = item.first;
         const int itemCount = item.second;
-        
-        // Skip food items
-        if (itemName == "food") {
-            continue;
-        }
-        
         for (int i = 0; i < itemCount; i++) {
             AI::Interface::i().sendCommand("Set " + itemName + "\n");
             tickUsed += 7;
             itemsDropped++;
         }
     }
-    
-    std::cout << "Kirby completed trip: walked " << forwardCount 
-              << " steps, dropped " << itemsDropped << " items, used " 
+    std::cout << "Kirby completed trip: walked " << forwardCount
+              << " steps, dropped " << itemsDropped << " items, used "
               << tickUsed << " ticks out of " << timeRemaining << std::endl;
 }
 
@@ -160,20 +203,15 @@ void KirbyModule::takeObjects() {
         for (auto &item : cell) {
             const std::string itemName = item.first;
             const int itemCount = item.second;
-            
-            // Skip food for now - we want to prioritize valuable resources
             if (itemName == "food") {
                 continue;
             }
-            
             for (int i = 0; i < itemCount; i++) {
                 AI::Interface::i().sendCommand("Take " + itemName + "\n");
                 tickUsed += 7;
                 itemsTaken++;
             }
         }
-        
-        // Now collect food if available
         if (cell.find("food") != cell.end() && cell["food"] > 0) {
             for (int i = 0; i < cell["food"]; i++) {
                 AI::Interface::i().sendCommand("Take food\n");
@@ -181,9 +219,8 @@ void KirbyModule::takeObjects() {
                 itemsTaken++;
             }
         }
-        
         if (itemsTaken > 0) {
-            std::cout << "Kirby collected " << itemsTaken << " items" << std::endl;
+            std::cout << "Collected " << itemsTaken << " items" << std::endl;
         }
     } catch (const std::out_of_range &e) {
         LOG_WARNING("Error taking objects: %s\n", e.what());

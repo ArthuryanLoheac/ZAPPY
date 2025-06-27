@@ -29,20 +29,12 @@ FoodGatheringModule::FoodGatheringModule() {
  * Periodically checks inventory and handles the food gathering process
  */
 void FoodGatheringModule::execute() {
-    static int inventoryCheckCount = 0;
-    inventoryCheckCount++;
-
     foodCount = AI::Data::i().inventory.find("food") !=
                 AI::Data::i().inventory.end() ?
                 AI::Data::i().inventory.at("food") : 0;
     level = AI::Data::i().level;
-
-    if (inventoryCheckCount % 10 == 0) {
-        AI::Interface::i().sendCommand(INVENTORY);
-    } else {
-        findFood();
-        collectFood();
-    }
+    findFood();
+    collectFood();
 }
 
 /**

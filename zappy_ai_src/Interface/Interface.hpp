@@ -314,7 +314,6 @@ class Interface {
      */
     static std::string decrypt(const std::string& encrypted,
         const std::string& key);
-
 };
 
 }  // namespace AI

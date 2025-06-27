@@ -18,7 +18,6 @@
 #include "include/logs.h"
 #include "Logic/Core.hpp"
 #include "modules/FoodGatheringModule.hpp"
-#include "modules/CommunicationModule.hpp"
 #include "modules/ElevationModule.hpp"
 #include "modules/RoleAttributionModule.hpp"
 #include "modules/DisruptionModule.hpp"
@@ -127,12 +126,9 @@ int initChildProcess(const int port, const std::string &ip,
         }
         if (AI::Data::i().isRunning) {
             try {
-                // Check if we need to add role-specific modules
                 if (!logic.hasRoleBasedModulesSetup()) {
                     logic.setupRoleBasedModules();
                 }
-                
-                // Execute the highest priority module
                 if (!interface.isWaitingForResponse()) {
                     logic.executeHighestPriorityModule();
                 }

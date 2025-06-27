@@ -121,25 +121,18 @@ class RoleAttributionModule : public AIModule {
      */
     std::string roleToString(Role role) const;
 
-    /// Current role of the AI
     Role currentRole;
-    
-    /// Current phase of role attribution
+
     AttributionPhase currentPhase;
-    
-    /// Counter for LOOK commands
+
     int lookCounter;
-    
-    /// Collection of IDs from other players
+
     std::set<int> receivedIds;
-    
-    /// The ID of this AI
+
     int myId;
-    
-    /// Random number generator
+
     std::mt19937 rng;
-    
-    /// Random distribution for IDs
+
     std::uniform_int_distribution<int> idDistribution;
 };
 

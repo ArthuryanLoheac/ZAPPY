@@ -8,6 +8,7 @@
 #ifndef ZAPPY_AI_SRC_MODULES_RESSOURCEGATHERINGSPAWNING_HPP_
 #define ZAPPY_AI_SRC_MODULES_RESSOURCEGATHERINGSPAWNING_HPP_
 
+#include <string>
 #include "modules/AIModule.hpp"
 
 /**
@@ -57,23 +58,39 @@ class RessourceGatheringSpawning : public AIModule {
      */
     std::string determineNeededRole() const;
 
-    /// Cooldown between spawns
+    /**
+     * @brief Take all objects from the current tile
+     * @return Number of objects taken
+     */
+    int takeAllObjects();
+
+    /**
+     * @brief Check for and take all objects on current tile
+     * @return True if any objects were taken
+     */
+    bool checkAndTakeObjects();
+
     int spawnCooldown;
 
-    /// Counter for checking resources
     int resourceCheckCounter;
 
-    /// Whether a player was recently spawned
     bool recentlySpawned;
 
-    /// Whether we need to feed
     bool needToFeed;
 
-    /// Counter for food collection
     int foodCollectionCounter;
 
-    /// Role of the spawned player
     std::string spawnedRole;
+
+    int harvesterCount;
+
+    int feedLookCounter;
+
+    bool emergencyLowFood;
+
+    bool creatingEmergencyFeeder;
+
+    bool waitingForEmergencyFood;
 };
 
 #endif  // ZAPPY_AI_SRC_MODULES_RESSOURCEGATHERINGSPAWNING_HPP_

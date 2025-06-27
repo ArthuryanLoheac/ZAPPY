@@ -14,34 +14,138 @@
  * @brief Initialize the FeederModule with default values
  */
 FeederModule::FeederModule()
-    : inventoryCheckCounter(0), foodCount(0), statusCounter(0) {
-    std::cout << "Feeder Module initialized" << std::endl;
+    : inventoryCheckCounter(0), foodCount(0),
+        currentState(FeederState::DROP_INITIAL_FOOD),
+      foodDropCounter(0), forkCommandSent(false), broadcastSent(false) {
+    std::cout << "Feeder Module initialized in sequence mode" << std::endl;
 }
 
 /**
  * @brief Execute the feeding behavior
  *
- * Continuously sets food on the ground
+ * Follows a specific sequence: drop 2 food, fork, drop 1 food, broadcast, then continuous feeding
  */
 void FeederModule::execute() {
-    // Check inventory periodically
     if (++inventoryCheckCounter >= 5) {
         checkInventory();
         inventoryCheckCounter = 0;
         return;
     }
-    
-    // Broadcast status occasionally
-    if (++statusCounter >= 30) {
-        statusCounter = 0;
-        std::cout << "Feeder status: Food count = " << foodCount << std::endl;
-        AI::Interface::i().sendMessage("FEEDER_STATUS_" + std::to_string(foodCount));
+
+    if (currentState == FeederState::CONTINUOUS_FEEDING) {
+        executeContinuousFeeding();
+        return;
     }
-    
-    // If we have food, place it on the ground
-    if (hasFood()) {
-        std::cout << "Feeder placing food on ground..." << std::endl;
+
+    if (currentState == FeederState::DROP_INITIAL_FOOD && hasFood()) {
+        std::cout << "Executing initial sequence: Dropping 2 food items"
+            << std::endl;
         AI::Interface::i().sendCommand("Set food\n");
+        AI::Interface::i().sendCommand("Set food\n");
+        foodDropCounter = 2;
+
+        std::cout << "Sending FORK command..." << std::endl;
+        AI::Interface::i().sendCommand(FORK);
+        forkCommandSent = true;
+
+        std::cout << "Dropping extra food item after fork" << std::endl;
+        AI::Interface::i().sendCommand("Set food\n");
+
+        std::cout << "Broadcasting NEED_FEEDER message..." << std::endl;
+        AI::Interface::i().sendMessage("NEED_FEEDER");
+        broadcastSent = true;
+
+        std::cout << "Moving to continuous feeding phase" << std::endl;
+        currentState = FeederState::CONTINUOUS_FEEDING;
+        return;
+    } else if (currentState == FeederState::DROP_INITIAL_FOOD) {
+        std::cout << "Waiting for food to execute initial sequence..."
+            << std::endl;
+        AI::Interface::i().sendCommand(INVENTORY);
+    }
+}
+
+/**
+ * @brief Execute the initial food dropping phase
+ * @return true if completed
+ */
+bool FeederModule::executeInitialFoodDrop() {
+    if (foodDropCounter >= 2) {
+        return true;
+    }
+    if (hasFood()) {
+        std::cout << "Dropping initial food item " << (foodDropCounter + 1)
+            << "/2" << std::endl;
+        AI::Interface::i().sendCommand("Set food\n");
+        foodDropCounter++;
+        if (foodDropCounter >= 2) {
+            return true;
+        }
+    } else {
+        std::cout << "Waiting for food to drop initial items..." << std::endl;
+    }
+    return false;
+}
+
+/**
+ * @brief Execute the fork command phase
+ * @return true if completed
+ */
+bool FeederModule::executeFork() {
+    if (forkCommandSent) {
+        return true;
+    }
+    std::cout << "Sending FORK command..." << std::endl;
+    AI::Interface::i().sendCommand(FORK);
+    forkCommandSent = true;
+    return true;
+}
+
+/**
+ * @brief Execute the extra food drop phase
+ * @return true if completed
+ */
+bool FeederModule::executeExtraFoodDrop() {
+    static bool extraFoodDropped = false;
+    if (extraFoodDropped) {
+        return true;
+    }
+    if (hasFood()) {
+        std::cout << "Dropping extra food item after fork" << std::endl;
+        AI::Interface::i().sendCommand("Set food\n");
+        extraFoodDropped = true;
+        return true;
+    } else {
+        std::cout << "Waiting for food to drop extra item..." << std::endl;
+    }
+    return false;
+}
+
+/**
+ * @brief Execute the broadcast phase
+ * @return true if completed
+ */
+bool FeederModule::executeBroadcast() {
+    if (broadcastSent) {
+        return true;
+    }
+    std::cout << "Broadcasting NEED_FEEDER message..." << std::endl;
+    AI::Interface::i().sendMessage("NEED_FEEDER");
+    broadcastSent = true;
+    return true;
+}
+
+/**
+ * @brief Execute the continuous feeding phase
+ */
+void FeederModule::executeContinuousFeeding() {
+    if (hasFood()) {
+        std::cout << "Continuously feeding: placing food on ground..."
+            << std::endl;
+        AI::Interface::i().sendCommand("Set food\n");
+    } else {
+        std::cout << "No food available for continuous feeding..."
+            << std::endl;
     }
 }
 
@@ -50,8 +154,8 @@ void FeederModule::execute() {
  * @return float Priority value between 0.0 and 1.0
  */
 float FeederModule::getPriority() {
-    // Always high priority - this is the feeder's primary job
-    return 0.9f;
+    // No other module, so highest priority
+    return 0.1f;
 }
 
 /**
@@ -67,7 +171,15 @@ bool FeederModule::hasFood() const {
  */
 void FeederModule::checkInventory() {
     AI::Interface::i().sendCommand(INVENTORY);
-    foodCount = AI::Data::i().inventory.find("food") != 
+    foodCount = AI::Data::i().inventory.find("food") !=
                 AI::Data::i().inventory.end() ?
                 AI::Data::i().inventory.at("food") : 0;
+}
+
+/**
+ * @brief Get the current state of the feeder sequence
+ * @return Current state enum value
+ */
+FeederState FeederModule::getCurrentState() const {
+    return currentState;
 }

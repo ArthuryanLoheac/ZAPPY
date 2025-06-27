@@ -34,10 +34,8 @@ ElevationModule::ElevationModule() {
 float ElevationModule::getPriority() {
     checkResources();
 
-    if (foodCount < 3) {
-        std::cout << "no elevation" << std::endl;
+    if (foodCount < 3)
         return 1.0f;
-    }
 
     return (hasSufficientFood) ? 0.4f : 0.7f;
 }

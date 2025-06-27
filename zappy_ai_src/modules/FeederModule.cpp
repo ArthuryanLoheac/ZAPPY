@@ -179,6 +179,3 @@ void FeederModule::checkInventory() {
 FeederState FeederModule::getCurrentState() const {
     return currentState;
 }
-FeederState FeederModule::getCurrentState() const {
-    return currentState;
-}

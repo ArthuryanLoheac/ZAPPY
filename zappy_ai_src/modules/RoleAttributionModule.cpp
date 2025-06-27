@@ -6,6 +6,7 @@
 */
 
 #include <unistd.h>
+#include <iostream>
 #include <regex>
 #include <random>
 #include <chrono>
@@ -13,7 +14,6 @@
 #include "modules/RoleAttributionModule.hpp"
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
-#include "../../libc/include/logs.h"
 
 /**
  * @brief Initialize the RoleAttributionModule with default values
@@ -25,8 +25,10 @@ RoleAttributionModule::RoleAttributionModule()
           static_cast<unsigned int>(std::chrono::steady_clock::now().
           time_since_epoch().count())),
       idDistribution(1, 1000) {
-    LOG_INFO("Role Attribution Module initialized with role: %s", roleToString(currentRole).c_str());
-    LOG_INFO("Starting initial LOOK phase with PID-based random seed: %d", getpid());
+    std::cout << "Role Attribution Module initialized with role: "
+              << roleToString(currentRole) << std::endl;
+    std::cout << "Starting initial LOOK phase with PID-based random seed: "
+              << getpid() << std::endl;
 }
 
 /**
@@ -39,11 +41,14 @@ void RoleAttributionModule::execute() {
     switch (currentPhase) {
         case AttributionPhase::INITIAL_LOOK:
             if (lookCounter < 3) {
-                LOG_INFO("Role Attribution Module sending LOOK command %d/3...", lookCounter + 1);
+                std::cout << "Role Attribution Module sending LOOK command "
+                          << (lookCounter + 1) << "/3..." << std::endl;
                 AI::Interface::i().sendCommand(LOOK);
                 lookCounter++;
                 if (lookCounter >= 3 && currentRole == Role::UNKNOWN) {
-                    LOG_INFO("No role assigned from NEED messages. Moving to ID attribution phase...");
+                    std::cout << "No role assigned from NEED messages. "
+                              << "Moving to ID attribution phase..."
+                              << std::endl;
                     currentPhase = AttributionPhase::BROADCASTING_ID;
                     AI::Interface::i().sendMessage("ID_ATTRIBUTION");
                     lookCounter = 0;
@@ -57,14 +62,17 @@ void RoleAttributionModule::execute() {
             break;
         case AttributionPhase::COLLECTING_IDS:
             if (lookCounter < 3) {
-                LOG_INFO("Collecting IDs - LOOK command %d/3... %ld", lookCounter + 1, time(nullptr));
+                std::cout << "Collecting IDs - LOOK command "
+                          << (lookCounter + 1) << "/3... "
+                          << time(nullptr) << std::endl;
                 AI::Interface::i().sendCommand(LOOK);
                 lookCounter++;
                 if (lookCounter >= 3) {
                     myId = generateRandomId();
-                    LOG_INFO("Assigning random ID: %d", myId);
+                    std::cout << "Assigning random ID: " << myId << std::endl;
                     assignRoleFromId();
-                    AI::Interface::i().sendMessage("I_AM_" + std::to_string(myId));
+                    AI::Interface::i().sendMessage("I_AM_"
+                        + std::to_string(myId));
                     currentPhase = AttributionPhase::ROLE_ASSIGNED;
                 }
             }
@@ -108,7 +116,8 @@ int RoleAttributionModule::generateRandomId() {
 void RoleAttributionModule::assignRoleFromId() {
     currentRole = Role::LEVELER;
     currentPhase = AttributionPhase::ROLE_ASSIGNED;
-    LOG_INFO("Role assigned based on random ID: %s", roleToString(currentRole).c_str());
+    std::cout << "Role assigned based on random ID: "
+              << roleToString(currentRole) << std::endl;
 }
 
 /**
@@ -116,10 +125,10 @@ void RoleAttributionModule::assignRoleFromId() {
  */
 void RoleAttributionModule::reassignRole() {
     myId = generateRandomId();
-    LOG_INFO("Reassigning with new random ID: %d", myId);
+    std::cout << "Reassigning with new random ID: " << myId << std::endl;
     assignRoleFromId();
     AI::Interface::i().sendMessage("NEW_ID_" + std::to_string(myId));
-    LOG_INFO("Reassigned to: %s", roleToString(currentRole).c_str());
+    std::cout << "Reassigned to: " << roleToString(currentRole) << std::endl;
 }
 
 /**
@@ -135,11 +144,12 @@ void RoleAttributionModule::processMessages() {
         std::string content = message.first;
         int direction = message.second;
 
-        LOG_INFO("Broadcast received - Content: '%s', Direction: %d", content.c_str(), direction);
+        std::cout << "Broadcast received - Content: '" << content
+                  << "', Direction: " << direction << std::endl;
 
         if (content.find("REROLL") != std::string::npos &&
             currentPhase == AttributionPhase::ROLE_ASSIGNED) {
-            LOG_INFO("REROLL, reassigning role...");
+            std::cout << "REROLL, reassigning role..." << std::endl;
             reassignRole();
             continue;
         }
@@ -187,8 +197,10 @@ void RoleAttributionModule::processInitialPhase(
     }
     if (roleAssigned) {
         currentPhase = AttributionPhase::ROLE_ASSIGNED;
-        LOG_INFO("Role assigned from direct broadcast: %s", roleToString(currentRole).c_str());
-        AI::Interface::i().sendMessage("ROLE_ACKNOWLEDGED_" + roleToString(currentRole));
+        std::cout << "Role assigned from direct broadcast: "
+                  << roleToString(currentRole) << std::endl;
+        AI::Interface::i().sendMessage("ROLE_ACKNOWLEDGED_" +
+            roleToString(currentRole));
     }
 }
 
@@ -209,7 +221,7 @@ void RoleAttributionModule::processIdCollectionPhase(
         int id = extractNumber(content);
         if (id > 0) {
             receivedIds.insert(id);
-            LOG_INFO("Received ID: %d", id);
+            std::cout << "Received ID: " << id << std::endl;
         }
         return;
     }
@@ -217,7 +229,7 @@ void RoleAttributionModule::processIdCollectionPhase(
     int id = extractNumber(content);
     if (id > 0) {
         receivedIds.insert(id);
-        LOG_INFO("Received number in message: %d", id);
+        std::cout << "Received number in message: " << id << std::endl;
     }
 }
 
@@ -257,19 +269,6 @@ std::string RoleAttributionModule::roleToString(Role role) const {
         case Role::LEVELER:
             return "LEVELER";
         case Role::FEEDER:
-            return "FEEDER";
-        default:
-            return "INVALID_ROLE";
-    }
-}
-
-/**
- * @brief Check if a role has been assigned
- * @return bool True if role is assigned
- */
-bool RoleAttributionModule::isRoleAssigned() const {
-    return currentPhase == AttributionPhase::ROLE_ASSIGNED;
-}
             return "FEEDER";
         default:
             return "INVALID_ROLE";

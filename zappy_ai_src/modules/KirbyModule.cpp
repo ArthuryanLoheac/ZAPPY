@@ -16,7 +16,7 @@
  */
 KirbyModule::KirbyModule() : tickUsed(0), timeRemaining(FOOD_TICK * 10),
     forwardCount(0), suckMode(true), hasMadeHisWill(false) {
-    LOG_INFO("KirbyModule initialized: suckMode=%s, timeRemaining=%d", 
+    LOG_INFO("KirbyModule initialized: suckMode=%s, timeRemaining=%d",
              (suckMode ? "true" : "false"), timeRemaining);
 }
 
@@ -31,7 +31,7 @@ KirbyModule::~KirbyModule() = default;
  * Decides whether to perform the suck or spit action based on the current mode.
  */
 void KirbyModule::execute() {
-    LOG_INFO("Kirby PID %d executing with %d ticks remaining, %s mode", 
+    LOG_INFO("Kirby PID %d executing with %d ticks remaining, %s mode",
              getpid(), timeRemaining - tickUsed, (suckMode ? "SUCK" : "SPIT"));
     if (suckMode) {
         suck();
@@ -74,8 +74,10 @@ void KirbyModule::computeSuckMode() {
                 (stepsToLoopAround * 7) + ticksForDropping;
             canLoopAround =
                 (ticksNeededToReturnByLooping < ticksNeededToReturnByTurning);
-            LOG_INFO("Map is %dx%d (square). Steps taken: %d. Ticks to loop around: %d. Ticks to turn back: %d",
-                     mapX, mapY, forwardCount, ticksNeededToReturnByLooping, ticksNeededToReturnByTurning);
+            LOG_INFO("Map is %dx%d (square). Steps taken: %d. Ticks to loop"
+                " around: %d. Ticks to turn back: %d",
+                mapX, mapY, forwardCount, ticksNeededToReturnByLooping,
+                ticksNeededToReturnByTurning);
             if (forwardCount >= mapX) {
                 LOG_INFO("Reached full map circuit, stopping to drop items");
                 suckMode = false;
@@ -87,7 +89,8 @@ void KirbyModule::computeSuckMode() {
         } else {
             int longestDimension = std::max(mapX, mapY);
             if (forwardCount >= longestDimension) {
-                LOG_INFO("Reached longest dimension (%d), turning back", longestDimension);
+                LOG_INFO("Reached longest dimension (%d), turning back",
+                    longestDimension);
                 suckMode = false;
                 shouldLoopAround = false;
                 hasMadeHisWill = false;
@@ -124,7 +127,8 @@ void KirbyModule::suck() {
     AI::Interface::i().sendCommand(FORWARD);
     tickUsed += 7;
     forwardCount++;
-    LOG_INFO("Kirby moved forward, now at step %d, used %d ticks", forwardCount, tickUsed);
+    LOG_INFO("Kirby moved forward, now at step %d, used %d ticks",
+        forwardCount, tickUsed);
 }
 
 /**
@@ -139,15 +143,17 @@ void KirbyModule::spit() {
     int mapY = AI::Data::i().mapY;
     bool isSquareMap = (mapX == mapY) && (mapX > 0) && (mapY > 0);
     int objectsToDrop = getNbObjects();
-    LOG_INFO("Kirby returning to drop %d objects after moving %d steps", objectsToDrop, forwardCount);
-    LOG_INFO("Map size: %dx%d, is square: %s, Should loop around: %s",
-             mapX, mapY, (isSquareMap ? "yes" : "no"), (shouldLoopAround ? "yes" : "no"));
+    LOG_INFO("Kirby returning to drop %d objects after moving %d steps",
+            objectsToDrop, forwardCount);
+    LOG_INFO("Map size: %dx%d, is square: %s, Should loop around: %s", mapX,
+        mapY, (isSquareMap ? "yes" : "no"), (shouldLoopAround ? "yes" : "no"));
     if (shouldLoopAround && isSquareMap && forwardCount <= mapX) {
         int stepsToLoopAround = mapX - forwardCount;
         if (stepsToLoopAround == 0) {
             LOG_INFO("Back to starting position");
         } else {
-            LOG_INFO("Looping around the map! Taking %d more steps forward instead of turning back", stepsToLoopAround);
+            LOG_INFO("Looping around the map! Taking %d more steps forward"
+                " instead of turning back", stepsToLoopAround);
             for (int i = 0; i < stepsToLoopAround; i++) {
                 AI::Interface::i().sendCommand(FORWARD);
                 tickUsed += 7;
@@ -173,7 +179,8 @@ void KirbyModule::spit() {
             itemsDropped++;
         }
     }
-    LOG_INFO("Kirby completed trip: walked %d steps, dropped %d items, used %d ticks out of %d",
+    LOG_INFO("Kirby completed trip: walked %d steps, dropped %d items,"
+        " used %d ticks out of %d",
              forwardCount, itemsDropped, tickUsed, timeRemaining);
 }
 

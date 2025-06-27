@@ -70,7 +70,7 @@ void Logic::executeHighestPriorityModule() {
             return a->getPriority() > b->getPriority();
         });
     const auto& module = *highestPriorityModuleIt;
-    LOG_INFO("Executing module: %s with priority: %.2f", 
+    LOG_INFO("Executing module: %s with priority: %.2f",
              typeid(*module).name(), module->getPriority());
     module->execute();
 }
@@ -204,7 +204,7 @@ void Logic::setupRoleBasedModules() {
             break;
 
         default:
-            LOG_INFO("Setting up modules for role: UNKNOWN (no additional modules added)");
+            LOG_INFO("Setting up modules for role: UNKNOWN, no modules added");
             return;
     }
 
@@ -217,5 +217,4 @@ void Logic::setupRoleBasedModules() {
  */
 bool Logic::hasRoleBasedModulesSetup() const {
     return roleModulesSetup;
-}
 }

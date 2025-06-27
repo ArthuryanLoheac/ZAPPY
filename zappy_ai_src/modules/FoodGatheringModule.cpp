@@ -52,7 +52,8 @@ float FoodGatheringModule::getPriority() {
                  (static_cast<float>(level) / 8.0f);
     if (prio < 0.0f) prio = 0.0f;
     if (prio > 1.0f) prio = 1.0f;
-    LOG_INFO("Food Gathering Module Priority: %.2f with food count: %d and level: %d", prio, foodCount, level);
+    LOG_INFO("Food Gathering Module Priority: %.2f with food count: %d and"
+        "level: %d", prio, foodCount, level);
     return prio;
 }
 
@@ -208,7 +209,8 @@ FoodGatheringModule::FoodSource FoodGatheringModule::evaluateFoodSources(
                     bestSource.weight = weight;
                 }
 
-                LOG_INFO("Food at (%zu,%d): %d items, weight = %.2f", x, relativeY, foodCount, weight);
+                LOG_INFO("Food at (%zu,%d): %d items, weight = %.2f", x,
+                    relativeY, foodCount, weight);
             }
         }
     }
@@ -327,7 +329,8 @@ void FoodGatheringModule::collectFood() {
 
     // If we found food with sufficient weight, collect all food along the path
     if (bestSource.weight >= WEIGHT_THRESHOLD) {
-        LOG_INFO("Best food source at (%d,%d) with weight %.2f", bestSource.x, bestSource.y, bestSource.weight);
+        LOG_INFO("Best food source at (%d,%d) with weight %.2f", bestSource.x,
+            bestSource.y, bestSource.weight);
         collectFoodAlongPath(bestSource.x, bestSource.y, foodLocations);
     } else {
         exploreRandomly();

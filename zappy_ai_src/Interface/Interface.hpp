@@ -89,6 +89,20 @@ class Interface {
      */
     void goTo(int x, int y);
 
+    /**
+     * @brief Turns the player around.
+     */
+    void doABarrelRoll();
+
+    /**
+     * @brief Moves the AI towards a specific direction by one tile,
+     *  based on the AI's actual orientation.
+     * @param direction Direction to move towards.
+     *
+     * Keep in mind that depending on the direction, 1 to 3 commands may be sent.
+     */
+    void goToDirection(int direction);
+
  private:
     /**
      * @brief Processes the input and output queues to handle commands

@@ -28,9 +28,9 @@ RessourceGatheringSpawning::RessourceGatheringSpawning()
  * @brief Execute the spawning behavior
  */
 void RessourceGatheringSpawning::execute() {
-    int foodCount = AI::Data::i().inventory.find("food") !=
+    int foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                     AI::Data::i().inventory.end() ?
-                    AI::Data::i().inventory.at("food") : 0;
+                    AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
     emergencyLowFood = (foodCount < 3);
     if (emergencyLowFood && foodCount >= 2 && !creatingEmergencyFeeder &&
         !waitingForEmergencyFood) {
@@ -99,9 +99,9 @@ void RessourceGatheringSpawning::execute() {
  * @return float Priority value between 0.0 and 1.0
  */
 float RessourceGatheringSpawning::getPriority() {
-    int foodCount = AI::Data::i().inventory.find("food") !=
+    int foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                     AI::Data::i().inventory.end() ?
-                    AI::Data::i().inventory.at("food") : 0;
+                    AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
     if (emergencyLowFood || creatingEmergencyFeeder) {
         return 0.01f;
     }
@@ -129,9 +129,9 @@ float RessourceGatheringSpawning::getPriority() {
  */
 bool RessourceGatheringSpawning::hasSufficientResources() const {
     const int foodThreshold = 2;
-    int foodCount = AI::Data::i().inventory.find("food") !=
+    int foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                     AI::Data::i().inventory.end() ?
-                    AI::Data::i().inventory.at("food") : 0;
+                    AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
     return foodCount >= foodThreshold &&
            spawnCooldown == 0 &&
            !recentlySpawned &&
@@ -143,9 +143,9 @@ bool RessourceGatheringSpawning::hasSufficientResources() const {
  * @return string representing the needed role
  */
 std::string RessourceGatheringSpawning::determineNeededRole() const {
-    int foodCount = AI::Data::i().inventory.find("food") !=
+    int foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                    AI::Data::i().inventory.end() ?
-                   AI::Data::i().inventory.at("food") : 0;
+                   AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
     if (harvesterCount >= 2) {
         LOG_INFO("Already spawned %d harvesters, spawning a feeder",
             harvesterCount);

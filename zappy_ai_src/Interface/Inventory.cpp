@@ -126,7 +126,7 @@ std::vector<std::string> &command) {
         }
         const std::string &item = args[i];
         int quantity = std::stoi(args[i + 1]);
-        Data::i().inventory[item] += quantity;
+        Data::i().inventory[Data::stringToMaterial.at(item)] += quantity;
     }
 }
 
@@ -142,7 +142,7 @@ std::vector<std::string> &command) {
 
     if (status == "KO") return;
 
-    Data::i().inventory[command[1]]++;
+    Data::i().inventory[Data::stringToMaterial.at(command[0])]++;
 }
 
 void Interface::commandSET(std::vector<std::string> &args,
@@ -157,7 +157,7 @@ std::vector<std::string> &command) {
 
     if (status == "KO") return;
 
-    Data::i().inventory[command[1]]--;
+    Data::i().inventory[Data::stringToMaterial.at(command[0])]--;
 }
 
 }  // namespace AI

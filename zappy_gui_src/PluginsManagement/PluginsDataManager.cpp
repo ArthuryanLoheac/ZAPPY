@@ -1,5 +1,5 @@
 #include "PluginsManagement/PluginsDataManager.hpp"
-#include "Connection/ServerGUI.hpp"
+#include "Connection/NetworkForGui.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
 
@@ -20,8 +20,8 @@ void PluginsDataManager::updatePluginsData() {
     for (const auto &team : data.teams)
         data.teamColors.push_back(MeshImporter::i().getColor(team));
     // CONNECTION
-    data.isConnected = GUI::ServerGUI::i().isConnectedToServer();
-    data.ping = GUI::ServerGUI::i().ping;
+    data.isConnected = GUI::NetworkForGui::i().isConnectedToServer();
+    data.ping = GUI::NetworkForGui::i().ping;
     // MESSAGES
     data.messages.clear();
     for (const auto &message : GUI::GameDataManager::i().getMessages())
@@ -45,6 +45,7 @@ void PluginsDataManager::updatePlayers() {
         newPlayer.teamName = player.getTeamName();
         newPlayer.x = player.getX();
         newPlayer.y = player.getY();
+        newPlayer.isDead = player.isDead;
         newPlayer.inElevation = player.getState() == GUI::Player::IDLE_ELEVATION
             || player.getState() == GUI::Player::END_ELEVATION
             || player.getState() == GUI::Player::START_ELEVATION;

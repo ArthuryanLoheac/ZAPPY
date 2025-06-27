@@ -101,12 +101,12 @@ $(ZAPPY_SERVER): $(COMMON_C_LIB) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER)
 	gcc -o $(ZAPPY_SERVER) $(OBJ_SRC_SERVER) $(OBJ_MAIN_SERVER) \
 	$(FLAGS_SERVER) $(COMMON_C_LIB)
 
-$(ZAPPY_GUI): $(COMMON_CPP_LIB) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI)
+$(ZAPPY_GUI): $(COMMON_C_LIB) $(COMMON_CPP_LIB) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI)
 	g++ -o $(ZAPPY_GUI) $(OBJ_SRC_GUI) $(OBJ_MAIN_GUI) \
 	$(COMMON_C_LIB) $(COMMON_CPP_LIB) \
 	$(LDFLAGS_GUI)
 
-$(ZAPPY_AI): $(COMMON_CPP_LIB) $(OBJ_SRC_AI) $(OBJ_MAIN_AI)
+$(ZAPPY_AI): $(COMMON_C_LIB) $(COMMON_CPP_LIB) $(OBJ_SRC_AI) $(OBJ_MAIN_AI)
 	g++ -o $(ZAPPY_AI) $(OBJ_SRC_AI) $(OBJ_MAIN_AI) \
 	$(COMMON_C_LIB) $(COMMON_CPP_LIB) \
 	$(FLAGS_AI)
@@ -203,11 +203,17 @@ FLAGS_SO =  -std=c++17 -Wall -Wextra -Werror -lIrrlicht \
 
 PLUGIN_SRC = $(shell find zappy_gui_plugins_src -type f -name "*.cpp")
 
+PLUGIN_COUNT := $(words $(PLUGIN_SRC))
+
 plugins_all:
 	rm -f plugins/*.so
 	@mkdir -p plugins
-	@for src in $(PLUGIN_SRC); do \
+	@i=0; \
+	total=$(PLUGIN_COUNT); \
+	for src in $(PLUGIN_SRC); do \
+		i=$$((i + 1));	\
 		plugin_name=$$(basename $$src .cpp); \
+		echo "[$$i/$$total] Compiling plugins/$$plugin_name";	\
 		g++ -o plugins/$$plugin_name.so -shared -fPIC $(COMMON_PLUGINS) \
 			$$src $(FLAGS_SO); \
 	done

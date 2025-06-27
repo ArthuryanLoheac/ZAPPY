@@ -53,8 +53,6 @@ class Logic {
     const std::map<std::string, int>& getInventory() const;
     void setLevel(int16_t newLevel);
     int16_t getLevel() const;
-    
-    // New methods for role-based module management
     RoleAttributionModule* getRoleModule();
     void setupRoleBasedModules();
     bool hasRoleBasedModulesSetup() const;

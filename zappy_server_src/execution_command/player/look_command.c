@@ -51,16 +51,15 @@ static void add_to_buffer_tile(char **buffer, zappy_t *zappy, int x, int y)
 
     for (int i = 0; i < 256; i++)
         str[i] = 0;
-    add_value_buffer(&str, player, "player ");
-    add_value_buffer(&str, egg, "egg ");
-    add_value_buffer(&str, cell->nbr_food, "food ");
-    add_value_buffer(&str, cell->nbr_linemate, "linemate ");
-    add_value_buffer(&str, cell->nbr_deraumere, "deraumere ");
-    add_value_buffer(&str, cell->nbr_sibur, "sibur ");
-    add_value_buffer(&str, cell->nbr_mendiane, "mendiane ");
-    add_value_buffer(&str, cell->nbr_phiras, "phiras ");
-    add_value_buffer(&str, cell->nbr_thystame, "thystame ");
-    add_to_buffer(&str, ",");
+    add_value_buffer(&str, player, " player");
+    add_value_buffer(&str, egg, " egg");
+    add_value_buffer(&str, cell->nbr_food, " food");
+    add_value_buffer(&str, cell->nbr_linemate, " linemate");
+    add_value_buffer(&str, cell->nbr_deraumere, " deraumere");
+    add_value_buffer(&str, cell->nbr_sibur, " sibur");
+    add_value_buffer(&str, cell->nbr_mendiane, " mendiane");
+    add_value_buffer(&str, cell->nbr_phiras, " phiras");
+    add_value_buffer(&str, cell->nbr_thystame, " thystame");
     add_to_buffer(buffer, str);
 }
 
@@ -106,31 +105,46 @@ static void move_forward_side(client_t *client, int *xyi, zappy_t *zappy,
     add_to_buffer_tile(buffer, zappy, xyi[0], xyi[1]);
 }
 
-static void init_buffer(char *buffer)
+static void init_buffer(char **buffer)
 {
     for (int i = 0; i < 2; i++)
-        buffer[i] = '\0';
-    add_to_buffer(&buffer, "[");
+        (*buffer)[i] = '\0';
+    add_to_buffer(buffer, "[");
+}
+
+static void fill_variable(look_variable_t *variables, client_t *client)
+{
+    variables->level = client->stats.level;
+    variables->x = client->stats.x;
+    variables->y = client->stats.y;
+}
+
+static void check_add_comma(char **buffer, int i, int j, int level)
+{
+    if (j == i && i == level)
+        return;
+    add_to_buffer(buffer, ",");
 }
 
 void look_command(zappy_t *zappy, client_t *client, char **args)
 {
-    int level = client->stats.level;
-    int x = client->stats.x;
-    int y = client->stats.y;
+    look_variable_t variables;
     int xyi_cpy[3] = {client->stats.x, client->stats.y, 0};
     char *buffer = malloc(2 * sizeof(char));
 
-    (void) args;
-    init_buffer(buffer);
-    for (int i = 0; i <= level; i++) {
+    if (client == NULL || zappy == NULL || buffer == NULL || !args)
+        return;
+    fill_variable(&variables, client);
+    init_buffer(&buffer);
+    for (int i = 0; i <= variables.level; i++) {
         for (int j = -i; j <= i; j++) {
-            xyi_cpy[0] = x;
-            xyi_cpy[1] = y;
+            xyi_cpy[0] = variables.x;
+            xyi_cpy[1] = variables.y;
             xyi_cpy[2] = j;
             move_forward_side(client, xyi_cpy, zappy, &buffer);
+            check_add_comma(&buffer, i, j, variables.level);
         }
-        move_forward_x(&client->stats, &x, &y, zappy);
+        move_forward_x(&client->stats, &variables.x, &variables.y, zappy);
     }
     add_to_buffer(&buffer, "]\n");
     add_to_buffer(&client->out_buffer, buffer);

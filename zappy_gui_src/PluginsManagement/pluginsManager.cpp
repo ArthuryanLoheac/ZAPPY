@@ -12,7 +12,7 @@
 #include "PluginsManagement/pluginsManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
-#include "Connection/ServerGUI.hpp"
+#include "Connection/NetworkForGui.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
 
@@ -79,7 +79,7 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
         event.KeyInput.Key == irr::KEY_TAB &&
         event.KeyInput.PressedDown)
         windowOpened = !windowOpened;
-    if (windowOpened) {
+    if (windowOpened || windowOptionMenu::i().opened) {
         onEventWindow(event);
         return;
     }
@@ -87,15 +87,8 @@ void pluginsManager::onEvent(const irr::SEvent &event) {
         if (plugin && plugin->isActive()) {
             try {
                 pluginsData &datas = PluginsDataManager::i().getData();
-                bool newData = plugin->onEvent(event, datas);
-                if (datas.frequency > 0 &&
-                    datas.frequency != GUI::DataManager::i().getFrequency()) {
-                    GUI::DataManager::i().setFrequency(datas.frequency);
-                    GUI::ServerGUI::i().outbuffer += "sst " +
-                        std::to_string(datas.frequency) + "\n";
-                    PluginsDataManager::i().updatePluginsData();
-                }
-                if (newData)
+                if (plugin->onEvent(event, datas,
+                    GUI::NetworkForGui::i().outbuffer))
                     return;
             } catch (const std::exception &e) {
                 LOG_ERROR("Error while processing event in plugin: %s",
@@ -129,6 +122,7 @@ void pluginsManager::initPluginMesh(initPluginData meshData) {
     setPluginMeshData("Mat5", meshData.MeshMat5);
     setPluginMeshData("Mat6", meshData.MeshMat6);
     setPluginMeshData("Player", meshData.MeshPlayer);
+    setPluginMeshData("Ring", meshData.MeshRing);
     setPluginMeshData("Egg", meshData.MeshEgg);
     setPluginMeshData("Tile", meshData.MeshTile);
     if (meshData.skyBox.isSet) {

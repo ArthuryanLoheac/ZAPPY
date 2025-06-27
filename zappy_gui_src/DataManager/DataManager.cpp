@@ -40,6 +40,10 @@ std::string DataManager::getIp() const {
     return ip;
 }
 
+bool DataManager::isOptimized() const {
+    return optimized;
+}
+
 /**
  * @brief Sets the server port.
  *
@@ -86,6 +90,15 @@ void DataManager::setFrequency(int f) {
     frequency = f;
 }
 
+/**
+ * @brief Sets the optimization state.
+ *
+ * @param o The optimization state to set.
+ */
+void DataManager::setOptimized(bool o) {
+    std::lock_guard<std::mutex> lock(mutexDatas);
+    optimized = o;
+}
 /**
  * @brief Clears the DataManager state.
  *

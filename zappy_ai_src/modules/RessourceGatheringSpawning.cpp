@@ -5,66 +5,92 @@
 ** Resource Gathering and Spawning Module Implementation
 */
 
-#include "modules/RessourceGatheringSpawning.hpp"
-#include <iostream>
-#include <chrono>
 #include <unistd.h>
+#include <string>
+#include <chrono>
+#include "modules/RessourceGatheringSpawning.hpp"
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
+#include "../../libc/include/logs.h"
 
 /**
  * @brief Initialize the RessourceGatheringSpawning with default values
  */
 RessourceGatheringSpawning::RessourceGatheringSpawning()
     : spawnCooldown(0), resourceCheckCounter(0), recentlySpawned(false),
-      needToFeed(false), foodCollectionCounter(0), spawnedRole("") {
-    std::cout << "Resource Gathering & Spawning Module initialized" << std::endl;
+      needToFeed(false), foodCollectionCounter(0), spawnedRole(""),
+      harvesterCount(0), feedLookCounter(0), emergencyLowFood(false),
+      creatingEmergencyFeeder(false), waitingForEmergencyFood(false) {
+    LOG_INFO("Resource GatheringSpawning Module initialized");
 }
 
 /**
  * @brief Execute the spawning behavior
  */
 void RessourceGatheringSpawning::execute() {
-    // Handle food collection from feeder if needed
+    int foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
+                    AI::Data::i().inventory.end() ?
+                    AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
+    emergencyLowFood = (foodCount < 3);
+    if (emergencyLowFood && foodCount >= 2 && !creatingEmergencyFeeder &&
+        !waitingForEmergencyFood) {
+        LOG_INFO("EMERGENCY: Low food detected (%d)."
+            " Creating emergency feeder!", foodCount);
+        AI::Interface::i().sendCommand(FORK);
+        creatingEmergencyFeeder = true;
+        return;
+    }
+    if (creatingEmergencyFeeder && !recentlySpawned) {
+        LOG_INFO("EMERGENCY: Assigning FEEDER role to emergency AI");
+        spawnedRole = "NEED_FEEDER";
+        for (int i = 0; i < 5; ++i) {
+            AI::Interface::i().sendMessage(spawnedRole);
+        }
+        creatingEmergencyFeeder = false;
+        waitingForEmergencyFood = true;
+        needToFeed = true;
+        foodCollectionCounter = 0;
+        feedLookCounter = 0;
+        return;
+    }
     if (needToFeed) {
+        if (++feedLookCounter >= 5) {
+            feedLookCounter = 0;
+            AI::Interface::i().sendCommand(LOOK);
+            if (checkAndTakeObjects()) {
+                LOG_INFO("Collected items from tile during feeding");
+            }
+            return;
+        }
         collectFoodFromFeeder();
         return;
     }
-
-    // Decrement cooldown if active
     if (spawnCooldown > 0) {
         spawnCooldown--;
         return;
     }
-
-    // Check inventory periodically
     if (++resourceCheckCounter >= 15) {
         resourceCheckCounter = 0;
         AI::Interface::i().sendCommand(INVENTORY);
         return;
     }
-
-    // If we just spawned a player, assign it a role
     if (recentlySpawned) {
         assignRoleToNewPlayer();
         recentlySpawned = false;
-        
-        // If we spawned a feeder, prepare to collect food
         if (spawnedRole == "NEED_FEEDER") {
             needToFeed = true;
             foodCollectionCounter = 0;
+            feedLookCounter = 0;
         } else {
-            spawnCooldown = 0; // Set cooldown before next spawn attempt
+            spawnCooldown = 0;
         }
         return;
     }
-
-    // Check if we have enough resources to spawn
     if (hasSufficientResources()) {
-        std::cout << "Spawning new player with FORK command..." << std::endl;
+        LOG_INFO("Spawning new player with FORK command...");
         AI::Interface::i().sendCommand(FORK);
         recentlySpawned = true;
-        spawnCooldown = 0; // Short cooldown to allow time for spawn to complete
+        spawnCooldown = 0;
     }
 }
 
@@ -73,23 +99,27 @@ void RessourceGatheringSpawning::execute() {
  * @return float Priority value between 0.0 and 1.0
  */
 float RessourceGatheringSpawning::getPriority() {
-    // Highest priority when we need to collect food from feeder
-    if (needToFeed) {
-        return 0.05f;
+    int foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
+                    AI::Data::i().inventory.end() ?
+                    AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
+    if (emergencyLowFood || creatingEmergencyFeeder) {
+        return 0.01f;
     }
-    
-    // Higher priority when we need to assign a role to a newly spawned player
+    if (waitingForEmergencyFood || needToFeed) {
+        if (foodCount <= 3) {
+            return 0.01f;
+        } else {
+            float dynamicPriority = 0.01f + ((foodCount - 3) * 0.01f);
+            return dynamicPriority;
+        }
+    }
     if (recentlySpawned) {
         return 0.1f;
     }
-    
-    // Medium priority when we have enough resources to spawn
     if (hasSufficientResources()) {
-        std::cout << "Sufficient resources for spawning, priority: 0.3" << std::endl;
+        LOG_INFO("Sufficient resources for spawning, priority: 0.3");
         return 0.3f;
     }
-    
-    // Low priority otherwise
     return 0.8f;
 }
 
@@ -98,16 +128,12 @@ float RessourceGatheringSpawning::getPriority() {
  * @return true if we have sufficient resources
  */
 bool RessourceGatheringSpawning::hasSufficientResources() const {
-    // Check if we have enough food to support spawning
-    // (need at least 2 food to safely spawn)
     const int foodThreshold = 2;
-    
-    int foodCount = AI::Data::i().inventory.find("food") !=
+    int foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                     AI::Data::i().inventory.end() ?
-                    AI::Data::i().inventory.at("food") : 0;
-    
-    return foodCount >= foodThreshold && 
-           spawnCooldown == 0 && 
+                    AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
+    return foodCount >= foodThreshold &&
+           spawnCooldown == 0 &&
            !recentlySpawned &&
            !needToFeed;
 }
@@ -117,19 +143,19 @@ bool RessourceGatheringSpawning::hasSufficientResources() const {
  * @return string representing the needed role
  */
 std::string RessourceGatheringSpawning::determineNeededRole() const {
-    // Check current food level
-    int foodCount = AI::Data::i().inventory.find("food") !=
+    int foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                    AI::Data::i().inventory.end() ?
-                   AI::Data::i().inventory.at("food") : 0;
-    
-    // If food is low, prioritize spawning a feeder
-    if (foodCount < 5) {
-        std::cout << "Food level low (" << foodCount << "), spawning a feeder" << std::endl;
+                   AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
+    if (harvesterCount >= 2) {
+        LOG_INFO("Already spawned %d harvesters, spawning a feeder",
+            harvesterCount);
         return "NEED_FEEDER";
     }
-    
-    // Otherwise spawn a harvester
-    std::cout << "Food level adequate (" << foodCount << "), spawning a harvester" << std::endl;
+    if (foodCount < 5) {
+        LOG_INFO("Food level low (%d), spawning a feeder", foodCount);
+        return "NEED_FEEDER";
+    }
+    LOG_INFO("Food level adequate (%d), spawning a harvester", foodCount);
     return "NEED_HARVESTER";
 }
 
@@ -138,9 +164,11 @@ std::string RessourceGatheringSpawning::determineNeededRole() const {
  */
 void RessourceGatheringSpawning::assignRoleToNewPlayer() {
     spawnedRole = determineNeededRole();
-    std::cout << "Assigning role to new player: " << spawnedRole << std::endl;
-    
-    // Broadcast the role assignment to the newly spawned player
+    LOG_INFO("Assigning role to new player: %s", spawnedRole.c_str());
+    if (spawnedRole == "NEED_HARVESTER") {
+        harvesterCount++;
+        LOG_INFO("Harvester count is now: %d", harvesterCount);
+    }
     for (int i = 0; i < 5; ++i) {
         AI::Interface::i().sendMessage(spawnedRole);
     }
@@ -150,14 +178,53 @@ void RessourceGatheringSpawning::assignRoleToNewPlayer() {
  * @brief Handle the food collection from a feeder
  */
 void RessourceGatheringSpawning::collectFoodFromFeeder() {
-    if (foodCollectionCounter < 8) {
-        std::cout << "Collecting food from feeder (" << (foodCollectionCounter + 1) 
-                  << "/8)" << std::endl;
+    if (foodCollectionCounter < 10) {
+        LOG_INFO("Collecting food from feeder (%d/10)",
+            foodCollectionCounter + 1);
         AI::Interface::i().sendCommand("Take food\n");
         foodCollectionCounter++;
     } else {
-        std::cout << "Finished collecting food from feeder" << std::endl;
+        LOG_INFO("Finished collecting food from feeder");
         needToFeed = false;
-        spawnCooldown = 50; // Set cooldown before next spawn attempt
+        waitingForEmergencyFood = false;
+        spawnCooldown = 50;
     }
+}
+
+/**
+ * @brief Take all objects from the current tile
+ * @return Number of objects taken
+ */
+int RessourceGatheringSpawning::takeAllObjects() {
+    int itemsTaken = 0;
+    if (AI::Data::i().vision.empty() || AI::Data::i().vision[0].empty())
+        return 0;
+    try {
+        const size_t midY = AI::Data::i().vision[0].size() / 2;
+        auto& currentTile = AI::Data::i().vision[0][midY];
+        for (auto& item : currentTile) {
+            const std::string& itemName = item.first;
+            int itemCount = item.second;
+            for (int i = 0; i < itemCount; i++) {
+                AI::Interface::i().sendCommand("Take " + itemName + "\n");
+                itemsTaken++;
+            }
+        }
+    } catch (const std::exception& e) {
+        LOG_INFO("Error taking objects: %s", e.what());
+    }
+    return itemsTaken;
+}
+
+/**
+ * @brief Check for and take all objects on current tile
+ * @return True if any objects were taken
+ */
+bool RessourceGatheringSpawning::checkAndTakeObjects() {
+    int itemsTaken = takeAllObjects();
+    if (itemsTaken > 0) {
+        LOG_INFO("Collected %d items", itemsTaken);
+        return true;
+    }
+    return false;
 }

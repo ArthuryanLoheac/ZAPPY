@@ -7,7 +7,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Zappy docs',
   tagline: 'Zip Zap Zoup ?',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/zappy.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -63,20 +63,19 @@ const config: Config = {
       title: 'Zappy docs',
       logo: {
         alt: 'Zappy Logo',
-        src: 'img/logo.svg',
+        src: 'img/zappy.svg',
       },
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'docusorusTutorialSidebar',
+          sidebarId: 'zappySidebar',
           position: 'right',
-          label: 'Docusorus Tutorial',
+          label: "Documentation"
         },
         {
-          type: 'docSidebar',
-          sidebarId: 'zappySidebar',
+          href: 'https://github.com/ArthuryanLoheac/ZAPPY',
           position: 'left',
-          label: "Zappy docs"
+          label: 'Contribute'
         },
         {
           href: '/ZAPPY/doxygen/index.html',
@@ -93,10 +92,6 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Docusorus Tutorial',
-              to: '/docs/tutorial/intro',
-            },
-            {
               label: 'API Reference',
               href: '/ZAPPY/doxygen/index.html',
               target: '_blank',
@@ -104,7 +99,7 @@ const config: Config = {
           ],
         }
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Zappy docs, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Zappytto team.`,
     },
     prism: {
       theme: prismThemes.github,

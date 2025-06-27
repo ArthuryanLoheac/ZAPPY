@@ -1,6 +1,5 @@
 #include "Logic/Core.hpp"
 
-#include <iostream>
 #include <map>
 #include <memory>
 #include <queue>
@@ -9,8 +8,9 @@
 #include <utility>
 #include <vector>
 
+#include "../Logic/AIBase.hpp"
+#include "../Interface/Interface.hpp"
 #include "Logic/PrioritySystem.hpp"
-#include "../modules/CommunicationModule.hpp"
 #include "../modules/FoodGatheringModule.hpp"
 #include "../modules/KirbyModule.hpp"
 #include "../modules/RoleAttributionModule.hpp"
@@ -18,6 +18,8 @@
 #include "../modules/DisruptionModule.hpp"
 #include "../modules/RessourceGatheringSpawning.hpp"
 #include "../modules/FeederModule.hpp"
+#include "../../libc/include/logs.h"
+#include "../modules/AdvancedLeveler.hpp"
 
 void CommandHistory::addCommandResponse(const std::string& command,
                                        const std::string& response) {
@@ -55,6 +57,12 @@ void Logic::addModule(std::unique_ptr<AIModule> module) {
 
 void Logic::executeHighestPriorityModule() {
     if (modules.empty()) return;
+    static int inventoryCheckCounter = 0;
+    if (++inventoryCheckCounter >= 10) {
+        inventoryCheckCounter = 0;
+        AI::Interface::i().sendCommand(INVENTORY);
+        return;
+    }
 
     auto highestPriorityModuleIt = std::max_element(
         modules.begin(), modules.end(),
@@ -62,18 +70,14 @@ void Logic::executeHighestPriorityModule() {
             const std::unique_ptr<AIModule>& b) {
             return a->getPriority() > b->getPriority();
         });
-    
-    // Get the module type name using typeid
     const auto& module = *highestPriorityModuleIt;
-    std::cout << "Executing module: " << typeid(*module).name() 
-              << " with priority: " << module->getPriority() << std::endl;
-    
-    // Execute the highest priority module
+    LOG_INFO("Executing module: %s with priority: %.2f",
+             typeid(*module).name(), module->getPriority());
     module->execute();
 }
 
 void Logic::queueCommand(const std::string& command) {
-    std::cout << "Queuing command: " << command << std::endl;
+    LOG_INFO("Queuing command: %s", command.c_str());
     commandQueue.push(command);
 }
 
@@ -83,7 +87,7 @@ std::queue<std::string>& Logic::getCommandQueue() {
 
 void Logic::handleServerResponse(const std::string& response) {
     if (commandQueue.empty()) {
-        std::cerr << "No command in queue to handle response." << std::endl;
+        LOG_ERROR("No command in queue to handle response.");
         return;
     }
 
@@ -158,8 +162,8 @@ int16_t Logic::getLevel() const {
  */
 RoleAttributionModule* Logic::getRoleModule() {
     for (auto& module : modules) {
-        // Use dynamic cast to check if the module is a RoleAttributionModule
-        if (auto roleModule = dynamic_cast<RoleAttributionModule*>(module.get())) {
+        if (auto roleModule =
+            dynamic_cast<RoleAttributionModule*>(module.get())) {
             return roleModule;
         }
     }
@@ -176,35 +180,33 @@ void Logic::setupRoleBasedModules() {
     }
 
     Role currentRole = roleModule->getCurrentRole();
-    std::cout << "Setting up modules for role: ";
-    
+
     switch (currentRole) {
         case Role::HARVESTER:
-            std::cout << "HARVESTER" << std::endl;
+            LOG_INFO("Setting up modules for role: HARVESTER");
             addModule(std::make_unique<KirbyModule>());
             break;
-            
+
         case Role::LEVELER:
-            std::cout << "LEVELER" << std::endl;
+            LOG_INFO("Setting up modules for role: LEVELER");
             addModule(std::make_unique<DisruptionModule>());
             addModule(std::make_unique<RessourceGatheringSpawning>());
             addModule(std::make_unique<ElevationModule>());
-            addModule(std::make_unique<FoodGatheringModule>());
+            addModule(std::make_unique<AdvancedLeveler>());
             break;
 
         case Role::DISRUPTER:
-            std::cout << "DISRUPTER" << std::endl;
+            LOG_INFO("Setting up modules for role: DISRUPTER");
             addModule(std::make_unique<DisruptionModule>());
-            addModule(std::make_unique<CommunicationModule>());
             break;
 
         case Role::FEEDER:
-            std::cout << "FEEDER" << std::endl;
+            LOG_INFO("Setting up modules for role: FEEDER");
             addModule(std::make_unique<FeederModule>());
             break;
 
         default:
-            std::cout << "UNKNOWN (no additional modules added)" << std::endl;
+            LOG_INFO("Setting up modules for role: UNKNOWN, no modules added");
             return;
     }
 

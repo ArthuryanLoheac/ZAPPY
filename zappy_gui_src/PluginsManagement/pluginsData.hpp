@@ -50,6 +50,7 @@ class pluginsData {
         irr::core::vector3df position;
              /**< Position of the player in 3D space. */
         std::vector<int> ressources;
+        bool isDead = false; /**< Flag indicating if the player is dead. */
              /**< List of resources held by the player. */
         std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> PlayerMesh;
             /**< Mesh associated with the player. */

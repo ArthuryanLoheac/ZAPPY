@@ -18,14 +18,13 @@
 #include "include/server.h"
 #include "logs.h"
 
-static zappy_t zappy = {0};
+static bool running = true;
 
 void handle_down_server(int sig)
 {
     (void)sig;
-    down_server(&zappy);
+    running = false;
     printf("Server shutting down\n");
-    exit(0);
 }
 
 static void setup_down_server(void)
@@ -38,7 +37,7 @@ static void setup_down_server(void)
 
 int main(int ac, char **av)
 {
-    zappy_t *zappy_ptr = &zappy;
+    zappy_t *zappy_ptr = malloc(sizeof(zappy_t));
 
     srand(time(NULL));
     zappy_ptr->parser = parse_arguments(ac, av);
@@ -50,7 +49,7 @@ int main(int ac, char **av)
     zappy_ptr->end_game = false;
     zappy_ptr->winning_team = NULL;
     setup_down_server();
-    start_server(zappy_ptr);
+    start_server(zappy_ptr, &running);
     down_server(zappy_ptr);
     return 0;
 }

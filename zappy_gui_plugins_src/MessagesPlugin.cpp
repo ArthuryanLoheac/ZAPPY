@@ -105,16 +105,23 @@ void MessagesPlugin::checkDeleteParticles() {
 }
 
 void MessagesPlugin::SendParticlesToAll(irr::video::IVideoDriver *driver,
-pluginsData::Player p) {
+pluginsData::Player &p) {
     for (auto &player : data.players) {
-        if (player.id == p.id || !player.PlayerMesh)
+        if (player.id == p.id || !player.PlayerMesh || !p.PlayerMesh)
             continue;
-        irr::core::vector3df pos = player.PlayerMesh->getPosition();
-        irr::core::vector3df dir = pos - p.PlayerMesh->getPosition();
-        int dist = (pos - p.PlayerMesh->getPosition()).getLength();
+        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> playerMesh =
+            player.PlayerMesh;
+        std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> pplayerMesh =
+            p.PlayerMesh;
+        if (!playerMesh || !pplayerMesh || player.isDead  || p.isDead)
+            continue;
+        irr::core::vector3df pos = playerMesh->getPosition();
+        irr::core::vector3df ppos = pplayerMesh->getPosition();
+        irr::core::vector3df dir = pos - ppos;
+        int dist = (pos - ppos).getLength();
         dir.normalize();
         dist *= 100;
-        initParticle(driver, p.PlayerMesh->getPosition(), dir, dist);
+        initParticle(driver, ppos, dir, dist);
     }
 }
 

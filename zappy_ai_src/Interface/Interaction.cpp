@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 #include "Interface/Interface.hpp"
 #include "Exceptions/Commands.hpp"
@@ -33,6 +34,32 @@ std::vector<std::string> &command) {
             args.size() - 1);
         return;
     }
+}
+
+void Interface::receiveEject(const std::vector<std::string> &args) {
+    if (args.size() < 2) {
+        LOG_WARNING("EJECT: Invalid arguments received");
+        return;
+    }
+
+    int direction;
+    try {
+        direction = std::stoi(args[1]);
+    } catch (const std::invalid_argument &e) {
+        LOG_WARNING("EJECT: Invalid argument for direction: %s",
+            args[1].c_str());
+        return;
+    } catch (const std::out_of_range &e) {
+        LOG_WARNING("EJECT: Direction value out of range: %s", args[1].c_str());
+        return;
+    }
+    if (direction < 1 || direction > 8) {
+        LOG_WARNING("EJECT: Invalid direction value %d", direction);
+        return;
+    }
+
+    Data::i().kickVector.push_back({direction, 0});
+    LOG_INFO("EJECT: Player ejected in direction %d", direction);
 }
 
 }  // namespace AI

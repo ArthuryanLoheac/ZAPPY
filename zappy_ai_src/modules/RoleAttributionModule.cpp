@@ -5,12 +5,13 @@
 ** Role Attribution Module Implementation
 */
 
-#include "modules/RoleAttributionModule.hpp"
+#include <unistd.h>
 #include <iostream>
 #include <regex>
 #include <random>
 #include <chrono>
-#include <unistd.h> // For getpid()
+#include <string>
+#include "modules/RoleAttributionModule.hpp"
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
 
@@ -20,15 +21,13 @@
 RoleAttributionModule::RoleAttributionModule()
     : currentRole(Role::UNKNOWN), currentPhase(AttributionPhase::INITIAL_LOOK),
       lookCounter(0), myId(-1),
-      // Initialize random number generator with PID as seed
-      // Plus a bit of time to make it even more random
-      rng(static_cast<unsigned int>(getpid()) ^ 
-          static_cast<unsigned int>(std::chrono::steady_clock::now().time_since_epoch().count())),
-      // Set distribution range from 1 to 1000 for IDs
+      rng(static_cast<unsigned int>(getpid()) ^
+          static_cast<unsigned int>(std::chrono::steady_clock::now().
+          time_since_epoch().count())),
       idDistribution(1, 1000) {
     std::cout << "Role Attribution Module initialized with role: "
               << roleToString(currentRole) << std::endl;
-    std::cout << "Starting initial LOOK phase with PID-based random seed: " 
+    std::cout << "Starting initial LOOK phase with PID-based random seed: "
               << getpid() << std::endl;
 }
 
@@ -38,66 +37,48 @@ RoleAttributionModule::RoleAttributionModule()
  * Manages the phases of role attribution and sends commands accordingly
  */
 void RoleAttributionModule::execute() {
-    // Process any incoming messages first
     processMessages();
-    
-    // Handle different phases of role attribution
     switch (currentPhase) {
         case AttributionPhase::INITIAL_LOOK:
-            // Send up to 3 LOOK commands in the initial phase
             if (lookCounter < 3) {
                 std::cout << "Role Attribution Module sending LOOK command "
                           << (lookCounter + 1) << "/3..." << std::endl;
                 AI::Interface::i().sendCommand(LOOK);
                 lookCounter++;
-
-                // If we've sent all 3 commands and still no role, move to broadcasting
                 if (lookCounter >= 3 && currentRole == Role::UNKNOWN) {
                     std::cout << "No role assigned from NEED messages. "
-                              << "Moving to ID attribution phase..." << std::endl;
+                              << "Moving to ID attribution phase..."
+                              << std::endl;
                     currentPhase = AttributionPhase::BROADCASTING_ID;
                     AI::Interface::i().sendMessage("ID_ATTRIBUTION");
-                    lookCounter = 0; // Reset for next phase
+                    lookCounter = 0;
                 }
             }
             break;
 
         case AttributionPhase::BROADCASTING_ID:
-            // Broadcast once then move to collecting phase
             currentPhase = AttributionPhase::COLLECTING_IDS;
             lookCounter = 0;
             break;
-
         case AttributionPhase::COLLECTING_IDS:
-            // Send up to 3 more LOOK commands while collecting IDs
             if (lookCounter < 3) {
                 std::cout << "Collecting IDs - LOOK command "
-                          << (lookCounter + 1) << "/3... " << time(nullptr) << std::endl;
+                          << (lookCounter + 1) << "/3... "
+                          << time(nullptr) << std::endl;
                 AI::Interface::i().sendCommand(LOOK);
                 lookCounter++;
-
-                // After 3 more LOOK commands, assign role based on random ID
                 if (lookCounter >= 3) {
                     myId = generateRandomId();
                     std::cout << "Assigning random ID: " << myId << std::endl;
-                    
                     assignRoleFromId();
-                    
-                    // Broadcast the assigned ID
-                    AI::Interface::i().sendMessage("I_AM_" + std::to_string(myId));
-
-                    // Move to assigned phase
+                    AI::Interface::i().sendMessage("I_AM_"
+                        + std::to_string(myId));
                     currentPhase = AttributionPhase::ROLE_ASSIGNED;
                 }
             }
             break;
 
         case AttributionPhase::ROLE_ASSIGNED:
-            // Periodically send LOOK to stay updated
-            if (lookCounter % 10 == 0) {
-                AI::Interface::i().sendCommand(LOOK);
-            }
-            lookCounter++;
             break;
     }
 }
@@ -133,8 +114,6 @@ int RoleAttributionModule::generateRandomId() {
  * @brief Assign role based on ID
  */
 void RoleAttributionModule::assignRoleFromId() {
-
-
     currentRole = Role::LEVELER;
     currentPhase = AttributionPhase::ROLE_ASSIGNED;
     std::cout << "Role assigned based on random ID: "
@@ -147,13 +126,9 @@ void RoleAttributionModule::assignRoleFromId() {
 void RoleAttributionModule::reassignRole() {
     myId = generateRandomId();
     std::cout << "Reassigning with new random ID: " << myId << std::endl;
-    
     assignRoleFromId();
-    
-    // Broadcast the new ID
     AI::Interface::i().sendMessage("NEW_ID_" + std::to_string(myId));
-    
-    std::cout << "Role reassigned to: " << roleToString(currentRole) << std::endl;
+    std::cout << "Reassigned to: " << roleToString(currentRole) << std::endl;
 }
 
 /**
@@ -172,15 +147,12 @@ void RoleAttributionModule::processMessages() {
         std::cout << "Broadcast received - Content: '" << content
                   << "', Direction: " << direction << std::endl;
 
-        // Check for REROLL message that triggers reassignment
-        if (content.find("REROLL") != std::string::npos && 
+        if (content.find("REROLL") != std::string::npos &&
             currentPhase == AttributionPhase::ROLE_ASSIGNED) {
-            std::cout << "REROLL command received, reassigning role..." << std::endl;
+            std::cout << "REROLL, reassigning role..." << std::endl;
             reassignRole();
             continue;
         }
-        
-        // Route messages based on current phase
         switch (currentPhase) {
             case AttributionPhase::INITIAL_LOOK:
                 processInitialPhase(content, direction);
@@ -192,8 +164,6 @@ void RoleAttributionModule::processMessages() {
                 break;
 
             case AttributionPhase::ROLE_ASSIGNED:
-                // After role assignment, we're only interested in specific messages
-                // This could be expanded to handle team coordination
                 break;
         }
     }
@@ -206,14 +176,12 @@ void RoleAttributionModule::processMessages() {
  */
 void RoleAttributionModule::processInitialPhase(
     const std::string& content, int direction) {
-    // Only process messages from direction 0 (same tile)
     if (direction != 0) {
         return;
     }
-    
+
     bool roleAssigned = false;
-    
-    // Handle direct role assignment messages
+
     if (content.find("NEED_HARVESTER") != std::string::npos) {
         currentRole = Role::HARVESTER;
         roleAssigned = true;
@@ -227,15 +195,12 @@ void RoleAttributionModule::processInitialPhase(
         currentRole = Role::FEEDER;
         roleAssigned = true;
     }
-    
-    // Update phase and log if role was assigned
     if (roleAssigned) {
         currentPhase = AttributionPhase::ROLE_ASSIGNED;
-        std::cout << "Role assigned from direct broadcast: " 
+        std::cout << "Role assigned from direct broadcast: "
                   << roleToString(currentRole) << std::endl;
-        
-        // Acknowledge the role assignment
-        AI::Interface::i().sendMessage("ROLE_ACKNOWLEDGED_" + roleToString(currentRole));
+        AI::Interface::i().sendMessage("ROLE_ACKNOWLEDGED_" +
+            roleToString(currentRole));
     }
 }
 
@@ -243,17 +208,15 @@ void RoleAttributionModule::processInitialPhase(
  * @brief Process messages during the ID collection phase
  * @param content The message content
  */
-void RoleAttributionModule::processIdCollectionPhase(const std::string& content) {
-    // Look for ID_ATTRIBUTION messages from other players
+void RoleAttributionModule::processIdCollectionPhase(
+    const std::string& content) {
     if (content.find("ID_ATTRIBUTION") != std::string::npos) {
-        // Respond with our ID if we already have one
         if (myId > 0) {
             AI::Interface::i().sendMessage("I_AM_" + std::to_string(myId));
         }
         return;
     }
-    
-    // Extract player IDs from I_AM messages
+
     if (content.find("I_AM_") != std::string::npos) {
         int id = extractNumber(content);
         if (id > 0) {
@@ -262,8 +225,7 @@ void RoleAttributionModule::processIdCollectionPhase(const std::string& content)
         }
         return;
     }
-    
-    // Any message containing a number
+
     int id = extractNumber(content);
     if (id > 0) {
         receivedIds.insert(id);
@@ -280,7 +242,7 @@ int RoleAttributionModule::extractNumber(const std::string& content) {
     // Use regex to find any number in the string
     std::regex numberRegex("\\d+");
     std::smatch match;
-    
+
     if (std::regex_search(content, match, numberRegex)) {
         try {
             return std::stoi(match[0]);

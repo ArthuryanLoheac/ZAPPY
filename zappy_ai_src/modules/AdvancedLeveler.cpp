@@ -245,7 +245,7 @@ float AdvancedLeveler::getPriority() {
         _moduleState = Moving;
         return 0.3f;
     }
-    
+
     return computePriority(AI::Data::i().level, AI::Data::i().inventory);
 }
 

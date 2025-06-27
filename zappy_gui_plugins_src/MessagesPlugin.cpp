@@ -105,7 +105,7 @@ void MessagesPlugin::checkDeleteParticles() {
 }
 
 void MessagesPlugin::SendParticlesToAll(irr::video::IVideoDriver *driver,
-pluginsData::Player p) {
+pluginsData::Player &p) {
     for (auto &player : data.players) {
         if (player.id == p.id || !player.PlayerMesh || !p.PlayerMesh)
             continue;

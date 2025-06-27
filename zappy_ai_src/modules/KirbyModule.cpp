@@ -13,9 +13,12 @@
 
 /**
  * @brief Constructs a new KirbyModule object.
+ * 
+ * Initializes the module in suck mode with a time budget of FOOD_TICK * 10.
  */
 KirbyModule::KirbyModule() : tickUsed(0), timeRemaining(FOOD_TICK * 10),
-    forwardCount(0), suckMode(true), hasMadeHisWill(false) {
+    forwardCount(0), suckMode(true), hasMadeHisWill(false),
+    shouldLoopAround(false) {
     LOG_INFO("KirbyModule initialized: suckMode=%s, timeRemaining=%d",
              (suckMode ? "true" : "false"), timeRemaining);
 }
@@ -28,7 +31,7 @@ KirbyModule::~KirbyModule() = default;
 /**
  * @brief Executes the main logic of the KirbyModule.
  *
- * Decides whether to perform the suck or spit action based on the current mode.
+ * Decides to perform the suck or spit action based on the current mode.
  */
 void KirbyModule::execute() {
     LOG_INFO("Kirby PID %d executing with %d ticks remaining, %s mode",
@@ -51,7 +54,10 @@ float KirbyModule::getPriority() {
 /**
  * @brief Computes whether the KirbyModule should remain in suck mode.
  *
- * Updates the suckMode flag based on time, map size, and actions left.
+ * Updates the suckMode flag based on remaining time, map dimensions, and
+ * efficiency calculations. Switches to spit mode when approaching time limits
+ * or map boundaries. For square maps, determines if looping around is more
+ * efficient than turning back.
  */
 void KirbyModule::computeSuckMode() {
     int mapX = AI::Data::i().mapX;
@@ -115,7 +121,12 @@ void KirbyModule::computeSuckMode() {
 }
 
 /**
- * @brief Performs the "suck" action: looks, takes objects, and moves forward.
+ * @brief Performs the "suck" action: looks around, takes objects, and moves
+ * forward.
+ * 
+ * First checks if mode should switch, then executes look, take, and forward
+ * commands.
+ * Increments step counter and updates tick usage.
  */
 void KirbyModule::suck() {
     computeSuckMode();
@@ -132,7 +143,12 @@ void KirbyModule::suck() {
 }
 
 /**
- * @brief Returns to base and drops collected objects.
+ * @brief Returns to starting position and drops all collected objects.
+ * 
+ * Chooses optimal return strategy based on map geometry and efficiency:
+ * - For square maps: may loop around if more efficient than turning back
+ * - Otherwise: turns around and retraces steps
+ * Drops all non-food items from inventory at the starting position.
  */
 void KirbyModule::spit() {
     if (hasMadeHisWill) {
@@ -185,7 +201,10 @@ void KirbyModule::spit() {
 }
 
 /**
- * @brief Takes all objects from the cell in front of the agent.
+ * @brief Takes all objects from the current cell after a look command.
+ * 
+ * Prioritizes collection of non-food items first, then collects food.
+ * Updates tick usage for each take command executed.
  */
 void KirbyModule::takeObjects() {
     try {
@@ -220,14 +239,13 @@ void KirbyModule::takeObjects() {
 }
 
 /**
- * @brief Gets the total number of objects in the inventory.
- * @return The number of objects as an integer.
+ * @brief Gets the total number of non-food objects in the inventory.
+ * @return The number of objects as an integer (food is excluded from count).
  */
 int KirbyModule::getNbObjects() {
     int nbObjects = 0;
 
     for (auto &item : AI::Data::i().inventory) {
-        // Don't count food when calculating objects to drop
         if (item.first != "food") {
             nbObjects += item.second;
         }

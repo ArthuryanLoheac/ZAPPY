@@ -19,48 +19,48 @@ const char InvRequestCmd[] = "Gemme you inventory !";
 const char CallingMsg[] = "Wololo !";
 
 static const std::unordered_map<AI::Data::Material_t, double> Rarety = {
-    {AI::Data::Linemate, 0.3},
-    {AI::Data::Deraumere, 0.15},
-    {AI::Data::Sibur, 0.1},
-    {AI::Data::Mendiane, 0.1},
-    {AI::Data::Phiras, 0.08},
-    {AI::Data::Thystame, 0.05}
+    {AI::Data::Material_t::Linemate, 0.3},
+    {AI::Data::Material_t::Deraumere, 0.15},
+    {AI::Data::Material_t::Sibur, 0.1},
+    {AI::Data::Material_t::Mendiane, 0.1},
+    {AI::Data::Material_t::Phiras, 0.08},
+    {AI::Data::Material_t::Thystame, 0.05}
 };
 
 static const std::unordered_map<unsigned int,
     AdvancedLeveler::ElevationRequirements_t>
     ElevationRequirementsMap = {
-        {1, {1, {{AI::Data::Linemate, 1}}}},
+        {1, {1, {{AI::Data::Material_t::Linemate, 1}}}},
 
-        {2, {2, {{AI::Data::Linemate, 1},
-            {AI::Data::Deraumere, 1},
-            {AI::Data::Sibur, 1}}}},
+        {2, {2, {{AI::Data::Material_t::Linemate, 1},
+            {AI::Data::Material_t::Deraumere, 1},
+            {AI::Data::Material_t::Sibur, 1}}}},
 
-        {3, {2, {{AI::Data::Linemate, 2},
-            {AI::Data::Sibur, 1},
-            {AI::Data::Phiras, 2}}}},
+        {3, {2, {{AI::Data::Material_t::Linemate, 2},
+            {AI::Data::Material_t::Sibur, 1},
+            {AI::Data::Material_t::Phiras, 2}}}},
 
-        {4, {4, {{AI::Data::Linemate, 1},
-            {AI::Data::Deraumere, 1},
-            {AI::Data::Sibur, 2},
-            {AI::Data::Phiras, 1}}}},
+        {4, {4, {{AI::Data::Material_t::Linemate, 1},
+            {AI::Data::Material_t::Deraumere, 1},
+            {AI::Data::Material_t::Sibur, 2},
+            {AI::Data::Material_t::Phiras, 1}}}},
 
-        {5, {4, {{AI::Data::Linemate, 1},
-            {AI::Data::Deraumere, 2},
-            {AI::Data::Sibur, 1},
-            {AI::Data::Mendiane, 3}}}},
+        {5, {4, {{AI::Data::Material_t::Linemate, 1},
+            {AI::Data::Material_t::Deraumere, 2},
+            {AI::Data::Material_t::Sibur, 1},
+            {AI::Data::Material_t::Mendiane, 3}}}},
 
-        {6, {6, {{AI::Data::Linemate, 1},
-            {AI::Data::Deraumere, 2},
-            {AI::Data::Sibur, 3},
-            {AI::Data::Phiras, 1}}}},
+        {6, {6, {{AI::Data::Material_t::Linemate, 1},
+            {AI::Data::Material_t::Deraumere, 2},
+            {AI::Data::Material_t::Sibur, 3},
+            {AI::Data::Material_t::Phiras, 1}}}},
 
-        {7, {6, {{AI::Data::Linemate, 2},
-            {AI::Data::Deraumere, 2},
-            {AI::Data::Sibur, 2},
-            {AI::Data::Mendiane, 2},
-            {AI::Data::Phiras, 2},
-            {AI::Data::Thystame, 1}}}}
+        {7, {6, {{AI::Data::Material_t::Linemate, 2},
+            {AI::Data::Material_t::Deraumere, 2},
+            {AI::Data::Material_t::Sibur, 2},
+            {AI::Data::Material_t::Mendiane, 2},
+            {AI::Data::Material_t::Phiras, 2},
+            {AI::Data::Material_t::Thystame, 1}}}}
 };
 
 double AdvancedLeveler::computePriority(int level,
@@ -97,12 +97,12 @@ static int getId() {
 
 static std::string getInvString() {
     return std::format("InvContent[{}] {},{},{},{},{},{}", getId(),
-        AI::Data::i().inventory.at(AI::Data::Linemate),
-        AI::Data::i().inventory.at(AI::Data::Deraumere),
-        AI::Data::i().inventory.at(AI::Data::Sibur),
-        AI::Data::i().inventory.at(AI::Data::Mendiane),
-        AI::Data::i().inventory.at(AI::Data::Phiras),
-        AI::Data::i().inventory.at(AI::Data::Thystame));
+        AI::Data::i().inventory.at(AI::Data::Material_t::Linemate),
+        AI::Data::i().inventory.at(AI::Data::Material_t::Deraumere),
+        AI::Data::i().inventory.at(AI::Data::Material_t::Sibur),
+        AI::Data::i().inventory.at(AI::Data::Material_t::Mendiane),
+        AI::Data::i().inventory.at(AI::Data::Material_t::Phiras),
+        AI::Data::i().inventory.at(AI::Data::Material_t::Thystame));
 }
 
 static const char defaultInvContentMsgForErr[] ="InvContent[id] "
@@ -147,12 +147,12 @@ parseInventoryMessage(const std::string &msg) {
     }
 
     AI::Data::Inventory_t inv;
-    inv[AI::Data::Linemate] = parsedInv[0];
-    inv[AI::Data::Deraumere] = parsedInv[0];
-    inv[AI::Data::Sibur] = parsedInv[0];
-    inv[AI::Data::Mendiane] = parsedInv[0];
-    inv[AI::Data::Phiras] = parsedInv[0];
-    inv[AI::Data::Thystame] = parsedInv[0];
+    inv[AI::Data::Material_t::Linemate] = parsedInv[0];
+    inv[AI::Data::Material_t::Deraumere] = parsedInv[0];
+    inv[AI::Data::Material_t::Sibur] = parsedInv[0];
+    inv[AI::Data::Material_t::Mendiane] = parsedInv[0];
+    inv[AI::Data::Material_t::Phiras] = parsedInv[0];
+    inv[AI::Data::Material_t::Thystame] = parsedInv[0];
 
     return std::make_pair(id, inv);
 }
@@ -179,14 +179,16 @@ float AdvancedLeveler::getPriority() {
 
 void AdvancedLeveler::execute() {
     switch (_moduleState) {
-        case Idling:
+        case Idling: {
             LOG_INFO("Prerequisites met, sending invitation for ritual");
             AI::Interface::i().sendCommand(InvRequestCmd);
             _moduleState = Listening;
+        }
             break;
-        case Answering:
+        case Answering: {
             AI::Interface::i().sendCommand(getInvString());
             _moduleState = Idling;
+        }
             break;
         case Listening: {
             auto &queue = AI::Data::i().messageQueue;
@@ -203,9 +205,19 @@ void AdvancedLeveler::execute() {
                     queue.pop();
                 }
             }
+            if (_othersInv.size() >= 6)
+                _moduleState = Calling;
         }
             break;
-        case Calling:
+        case Calling: {
+            if (AI::Data::i().vision.at(0).at(0).at("player") >= 6) {
+                AI::Interface::i().sendCommand(INCANTATION);
+                _moduleState = Elevating;
+                break;
+            } else {
+                AI::Interface::i().sendCommand(CallingMsg);
+            }
+        }
             break;
         case Moving:
             break;

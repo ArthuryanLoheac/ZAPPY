@@ -14,6 +14,7 @@
 #include "../Exceptions/Factory.hpp"
 #include "../Exceptions/Commands.hpp"
 #include "../Data/Data.hpp"
+#include "../../libc/include/logs.h"
 
 /**
  * @brief Initialize the FoodGatheringModule with default values

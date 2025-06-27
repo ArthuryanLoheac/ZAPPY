@@ -9,6 +9,7 @@
 #include <iostream>
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
+#include "../../libc/include/logs.h"
 
 /**
  * @brief Initialize the ElevationModule with default values
@@ -101,7 +102,7 @@ bool ElevationModule::checkCurrentTileForLinemate() {
 
     if (currentTile.find("linemate") != currentTile.end() &&
         currentTile["linemate"] == 1) {
-        std::cout << "Found linemate on current tile!" << std::endl;
+        LOG_INFO("Found linemate on current tile!");
         targetX = 0;
         targetY = 0;
         return true;
@@ -124,8 +125,7 @@ bool ElevationModule::scanVisionForLinemate() {
             auto& tileContents = AI::Data::i().vision[x][y];
             if (tileContents.find("linemate") != tileContents.end() &&
                 tileContents["linemate"] == 1) {
-                std::cout << "Found linemate at position (" << x << ","
-                          << relativeY << ")" << std::endl;
+                LOG_INFO("Found linemate at position (%zu,%d)", x, relativeY);
                 targetX = static_cast<int>(x);
                 targetY = relativeY;
                 return true;
@@ -157,7 +157,7 @@ bool ElevationModule::findElevationSpot() {
  * @brief Handle the case when linemate is in the player's inventory
  */
 void ElevationModule::handleLinemateInInventory() {
-    std::cout << "Dropping linemate for elevation" << std::endl;
+    LOG_INFO("Dropping linemate for elevation");
     AI::Interface::i().sendCommand("Set linemate\n");
     foundSpot = false;
     AI::Interface::i().sendCommand(LOOK);
@@ -168,13 +168,12 @@ void ElevationModule::handleLinemateInInventory() {
  */
 void ElevationModule::handleFoundLinemateTile() {
     if (targetX > 0 || targetY != 0) {
-        std::cout << "Moving to linemate at (" << targetX << ","
-            << targetY << ")" << std::endl;
+        LOG_INFO("Moving to linemate at (%d,%d)", targetX, targetY);
         AI::Interface::i().goTo(targetX, targetY);
         targetX = 0;
         targetY = 0;
     } else {
-        std::cout << "Starting incantation" << std::endl;
+        LOG_INFO("Starting incantation");
         AI::Interface::i().sendCommand(INCANTATION);
         foundSpot = false;
         targetX = -1;
@@ -190,8 +189,7 @@ void ElevationModule::handleFoundLinemateTile() {
  */
 void ElevationModule::performElevation() {
     if (foodCount < 3) {
-        std::cout << "Not enough food for elevation: " << foodCount << "/3"
-                  << std::endl;
+        LOG_WARNING("Not enough food for elevation: %d/3", foodCount);
         return;
     }
 

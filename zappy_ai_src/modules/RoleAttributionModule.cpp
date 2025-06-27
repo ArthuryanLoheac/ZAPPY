@@ -14,6 +14,7 @@
 #include "modules/RoleAttributionModule.hpp"
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
+#include "../../libc/include/logs.h"
 
 /**
  * @brief Initialize the RoleAttributionModule with default values

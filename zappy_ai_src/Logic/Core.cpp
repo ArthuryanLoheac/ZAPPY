@@ -19,6 +19,7 @@
 #include "../modules/DisruptionModule.hpp"
 #include "../modules/RessourceGatheringSpawning.hpp"
 #include "../modules/FeederModule.hpp"
+#include "../../libc/include/logs.h"
 
 void CommandHistory::addCommandResponse(const std::string& command,
                                        const std::string& response) {
@@ -70,13 +71,13 @@ void Logic::executeHighestPriorityModule() {
             return a->getPriority() > b->getPriority();
         });
     const auto& module = *highestPriorityModuleIt;
-    std::cout << "Executing module: " << typeid(*module).name()
-              << " with priority: " << module->getPriority() << std::endl;
+    LOG_INFO("Executing module: %s with priority: %.2f", 
+             typeid(*module).name(), module->getPriority());
     module->execute();
 }
 
 void Logic::queueCommand(const std::string& command) {
-    std::cout << "Queuing command: " << command << std::endl;
+    LOG_INFO("Queuing command: %s", command.c_str());
     commandQueue.push(command);
 }
 
@@ -86,7 +87,7 @@ std::queue<std::string>& Logic::getCommandQueue() {
 
 void Logic::handleServerResponse(const std::string& response) {
     if (commandQueue.empty()) {
-        std::cerr << "No command in queue to handle response." << std::endl;
+        LOG_ERROR("No command in queue to handle response.");
         return;
     }
 
@@ -179,33 +180,32 @@ void Logic::setupRoleBasedModules() {
     }
 
     Role currentRole = roleModule->getCurrentRole();
-    std::cout << "Setting up modules for role: ";
 
     switch (currentRole) {
         case Role::HARVESTER:
-            std::cout << "HARVESTER" << std::endl;
+            LOG_INFO("Setting up modules for role: HARVESTER");
             addModule(std::make_unique<KirbyModule>());
             break;
 
         case Role::LEVELER:
-            std::cout << "LEVELER" << std::endl;
+            LOG_INFO("Setting up modules for role: LEVELER");
             addModule(std::make_unique<DisruptionModule>());
             addModule(std::make_unique<RessourceGatheringSpawning>());
             addModule(std::make_unique<ElevationModule>());
             break;
 
         case Role::DISRUPTER:
-            std::cout << "DISRUPTER" << std::endl;
+            LOG_INFO("Setting up modules for role: DISRUPTER");
             addModule(std::make_unique<DisruptionModule>());
             break;
 
         case Role::FEEDER:
-            std::cout << "FEEDER" << std::endl;
+            LOG_INFO("Setting up modules for role: FEEDER");
             addModule(std::make_unique<FeederModule>());
             break;
 
         default:
-            std::cout << "UNKNOWN (no additional modules added)" << std::endl;
+            LOG_INFO("Setting up modules for role: UNKNOWN (no additional modules added)");
             return;
     }
 

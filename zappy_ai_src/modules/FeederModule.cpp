@@ -9,6 +9,7 @@
 #include <iostream>
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
+#include "../../libc/include/logs.h"
 
 /**
  * @brief Initialize the FeederModule with default values
@@ -17,7 +18,7 @@ FeederModule::FeederModule()
     : inventoryCheckCounter(0), foodCount(0),
         currentState(FeederState::DROP_INITIAL_FOOD),
       foodDropCounter(0), forkCommandSent(false), broadcastSent(false) {
-    std::cout << "Feeder Module initialized in sequence mode" << std::endl;
+    LOG_INFO("Feeder Module initialized in sequence mode");
 }
 
 /**
@@ -38,29 +39,27 @@ void FeederModule::execute() {
     }
 
     if (currentState == FeederState::DROP_INITIAL_FOOD && hasFood()) {
-        std::cout << "Executing initial sequence: Dropping 2 food items"
-            << std::endl;
+        LOG_INFO("Executing initial sequence: Dropping 2 food items");
         AI::Interface::i().sendCommand("Set food\n");
         AI::Interface::i().sendCommand("Set food\n");
         foodDropCounter = 2;
 
-        std::cout << "Sending FORK command..." << std::endl;
+        LOG_INFO("Sending FORK command...");
         AI::Interface::i().sendCommand(FORK);
         forkCommandSent = true;
 
-        std::cout << "Dropping extra food item after fork" << std::endl;
+        LOG_INFO("Dropping extra food item after fork");
         AI::Interface::i().sendCommand("Set food\n");
 
-        std::cout << "Broadcasting NEED_FEEDER message..." << std::endl;
+        LOG_INFO("Broadcasting NEED_FEEDER message...");
         AI::Interface::i().sendMessage("NEED_FEEDER");
         broadcastSent = true;
 
-        std::cout << "Moving to continuous feeding phase" << std::endl;
+        LOG_INFO("Moving to continuous feeding phase");
         currentState = FeederState::CONTINUOUS_FEEDING;
         return;
     } else if (currentState == FeederState::DROP_INITIAL_FOOD) {
-        std::cout << "Waiting for food to execute initial sequence..."
-            << std::endl;
+        LOG_INFO("Waiting for food to execute initial sequence...");
         AI::Interface::i().sendCommand(INVENTORY);
     }
 }
@@ -74,7 +73,7 @@ bool FeederModule::executeInitialFoodDrop() {
         return true;
     }
     if (hasFood()) {
-        std::cout << "Dropping initial food item " << (foodDropCounter + 1)
+        LOG_INFO("Dropping initial food item ") << (foodDropCounter + 1)
             << "/2" << std::endl;
         AI::Interface::i().sendCommand("Set food\n");
         foodDropCounter++;
@@ -82,7 +81,7 @@ bool FeederModule::executeInitialFoodDrop() {
             return true;
         }
     } else {
-        std::cout << "Waiting for food to drop initial items..." << std::endl;
+        LOG_INFO("Waiting for food to drop initial items...");
     }
     return false;
 }
@@ -95,7 +94,7 @@ bool FeederModule::executeFork() {
     if (forkCommandSent) {
         return true;
     }
-    std::cout << "Sending FORK command..." << std::endl;
+    LOG_INFO("Sending FORK command...");
     AI::Interface::i().sendCommand(FORK);
     forkCommandSent = true;
     return true;
@@ -111,12 +110,12 @@ bool FeederModule::executeExtraFoodDrop() {
         return true;
     }
     if (hasFood()) {
-        std::cout << "Dropping extra food item after fork" << std::endl;
+        LOG_INFO("Dropping extra food item after fork");
         AI::Interface::i().sendCommand("Set food\n");
         extraFoodDropped = true;
         return true;
     } else {
-        std::cout << "Waiting for food to drop extra item..." << std::endl;
+        LOG_INFO("Waiting for food to drop extra item...");
     }
     return false;
 }
@@ -129,7 +128,7 @@ bool FeederModule::executeBroadcast() {
     if (broadcastSent) {
         return true;
     }
-    std::cout << "Broadcasting NEED_FEEDER message..." << std::endl;
+    LOG_INFO("Broadcasting NEED_FEEDER message...");
     AI::Interface::i().sendMessage("NEED_FEEDER");
     broadcastSent = true;
     return true;
@@ -140,11 +139,11 @@ bool FeederModule::executeBroadcast() {
  */
 void FeederModule::executeContinuousFeeding() {
     if (hasFood()) {
-        std::cout << "Continuously feeding: placing food on ground..."
+        LOG_INFO("Continuously feeding: placing food on ground...")
             << std::endl;
         AI::Interface::i().sendCommand("Set food\n");
     } else {
-        std::cout << "No food available for continuous feeding..."
+        LOG_INFO("No food available for continuous feeding...")
             << std::endl;
     }
 }

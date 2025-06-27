@@ -12,6 +12,7 @@
 #include "modules/RessourceGatheringSpawning.hpp"
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
+#include "../../libc/include/logs.h"
 
 /**
  * @brief Initialize the RessourceGatheringSpawning with default values

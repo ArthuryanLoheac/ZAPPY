@@ -9,6 +9,7 @@
 #include <iostream>
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
+#include "../../libc/include/logs.h"
 
 /**
  * @brief Initialize the DisruptionModule with default values
@@ -29,7 +30,7 @@ void DisruptionModule::execute() {
     actionCounter++;
     sendRandomMovement();
     if (shouldSendLook()) {
-        std::cout << "Disruption Module sending LOOK command..." << std::endl;
+        LOG_INFO("Disruption Module sending LOOK command...");
         AI::Interface::i().sendCommand(LOOK);
         updateLookProbability();
     }
@@ -55,18 +56,15 @@ void DisruptionModule::sendRandomMovement() {
     int randomChoice = distribution(rng);
     switch (randomChoice) {
         case 1:
-            std::cout << "Disruption Module sending FORWARD command"
-                << std::endl;
+            LOG_INFO("Disruption Module sending FORWARD command");
             AI::Interface::i().sendCommand(FORWARD);
             break;
         case 2:
-            std::cout << "Disruption Module sending LEFT command"
-                << std::endl;
+            LOG_INFO("Disruption Module sending LEFT command");
             AI::Interface::i().sendCommand(LEFT);
             break;
         case 3:
-            std::cout << "Disruption Module sending RIGHT command"
-                << std::endl;
+            LOG_INFO("Disruption Module sending RIGHT command");
             AI::Interface::i().sendCommand(RIGHT);
             break;
     }
@@ -97,6 +95,6 @@ void DisruptionModule::updateLookProbability() {
     if (lookProbability > 100) {
         lookProbability = 100;
     }
-    std::cout << "Disruption Module updated look probability to: "
-              << lookProbability << "%" << std::endl;
+    LOG_INFO("Disruption Module updated look probability to: %d%%",
+             lookProbability);
 }

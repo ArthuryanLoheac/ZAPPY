@@ -10,6 +10,7 @@
 #include "Interface/Interface.hpp"
 #include "Data/Data.hpp"
 #include "include/logs.h"
+#include "../../libc/include/logs.h"
 
 /**
  * @brief Constructs a new KirbyModule object.

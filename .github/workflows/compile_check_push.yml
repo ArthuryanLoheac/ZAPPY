@@ -1,4 +1,4 @@
-name: pain_au_chocolat
+name: compile check and push
 
 on:
   push:

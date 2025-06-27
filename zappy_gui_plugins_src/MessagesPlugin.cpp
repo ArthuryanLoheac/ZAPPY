@@ -113,7 +113,7 @@ pluginsData::Player &p) {
             player.PlayerMesh;
         std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> pplayerMesh =
             p.PlayerMesh;
-        if (!playerMesh || !pplayerMesh)
+        if (!playerMesh || !pplayerMesh || player.isDead  || p.isDead)
             continue;
         irr::core::vector3df pos = playerMesh->getPosition();
         irr::core::vector3df ppos = pplayerMesh->getPosition();

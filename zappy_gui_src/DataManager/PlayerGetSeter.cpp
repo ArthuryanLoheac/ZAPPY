@@ -55,8 +55,9 @@ Player &Player::operator=(Player &&other) noexcept {
 
 void Player::clear(irr::scene::ISceneManager *smgr) {
     std::lock_guard<std::mutex> lock(mutexDatas);
+    isDead = true;
     if (PlayerMesh && smgr) {
-        PlayerMesh->setVisible(false);
+        smgr->addToDeletionQueue(PlayerMesh.get());
     }
     for (auto &mesh : PlayerMeshesCylinder) {
         smgr->addToDeletionQueue(mesh.get());
@@ -231,6 +232,7 @@ int Player::getRessource(int id) const {
 
 void Player::destroy() {
     std::lock_guard<std::mutex> lock(mutexDatas);
+    isDead = true;
     if (!PlayerMesh)
         return;
     int idM = PlayerMesh->getID();
@@ -243,5 +245,6 @@ void Player::destroy() {
         if (sceneNodeC)
             GUI::Window::i().smgr->addToDeletionQueue(sceneNodeC);
     }
+    PlayerMesh = nullptr;
 }
 }  // namespace GUI

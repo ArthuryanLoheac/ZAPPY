@@ -165,6 +165,24 @@ parseInventoryMessage(const std::string &msg) {
     return std::make_pair(id, inv);
 }
 
+/**
+ * @brief Checks if the required materials for the next elecation ritual are
+ * located on the AI's current tile.
+ */
+static bool isRequiredMaterialsOnGround() {
+    const AI::Data::Inventory_t &inv = AI::Data::i().inventory;
+    const AdvancedLeveler::ElevationRequirements_t &requiredMaterials =
+        ElevationRequirementsMap.at(AI::Data::i().level);
+
+    for (const auto &[material, amount] : requiredMaterials.materialsCount) {
+        if (inv.count(material) == 0)
+            return false;
+        if (inv.at(material) >= amount)
+            return true;
+    }
+    return false;
+}
+
 float AdvancedLeveler::getPriority() {
     auto &msgQueue = AI::Data::i().messageQueue;
 
@@ -182,25 +200,12 @@ float AdvancedLeveler::getPriority() {
             return 1.0f;
         }
     }
-    return computePriority(AI::Data::i().level, AI::Data::i().inventory);
-}
-
-/**
- * @brief Checks if the required materials for the next elecation ritual are
- * located on the AI's current tile.
- */
-static bool isRequiredMaterialsOnGround() {
-    const AI::Data::Inventory_t &inv = AI::Data::i().inventory;
-    const AdvancedLeveler::ElevationRequirements_t &requiredMaterials =
-        ElevationRequirementsMap.at(AI::Data::i().level);
-
-    for (const auto &[material, amount] : requiredMaterials.materialsCount) {
-        if (AI::Data::i().inventory.count(material) == 0)
-            return false;
-        if (AI::Data::i().inventory.at(material) >= amount)
-            return true;
+    if (!msgQueue.empty()
+        && msgQueue.front().first == std::string(CallingMsg)) {
+        _moduleState = Moving;
+        return 0.3f;
     }
-    return false;
+    return computePriority(AI::Data::i().level, AI::Data::i().inventory);
 }
 
 void AdvancedLeveler::execute() {
@@ -252,7 +257,15 @@ void AdvancedLeveler::execute() {
         }
             break;
 
-        case Moving:
+        case Moving: {
+            if (AI::Data::i().messageQueue.empty())
+                break;
+            if (AI::Data::i().messageQueue.front().second == 0)
+                _moduleState = Spitting;
+            AI::Interface::i().goToDirection(
+                AI::Data::i().messageQueue.front().second);
+            AI::Data::i().messageQueue.pop();
+        }
             break;
 
         case Spitting: {

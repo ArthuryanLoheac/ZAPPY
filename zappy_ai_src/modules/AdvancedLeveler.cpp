@@ -172,7 +172,7 @@ parseInventoryMessage(const std::string &msg) {
 static bool isRequiredMaterialsOnGround(int ritualLevel) {
     const auto &tile = AI::Data::i().vision.at(0).at(0);
     const AdvancedLeveler::ElevationRequirements_t &requiredMaterials =
-        ElevationRequirementsMap.at(AI::Data::i().level);
+        ElevationRequirementsMap.at(ritualLevel);
 
     for (const auto &[material, amount] : requiredMaterials.materialsCount) {
         if (tile.count(AI::Data::materialToString(material)) == 0)
@@ -193,7 +193,6 @@ int ritualLevel) {
         ElevationRequirementsMap.at(ritualLevel);
 
     for (const auto &[material, amount] : requiredMaterials.materialsCount) {
-        const AI::Data::Inventory_t &inv = AI::Data::i().inventory;
         if (inv.count(material) == 0)
             return false;
         if (inv.at(material) >= amount)
@@ -207,16 +206,18 @@ int ritualLevel) {
  *
  * If all items are already present on the ground, does nothing.
  */
-static void spitRequiredMaterial(int ritualLevel) {
-    const auto &tile = AI::Data::i().vision.at(0).at(0);
+static void spitRequiredMaterial(AI::Data::Inventory_t &inv, int ritualLevel) {
     const AdvancedLeveler::ElevationRequirements_t &requiredMaterials =
         ElevationRequirementsMap.at(ritualLevel);
 
     for (const auto &[material, amount] : requiredMaterials.materialsCount) {
         const AI::Data::Inventory_t &inv = AI::Data::i().inventory;
-        if (inv.count(material) == 0 || inv.at(material) < amount)
+        if (inv.count(material) == 0 || inv.at(material) < amount
+            && inv.count(material) > 0) {
             AI::Interface::i().sendCommand(std::format("SET {}",
                 AI::Data::materialToString(material)));
+            return;
+            }
     }
 }
 
@@ -322,7 +323,8 @@ void AdvancedLeveler::execute() {
                     AI::Interface::i().sendCommand(INCANTATION);
                 _moduleState = Elevating;
             } else {
-                spitRequiredMaterial(AI::Data::i().level);
+                spitRequiredMaterial(AI::Data::i().inventory,
+                    AI::Data::i().level);
             }
         }
             break;

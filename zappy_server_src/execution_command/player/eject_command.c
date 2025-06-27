@@ -50,7 +50,7 @@ static void compute_forward_pos(int *x, int *y, stats_t *stats, zappy_t *zappy)
  * @param xSize Width of the map.
  * @param ySize Height of the map.
  */
-unsigned int get_direction_between_two_tiles(unsigned int tile1[2],
+static unsigned int get_direction_between_two_tiles(unsigned int tile1[2],
     unsigned int tile2[2], unsigned int xSize, unsigned int ySize)
 {
     if (tile1[0] != tile2[0]) {
@@ -158,12 +158,11 @@ static void send_pex_to_graphics(zappy_t *zappy, client_t *client)
 static bool is_player_at_pos(zappy_t *zappy, client_t *client, int xCheck,
     int yCheck)
 {
-    for (client_t *zappyClient = zappy->clients; client != NULL;
-        client = client->next) {
+    for (client_t *zappyClient = zappy->clients; zappyClient != NULL;
+        zappyClient = zappyClient->next) {
         if (zappyClient->stats.x == xCheck && zappyClient->stats.y == yCheck
             && zappyClient->stats.id != client->stats.id)
             return true;
-        zappyClient = zappyClient->next;
     }
     return false;
 }

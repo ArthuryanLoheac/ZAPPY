@@ -59,7 +59,7 @@ This document describes the client/server communication protocol used in the Zap
 | `smg M` | Server message |
 | `suc` | Unknown command |
 | `sbp` | Command parameter error |
-| `ping` | Wait the response to see the delay with the server |
+| `ping` | Send the response to see the delay with the server |
 
 ---
 
@@ -73,6 +73,8 @@ This document describes the client/server communication protocol used in the Zap
 | `pin #n` | Request player inventory |
 | `sgt` | Request time unit |
 | `sst T` | Set time unit |
+| `ping` | Wait the response to see the delay with the server |
+| `levelup #n` | Level up by one level the player N |
 
 ---
 

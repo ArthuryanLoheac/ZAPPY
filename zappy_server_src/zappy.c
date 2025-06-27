@@ -25,13 +25,6 @@ static void check_for_new_client(zappy_t *zappy)
     if (server->fds[0].revents & POLLIN) {
         LOG_DEBUG("Connection attempt from a client");
         new_fd = accept(server->fds[0].fd, NULL, NULL);
-        if (server->nb_fds >= 1000) {
-            LOG_WARNING("Connection attempt from client failed:"
-                " maximum number of clients reached");
-            write(new_fd, "ko\n", 3);
-            close(new_fd);
-            return;
-        }
         if (new_fd == -1) {
             LOG_WARNING("Connection attempt from client failed:"
                 " accept syscall failed");
@@ -87,7 +80,7 @@ static void handle_client(zappy_t *zappy, bool *last_cycle)
         *last_cycle = true;
 }
 
-void start_server(zappy_t *zappy)
+void start_server(zappy_t *zappy, bool *running)
 {
     server_t *server = zappy->server;
     int ready = 0;
@@ -97,7 +90,7 @@ void start_server(zappy_t *zappy)
     zappy->durationTickLeft = zappy->durationTick;
     zappy->tickCount = 0;
     message_start_server(zappy);
-    while (1) {
+    while (*running) {
         check_ticks(zappy);
         ready = poll(server->fds, server->nb_fds,
             (1.0 / zappy->parser->freq) * 1000);

@@ -28,3 +28,44 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+.heroBanner, .hero--primary {
+  background-image: url('/img/game-screenshot.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 300px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.heroBanner::before, .hero--primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: inherit;
+  filter: blur(3px) brightness(0.7);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.heroBanner * , .hero--primary * {
+  position: relative;
+  z-index: 3;
+  text-shadow: none;
+  color: #fff;
+}
+
+.heroBanner .zoup-text, .hero--primary .zoup-text {
+  color: #111 !important;
+}
+
+.heroBanner-content, .hero--primary-content {
+  background: rgba(20, 20, 20, 0.7);
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  display: inline-block;
+  margin: 0 auto;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}

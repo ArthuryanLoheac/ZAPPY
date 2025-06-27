@@ -14,6 +14,7 @@ class DataManager {
     int port;
     std::string ip;
     int frequency = 0;
+    bool optimized = false;
 
  public:
     bool running = true;
@@ -27,11 +28,13 @@ class DataManager {
     int getPort() const;
     int getFrequency() const;
     std::string getIp() const;
+    bool isOptimized() const;
 
     void setPort(int port);
     void setIp(std::string ip);
     void setRunning(bool b);
     void setFrequency(int f);
+    void setOptimized(bool o);
 
     void clear();
 };

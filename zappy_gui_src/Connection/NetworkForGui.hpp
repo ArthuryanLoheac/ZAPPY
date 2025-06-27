@@ -6,36 +6,47 @@
 #include <vector>
 #include <chrono>
 
+#include "Connection/PollWrapper.hpp"
+
 namespace GUI {
 
 /**
  * @brief Manages the server communication and command handling for the GUI.
  */
-class ServerGUI {
+class NetworkForGui {
  public:
     int server_fd; /**< Server socket file descriptor. */
     int nb_fds; /**< Number of file descriptors. */
-    struct pollfd fd; /**< Poll file descriptor structure. */
     std::string buffer; /**< Buffer for storing incoming data. */
     std::string outbuffer = ""; /**< Buffer for outgoing data. */
     int updateMapTime = 30; /**< Time interval for map updates. */
     int updatePingTime = 3; /**< Time interval for map updates. */
     int ping = 0; /**< Ping counter for server communication. */
+    bool toClear;
 
     /**
-     * @brief Constructs a new ServerGUI object.
+     * @brief Constructs a new NetworkForGui object.
      */
-    ServerGUI();
+    NetworkForGui();
+
+    void InitServer();
 
     /**
-     * @brief Provides a singleton instance of the ServerGUI class.
+     * @brief Provides a singleton instance of the NetworkForGui class.
      *
-     * @return ServerGUI& Reference to the singleton instance.
+     * @return NetworkForGui& Reference to the singleton instance.
      */
-    static ServerGUI &i() {
-        static ServerGUI i;
+    static NetworkForGui &i() {
+        static NetworkForGui i;
         return i;
     }
+
+    /**
+     * @brief Initializes the network connection to the server.
+     *
+     * @param sockfd The socket file descriptor for the server connection.
+     */
+    void initNetwork(int sockfd);
 
     /**
      * @brief Sends data to the server.
@@ -43,6 +54,8 @@ class ServerGUI {
      * @param message The message to send.
      */
     void sendDatasToServer(const std::string &message);
+
+    void sendBufferToServer();
 
     /**
      * @brief Starts the server communication loop.
@@ -62,6 +75,7 @@ class ServerGUI {
     void setConnectedToServer(bool connected);
 
  private:
+    PollWrapper pollWrapper; /**< PollWrapper member for managing poll. */
     bool sendPing = false; /**< Flag to indicate if BCT command has been sent */
     std::chrono::system_clock::time_point timeForPing;
     bool isConnected = false; /**< if the server connection is active */
@@ -100,7 +114,7 @@ class ServerGUI {
      * @param it Iterator pointing to the command in the command map.
      * @param args Arguments for the command.
      */
-    void execCommand(std::map<std::string, void(GUI::ServerGUI::*)
+    void execCommand(std::map<std::string, void(GUI::NetworkForGui::*)
     (std::vector<std::string> &)>::iterator it, std::vector<std::string> &args);
 
     /**
@@ -230,7 +244,7 @@ class ServerGUI {
     void pexCommand(std::vector<std::string> &args);
 
     /**
-     * @brief Handles the "SUC" command when an hunknown command is received
+     * @brief Handles the "SUC" command when an unknown command is received
      *
      * @param args Command arguments containing player ID and action details.
      */
@@ -266,34 +280,42 @@ class ServerGUI {
     void sbpCommand(std::vector<std::string> &args);
 
     /**
+     * @brief Handles the "PING" command when an PING is received
+     *
+     * @param args Command arguments containing player ID and action details.
+     */
+    void pingCommand(std::vector<std::string> &args);
+
+    /**
      * @brief Map of server commands to their corresponding handler functions.
      */
     std::map<std::string,
-     void(ServerGUI::*)(std::vector<std::string> &)> commands = {
-        {"WELCOME", &ServerGUI::welcomeCommand},
-        {"MSZ", &ServerGUI::mszCommand},
-        {"ENW", &ServerGUI::enwCommand},
-        {"TNA", &ServerGUI::tnaCommand},
-        {"BCT", &ServerGUI::bctCommand},
-        {"SGT", &ServerGUI::sgtCommand},
-        {"SST", &ServerGUI::sgtCommand},
-        {"EBO", &ServerGUI::eboCommand},
-        {"EDI", &ServerGUI::ediCommand},
-        {"PNW", &ServerGUI::pnwCommand},
-        {"PPO", &ServerGUI::ppoCommand},
-        {"PIN", &ServerGUI::pinCommand},
-        {"PDI", &ServerGUI::pdiCommand},
-        {"PLV", &ServerGUI::plvCommand},
-        {"PIC", &ServerGUI::picCommand},
-        {"PIE", &ServerGUI::pieCommand},
-        {"PDR", &ServerGUI::pdrCommand},
-        {"PGT", &ServerGUI::pgtCommand},
-        {"PEX", &ServerGUI::pexCommand},
-        {"SUC", &ServerGUI::sucCommand},
-        {"SEG", &ServerGUI::segCommand},
-        {"PBC", &ServerGUI::pbcCommand},
-        {"SMG", &ServerGUI::smgCommand},
-        {"SBP", &ServerGUI::sbpCommand}
+     void(NetworkForGui::*)(std::vector<std::string> &)> commands = {
+        {"WELCOME", &NetworkForGui::welcomeCommand},
+        {"MSZ", &NetworkForGui::mszCommand},
+        {"ENW", &NetworkForGui::enwCommand},
+        {"TNA", &NetworkForGui::tnaCommand},
+        {"BCT", &NetworkForGui::bctCommand},
+        {"SGT", &NetworkForGui::sgtCommand},
+        {"SST", &NetworkForGui::sgtCommand},
+        {"EBO", &NetworkForGui::eboCommand},
+        {"EDI", &NetworkForGui::ediCommand},
+        {"PNW", &NetworkForGui::pnwCommand},
+        {"PPO", &NetworkForGui::ppoCommand},
+        {"PIN", &NetworkForGui::pinCommand},
+        {"PDI", &NetworkForGui::pdiCommand},
+        {"PLV", &NetworkForGui::plvCommand},
+        {"PIC", &NetworkForGui::picCommand},
+        {"PIE", &NetworkForGui::pieCommand},
+        {"PDR", &NetworkForGui::pdrCommand},
+        {"PGT", &NetworkForGui::pgtCommand},
+        {"PEX", &NetworkForGui::pexCommand},
+        {"SUC", &NetworkForGui::sucCommand},
+        {"SEG", &NetworkForGui::segCommand},
+        {"PBC", &NetworkForGui::pbcCommand},
+        {"SMG", &NetworkForGui::smgCommand},
+        {"SBP", &NetworkForGui::sbpCommand},
+        {"PING", &NetworkForGui::sucCommand}
     };
 };
 

@@ -26,14 +26,35 @@ initPluginData changeStylePlugin::init(irr::scene::ISceneManager* smgr,
     this->cam = cam;
     initPluginData pluginData;
     pluginData.MeshBattery = initPluginData::MeshInitPlugin("Battery2", 2.f);
+    pluginData.MeshPlayer = initPluginData::MeshInitPlugin("Kirby", 0.8f);
+    pluginData.MeshEgg = initPluginData::MeshInitPlugin("KirbyEgg", 0.8f);
+    pluginData.MeshRing = initPluginData::MeshInitPlugin("Star", 0.8f);
+    pluginData.MeshTile = initPluginData::MeshInitPlugin("SocleKirby", 1.14f);
+    pluginData.MeshMat1 = initPluginData::MeshInitPlugin("Flower1", 1.f);
+    pluginData.MeshMat2 = initPluginData::MeshInitPlugin("Flower2", 1.f);
+    pluginData.MeshMat3 = initPluginData::MeshInitPlugin("Flower3", 1.f);
+    pluginData.MeshMat4 = initPluginData::MeshInitPlugin("Flower4", 1.f);
+    pluginData.MeshMat5 = initPluginData::MeshInitPlugin("Flower5", 1.f);
+    pluginData.MeshMat6 = initPluginData::MeshInitPlugin("Flower6", 1.f);
+    pluginData.MeshBattery = initPluginData::MeshInitPlugin("Coin", 2.f);
+    pluginData.Death = initPluginData::SoundInitPlugin(
+        "Musics/kirby_-_death_noise-8841fc32-68b4-4605-8593-907d4508a665.mp3");
+    pluginData.Spawn = initPluginData::SoundInitPlugin(
+        "Musics/hiiii_kirby_sound.mp3");
+    pluginData.Elevation = initPluginData::SoundInitPlugin(
+        "Musics/kirby_extra_life.mp3");
+    pluginData.Push = initPluginData::SoundInitPlugin(
+        "Musics/ssb-kirby-captain-falcon-sound.mp3");
+    pluginData.SpawnEgg = initPluginData::SoundInitPlugin(
+        "Musics/waddle-dee.mp3");
     pluginData.Ambient = initPluginData::SoundInitPlugin(
-        "Musics/SC_WorldPyro.mp3");
+        "Musics/Kirby dream land theme song.mp3");
     pluginData.skyBox = initPluginData::SkyBox(
-        "skybox/skybox2/skybox_py.jpg", "skybox/skybox2/skybox_ny.jpg",
-        "skybox/skybox2/skybox_nx.jpg", "skybox/skybox2/skybox_px.jpg",
-        "skybox/skybox2/skybox_pz.jpg", "skybox/skybox2/skybox_nz.jpg", 0);
+        "skybox/SB/SunsetBay_U.png", "skybox/SB/SunsetBay_D.png",
+        "skybox/SB/SunsetBay_W.png", "skybox/SB/SunsetBay_E.png",
+        "skybox/SB/SunsetBay_N.png", "skybox/SB/SunsetBay_S.png", 0);
     // RED
     pluginData.light = initPluginData::LightPlugin(
-        irr::video::SColorf(2, 1.5f, 1.5f, 1.f));
+        irr::video::SColorf(2.f, 1.f, 1.f, 2.5f));
     return pluginData;
 }

@@ -13,7 +13,7 @@
 #include "PluginsManagement/pluginsManager.hpp"
 #include "DataManager/DataManager.hpp"
 #include "Graphic/Window/window.hpp"
-#include "Connection/ServerGUI.hpp"
+#include "Connection/NetworkForGui.hpp"
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
 

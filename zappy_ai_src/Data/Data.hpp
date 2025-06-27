@@ -63,6 +63,8 @@ class Data {
 
     std::queue<std::pair<std::string, int>> messageQueue;
 
+    std::vector<std::pair<int, int>> kickVector;
+
     std::string magicKey;
 
  private:

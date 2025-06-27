@@ -101,7 +101,14 @@ class Interface {
      *
      * Keep in mind that depending on the direction, 1 to 3 commands may be sent.
      */
+
     void goToDirection(int direction);
+
+    /**
+     * @brief Sends a message to the other players by using the broadcast command
+     * @param message The message string to send
+     */
+    void sendMessage(const std::string &message);
 
  private:
     /**
@@ -281,6 +288,14 @@ class Interface {
     void receiveMessage(const std::vector<std::string> &args);
 
     /**
+     * @brief Handles the EJECT command response from the server
+     * This method is called when the AI receives an EJECT command.
+     * It processes the arguments and updates the AI's state accordingly.
+     * @param args The arguments received from the server
+     */
+    void receiveEject(const std::vector<std::string> &args);
+
+    /**
      * @brief Attempts to start an incantation ritual
      * @return true if the incantation started successfully, false otherwise
      */
@@ -322,12 +337,6 @@ class Interface {
      */
     static std::string decrypt(const std::string& encrypted,
         const std::string& key);
-
-    /**
-     * @brief Sends a message to the other players by using the broadcast command
-     * @param message The message string to send
-     */
-    void sendMessage(const std::string &message);
 };
 
 }  // namespace AI

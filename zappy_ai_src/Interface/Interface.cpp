@@ -85,6 +85,11 @@ void Interface::run() {
             receiveMessage(outputCopy);
             continue;
         }
+        if (output[0] == "EJECT:") {
+            auto outputCopy = output;
+            receiveEject(outputCopy);
+            continue;
+        }
         outputQueue.push(output);
     }
     try {
@@ -150,6 +155,7 @@ std::string toUpperCase(const std::string &str) {
 }
 
 void Interface::sendCommand(const std::string &command) {
+    std::cout << "Sending command: " << command << std::endl;
     if (inputQueue.size() >= 10) {
         commandBuffer.push(command);
         return;
@@ -157,6 +163,10 @@ void Interface::sendCommand(const std::string &command) {
     socket.sendDatasToServer(command);
     auto parsedCommand = parseCommands(command.substr(0, command.size()-1));
     parsedCommand[0] = toUpperCase(parsedCommand[0]);
+    for (size_t i = 0; i < parsedCommand.size(); i++) {
+        std::cout << "Sending command: " << parsedCommand[i] << std::endl;
+    }
+
     inputQueue.push(parsedCommand);
 }
 

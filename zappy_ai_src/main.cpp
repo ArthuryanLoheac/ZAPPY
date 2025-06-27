@@ -18,9 +18,11 @@
 #include "include/logs.h"
 #include "Logic/Core.hpp"
 #include "modules/FoodGatheringModule.hpp"
-#include "modules/CommunicationModule.hpp"
 #include "modules/ElevationModule.hpp"
-
+#include "modules/RoleAttributionModule.hpp"
+#include "modules/DisruptionModule.hpp"
+#include "modules/RessourceGatheringSpawning.hpp"
+#include "modules/KirbyModule.hpp"
 
 bool sigintReceived = false;
 
@@ -33,6 +35,7 @@ void printHelp() {
         "  -n name:    name of the team of the AI" << std::endl <<
         "  -p port:    port number of the zappy server" << std::endl <<
         "  -h machine: machine name or IP address of the zappy server" <<
+        std::endl <<
         "  -v, -vv, -vvv : Set verbose level (WARNING, INFO, DEBUG)"
         << std::endl;
 }
@@ -63,7 +66,8 @@ void parseArgs(const int argc, char **argv, std::string &ip, int &port,
         throw AI::ArgumentsException("Invalid number of arguments.");
     }
 
-    if (argc == 2 && std::string(argv[1]) == "--help") {
+    if (argc == 2 && (std::string(argv[1]) == "--help" ||
+        std::string(argv[1]) == "-h")) {
         printHelp();
         exit(0);
     }
@@ -109,9 +113,8 @@ int initChildProcess(const int port, const std::string &ip,
     }
 
     Logic& logic = Logic::getInstance();
-    logic.addModule(std::make_unique<FoodGatheringModule>());
-    logic.addModule(std::make_unique<CommunicationModule>());
-    logic.addModule(std::make_unique<ElevationModule>());
+    // Start with only the role attribution module
+    logic.addModule(std::make_unique<RoleAttributionModule>());
 
     while (AI::Data::i().isDead == false) {
         try {
@@ -125,6 +128,9 @@ int initChildProcess(const int port, const std::string &ip,
         }
         if (AI::Data::i().isRunning) {
             try {
+                if (!logic.hasRoleBasedModulesSetup()) {
+                    logic.setupRoleBasedModules();
+                }
                 if (!interface.isWaitingForResponse()) {
                     logic.executeHighestPriorityModule();
                 }

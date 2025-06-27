@@ -30,6 +30,6 @@ class ConnectionStatePlugin_Water : public Aplugin {
     void update(pluginsData data, float dt) override;
 
     std::string getName() const override {
-        return "Connection State Plugin Water";
+        return "Connection State Water";
     }
 };

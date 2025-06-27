@@ -122,7 +122,7 @@ static void send_unknown(client_t *client, char **args)
 {
     if (args && strcmp(args[0], "PING") == 0) {
         if (client->is_graphic) {
-            add_to_buffer(&client->out_buffer, "suc\n");
+            add_to_buffer(&client->out_buffer, "PING\n");
             return;
         }
     }

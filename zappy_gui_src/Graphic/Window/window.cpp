@@ -12,6 +12,7 @@
 #include "PluginsManagement/PluginsDataManager.hpp"
 #include "DataManager/PathManager.hpp"
 #include "Window/windowOptionMenu.hpp"
+#include "Connection/NetworkForGui.hpp"
 
 namespace GUI {
 void Window::SetupSkybox() {
@@ -43,7 +44,9 @@ void Window::SetupSkybox() {
 }
 
 Window::Window() {
-    device = irr::createDevice(irr::video::EDT_BURNINGSVIDEO,
+    bool optimized = GUI::DataManager::i().isOptimized();
+    device = irr::createDevice(
+        optimized ? irr::video::EDT_OPENGL : irr::video::EDT_BURNINGSVIDEO,
         irr::core::dimension2d<irr::u32>(1280, 720), 16, false, false, false,
         &receiver);
 
@@ -102,6 +105,9 @@ void Window::windowUpdateNoFocus() {
         updateSkyBoxRotation();
         GameDataManager::i().Update(frameDeltaTime);
         SoundsManager::i().Update();
+        PluginsDataManager::i().updatePluginsData();
+        pluginsManager::i().update(PluginsDataManager::i().getData(),
+            frameDeltaTime);
         driver->beginScene(true, true,
             irr::video::SColor(255, 100, 101, 140));
 
@@ -128,6 +134,17 @@ void Window::setRotationSpeedSkybox(float speed) {
 
 void Window::update() {
     while (device->run()) {
+        if (GUI::NetworkForGui::i().toClear) {
+            GUI::NetworkForGui::i().toClear = false;
+            smgr->clear();
+            cam = smgr->addCameraSceneNode(nullptr,
+                irr::core::vector3df(0, 0, 0),
+                irr::core::vector3df(0, -2, 0));
+            cam->setFOV(M_PI / 2.0f);
+            cam->setNearValue(0.1f);
+            cam->setFarValue(10000.0f);
+            SetupSkybox();
+        }
         updateDeltaTime();
         if (device->isWindowActive())
             windowUpdateFocus();
@@ -165,7 +182,7 @@ void Window::clearMeshes() {
     worldSetuped = false;
 }
 
-void Window::setupWorld() {
+void Window::setupWorldData() {
     if (cubes.size() > 0) {
         for (auto &cube : cubes) {
             cube->remove();
@@ -183,8 +200,12 @@ void Window::setupWorld() {
 }
 
 void Window::updateMesh() {
-    if (!GUI::GameDataManager::i().getTile(0, 0).getTileMesh())
+    try {
+        if (!GUI::GameDataManager::i().getTile(0, 0).getTileMesh())
+            worldSetupMesh();
+    } catch (const std::exception &e) {
         worldSetupMesh();
+    }
     if (!worldSetuped)
         return;
 

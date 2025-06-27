@@ -77,4 +77,5 @@ class KirbyModule : public AIModule {
     int forwardCount;
     bool suckMode;
     bool hasMadeHisWill;
+    bool shouldLoopAround;
 };

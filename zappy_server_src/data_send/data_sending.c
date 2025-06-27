@@ -14,8 +14,7 @@
 
 static void send_msz(zappy_t *zappy, client_t *send)
 {
-    char msz_data[7 + strlen(zappy->parser_str->width)
-        + strlen(zappy->parser_str->height)];
+    char msz_data[256];
 
     snprintf(msz_data, sizeof(msz_data), "msz %s %s\n",
         zappy->parser_str->width,
@@ -34,7 +33,7 @@ static void send_sgt(zappy_t *zappy, client_t *send)
 
 static void send_bct(starting_map_t *map, int x, int y, client_t *send)
 {
-    char bct_data[21 + get_size(x) + get_size(y)];
+    char bct_data[256];
     cell_t cell = map->grid[y][x];
 
     snprintf(bct_data, sizeof(bct_data), "bct %d %d %d %d %d %d %d %d %d\n",
@@ -46,7 +45,7 @@ static void send_bct(starting_map_t *map, int x, int y, client_t *send)
 
 static void send_tna(char *name, client_t *send)
 {
-    char tna_data[6 + strlen(name)];
+    char tna_data[256];
 
     snprintf(tna_data, sizeof(tna_data), "tna %s\n", name);
     add_to_buffer(&send->out_buffer, tna_data);
@@ -70,16 +69,24 @@ void send_data(zappy_t *zappy, client_t *c)
 
 void add_to_buffer(char **buffer, const char *data)
 {
-    size_t old_size = *buffer ? strlen(*buffer) : 0;
-    size_t new_size = old_size + strlen(data) + 1;
-    char *new_buffer = realloc(*buffer, new_size);
+    size_t old_size;
+    size_t new_size;
+    char *new_buffer = NULL;
 
-    if (new_buffer == NULL) {
-        perror("realloc");
-        exit(EXIT_FAILURE);
+    if (*buffer == NULL) {
+        *buffer = strdup(data);
+        if (*buffer == NULL)
+            display_error("Failed to allocate memory for buffer");
+        return;
     }
+    old_size = strlen(*buffer);
+    new_size = old_size + strlen(data) + 1;
+    new_buffer = malloc(new_size);
+    if (new_buffer == NULL)
+        display_error("Failed to allocate memory for new buffer");
+    strcpy(new_buffer, *buffer);
+    strcpy(new_buffer + old_size, data);
     *buffer = new_buffer;
-    strcpy(*buffer + old_size, data);
 }
 
 int get_size(int nbr)

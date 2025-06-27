@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 
-#include "Connection/ServerGUI.hpp"
-#include "Exceptions/ServerGUIExceptions.hpp"
+#include "Connection/NetworkForGui.hpp"
+#include "Exceptions/NetworkForGuiExceptions.hpp"
 #include "Window/window.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
@@ -30,7 +30,7 @@ namespace GUI {
  * @brief Sends the welcome command to the server.
  * @param args Command arguments (unused).
  */
-void GUI::ServerGUI::welcomeCommand(std::vector<std::string> &args) {
+void GUI::NetworkForGui::welcomeCommand(std::vector<std::string> &args) {
     (void) args;
     sendDatasToServer("GRAPHIC\n");
 }
@@ -40,7 +40,7 @@ void GUI::ServerGUI::welcomeCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing width and height.
  * @throws CommandParsingException If the command format or dimensions are invalid.
  */
-void ServerGUI::mszCommand(std::vector<std::string> &args) {
+void NetworkForGui::mszCommand(std::vector<std::string> &args) {
     if (args.size() != 3)
         throw CommandParsingException("Invalid msz command format");
     int width = std::stoi(args[1]);
@@ -50,7 +50,7 @@ void ServerGUI::mszCommand(std::vector<std::string> &args) {
     GameDataManager::i().setWidth(width);
     GameDataManager::i().setHeight(height);
 
-    GUI::Window::i().setupWorld();
+    GUI::Window::i().setupWorldData();
 }
 
 /**
@@ -58,7 +58,7 @@ void ServerGUI::mszCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing egg details.
  * @throws CommandParsingException If the command format or details are invalid.
  */
-void GUI::ServerGUI::enwCommand(std::vector<std::string> &args) {
+void GUI::NetworkForGui::enwCommand(std::vector<std::string> &args) {
     if (args.size() != 5)
         throw CommandParsingException("Invalid enw command format");
     if (args[1].size() < 2 || args[2].size() < 2)
@@ -80,7 +80,7 @@ void GUI::ServerGUI::enwCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing the team name.
  * @throws CommandParsingException If the command format is invalid.
  */
-void ServerGUI::tnaCommand(std::vector<std::string> &args) {
+void NetworkForGui::tnaCommand(std::vector<std::string> &args) {
     if (args.size() != 2)
         throw CommandParsingException("Invalid tna command format");
 
@@ -93,7 +93,7 @@ void ServerGUI::tnaCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing tile coordinates and resources.
  * @throws CommandParsingException If the command format is invalid.
  */
-void ServerGUI::bctCommand(std::vector<std::string> &args) {
+void NetworkForGui::bctCommand(std::vector<std::string> &args) {
     if (args.size() != 10)
         throw CommandParsingException("Invalid bct command format");
     int x = std::stoi(args[1]);
@@ -116,7 +116,7 @@ void ServerGUI::bctCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing the frequency.
  * @throws CommandParsingException If the command format is invalid.
  */
-void ServerGUI::sgtCommand(std::vector<std::string> &args) {
+void NetworkForGui::sgtCommand(std::vector<std::string> &args) {
     if (args.size() != 2)
         throw CommandParsingException("Invalid sgt command format");
     int f = std::stoi(args[1]);
@@ -129,7 +129,7 @@ void ServerGUI::sgtCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing the egg ID.
  * @throws CommandParsingException If the command format or ID is invalid.
  */
-void ServerGUI::eboCommand(std::vector<std::string> &args) {
+void NetworkForGui::eboCommand(std::vector<std::string> &args) {
     if (args.size() != 2)
         throw CommandParsingException("Invalid ebo command format");
     if (args[1].size() < 2)
@@ -144,7 +144,7 @@ void ServerGUI::eboCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing the egg ID.
  * @throws CommandParsingException If the command format or ID is invalid.
  */
-void ServerGUI::ediCommand(std::vector<std::string> &args) {
+void NetworkForGui::ediCommand(std::vector<std::string> &args) {
     if (args.size() != 2)
         throw CommandParsingException("Invalid edi command format");
     if (args[1].size() < 2)
@@ -160,7 +160,7 @@ void ServerGUI::ediCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing player details.
  * @throws CommandParsingException If the command format or details are invalid.
  */
-void ServerGUI::pnwCommand(std::vector<std::string> &args) {
+void NetworkForGui::pnwCommand(std::vector<std::string> &args) {
     if (args.size() != 7)
         throw CommandParsingException("Invalid pnw command format");
     if (args[1].size() < 2)
@@ -196,7 +196,7 @@ void ServerGUI::pnwCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing player ID, position, and orientation.
  * @throws CommandParsingException If the command format or details are invalid.
  */
-void ServerGUI::ppoCommand(std::vector<std::string> &args) {
+void NetworkForGui::ppoCommand(std::vector<std::string> &args) {
     if (args.size() != 5)
         throw CommandParsingException("Invalid ppo command format");
     if (args[1].size() < 2)
@@ -226,7 +226,7 @@ void ServerGUI::ppoCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing player ID, position, and resources.
  * @throws CommandParsingException If the command format or details are invalid.
  */
-void ServerGUI::pinCommand(std::vector<std::string> &args) {
+void NetworkForGui::pinCommand(std::vector<std::string> &args) {
     if (args.size() != 11)
         throw CommandParsingException("Invalid pin command format");
     if (args[1].size() < 2)
@@ -250,7 +250,7 @@ void ServerGUI::pinCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing the player ID.
  * @throws CommandParsingException If the command format or ID is invalid.
  */
-void ServerGUI::pdiCommand(std::vector<std::string> &args) {
+void NetworkForGui::pdiCommand(std::vector<std::string> &args) {
     if (args.size() != 2)
         throw CommandParsingException("Invalid pdi command format");
     if (args[1].size() < 2)
@@ -265,7 +265,7 @@ void ServerGUI::pdiCommand(std::vector<std::string> &args) {
  * @param args Command arguments containing player ID and level.
  * @throws CommandParsingException If the command format or level is invalid.
  */
-void ServerGUI::plvCommand(std::vector<std::string> &args) {
+void NetworkForGui::plvCommand(std::vector<std::string> &args) {
     if (args.size() != 3)
         throw CommandParsingException("Invalid plv command format");
     if (args[1].size() < 2)
@@ -278,7 +278,7 @@ void ServerGUI::plvCommand(std::vector<std::string> &args) {
     GameDataManager::i().getPlayer(id).setLevel(level);
 }
 
-void ServerGUI::picCommand(std::vector<std::string> &args) {
+void NetworkForGui::picCommand(std::vector<std::string> &args) {
     if (args.size() < 5)
         throw CommandParsingException("Invalid pic command format");
     for (size_t i = 4; i < args.size(); i++) {
@@ -294,7 +294,7 @@ void ServerGUI::picCommand(std::vector<std::string> &args) {
     }
 }
 
-void ServerGUI::pieCommand(std::vector<std::string> &args) {
+void NetworkForGui::pieCommand(std::vector<std::string> &args) {
     if (args.size() < 4)
         throw CommandParsingException("Invalid pie command format");
     int x = std::stoi(args[1]);
@@ -309,7 +309,7 @@ void ServerGUI::pieCommand(std::vector<std::string> &args) {
     GameDataManager::i().setElevationSound(true);
 }
 
-void ServerGUI::pdrCommand(std::vector<std::string> &args) {
+void NetworkForGui::pdrCommand(std::vector<std::string> &args) {
     if (args.size() != 3)
         throw CommandParsingException("Invalid pdr command format");
     if (args[1].size() < 2)
@@ -317,7 +317,7 @@ void ServerGUI::pdrCommand(std::vector<std::string> &args) {
     GameDataManager::i().setDropping(true);
 }
 
-void ServerGUI::pgtCommand(std::vector<std::string> &args) {
+void NetworkForGui::pgtCommand(std::vector<std::string> &args) {
     if (args.size() != 3)
         throw CommandParsingException("Invalid pgt command format");
     if (args[1].size() < 2)
@@ -325,7 +325,7 @@ void ServerGUI::pgtCommand(std::vector<std::string> &args) {
     GameDataManager::i().setCollecting(true);
 }
 
-void ServerGUI::pexCommand(std::vector<std::string> &args) {
+void NetworkForGui::pexCommand(std::vector<std::string> &args) {
     if (args.size() != 2)
         throw CommandParsingException("Invalid pex command format");
     if (args[1].size() < 2)
@@ -334,15 +334,11 @@ void ServerGUI::pexCommand(std::vector<std::string> &args) {
 }
 }  // namespace GUI
 
-void GUI::ServerGUI::sucCommand(std::vector<std::string> &args) {
+void GUI::NetworkForGui::sucCommand(std::vector<std::string> &args) {
     (void) args;
-    if (sendPing) {
-        ping = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now() - timeForPing).count();
-    }
 }
 
-void GUI::ServerGUI::segCommand(std::vector<std::string> &args) {
+void GUI::NetworkForGui::segCommand(std::vector<std::string> &args) {
     if (args.size() < 2)
         throw CommandParsingException("Invalid seg command format");
     std::string winner = args[1];
@@ -350,7 +346,7 @@ void GUI::ServerGUI::segCommand(std::vector<std::string> &args) {
     GameDataManager::i().setWinner(winner);
 }
 
-void GUI::ServerGUI::pbcCommand(std::vector<std::string> &args) {
+void GUI::NetworkForGui::pbcCommand(std::vector<std::string> &args) {
     if (args.size() < 3)
         throw CommandParsingException("Invalid pbc command format");
     int id = std::stoi(args[1].substr(1));
@@ -360,7 +356,7 @@ void GUI::ServerGUI::pbcCommand(std::vector<std::string> &args) {
     GameDataManager::i().addMessage(message, id);
 }
 
-void GUI::ServerGUI::smgCommand(std::vector<std::string> &args) {
+void GUI::NetworkForGui::smgCommand(std::vector<std::string> &args) {
     if (args.size() < 2)
         throw CommandParsingException("Invalid msg command format");
     std::string message;
@@ -372,6 +368,14 @@ void GUI::ServerGUI::smgCommand(std::vector<std::string> &args) {
     (void) message;
 }
 
-void GUI::ServerGUI::sbpCommand(std::vector<std::string> &args) {
+void GUI::NetworkForGui::sbpCommand(std::vector<std::string> &args) {
     (void) args;
+}
+
+void GUI::NetworkForGui::pingCommand(std::vector<std::string> &args) {
+    (void) args;
+    if (sendPing) {
+        ping = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now() - timeForPing).count();
+    }
 }

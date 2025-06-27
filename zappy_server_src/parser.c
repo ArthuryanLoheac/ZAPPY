@@ -120,21 +120,39 @@ static void parse_one_arg(int ac, char **av, parser_t *parser, int i)
         set_minimum_log_level(DEBUG);
 }
 
-parser_t *parse_arguments(int ac, char **av)
+static int check_teams_line(char **team_names, int nb_teams, int i)
 {
-    parser_t *parser = init_parser();
-
-    for (int i = 1; i < ac; i++)
-        parse_one_arg(ac, av, parser, i);
-    if (parser->port == 0 || parser->width == 0 || parser->height == 0 ||
-        parser->team_names == NULL || parser->clients_per_team == 0 ||
-        parser->freq > 200)
-        display_help();
-    return parser;
+    for (int j = i + 1; j < nb_teams; j++) {
+        if (strcmp(team_names[i], team_names[j]) == 0) {
+            printf("Teams must have different names.\n");
+            return 1;
+        }
+    }
+    return 0;
 }
 
-void destroy_parser(parser_t *parser)
+static int check_teams(char **team_names, int nb_teams)
 {
-    free(parser->team_names);
-    free(parser);
+    if (nb_teams < 2) {
+        printf("At least two teams are required.\n");
+        return 1;
+    }
+    for (int i = 0; i < nb_teams; i++) {
+        if (check_teams_line(team_names, nb_teams, i) == 1)
+            return 1;
+    }
+    return 0;
+}
+
+parser_t *parse_arguments(int ac, char **av)
+{
+    parser_t *pars = init_parser();
+
+    for (int i = 1; i < ac; i++)
+        parse_one_arg(ac, av, pars, i);
+    if (pars->port == 0 || pars->width == 0 || pars->height == 0 ||
+        pars->team_names == NULL || pars->clients_per_team == 0 ||
+        pars->freq > 200 || check_teams(pars->team_names, pars->nb_teams))
+        display_help();
+    return pars;
 }

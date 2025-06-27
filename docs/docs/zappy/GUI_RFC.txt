@@ -163,6 +163,12 @@ RFC 222                   Zappy GUI Protocol              Jun 2025
    sbp <CRLF> ->
       Command parameter error
 
+   ping <CRLF> ->
+      Ping the server
+
+   levelup <SP> #n <CRLF> ->
+      Level up the player N by one
+
                                                                [Page 5]
 
 RFC 222                   Zappy GUI Protocol              Jun 2025

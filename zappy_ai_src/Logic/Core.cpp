@@ -19,6 +19,7 @@
 #include "../modules/RessourceGatheringSpawning.hpp"
 #include "../modules/FeederModule.hpp"
 #include "../../libc/include/logs.h"
+#include "../modules/AdvancedLeveler.hpp"
 
 void CommandHistory::addCommandResponse(const std::string& command,
                                        const std::string& response) {
@@ -191,6 +192,7 @@ void Logic::setupRoleBasedModules() {
             addModule(std::make_unique<DisruptionModule>());
             addModule(std::make_unique<RessourceGatheringSpawning>());
             addModule(std::make_unique<ElevationModule>());
+            addModule(std::make_unique<AdvancedLeveler>());
             break;
 
         case Role::DISRUPTER:

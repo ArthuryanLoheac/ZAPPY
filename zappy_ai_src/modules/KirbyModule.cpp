@@ -117,63 +117,6 @@ void KirbyModule::computeSuckMode() {
             suckMode = false;
             shouldLoopAround = canLoopAround;
         }
-    int mapX = AI::Data::i().mapX;
-    int mapY = AI::Data::i().mapY;
-    int ticksForRotation = 2 * 7;
-    int ticksForReturn = forwardCount * 7;
-    int ticksForDropping = getNbObjects() * 7;
-    int ticksNeededToReturnByTurning = ticksForRotation + ticksForReturn
-        + ticksForDropping;
-    int ticksRemaining = timeRemaining - tickUsed;
-    const int SAFETY_MARGIN = 35;
-    bool canLoopAround = false;
-    int ticksNeededToReturnByLooping = 0;
-
-    if (mapX > 0 && mapY > 0) {
-        bool isSquareMap = (mapX == mapY);
-        if (isSquareMap) {
-            int stepsToLoopAround = mapX - forwardCount;
-            ticksNeededToReturnByLooping =
-                (stepsToLoopAround * 7) + ticksForDropping;
-            canLoopAround =
-                (ticksNeededToReturnByLooping < ticksNeededToReturnByTurning);
-            LOG_INFO("Map is %dx%d (square). Steps taken: %d. Ticks to loop"
-                " around: %d. Ticks to turn back: %d",
-                mapX, mapY, forwardCount, ticksNeededToReturnByLooping,
-                ticksNeededToReturnByTurning);
-            if (forwardCount >= mapX) {
-                LOG_INFO("Reached full map circuit, stopping to drop items");
-                suckMode = false;
-                shouldLoopAround = (ticksNeededToReturnByLooping <
-                    ticksNeededToReturnByTurning);
-                hasMadeHisWill = false;
-                return;
-            }
-        } else {
-            int longestDimension = std::max(mapX, mapY);
-            if (forwardCount >= longestDimension) {
-                LOG_INFO("Reached longest dimension (%d), turning back",
-                    longestDimension);
-                suckMode = false;
-                shouldLoopAround = false;
-                hasMadeHisWill = false;
-                return;
-            }
-        }
-    }
-    int ticksNeededToReturn = canLoopAround ?
-                             ticksNeededToReturnByLooping :
-                             ticksNeededToReturnByTurning;
-    if (ticksRemaining - ticksNeededToReturn <= SAFETY_MARGIN) {
-        if (suckMode) {
-            LOG_INFO("Kirby PID %i switching to SPIT mode (ticks remaining: %i"
-                    ", ticks needed: %i, safety margin: %i)\n",
-                    getpid(), ticksRemaining, ticksNeededToReturn,
-                        SAFETY_MARGIN);
-            hasMadeHisWill = false;
-            suckMode = false;
-            shouldLoopAround = canLoopAround;
-        }
     }
 }
 

@@ -56,6 +56,7 @@ class AdvancedLeveler : public AIModule {
         Listening,
         Calling,
         Moving,
+        Spitting,
         Elevating
     } ModuleState_t;
 

@@ -27,6 +27,10 @@ static const std::unordered_map<AI::Data::Material_t, double> Rarety = {
     {AI::Data::Material_t::Thystame, 0.05}
 };
 
+/**
+ * @brief All elevations material requirements
+ * Map of AdvancedLeveler::ElevationRequirements_t by their levels.
+ */
 static const std::unordered_map<unsigned int,
     AdvancedLeveler::ElevationRequirements_t>
     ElevationRequirementsMap = {
@@ -105,8 +109,12 @@ static std::string getInvString() {
         AI::Data::i().inventory.at(AI::Data::Material_t::Thystame));
 }
 
+/**
+ * Message used in errors logs when the parsing of an inventory content msg fails
+ */
 static const char defaultInvContentMsgForErr[] ="InvContent[id] "
     "Linemate,Deraumere,Sibur,Mendiane,Phiras,Thystame";
+
 /**
  * @return Optional pair with id;inventory
  */
@@ -177,6 +185,24 @@ float AdvancedLeveler::getPriority() {
     return computePriority(AI::Data::i().level, AI::Data::i().inventory);
 }
 
+/**
+ * @brief Checks if the required materials for the next elecation ritual are
+ * located on the AI's current tile.
+ */
+static bool isRequiredMaterialsOnGround() {
+    const AI::Data::Inventory_t &inv = AI::Data::i().inventory;
+    const AdvancedLeveler::ElevationRequirements_t &requiredMaterials =
+        ElevationRequirementsMap.at(AI::Data::i().level);
+
+    for (const auto &[material, amount] : requiredMaterials.materialsCount) {
+        if (AI::Data::i().inventory.count(material) == 0)
+            return false;
+        if (AI::Data::i().inventory.at(material) >= amount)
+            return true;
+    }
+    return false;
+}
+
 void AdvancedLeveler::execute() {
     switch (_moduleState) {
         case Idling: {
@@ -185,11 +211,13 @@ void AdvancedLeveler::execute() {
             _moduleState = Listening;
         }
             break;
+
         case Answering: {
             AI::Interface::i().sendCommand(getInvString());
             _moduleState = Idling;
         }
             break;
+
         case Listening: {
             auto &queue = AI::Data::i().messageQueue;
 
@@ -209,18 +237,30 @@ void AdvancedLeveler::execute() {
                 _moduleState = Calling;
         }
             break;
+
         case Calling: {
-            if (AI::Data::i().vision.at(0).at(0).at("player") >= 6) {
-                AI::Interface::i().sendCommand(INCANTATION);
-                _moduleState = Elevating;
+            if (AI::Data::i().vision.at(0).at(0).count("player")
+                && AI::Data::i().vision.at(0).at(0).at("player") >= 6) {
+                if (isRequiredMaterialsOnGround()) {
+                    AI::Interface::i().sendCommand(INCANTATION);
+                    _moduleState = Elevating;
+                }
                 break;
             } else {
                 AI::Interface::i().sendCommand(CallingMsg);
             }
         }
             break;
+
         case Moving:
             break;
+
+        case Spitting: {
+            if (isRequiredMaterialsOnGround())
+                break;
+        }
+            break;
+
         case Elevating:
             break;
     }

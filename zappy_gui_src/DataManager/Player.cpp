@@ -7,6 +7,7 @@
 #include "DataManager/Player.hpp"
 #include "DataManager/GameDataManager.hpp"
 #include "DataManager/DataManager.hpp"
+#include "DataManager/PathManager.hpp"
 #include "Graphic/Window/window.hpp"
 
 namespace GUI {
@@ -210,7 +211,8 @@ void Player::initMeshRings() {
             position = Vec3d(0);
         }
         position.Y += 0.5f;
-        auto mesh = MeshImporter::i().importMesh("Cylinder", teamName, position,
+        auto mesh = MeshImporter::i().importMesh(
+            GUI::PathManager::i().getPath("Ring"), teamName, position,
             Vec3d(0.2f), Vec3d(0, o * 90, 0));
         if (!mesh || !mesh->getMesh()) {
             std::cerr << "Error: Failed to create Cylinder mesh for level "

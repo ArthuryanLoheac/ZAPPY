@@ -1,0 +1,289 @@
+Network Working Group                                        L. Pintard
+Request for Comments: EPITECH-RFC-222                        J. Bizeul
+Category: Standards Track                                    N. Bezard
+ISSN: 2070-1721                                             M. Guillet-Arnaud
+                                                            M. Fillion
+                                                            A. Loheac de Sainte Marie
+
+                            Zappy GUI Protocol
+
+Abstract
+
+   This document defines the communication protocol between the Zappy
+   server and its graphical client (GUI). It describes the format,
+   structure, and semantics of messages exchanged over the network.
+   The protocol is designed to support real-time visualization of the
+   game state.
+
+Status of This Memo
+
+   This document is a product of EPITECH and represents information
+   deemed valuable to provide for permanent record. It is published
+   for informational purposes and is not a candidate for any level of
+   Internet Standard.
+
+Table of Contents
+
+   1. Introduction ....................................................3
+   2. Terminology and Symbols .........................................4
+   3. Server to Client Messages .......................................5
+   4. Client to Server Messages .......................................7
+   5. Message Format and Semantics ....................................8
+   6. Versioning ......................................................9
+   7. Security Considerations .........................................9
+   8. References .....................................................10
+   9. Authors' Addresses .............................................11
+
+                                                               [Page 1]
+
+RFC 222                   Zappy GUI Protocol              Jun 2025
+
+
+--- Page 3 ---
+1. Introduction
+
+   The Zappy protocol enables the GUI client to interact with the game
+   server. It provides a set of ASCII-based textual commands for game
+   state updates, player actions, and server configuration to properly
+   render in 3D. All messages are line-based and terminated by a newline
+   character ('\n').
+
+                                                               [Page 3]
+
+RFC 222                   Zappy GUI Protocol              Jun 2025
+
+
+--- Page 4 ---
+2. Terminology and Symbols
+
+   The following symbols are used to define parameters in string formats:
+
+   | Symbol | Meaning                          |
+   |--------|----------------------------------|
+   | X      | Map width or X coordinate        |
+   | Y      | Map height or Y coordinate       |
+   | q0     | Quantity of Food                 |
+   | q1     | Quantity of Linemate             |
+   | q2     | Quantity of Deraumere            |
+   | q3     | Quantity of Sibur                |
+   | q4     | Quantity of Mendiane             |
+   | q5     | Quantity of Phiras               |
+   | q6     | Quantity of Thystame             |
+   | #n     | Player number (preceded by #)    |
+   | O      | Orientation: 1=N, 2=E, 3=S, 4=W  |
+   | L      | Player or incantation level      |
+   | #e     | Egg number (preceded by #)       |
+   | T      | Time unit                        |
+   | N      | Team name                        |
+   | R      | Incantation result (0=KO, 1=OK)  |
+   | M      | Message string                   |
+   | i      | Resource index (0 to 6)          |
+
+                                                               [Page 4]
+
+RFC 222                   Zappy GUI Protocol              Jun 2025
+
+
+--- Page 5 ---
+3. Server to Client Messages
+
+   The following commands are sent by the server to the GUI client:
+
+   msz <SP> X <SP> Y <CRLF> ->
+      Map size
+
+   bct <SP> X <SP> Y <SP> q0 <SP> q1 <SP> q2 <SP> q3 <SP> q4
+   <SP> q5 <SP> q6 <CRLF> ->
+      Content of a single tile
+
+   tna <SP> N <CRLF> ->
+      Team name
+
+   pnw <SP> #n <SP> X <SP> Y <SP> O <SP> L <SP> N <CRLF> ->
+      Connection of a new player
+
+   ppo <SP> #n <SP> X <SP> Y <SP> O <CRLF> ->
+      Player position
+
+   plv <SP> #n <SP> L <CRLF> ->
+      Player level
+
+   pin <SP> #n <SP> X <SP> Y <SP> q0 <SP> q1 <SP> q2 <SP> q3 <SP> q4
+   <SP> q5 <SP> q6 <CRLF> ->
+      Player inventory
+
+   pex <SP> #n <CRLF> ->
+      Expulsion
+
+   pbc <SP> #n <SP> M <CRLF> ->
+      Broadcast message
+
+   pic <SP> X <SP> Y <SP> L <SP> #n <SP> #n ... <CRLF> ->
+      Start of an incantation
+
+   pie <SP> X <SP> Y <SP> R <CRLF> ->
+      End of an incantation
+
+   pfk <SP> #n <CRLF> ->
+      Player laid an egg
+
+   pdr <SP> #n <SP> i <CRLF> ->
+      Player dropped a resource
+
+   pgt <SP> #n <SP> i <CRLF> ->
+      Player collected a resource
+
+   pdi <SP> #n <CRLF> ->
+      Player died
+
+   enw <SP> #e <SP> #n <SP> X <SP> Y <CRLF> ->
+      Egg laid by player
+
+   ebo <SP> #e <CRLF> ->
+      Egg connects as a player
+
+   edi <SP> #e <CRLF> ->
+      Egg died
+
+   sgt <SP> T <CRLF> ->
+      Time unit value
+
+   sst <SP> T <CRLF> ->
+      Modify time unit
+
+   seg <SP> N <CRLF> ->
+      End of game
+
+   smg <SP> M <CRLF> ->
+      Server message
+
+   suc <CRLF> ->
+      Unknown command
+
+   sbp <CRLF> ->
+      Command parameter error
+
+   ping <CRLF> ->
+      Ping the server
+
+   levelup <SP> #n <CRLF> ->
+      Level up the player N by one
+
+                                                               [Page 5]
+
+RFC 222                   Zappy GUI Protocol              Jun 2025
+
+
+--- Page 7 ---
+4. Client to Server Messages
+
+   The GUI client may send the following commands to the server:
+
+   ppo <SP> #n <CRLF> ->
+      Request player position
+
+   mct <CRLF> ->
+      Request full map content
+
+   plv <SP> #n <CRLF> ->
+      Request player level
+
+   pin <SP> #n <CRLF> ->
+      Request player inventory
+
+   sgt <CRLF> ->
+      Request current time unit
+
+   sst <SP> T <CRLF> ->
+      Set new time unit
+
+                                                               [Page 7]
+
+RFC 222                   Zappy GUI Protocol              Jun 2025
+
+
+--- Page 8 ---
+5. Message Format and Semantics
+
+   - All messages are encoded in UTF-8 and terminated by a newline
+      character ('\n').
+   - All messages are case insensitive.
+   - Player and egg identifiers are prefixed by '#'.
+   - Resource indices range from 0 (Food) to 6 (Thystame).
+   - Orientation values:
+      1: North
+      2: East
+      3: South
+      4: West
+
+   Commands must follow exact spelling and spacing. Any deviation may
+   result in:
+   - 'suc' (unknown command)
+   - 'sbp' (bad parameters)
+
+                                                               [Page 8]
+
+RFC 222                   Zappy GUI Protocol              Jun 2025
+
+
+--- Page 9 ---
+6. Versioning
+
+   Protocol Version: 1.0
+   Future protocol changes must increment the version number.
+   Compatibility is not guaranteed between major versions.
+
+7. Security Considerations
+
+   This protocol assumes a trusted local network environment. No
+   authentication, encryption, or integrity checks are built-in.
+   It's strongly advised not to expose the protocol interface to public
+   networks without an external secure layer (e.g., SSH tunnel, VPN).
+
+                                                               [Page 9]
+
+RFC 222                   Zappy GUI Protocol              Jun 2025
+
+
+--- Page 10 ---
+8. References
+
+Normative References:
+   [RFC793]  Postel, J., "Transmission Control Protocol", STD 7,
+             RFC 793, September 1981. (Obsoleted by RFC 9293)
+
+   [RFC2119] Bradner, S., "Key words for use in RFCs to Indicate
+             Requirement Levels", BCP 14, RFC 2119, March 1997.
+
+Informative References:
+   None.
+
+                                                            [Page 10]
+
+RFC 222                   Zappy GUI Protocol              Jun 2025
+
+
+--- Page 11 ---
+9. Authors' Addresses
+
+   Léopold Pintard
+   EMail: leopold.pintard@epitech.eu
+
+   Jean Bizeul
+   EMail: jean.bizeul@epitech.eu
+
+   Nathan Bezard
+   EMail: nathan.bezard@epitech.eu
+
+   Matthieu Guillet-Arnaud
+   EMail: matthieu.guillet-arnaud@epitech.eu
+
+   Mathys Fillion
+   EMail: mathys.fillion@epitech.eu
+
+   Arthuryan Loheac de Sainte Marie
+   EMail: arthuryan.loheac-de-sainte-marie@epitech.eu
+
+                                                            [Page 11]
+
+RFC 222                   Zappy GUI Protocol              Jun 2025

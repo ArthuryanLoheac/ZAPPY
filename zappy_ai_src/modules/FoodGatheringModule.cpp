@@ -144,12 +144,12 @@ int FoodGatheringModule::countNearbyFood(size_t x, size_t y) {
  */
 float FoodGatheringModule::calculateFoodWeight(size_t x, int relativeY,
                                              int foodCount) {
-    const float FOOD_WEIGHT = 5.0f;
-    const float FOOD_BONUS = 3.0f;
-    const float DISTANCE_PENALTY = 1.0f;
-    const float DIRECTION_PENALTY = 2.0f;
-    const float NEARBY_FOOD_BONUS = 1.0f;
-    const float CURRENT_TILE_BONUS = 10.0f;
+    const float FOOD_WEIGHT = 10.0f;
+    const float FOOD_BONUS = 6.0f;
+    const float DISTANCE_PENALTY = 5.0f;
+    const float DIRECTION_PENALTY = 5.0f;
+    const float NEARBY_FOOD_BONUS = 5.0f;
+    const float CURRENT_TILE_BONUS = 15.0f;
 
     float weight = FOOD_WEIGHT;
 

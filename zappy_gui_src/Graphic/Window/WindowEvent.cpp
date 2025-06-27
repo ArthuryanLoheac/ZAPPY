@@ -6,12 +6,11 @@
 #include "Graphic/Events/MyEventReceiver.hpp"
 #include "Graphic/Window/window.hpp"
 #include "PluginsManagement/pluginsManager.hpp"
+#include "Window/windowOptionMenu.hpp"
 
 namespace GUI {
 void Window::handleEvent() {
-    if (receiver.IsKeyDown(irr::KEY_ESCAPE))
-        device->closeDevice();
-    if (pluginsManager::i().isWindowOpened())
+    if (pluginsManager::i().isWindowOpened() || windowOptionMenu::i().opened)
         return;
     int xMoveCam = receiver.getValBetween(irr::KEY_KEY_E, irr::KEY_KEY_A);
     int yMoveCenterCam = receiver.getValBetween(irr::KEY_KEY_D, irr::KEY_KEY_Q);
@@ -32,6 +31,7 @@ void Window::updateDeltaTime() {
 
 void Window::moveCamera(float x, float zoom, float xMove, float yMove,
 float zMove) {
+    if (!cam) return;
     // rotate around
     updateRotation(x);
     float radAngleX = std::cos(angleXCamera * (M_PI / 180.0f));
@@ -66,8 +66,10 @@ float radZ) {
     posTarget.X += xMove * frameDeltaTime * moveSpeedCamera;
     posTarget.Z += yMove * frameDeltaTime * moveSpeedCamera;
     posTarget.Y += zMove * frameDeltaTime * moveSpeedCamera;
-    posTarget.X = std::clamp(posTarget.X, -(width / 2.f), (width / 2.f));
-    posTarget.Z = std::clamp(posTarget.Z, -(height / 2.f), (height / 2.f));
+    if (width > 0)
+        posTarget.X = std::clamp(posTarget.X, -(width / 2.f), (width / 2.f));
+    if (height > 0)
+        posTarget.Z = std::clamp(posTarget.Z, -(height / 2.f), (height / 2.f));
     posTarget.Y = std::clamp(posTarget.Y, -4.5f, 1000.f);
     cam->setTarget(posTarget);
 }

@@ -35,6 +35,7 @@ void printHelp() {
         "  -n name:    name of the team of the AI" << std::endl <<
         "  -p port:    port number of the zappy server" << std::endl <<
         "  -h machine: machine name or IP address of the zappy server" <<
+        std::endl <<
         "  -v, -vv, -vvv : Set verbose level (WARNING, INFO, DEBUG)"
         << std::endl;
 }
@@ -65,7 +66,8 @@ void parseArgs(const int argc, char **argv, std::string &ip, int &port,
         throw AI::ArgumentsException("Invalid number of arguments.");
     }
 
-    if (argc == 2 && std::string(argv[1]) == "--help") {
+    if (argc == 2 && (std::string(argv[1]) == "--help" ||
+        std::string(argv[1]) == "-h")) {
         printHelp();
         exit(0);
     }

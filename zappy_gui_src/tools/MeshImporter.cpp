@@ -72,8 +72,8 @@ irr::scene::IAnimatedMesh *MeshImporter::getMesh(std::string meshName) {
  * @return irr::video::ITexture* Pointer to the loaded texture.
  */
 irr::video::ITexture *MeshImporter::getTexture(std::string textureName) {
-    irr::io::path pathTexture =
-        irr::io::path(("assets/Bake" + textureName + ".png").c_str());
+    irr::io::path pathTexture = irr::io::path(("assets/Bake" +
+        textureName + ".png").c_str());
 
     if (textures.find(textureName) == textures.end()) {
         auto mesh = GUI::Window::i().driver->getTexture(pathTexture);

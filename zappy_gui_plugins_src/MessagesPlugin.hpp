@@ -57,7 +57,7 @@ class MessagesPlugin : public Aplugin {
      * @param p The player data for which particles are sent.
      */
     void SendParticlesToAll(irr::video::IVideoDriver* driver,
-        pluginsData::Player p);
+        pluginsData::Player &p);
 
  public:
     /**

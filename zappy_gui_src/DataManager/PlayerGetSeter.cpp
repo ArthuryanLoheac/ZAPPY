@@ -56,9 +56,7 @@ Player &Player::operator=(Player &&other) noexcept {
 void Player::clear(irr::scene::ISceneManager *smgr) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     if (PlayerMesh && smgr) {
-        smgr->addToDeletionQueue(PlayerMesh.get());
-        PlayerMesh.reset();
-        PlayerMesh = nullptr;
+        PlayerMesh->setVisible(false);
     }
     for (auto &mesh : PlayerMeshesCylinder) {
         smgr->addToDeletionQueue(mesh.get());

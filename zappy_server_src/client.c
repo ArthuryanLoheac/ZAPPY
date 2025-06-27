@@ -55,6 +55,13 @@ void add_client(zappy_t *zappy, int fd)
 {
     server_t *server = zappy->server;
 
+    if (server->nb_fds >= 1000) {
+        LOG_WARNING("Connection attempt from client failed:"
+            " maximum number of clients reached");
+        if (close(fd) == -1)
+            display_error("Failed to close client socket");
+        return;
+    }
     server->fds = realloc(server->fds, sizeof(struct pollfd) *
         (server->nb_fds + 1));
     if (server->fds == NULL)
@@ -116,12 +123,12 @@ void destroy_clients(client_t *clients)
 
     while (current != NULL) {
         next = current->next;
-        if (close(current->fd) == -1)
-            display_error("Failed to close client socket");
         if (current->in_buffer != NULL)
             free(current->in_buffer);
         if (current->out_buffer != NULL)
             free(current->out_buffer);
+        if (close(current->fd) == -1)
+            display_error("Failed to close client socket");
         free(current);
         current = next;
     }

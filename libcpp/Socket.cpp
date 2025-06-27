@@ -98,6 +98,8 @@ void Socket::run() {
         throw std::runtime_error("Poll error occurred");
     if (fd.revents & POLLIN)
         readDatasFromServer();
+    if (fd.revents & POLLOUT)
+        flushWriteBuffer();
 }
 
 /**
@@ -182,13 +184,21 @@ std::vector<std::string> Socket::parseCommands(std::string &command) {
  * @param message The message to send
  * @throws std::runtime_error if sending data fails
  */
-void Socket::sendDatasToServer(const std::string &message) const {
-    if (fd.revents & POLLOUT) {
-        const ssize_t bytes_sent = write(server_fd,
-            message.c_str(), message.size());
+void Socket::sendDatasToServer(const std::string &message) {
+    writeBuffer += message;
+}
+
+void Socket::flushWriteBuffer() {
+    while (!writeBuffer.empty()) {
+        ssize_t bytes_sent = write(server_fd, writeBuffer.c_str(),
+            writeBuffer.size());
         if (bytes_sent == -1) {
+            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                break;
+            }
             throw std::runtime_error("Error sending data to server");
         }
+        writeBuffer.erase(0, bytes_sent);
     }
 }
 

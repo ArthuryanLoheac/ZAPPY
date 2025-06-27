@@ -105,7 +105,7 @@ void update_map(cell_t **map, parser_t *parser);
 void destroy_map(cell_t **map);
 void check_win(zappy_t *zappy);
 
-void start_server(zappy_t *zappy);
+void start_server(zappy_t *zappy, bool *running);
 void down_server(zappy_t *zappy);
 
 #endif /* !ZAPPY_H */

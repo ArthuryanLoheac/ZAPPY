@@ -182,7 +182,7 @@ bool PlayerDataPlugin::detectCollisionPlayer() {
         ->getRayFromScreenCoordinates(mousePos, cam);
 
     for (auto &player : data.players) {
-        if (!player.PlayerMesh || !player.PlayerMesh)
+        if (!player.PlayerMesh)
             continue;
         std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> playerMesh =
             player.PlayerMesh;

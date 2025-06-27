@@ -166,10 +166,10 @@ parseInventoryMessage(const std::string &msg) {
 }
 
 /**
- * @brief Checks if the required materials for the next elecation ritual are
+ * @brief Checks if the required materials for the required elevation ritual are
  * located on the AI's current tile.
  */
-static bool isRequiredMaterialsOnGround() {
+static bool isRequiredMaterialsOnGround(int ritualLevel) {
     const AI::Data::Inventory_t &inv = AI::Data::i().inventory;
     const AdvancedLeveler::ElevationRequirements_t &requiredMaterials =
         ElevationRequirementsMap.at(AI::Data::i().level);
@@ -181,6 +181,24 @@ static bool isRequiredMaterialsOnGround() {
             return true;
     }
     return false;
+}
+
+/**
+ * @brief Checks if the required materials for the required elevation ritual are
+ * located in the inventory.
+ */
+static bool isRequiredMaterialsInInv(AI::Data::Inventory_t &inv,
+int ritualLevel) {
+    const AdvancedLeveler::ElevationRequirements_t &requiredMaterials =
+        ElevationRequirementsMap.at(ritualLevel);
+
+    for (const auto &[material, amount] : requiredMaterials.materialsCount) {
+        const AI::Data::Inventory_t &inv = AI::Data::i().inventory;
+        if (inv.count(material) == 0)
+            return false;
+        if (inv.at(material) >= amount)
+            return true;
+    }
 }
 
 float AdvancedLeveler::getPriority() {
@@ -232,21 +250,30 @@ void AdvancedLeveler::execute() {
 
                 if (parsed != std::nullopt) {
                     int id = std::get<0>(parsed.value());
-                    std::pair<int, AI::Data::Inventory_t> inv = {
-                        direction, std::get<1>(parsed.value())};
+                    AI::Data::Inventory_t inv = std::get<1>(parsed.value());
                     _othersInv[id] = inv;
                     queue.pop();
                 }
             }
-            if (_othersInv.size() >= 6)
-                _moduleState = Calling;
+            if (_othersInv.size() >= 6) {
+                AI::Data::Inventory_t totalInv;
+                for (const auto &inv : _othersInv) {
+                    for (const auto &[material, count] : inv.second) {
+                        totalInv[material] += count;
+                    }
+                }
+                if (isRequiredMaterialsInInv(totalInv, AI::Data::i().level))
+                    _moduleState = Calling;
+                else
+                    _moduleState = Idling;
+            }
         }
             break;
 
         case Calling: {
             if (AI::Data::i().vision.at(0).at(0).count("player")
                 && AI::Data::i().vision.at(0).at(0).at("player") >= 6) {
-                if (isRequiredMaterialsOnGround()) {
+                if (isRequiredMaterialsOnGround(AI::Data::i().level)) {
                     AI::Interface::i().sendCommand(INCANTATION);
                     _moduleState = Elevating;
                 }
@@ -269,7 +296,7 @@ void AdvancedLeveler::execute() {
             break;
 
         case Spitting: {
-            if (isRequiredMaterialsOnGround())
+            if (isRequiredMaterialsOnGround(AI::Data::i().level))
                 break;
         }
             break;

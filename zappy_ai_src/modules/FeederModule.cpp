@@ -167,9 +167,9 @@ bool FeederModule::hasFood() const {
  */
 void FeederModule::checkInventory() {
     AI::Interface::i().sendCommand(INVENTORY);
-    foodCount = AI::Data::i().inventory.find("food") !=
+    foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                 AI::Data::i().inventory.end() ?
-                AI::Data::i().inventory.at("food") : 0;
+                AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
 }
 
 /**

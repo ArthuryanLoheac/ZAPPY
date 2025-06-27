@@ -29,9 +29,12 @@ FoodGatheringModule::FoodGatheringModule() {
  * Periodically checks inventory and handles the food gathering process
  */
 void FoodGatheringModule::execute() {
-    foodCount = AI::Data::i().inventory.find("food") !=
+    static int inventoryCheckCount = 0;
+    inventoryCheckCount++;
+
+    foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                 AI::Data::i().inventory.end() ?
-                AI::Data::i().inventory.at("food") : 0;
+                AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
     level = AI::Data::i().level;
     findFood();
     collectFood();
@@ -45,9 +48,9 @@ void FoodGatheringModule::execute() {
  * @return float Priority value between 0.0 and 1.0
  */
 float FoodGatheringModule::getPriority() {
-    foodCount = AI::Data::i().inventory.find("food") !=
+    foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                 AI::Data::i().inventory.end() ?
-                AI::Data::i().inventory.at("food") : 0;
+                AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
     float prio = (static_cast<float>(foodCount) / 10.0f) -
                  (static_cast<float>(level) / 8.0f);
     if (prio < 0.0f) prio = 0.0f;

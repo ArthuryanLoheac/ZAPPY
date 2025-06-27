@@ -171,7 +171,7 @@ void KirbyModule::spit() {
     }
     int itemsDropped = 0;
     for (auto &item : AI::Data::i().inventory) {
-        const std::string itemName = item.first;
+        const std::string itemName = AI::Data::materialToString(item.first);
         const int itemCount = item.second;
         for (int i = 0; i < itemCount; i++) {
             AI::Interface::i().sendCommand("Set " + itemName + "\n");
@@ -228,7 +228,7 @@ int KirbyModule::getNbObjects() {
 
     for (auto &item : AI::Data::i().inventory) {
         // Don't count food when calculating objects to drop
-        if (item.first != "food") {
+        if (item.first != AI::Data::Material_t::Food) {
             nbObjects += item.second;
         }
     }

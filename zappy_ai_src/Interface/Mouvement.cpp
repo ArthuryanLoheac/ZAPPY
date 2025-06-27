@@ -106,4 +106,53 @@ void Interface::goTo(int x, int y) {
     }
 }
 
+/**
+ * @brief Some memes don't hurt
+ */
+void Interface::doABarrelRoll() {
+    sendCommand(LEFT);
+    sendCommand(LEFT);
+}
+
+void Interface::goToDirection(int direction) {
+    if (direction < 0 || direction > 8) {
+        LOG_WARNING("goToDirection: Expected a direction between 0 & 8"
+            "but got %i", direction);
+        return;
+    }
+    switch (direction) {
+        case 0:
+            return;
+        case 1:
+            sendCommand(FORWARD);
+            return;
+        case 2:
+            sendCommand(FORWARD);
+            break;
+        case 3:
+            sendCommand(LEFT);
+            sendCommand(FORWARD);
+            break;
+        case 4:
+            sendCommand(LEFT);
+            sendCommand(FORWARD);
+            break;
+        case 5:
+            doABarrelRoll();
+            sendCommand(FORWARD);
+            break;
+        case 6:
+            sendCommand(RIGHT);
+            sendCommand(FORWARD);
+            break;
+        case 7:
+            sendCommand(RIGHT);
+            sendCommand(FORWARD);
+            break;
+        case 8:
+            sendCommand(FORWARD);
+            break;
+    }
+}
+
 }  // namespace AI

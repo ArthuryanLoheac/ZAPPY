@@ -22,7 +22,7 @@ pluginsData::Tile PlayerDataPlugin::getTile(int x, int y) {
 
 void PlayerDataPlugin::drawPlayerInfo(int id,
 std::shared_ptr<irr::gui::IGUIFont> font) {
-    if (!font || id < 0 || data.players.size() == 0)
+    if (!font || id < 0 || data.players.empty())
         return;
 
     int width = driver->getScreenSize().Width;

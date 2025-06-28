@@ -57,10 +57,12 @@ void Player::clear(irr::scene::ISceneManager *smgr) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     isDead = true;
     if (PlayerMesh && smgr) {
-        smgr->addToDeletionQueue(PlayerMesh.get());
+        PlayerMesh->remove();
+        PlayerMesh = nullptr;
     }
     for (auto &mesh : PlayerMeshesCylinder) {
-        smgr->addToDeletionQueue(mesh.get());
+        mesh->remove();
+        mesh = nullptr;
     }
     PlayerMeshesCylinder.clear();
     PlayerMeshesCylinderRotation.clear();
@@ -75,6 +77,7 @@ float randRotation(int i) {
 void Player::Init(std::string team, int level) {
     state = MOVING;
     timeTT = 0;
+    isDead = false;
     (void) team;
     (void) level;
     for (int i = 0; i < maxLevel; i++) {
@@ -202,13 +205,8 @@ void Player::setMesh(const std::shared_ptr<Mesh> &mesh) {
             break;
         }
     }
-    if (!isInList) {
-        mesh->remove();
+    if (!isInList)
         return;
-    }
-
-    if (PlayerMesh)
-        PlayerMesh->setVisible(false);
     PlayerMesh = mesh;
     Window::i().removePlayerInitLst(id);
 }
@@ -235,15 +233,13 @@ void Player::destroy() {
     isDead = true;
     if (!PlayerMesh)
         return;
-    int idM = PlayerMesh->getID();
-    auto sceneNode = GUI::Window::i().smgr->getSceneNodeFromId(idM);
-    if (sceneNode)
-        GUI::Window::i().smgr->addToDeletionQueue(sceneNode);
+    printf("Player %d destroyed\n", id);
+    PlayerMesh->remove();
     for (size_t i = 0; i < PlayerMeshesCylinder.size(); i++) {
-        int idMC = PlayerMeshesCylinder[i]->getID();
-        auto sceneNodeC = GUI::Window::i().smgr->getSceneNodeFromId(idMC);
-        if (sceneNodeC)
-            GUI::Window::i().smgr->addToDeletionQueue(sceneNodeC);
+        if (PlayerMeshesCylinder[i]) {
+            PlayerMeshesCylinder[i]->remove();
+            PlayerMeshesCylinder[i] = nullptr;
+        }
     }
     PlayerMesh = nullptr;
 }

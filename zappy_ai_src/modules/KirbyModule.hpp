@@ -80,6 +80,10 @@ class KirbyModule : public AIModule {
      */
     int getNbObjects();
 
+    // --- New helper methods ---
+    void moveBackToStart();
+    int dropAllInventory();
+
  private:
     int tickUsed;              ///< Number of ticks consumed so far
     int timeRemaining;         ///< Total time budget for the module

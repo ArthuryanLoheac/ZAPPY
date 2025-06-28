@@ -109,7 +109,7 @@ float RessourceGatheringSpawning::getPriority() {
         if (foodCount <= 3) {
             return 0.01f;
         } else {
-            float dynamicPriority = 0.01f + ((foodCount - 3) * 0.01f);
+            float dynamicPriority = 0.01f + (foodCount * 0.01f);
             return dynamicPriority;
         }
     }

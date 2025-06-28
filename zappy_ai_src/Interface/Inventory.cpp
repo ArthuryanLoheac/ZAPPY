@@ -156,8 +156,12 @@ std::vector<std::string> &command) {
     const std::string &status = args[0];
 
     if (status == "KO") return;
-
-    Data::i().inventory[Data::stringToMaterial.at(command[0])]--;
+    try {
+        Data::i().inventory[Data::stringToMaterial.at(command[1])]--;
+    } catch (const std::out_of_range &e) {
+        LOG_ERROR("SET: Material '%s' not found in inventory.",
+            command[1].c_str());
+    }
 }
 
 }  // namespace AI

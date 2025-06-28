@@ -5,6 +5,7 @@
 #include <vector>
 #include <stdexcept>
 #include <algorithm>
+#include <iostream>
 
 #include "Interface/Interface.hpp"
 #include "Data/Data.hpp"
@@ -143,26 +144,14 @@ void KirbyModule::suck() {
 }
 
 /**
- * @brief Returns to starting position and drops all collected objects.
- * 
- * Chooses optimal return strategy based on map geometry and efficiency:
- * - For square maps: may loop around if more efficient than turning back
- * - Otherwise: turns around and retraces steps
- * Drops all non-food items from inventory at the starting position.
+ * @brief Move the player back to the starting position.
+ * Handles both looping around and turning back.
  */
-void KirbyModule::spit() {
-    if (hasMadeHisWill) {
-        return;
-    }
-    hasMadeHisWill = true;
+void KirbyModule::moveBackToStart() {
     int mapX = AI::Data::i().mapX;
     int mapY = AI::Data::i().mapY;
     bool isSquareMap = (mapX == mapY) && (mapX > 0) && (mapY > 0);
-    int objectsToDrop = getNbObjects();
-    LOG_INFO("Kirby returning to drop %d objects after moving %d steps",
-            objectsToDrop, forwardCount);
-    LOG_INFO("Map size: %dx%d, is square: %s, Should loop around: %s", mapX,
-        mapY, (isSquareMap ? "yes" : "no"), (shouldLoopAround ? "yes" : "no"));
+
     if (shouldLoopAround && isSquareMap && forwardCount <= mapX) {
         int stepsToLoopAround = mapX - forwardCount;
         if (stepsToLoopAround == 0) {
@@ -185,9 +174,20 @@ void KirbyModule::spit() {
             tickUsed += 7;
         }
     }
+}
+
+/**
+ * @brief Drop all items in inventory, non-food first, then food.
+ * @return Number of items dropped.
+ */
+int KirbyModule::dropAllInventory() {
     int itemsDropped = 0;
     for (auto &item : AI::Data::i().inventory) {
-        const std::string itemName = AI::Data::materialToString(item.first);
+        if (item.first == AI::Data::Material_t::Food)
+            continue;
+        std::string itemName = AI::Data::materialToString(item.first);
+        std::transform(itemName.begin(), itemName.end(), itemName.begin(),
+            ::tolower);
         const int itemCount = item.second;
         for (int i = 0; i < itemCount; i++) {
             AI::Interface::i().sendCommand("Set " + itemName + "\n");
@@ -195,6 +195,61 @@ void KirbyModule::spit() {
             itemsDropped++;
         }
     }
+    for (auto &item : AI::Data::i().inventory) {
+        if (item.first != AI::Data::Material_t::Food)
+            continue;
+        std::string itemName = AI::Data::materialToString(item.first);
+        std::transform(itemName.begin(), itemName.end(), itemName.begin(),
+            ::tolower);
+        const int itemCount = item.second;
+        for (int i = 0; i < itemCount; i++) {
+            AI::Interface::i().sendCommand("Set " + itemName + "\n");
+            tickUsed += 7;
+            itemsDropped++;
+        }
+    }
+    return itemsDropped;
+}
+
+/**
+ * @brief Returns to starting position and drops all collected objects.
+ * 
+ * Chooses optimal return strategy based on map geometry and efficiency:
+ * - For square maps: may loop around if more efficient than turning back
+ * - Otherwise: turns around and retraces steps
+ * Drops all non-food items from inventory at the starting position.
+ */
+void KirbyModule::spit() {
+    if (hasMadeHisWill) {
+        return;
+    }
+    hasMadeHisWill = true;
+    int mapX = AI::Data::i().mapX;
+    int mapY = AI::Data::i().mapY;
+    bool isSquareMap = (mapX == mapY) && (mapX > 0) && (mapY > 0);
+    int objectsToDrop = getNbObjects();
+    LOG_INFO("Kirby returning to drop %d objects after moving %d steps",
+            objectsToDrop, forwardCount);
+    LOG_INFO("Map size: %dx%d, is square: %s, Should loop around: %s", mapX,
+        mapY, (isSquareMap ? "yes" : "no"), (shouldLoopAround ? "yes" : "no"));
+
+    moveBackToStart();
+    int itemsDropped = dropAllInventory();
+
+    // Redundancy: check inventory and drop again if not empty
+    AI::Interface::i().sendCommand("Inventory\n");
+    // Simulate a short delay or assume inventory is updated synchronously
+    // (If async, this should be handled in response callback)
+    int remaining = 0;
+    for (const auto& item : AI::Data::i().inventory) {
+        if (item.second > 0)
+            remaining += item.second;
+    }
+    if (remaining > 0) {
+        LOG_INFO("Redundancy: Inventory not empty after drop, dropping again");
+        itemsDropped += dropAllInventory();
+    }
+
     LOG_INFO("Kirby completed trip: walked %d steps, dropped %d items,"
         " used %d ticks out of %d",
              forwardCount, itemsDropped, tickUsed, timeRemaining);

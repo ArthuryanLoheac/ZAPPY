@@ -226,6 +226,17 @@ void Window::updateMesh() {
             }
         }
     }
+    for (size_t i = 0; i < GUI::GameDataManager::i().getEggs().size(); i++) {
+        if (GUI::GameDataManager::i().getEggs()[i].isDead) {
+            if (GUI::GameDataManager::i().getEggs()[i].EggMesh) {
+                GUI::GameDataManager::i().getEggs()[i].EggMesh->remove();
+                GUI::GameDataManager::i().getEggs()[i].EggMesh = nullptr;
+                GUI::GameDataManager::i().getEggs().erase(
+                    GUI::GameDataManager::i().getEggs().begin() + i);
+                i--;
+            }
+        }
+    }
 
     if (needUpdateRessources)
         initMeshRessources();

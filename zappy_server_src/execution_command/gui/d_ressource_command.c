@@ -13,7 +13,7 @@
 static void send_ressource_update(zappy_t *zappy, client_t *client,
     cell_t *cell)
 {
-    char buffer[256];
+    char buffer[2560];
 
     if (cell == NULL || zappy == NULL || client == NULL)
         return;
@@ -86,9 +86,9 @@ int check_args(zappy_t *zappy, client_t *client, char **args)
 
 void d_ressource_command(zappy_t *zappy, client_t *client, char **args)
 {
-    int x;
-    int y;
-    int quantity;
+    int x = 0;
+    int y = 0;
+    int quantity = 0;
     char *resource = NULL;
     cell_t *cell = NULL;
 

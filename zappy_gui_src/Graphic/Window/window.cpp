@@ -156,9 +156,8 @@ void Window::update() {
 }
 
 void Window::clearMeshes() {
-    for (auto &cube : cubes) {
-        smgr->addToDeletionQueue(cube);
-    }
+    for (auto &cube : cubes)
+        cube->remove();
     cubes.clear();
     for (int i = 0; i < GUI::GameDataManager::i().getWidth(); i++) {
         for (int j = 0; j < GUI::GameDataManager::i().getHeight(); j++) {
@@ -167,12 +166,12 @@ void Window::clearMeshes() {
         }
     }
     if (light) {
-        smgr->addToDeletionQueue(light);
+        light->remove();
         light = nullptr;
     }
     for (auto &egg : GUI::GameDataManager::i().getEggs()) {
         if (egg.EggMesh) {
-            smgr->addToDeletionQueue(egg.EggMesh.get());
+            egg.EggMesh->remove();
             egg.EggMesh = nullptr;
         }
     }
@@ -200,6 +199,36 @@ void Window::setupWorldData() {
 }
 
 void Window::updateMesh() {
+    for (size_t i = 0; i < GUI::GameDataManager::i().getPlayers().size(); i++) {
+        if (GUI::GameDataManager::i().getPlayers()[i].isDead) {
+            if (GUI::GameDataManager::i().getPlayers()[i].getMesh()) {
+                GUI::GameDataManager::i().getPlayers()[i].getMesh()->remove();
+                GUI::GameDataManager::i().getPlayers()[i].getMesh() = nullptr;
+                for (auto &mesh : GUI::GameDataManager::i()
+                    .getPlayers()[i].getPlayerMeshesCylinder()) {
+                    mesh->remove();
+                }
+                GUI::GameDataManager::i().getPlayers()[i].
+                    getPlayerMeshesCylinder().clear();
+                GUI::GameDataManager::i().getPlayers()[i].
+                    setMesh(nullptr);
+                GUI::GameDataManager::i().getPlayers().erase(
+                    GUI::GameDataManager::i().getPlayers().begin() + i);
+                i--;
+            }
+        }
+    }
+    for (size_t i = 0; i < GUI::GameDataManager::i().getEggs().size(); i++) {
+        if (GUI::GameDataManager::i().getEggs()[i].isDead) {
+            if (GUI::GameDataManager::i().getEggs()[i].EggMesh) {
+                GUI::GameDataManager::i().getEggs()[i].EggMesh->remove();
+                GUI::GameDataManager::i().getEggs()[i].EggMesh = nullptr;
+                GUI::GameDataManager::i().getEggs().erase(
+                    GUI::GameDataManager::i().getEggs().begin() + i);
+                i--;
+            }
+        }
+    }
     try {
         if (!GUI::GameDataManager::i().getTile(0, 0).getTileMesh())
             worldSetupMesh();
@@ -208,22 +237,6 @@ void Window::updateMesh() {
     }
     if (!worldSetuped)
         return;
-    for (size_t i = 0; i < GUI::GameDataManager::i().getPlayers().size(); i++) {
-        if (GUI::GameDataManager::i().getPlayers()[i].isDead) {
-            if (GUI::GameDataManager::i().getPlayers()[i].getMesh()) {
-                smgr->addToDeletionQueue(
-                    GUI::GameDataManager::i().getPlayers()[i].getMesh().get());
-                for (auto &mesh : GUI::GameDataManager::i()
-                    .getPlayers()[i].getPlayerMeshesCylinder()) {
-                    smgr->addToDeletionQueue(mesh.get());
-                }
-                GUI::GameDataManager::i().getPlayers()[i].setMesh(nullptr);
-                GUI::GameDataManager::i().getPlayers().erase(
-                    GUI::GameDataManager::i().getPlayers().begin() + i);
-                i--;
-            }
-        }
-    }
 
     if (needUpdateRessources)
         initMeshRessources();

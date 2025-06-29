@@ -29,28 +29,28 @@ void GameTile::clear(irr::scene::ISceneManager *smgr) {
     std::lock_guard<std::mutex> lock(mutexDatas);
     if (!smgr)
         return;
-    smgr->addToDeletionQueue(tileMesh.get());
-    tileMesh.reset();
+    tileMesh->remove();
+    tileMesh = nullptr;
     for (auto &mesh : meshesFood)
-        smgr->addToDeletionQueue(mesh.get());
+        mesh->remove();
     meshesFood.clear();
     for (auto &mesh : meshesR1)
-        smgr->addToDeletionQueue(mesh.get());
+        mesh->remove();
     meshesR1.clear();
     for (auto &mesh : meshesR2)
-        smgr->addToDeletionQueue(mesh.get());
+        mesh->remove();
     meshesR2.clear();
     for (auto &mesh : meshesR3)
-        smgr->addToDeletionQueue(mesh.get());
+        mesh->remove();
     meshesR3.clear();
     for (auto &mesh : meshesR4)
-        smgr->addToDeletionQueue(mesh.get());
+        mesh->remove();
     meshesR4.clear();
     for (auto &mesh : meshesR5)
-        smgr->addToDeletionQueue(mesh.get());
+        mesh->remove();
     meshesR5.clear();
     for (auto &mesh : meshesR6)
-        smgr->addToDeletionQueue(mesh.get());
+        mesh->remove();
     meshesR6.clear();
 }
 

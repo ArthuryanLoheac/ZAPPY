@@ -123,12 +123,6 @@ void GameDataManager::removeEgg(int id) {
     for (size_t i = 0; i < eggs.size(); i++) {
         if (eggs[i].id == id) {
             eggs[i].isDead = true;
-            if (eggs[i].EggMesh) {
-                int idM = eggs[i].EggMesh->getID();
-                auto sceneNode = GUI::Window::i().smgr->getSceneNodeFromId(idM);
-                sceneNode->setVisible(false);
-                return;
-            }
         }
     }
     throw ParseException("Invalid ID egg");

@@ -39,7 +39,7 @@ void levelup_command(zappy_t *zappy, client_t *client, char **args)
     client_t *c = zappy->clients;
     int id = -1;
 
-    if (args[0] == NULL || strlen(args[0]) < 2)
+    if (!args || args[0] == NULL || strlen(args[0]) < 2)
         return;
     id = atoi(args[0] + 1);
     if (id < 0) {

@@ -52,6 +52,7 @@ void pluginsManager::loadPlugin(const std::string &path) {
         auto plugin = dlLoader<pluginsInterface>::getLib(path, "createPlugin");
         if (plugin) {
             _plugins.push_back(std::move(plugin));
+            _plugins.back()->setActive(false);
         }
     } catch (const dlLoader<pluginsInterface>::dlError &e) {
         std::cerr << e.what() << std::endl;

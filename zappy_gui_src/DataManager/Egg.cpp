@@ -14,5 +14,7 @@ namespace GUI {
  */
 Egg::Egg(int id, int team, int x, int y,
 const std::shared_ptr<Mesh> &eggMesh)
-: id(id), team(team), x(x), y(y), EggMesh(eggMesh) {}
+: id(id), team(team), x(x), y(y), EggMesh(eggMesh) {
+    isDead = false;
+}
 }  // namespace GUI

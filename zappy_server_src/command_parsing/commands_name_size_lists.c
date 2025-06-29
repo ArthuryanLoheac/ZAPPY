@@ -29,6 +29,9 @@ const command_name_size_t player_command_name_size_list[] = {
 const command_name_size_t gui_command_name_size_list[] = {
     {"MSZ", 0},
     {"BCT", 0},
+    {"PLV", 0},
+    {"PPO", 0},
+    {"PIN", 0},
     {"MCT", 0},
     {"TNA", 0},
     {"SGT", 0},

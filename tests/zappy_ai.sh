@@ -1,1 +1,1 @@
-./zappy_ai -p 4040 -h 127.0.0.1 -n t1 -vv
+./zappy_ai -p 4040 -h 127.0.0.1 -n t3 -vvv

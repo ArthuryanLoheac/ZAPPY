@@ -13,9 +13,9 @@
 
 static void send_team_name(client_t *gui, const char *team_name)
 {
-    char response[6 + strlen(team_name)];
+    char response[60 + strlen(team_name)];
 
-    snprintf(response, 5 + strlen(team_name),
+    snprintf(response, 6 + strlen(team_name),
         "tna %s\n", team_name);
     add_to_buffer(&gui->out_buffer, response);
 }

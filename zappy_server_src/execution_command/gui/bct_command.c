@@ -19,7 +19,7 @@ void bct_command(zappy_t *zappy, client_t *client, char **args)
         LOG_WARNING("[%i]: Wrong amount of arguments for command pin."
             " Got %i but required %i", client->fd, pointlen(args), 2);
     } else {
-        send_bloc_content(atoi(args[1]), atoi(args[2]),
+        send_bloc_content(atoi(args[0]), atoi(args[1]),
             zappy, client);
     }
 }

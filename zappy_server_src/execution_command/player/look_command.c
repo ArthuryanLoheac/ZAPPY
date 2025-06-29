@@ -112,8 +112,11 @@ static void init_buffer(char **buffer)
     add_to_buffer(buffer, "[");
 }
 
-static void fill_variable(look_variable_t *variables, client_t *client)
+static void fill_variable(look_variable_t *variables, client_t *client,
+    int *xyi_cpy)
 {
+    xyi_cpy[0] = client->stats.x;
+    xyi_cpy[1] = client->stats.y;
     variables->level = client->stats.level;
     variables->x = client->stats.x;
     variables->y = client->stats.y;
@@ -129,12 +132,12 @@ static void check_add_comma(char **buffer, int i, int j, int level)
 void look_command(zappy_t *zappy, client_t *client, char **args)
 {
     look_variable_t variables;
-    int xyi_cpy[3] = {client->stats.x, client->stats.y, 0};
+    int xyi_cpy[3] = {0, 0, 0};
     char *buffer = malloc(2 * sizeof(char));
 
     if (client == NULL || zappy == NULL || buffer == NULL || !args)
         return;
-    fill_variable(&variables, client);
+    fill_variable(&variables, client, xyi_cpy);
     init_buffer(&buffer);
     for (int i = 0; i <= variables.level; i++) {
         for (int j = -i; j <= i; j++) {

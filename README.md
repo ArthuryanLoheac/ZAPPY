@@ -85,6 +85,7 @@ USAGE: ./zappy_gui -p port -h machine
 | -p | port | port number |
 | -h | machine | hostname of the server |
 | -v, -vv, -vvv | ---- | set verbose level (WARNINGS, INFOS, DEBUGS) |
+| -o | Enable low detail mode |
 
 </details>
 

@@ -199,14 +199,6 @@ void Window::setupWorldData() {
 }
 
 void Window::updateMesh() {
-    try {
-        if (!GUI::GameDataManager::i().getTile(0, 0).getTileMesh())
-            worldSetupMesh();
-    } catch (const std::exception &e) {
-        worldSetupMesh();
-    }
-    if (!worldSetuped)
-        return;
     for (size_t i = 0; i < GUI::GameDataManager::i().getPlayers().size(); i++) {
         if (GUI::GameDataManager::i().getPlayers()[i].isDead) {
             if (GUI::GameDataManager::i().getPlayers()[i].getMesh()) {
@@ -237,6 +229,14 @@ void Window::updateMesh() {
             }
         }
     }
+    try {
+        if (!GUI::GameDataManager::i().getTile(0, 0).getTileMesh())
+            worldSetupMesh();
+    } catch (const std::exception &e) {
+        worldSetupMesh();
+    }
+    if (!worldSetuped)
+        return;
 
     if (needUpdateRessources)
         initMeshRessources();

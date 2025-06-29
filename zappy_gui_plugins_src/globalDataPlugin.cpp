@@ -22,7 +22,7 @@ irr::video::IVideoDriver* driver) {
 
     if (!font)
         return;
-    int sizeY = 120 + data.teams.size() * 30;
+    int sizeY = 120 + data.teams.size() * 20;
     for (size_t i = 0; i < data.teams.size(); i++)
         sizeY += 20 * countNbLevelDifferentTeams(data.teams[i]);
     drawImage("assets/UI/BottomRight.png", 0, 0, 200, sizeY, driver);

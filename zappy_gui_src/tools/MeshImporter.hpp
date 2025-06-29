@@ -29,6 +29,12 @@ class MeshImporter {
         std::shared_ptr<irr::scene::IAnimatedMeshSceneNode> node);
     irr::video::SColor getColor(std::string teamName);
 
+    void removeMesh(const std::string &meshName);
+    void removeTexture(const std::string &textureName);
+
+    void cleanupUnusedResources();
+    void cleanupUnusedMeshes();
+
     std::map<std::string, irr::video::SColor> colorTeam;
     size_t iColor = 0;
     std::vector<irr::video::SColor> colors = {

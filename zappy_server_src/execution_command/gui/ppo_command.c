@@ -28,6 +28,7 @@ void send_player_pos(zappy_t *zappy, client_t *gui, int id)
     }
     LOG_WARNING("[%i]: Unknown player id(%i) from ppo gui request",
         gui->fd, id);
+    add_to_buffer(&gui->out_buffer, "ko\n");
 }
 
 void ppo_command(zappy_t *zappy, client_t *client, char **args)

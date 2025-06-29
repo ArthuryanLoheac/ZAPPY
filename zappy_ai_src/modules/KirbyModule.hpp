@@ -91,4 +91,5 @@ class KirbyModule : public AIModule {
     bool suckMode;             ///< True if collecting, false if returning
     bool hasMadeHisWill;       ///< True if return journey has been initiated
     bool shouldLoopAround;     ///< True if should loop around map
+    bool hasSpawnedHarvester;  ///< True if HarvesterSpawner has been added
 };

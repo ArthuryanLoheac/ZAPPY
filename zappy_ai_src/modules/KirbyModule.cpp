@@ -11,6 +11,8 @@
 #include "Data/Data.hpp"
 #include "include/logs.h"
 #include "../../libc/include/logs.h"
+#include "Logic/Core.hpp"
+#include "modules/HarvesterSpawner.hpp"
 
 /**
  * @brief Constructs a new KirbyModule object.
@@ -19,7 +21,7 @@
  */
 KirbyModule::KirbyModule() : tickUsed(0), timeRemaining(FOOD_TICK * 10),
     forwardCount(0), suckMode(true), hasMadeHisWill(false),
-    shouldLoopAround(false) {
+    shouldLoopAround(false), hasSpawnedHarvester(false) {
     LOG_INFO("KirbyModule initialized: suckMode=%s, timeRemaining=%d",
              (suckMode ? "true" : "false"), timeRemaining);
 }
@@ -252,6 +254,13 @@ void KirbyModule::spit() {
     LOG_INFO("Kirby completed trip: walked %d steps, dropped %d items,"
         " used %d ticks out of %d",
              forwardCount, itemsDropped, tickUsed, timeRemaining);
+    
+    // Add the HarvesterSpawner module once when operation is complete
+    if (!hasSpawnedHarvester) {
+        Logic::getInstance().addModule(std::make_unique<HarvesterSpawner>());
+        LOG_INFO("Added HarvesterSpawner module to continue with feeding and harvesting");
+        hasSpawnedHarvester = true;
+    }
 }
 
 /**

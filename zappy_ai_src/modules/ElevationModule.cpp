@@ -7,6 +7,7 @@
 
 #include "modules/ElevationModule.hpp"
 #include <iostream>
+#include <algorithm>
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
 #include "../../libc/include/logs.h"
@@ -34,12 +35,22 @@ ElevationModule::ElevationModule() {
  * @return float Priority value between 0.0 and 1.0
  */
 float ElevationModule::getPriority() {
-    checkResources();
-
-    if (foodCount < 3)
-        return 1.0f;
-
-    return (hasSufficientFood) ? 0.3f : 0.7f;
+    foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
+        AI::Data::i().inventory.end() ?
+        AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
+    if (foodCount < 3) {
+        LOG_INFO("Elevation Module Priority: 0.7 (not enough food)");
+        std::cout << "Not enough food for elevation: " << foodCount
+                  << std::endl;
+        return 0.7f;
+    }
+    float ret = elevationPriority;
+    elevationPriority -= 0.05f;
+    if (elevationPriority < 0.0f)
+        elevationPriority = 0.0f;
+    std::cout << "Elevation Module Priority: " << ret
+              << " with food count: " << foodCount << std::endl;
+    return ret;
 }
 
 /**
@@ -68,6 +79,7 @@ void ElevationModule::checkResources() {
  * Manages the sequence of looking for linemate, moving to it, and starting incantation
  */
 void ElevationModule::execute() {
+    elevationPriority = 0.6f;
     std::cout << "Player with PID " << getpid()
               << " executing Elevation Module" << std::endl;
     checkResources();
@@ -89,9 +101,7 @@ void ElevationModule::execute() {
         }
     }
 
-    if (foundSpot || hasLinemate) {
-        performElevation();
-    }
+    performElevation();
 }
 
 /**
@@ -125,23 +135,8 @@ bool ElevationModule::checkCurrentTileForLinemate() {
  *
  * @return True if a suitable tile with linemate was found
  */
+// This function is now unused and always returns false
 bool ElevationModule::scanVisionForLinemate() {
-    for (size_t x = 0; x < AI::Data::i().vision.size(); x++) {
-        const size_t midY = AI::Data::i().vision[x].size() / 2;
-        for (size_t y = 0; y < AI::Data::i().vision[x].size(); y++) {
-            int relativeY = static_cast<int>(y) - static_cast<int>(midY);
-
-            auto& tileContents = AI::Data::i().vision[x][y];
-            if (tileContents.find("linemate") != tileContents.end() &&
-                tileContents["linemate"] == 1) {
-                LOG_INFO("Found linemate at position (%zu,%d)", x, relativeY);
-                targetX = static_cast<int>(x);
-                targetY = relativeY;
-                return true;
-            }
-        }
-    }
-
     return false;
 }
 
@@ -155,11 +150,8 @@ bool ElevationModule::findElevationSpot() {
         return false;
     }
 
-    if (checkCurrentTileForLinemate()) {
-        return true;
-    }
-
-    return scanVisionForLinemate();
+    // Only check current tile, do not scan other tiles
+    return checkCurrentTileForLinemate();
 }
 
 /**
@@ -173,21 +165,33 @@ void ElevationModule::handleLinemateInInventory() {
 }
 
 /**
+ * @brief Drop all items in inventory (except food)
+ */
+void ElevationModule::dropAllInventory() {
+    for (auto &item : AI::Data::i().inventory) {
+        if (item.first == AI::Data::Material_t::Food) {
+            continue;
+        }
+        std::string itemName = AI::Data::materialToString(item.first);
+        std::transform(itemName.begin(), itemName.end(), itemName.begin(), ::tolower);
+        int itemCount = item.second;
+        for (int i = 0; i < itemCount; ++i) {
+            AI::Interface::i().sendCommand("Set " + itemName + "\n");
+        }
+    }
+}
+
+/**
  * @brief Handle the case when linemate was found on a tile
  */
 void ElevationModule::handleFoundLinemateTile() {
-    if (targetX > 0 || targetY != 0) {
-        LOG_INFO("Moving to linemate at (%d,%d)", targetX, targetY);
-        AI::Interface::i().goTo(targetX, targetY);
-        targetX = 0;
-        targetY = 0;
-    } else {
-        LOG_INFO("Starting incantation");
-        AI::Interface::i().sendCommand(INCANTATION);
-        foundSpot = false;
-        targetX = -1;
-        targetY = -1;
-    }
+    // Drop all items before incantation
+    dropAllInventory();
+    LOG_INFO("Starting incantation");
+    AI::Interface::i().sendCommand(INCANTATION);
+    foundSpot = false;
+    targetX = -1;
+    targetY = -1;
 }
 
 /**
@@ -207,7 +211,9 @@ void ElevationModule::performElevation() {
         return;
     }
 
-    if (foundSpot && targetX >= 0 && targetY >= 0) {
+    // Only trigger incantation if on the correct tile (no movement)
+    if (foundSpot && targetX == 0 && targetY == 0) {
         handleFoundLinemateTile();
     }
 }
+

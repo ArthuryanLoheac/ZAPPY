@@ -72,11 +72,6 @@ void RessourceGatheringSpawning::execute() {
         spawnCooldown--;
         return;
     }
-    if (++resourceCheckCounter >= 15) {
-        resourceCheckCounter = 0;
-        AI::Interface::i().sendCommand(INVENTORY);
-        return;
-    }
     if (recentlySpawned) {
         assignRoleToNewPlayer();
         recentlySpawned = false;
@@ -94,21 +89,6 @@ void RessourceGatheringSpawning::execute() {
         AI::Interface::i().sendCommand(FORK);
         recentlySpawned = true;
         spawnCooldown = 0;
-    }
-
-    // Handle picking up non-food items if present (priority 0.2)
-    if (!AI::Data::i().vision.empty() && !AI::Data::i().vision[0].empty()) {
-        const size_t midY = AI::Data::i().vision[0].size() / 2;
-        auto& currentTile = AI::Data::i().vision[0][midY];
-        bool tookSomething = false;
-        for (const auto& item : currentTile) {
-            if (item.first != "Food" && item.second > 0) {
-                AI::Interface::i().sendCommand("Take " + item.first + "\n");
-                tookSomething = true;
-            }
-        }
-        if (tookSomething)
-            return;
     }
 }
 
@@ -141,18 +121,6 @@ float RessourceGatheringSpawning::getPriority() {
     spawnCooldown = 0;
     recentlySpawned = false;
     needToFeed = false;
-
-    // Check current tile for non-food items, but do not send commands here
-    if (!AI::Data::i().vision.empty() && !AI::Data::i().vision[0].empty()) {
-        const size_t midY = AI::Data::i().vision[0].size() / 2;
-        auto& currentTile = AI::Data::i().vision[0][midY];
-        for (const auto& item : currentTile) {
-            if (item.first != "food" && item.second > 0) {
-                // Non-food item found, return higher priority
-                return 0.2f;
-            }
-        }
-    }
 
     return 0.8f;
 }
@@ -255,10 +223,5 @@ int RessourceGatheringSpawning::takeAllObjects() {
  * @return True if any objects were taken
  */
 bool RessourceGatheringSpawning::checkAndTakeObjects() {
-    int itemsTaken = takeAllObjects();
-    if (itemsTaken > 0) {
-        LOG_INFO("Collected %d items", itemsTaken);
-        return true;
-    }
     return false;
 }

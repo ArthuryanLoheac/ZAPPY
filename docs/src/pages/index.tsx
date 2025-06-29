@@ -21,7 +21,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg zoup-text"
             to="/docs/zappy/CONTRIBUTING">
-            Zoup Zoup !
+             Get started
           </Link>
         </div>
       </div>

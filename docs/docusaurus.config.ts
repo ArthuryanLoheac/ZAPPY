@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Zappy docs',
-  tagline: 'Zip Zap Zoup ?',
+  tagline: 'Raise, Trantorians !',
   favicon: 'img/zappy.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future

@@ -236,10 +236,7 @@ void KirbyModule::spit() {
     moveBackToStart();
     int itemsDropped = dropAllInventory();
 
-    // Redundancy: check inventory and drop again if not empty
     AI::Interface::i().sendCommand("Inventory\n");
-    // Simulate a short delay or assume inventory is updated synchronously
-    // (If async, this should be handled in response callback)
     int remaining = 0;
     for (const auto& item : AI::Data::i().inventory) {
         if (item.second > 0)

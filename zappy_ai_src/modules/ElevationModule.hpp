@@ -85,6 +85,14 @@ class ElevationModule : public AIModule {
      */
     void handleFoundLinemateTile();
 
+    /**
+     * @brief Drop all items in the inventory
+     *
+     * This function is called when the AI needs to drop all items, such as after
+     * an unsuccessful attempt to find a linemate or when resetting the state.
+     */
+    void dropAllInventory();
+
     /// Location of a suitable elevation spot (tile with linemate)
     int targetX = -1;
     int targetY = -1;
@@ -96,6 +104,7 @@ class ElevationModule : public AIModule {
 
     /// Current food count
     int foodCount = 0;
+    float elevationPriority = 0.6f;  // Dynamic priority for ElevationModule
 };
 
 #endif  // ZAPPY_AI_SRC_MODULES_ELEVATIONMODULE_HPP_

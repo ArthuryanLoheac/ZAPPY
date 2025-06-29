@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <string>
 #include <chrono>
+#include <iostream>
 #include "modules/RessourceGatheringSpawning.hpp"
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
@@ -28,6 +29,9 @@ RessourceGatheringSpawning::RessourceGatheringSpawning()
  * @brief Execute the spawning behavior
  */
 void RessourceGatheringSpawning::execute() {
+    std::cout << "Player with PID " << getpid()
+              << " executing Resource Gathering and Spawning Module"
+              << std::endl;
     int foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                     AI::Data::i().inventory.end() ?
                     AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
@@ -69,11 +73,6 @@ void RessourceGatheringSpawning::execute() {
         spawnCooldown--;
         return;
     }
-    if (++resourceCheckCounter >= 15) {
-        resourceCheckCounter = 0;
-        AI::Interface::i().sendCommand(INVENTORY);
-        return;
-    }
     if (recentlySpawned) {
         assignRoleToNewPlayer();
         recentlySpawned = false;
@@ -109,7 +108,7 @@ float RessourceGatheringSpawning::getPriority() {
         if (foodCount <= 3) {
             return 0.01f;
         } else {
-            float dynamicPriority = 0.01f + (foodCount * 0.01f);
+            float dynamicPriority = 0.01f + (foodCount * 0.05f);
             return dynamicPriority;
         }
     }
@@ -120,6 +119,10 @@ float RessourceGatheringSpawning::getPriority() {
         LOG_INFO("Sufficient resources for spawning, priority: 0.3");
         return 0.3f;
     }
+    spawnCooldown = 0;
+    recentlySpawned = false;
+    needToFeed = false;
+
     return 0.8f;
 }
 
@@ -221,10 +224,5 @@ int RessourceGatheringSpawning::takeAllObjects() {
  * @return True if any objects were taken
  */
 bool RessourceGatheringSpawning::checkAndTakeObjects() {
-    int itemsTaken = takeAllObjects();
-    if (itemsTaken > 0) {
-        LOG_INFO("Collected %d items", itemsTaken);
-        return true;
-    }
     return false;
 }

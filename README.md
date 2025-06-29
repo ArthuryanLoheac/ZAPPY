@@ -77,7 +77,7 @@ USAGE: ./zappy_server -p port -x width -y height -n name1 name2 ... -c clientsNb
 <details> <summary> <b><span style="font-size: 1.2em;">🌍 GUI</span></b> </summary>
 
 ```sh
-USAGE: ./zappy_gui -p port -h machine
+USAGE: ./zappy_gui -p port -h machine [-o]
 ```
 
 | Option | Parameter | Description |
@@ -85,6 +85,7 @@ USAGE: ./zappy_gui -p port -h machine
 | -p | port | port number |
 | -h | machine | hostname of the server |
 | -v, -vv, -vvv | ---- | set verbose level (WARNINGS, INFOS, DEBUGS) |
+| -o | Use a lighter rendering method |
 
 </details>
 

@@ -5,9 +5,10 @@
 ** Disruption Module Implementation
 */
 
-#include "modules/DisruptionModule.hpp"
+#include <unistd.h>
 #include <iostream>
 #include <string>
+#include "modules/DisruptionModule.hpp"
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
 #include "../../libc/include/logs.h"
@@ -89,8 +90,6 @@ int DisruptionModule::checkVisionElevation() {
             auto& tile = AI::Data::i().vision[x][y];
 
             if (tile["player"] > 2 && getNumberStone(tile) > 2) {
-                std::cout << "Disruption Module found elevation at: "
-                            << x << ", " << relativeY << std::endl;
                 attack(x, relativeY);
                 return 1;
             }

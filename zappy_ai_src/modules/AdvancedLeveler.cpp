@@ -1,5 +1,7 @@
 #include "modules/AdvancedLeveler.hpp"
 
+#include <unistd.h>
+
 #include <cmath>
 #include <unordered_map>
 #include <algorithm>
@@ -223,15 +225,6 @@ static void spitRequiredMaterial(AI::Data::Inventory_t &inv, int ritualLevel) {
 }
 
 float AdvancedLeveler::getPriority() {
-    static int inventoryPrintCounter = 0;
-    if (++inventoryPrintCounter >= 10) {
-        inventoryPrintCounter = 0;
-        std::cout << "Inventory: ";
-        for (const auto& [mat, qty] : AI::Data::i().inventory) {
-            std::cout << AI::Data::materialToString(mat) << "=" << qty << " ";
-        }
-        std::cout << std::endl;
-    }
     auto &msgQueue = AI::Data::i().messageQueue;
 
     if (AI::Data::i().level < 2)

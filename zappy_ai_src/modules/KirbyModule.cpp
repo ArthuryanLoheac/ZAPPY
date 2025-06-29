@@ -11,6 +11,8 @@
 #include "Data/Data.hpp"
 #include "include/logs.h"
 #include "../../libc/include/logs.h"
+#include "Logic/Core.hpp"
+#include "modules/HarvesterSpawner.hpp"
 
 /**
  * @brief Constructs a new KirbyModule object.
@@ -19,7 +21,7 @@
  */
 KirbyModule::KirbyModule() : tickUsed(0), timeRemaining(FOOD_TICK * 10),
     forwardCount(0), suckMode(true), hasMadeHisWill(false),
-    shouldLoopAround(false) {
+    shouldLoopAround(false), hasSpawnedHarvester(false) {
     LOG_INFO("KirbyModule initialized: suckMode=%s, timeRemaining=%d",
              (suckMode ? "true" : "false"), timeRemaining);
 }
@@ -135,7 +137,9 @@ void KirbyModule::suck() {
         return;
     AI::Interface::i().sendCommand(LOOK);
     tickUsed += 7;
-    takeObjects();
+    if (forwardCount > 0) {
+        takeObjects();
+    }
     AI::Interface::i().sendCommand(FORWARD);
     tickUsed += 7;
     forwardCount++;
@@ -250,11 +254,18 @@ void KirbyModule::spit() {
     LOG_INFO("Kirby completed trip: walked %d steps, dropped %d items,"
         " used %d ticks out of %d",
              forwardCount, itemsDropped, tickUsed, timeRemaining);
+
+    if (!hasSpawnedHarvester) {
+        Logic::getInstance().addModule(std::make_unique<HarvesterSpawner>());
+        LOG_INFO("Added HarvesterSpawner module to continue with feeding"
+            " and harvesting");
+        hasSpawnedHarvester = true;
+    }
 }
 
 /**
  * @brief Takes all objects from the current cell after a look command.
- * 
+ *
  * Prioritizes collection of non-food items first, then collects food.
  * Updates tick usage for each take command executed.
  */

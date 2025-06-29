@@ -142,7 +142,7 @@ std::vector<std::string> &command) {
 
     if (status == "KO") return;
 
-    Data::i().inventory[Data::stringToMaterial.at(command[0])]++;
+    Data::i().inventory[Data::stringToMaterial.at(command[1])]++;
 }
 
 void Interface::commandSET(std::vector<std::string> &args,

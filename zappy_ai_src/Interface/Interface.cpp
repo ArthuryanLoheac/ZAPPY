@@ -155,7 +155,7 @@ std::string toUpperCase(const std::string &str) {
 }
 
 void Interface::sendCommand(const std::string &command) {
-    std::cout << "Sending command: " << command << std::endl;
+    LOG_INFO("Sending command: %s", command.c_str());
     if (inputQueue.size() >= 10) {
         commandBuffer.push(command);
         return;
@@ -164,7 +164,7 @@ void Interface::sendCommand(const std::string &command) {
     auto parsedCommand = parseCommands(command.substr(0, command.size()-1));
     parsedCommand[0] = toUpperCase(parsedCommand[0]);
     for (size_t i = 0; i < parsedCommand.size(); i++) {
-        std::cout << "Sending command: " << parsedCommand[i] << std::endl;
+        LOG_INFO("Sending command: %s", parsedCommand[i].c_str());
     }
 
     inputQueue.push(parsedCommand);

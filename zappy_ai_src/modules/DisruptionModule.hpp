@@ -9,6 +9,8 @@
 #define ZAPPY_AI_SRC_MODULES_DISRUPTIONMODULE_HPP_
 
 #include <random>
+#include <unordered_map>
+#include <string>
 #include "modules/AIModule.hpp"
 
 /**
@@ -52,6 +54,26 @@ class DisruptionModule : public AIModule   {
      * Increases probability by 40% or resets to 0 if at 100%
      */
     void updateLookProbability();
+
+    /**
+     * @brief Check if there is an elevation nearby
+     * if there is one send the number of the case of the elevation
+     */
+    int checkVisionElevation();
+
+    /**
+     * @brief Get the number of stones in a tile
+     * @param tile The tile to check
+     * @return int Number of stones in the tile
+     */
+    int getNumberStone(std::unordered_map<std::string, int> &tile);
+
+    /**
+     * @brief Send an attack command to a specific tile
+     * @param x The x coordinate of the tile
+     * @param relativeY The relative y coordinate of the tile
+     */
+    void attack(size_t x, int relativeY);
 
     /// Current probability of sending a LOOK command (0, 40, 80, 100)
     int lookProbability;

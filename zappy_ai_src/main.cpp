@@ -113,7 +113,6 @@ int initChildProcess(const int port, const std::string &ip,
     }
 
     Logic& logic = Logic::getInstance();
-    // Start with only the role attribution module
     logic.addModule(std::make_unique<RoleAttributionModule>());
 
     while (AI::Data::i().isDead == false) {

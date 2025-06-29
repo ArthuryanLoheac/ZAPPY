@@ -135,7 +135,9 @@ void KirbyModule::suck() {
         return;
     AI::Interface::i().sendCommand(LOOK);
     tickUsed += 7;
-    takeObjects();
+    if (forwardCount > 0) {
+        takeObjects();
+    }
     AI::Interface::i().sendCommand(FORWARD);
     tickUsed += 7;
     forwardCount++;

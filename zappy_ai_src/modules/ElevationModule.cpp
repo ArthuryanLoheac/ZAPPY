@@ -10,6 +10,7 @@
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
 #include "../../libc/include/logs.h"
+#include <unistd.h>
 
 /**
  * @brief Initialize the ElevationModule with default values
@@ -38,7 +39,7 @@ float ElevationModule::getPriority() {
     if (foodCount < 3)
         return 1.0f;
 
-    return (hasSufficientFood) ? 0.4f : 0.7f;
+    return (hasSufficientFood) ? 0.3f : 0.7f;
 }
 
 /**
@@ -55,6 +56,8 @@ void ElevationModule::checkResources() {
                   != AI::Data::i().inventory.end()
                   && AI::Data::i().inventory.at(AI::Data::Material_t::Linemate)
                   > 0;
+    std::cout << "Food count: " << foodCount
+              << ", Has linemate: " << hasLinemate << std::endl;
 
     hasSufficientFood = (foodCount >= 3);
 }
@@ -65,6 +68,8 @@ void ElevationModule::checkResources() {
  * Manages the sequence of looking for linemate, moving to it, and starting incantation
  */
 void ElevationModule::execute() {
+    std::cout << "Player with PID " << getpid()
+              << " executing Elevation Module" << std::endl;
     checkResources();
 
     static int lookCounter = 0;
@@ -76,6 +81,7 @@ void ElevationModule::execute() {
     }
 
     if (!foundSpot && !hasLinemate) {
+        std::cout << "Looking for linemate..." << std::endl;
         foundSpot = findElevationSpot();
         if (!foundSpot) {
             AI::Interface::i().sendCommand(LOOK);
@@ -94,6 +100,7 @@ void ElevationModule::execute() {
  * @return True if linemate is found on current tile
  */
 bool ElevationModule::checkCurrentTileForLinemate() {
+    std::cout << "Checking current tile for linemate..." << std::endl;
     if (AI::Data::i().vision.empty() || AI::Data::i().vision[0].empty()) {
         return false;
     }
@@ -106,9 +113,10 @@ bool ElevationModule::checkCurrentTileForLinemate() {
         LOG_INFO("Found linemate on current tile!");
         targetX = 0;
         targetY = 0;
+        std::cout << "Linemate found at (0, 0)!!!!!!!!!!!!!!!!!!!!" << std::endl;
         return true;
     }
-
+    std::cout << "No linemate found on current tile." << std::endl;
     return false;
 }
 

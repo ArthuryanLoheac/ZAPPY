@@ -5,9 +5,10 @@
 ** Disruption Module Implementation
 */
 
-#include "modules/DisruptionModule.hpp"
+#include <unistd.h>
 #include <iostream>
 #include <string>
+#include "modules/DisruptionModule.hpp"
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
 #include "../../libc/include/logs.h"
@@ -28,6 +29,9 @@ DisruptionModule::DisruptionModule(): lookProbability(0), actionCounter(0),
  * based on the current probability.
  */
 void DisruptionModule::execute() {
+    std::cout << "Player with PID " << getpid()
+              << " executing Disruption Module with action counter: "
+              << actionCounter << std::endl;
     actionCounter++;
     sendRandomMovement();
     if (shouldSendLook()) {

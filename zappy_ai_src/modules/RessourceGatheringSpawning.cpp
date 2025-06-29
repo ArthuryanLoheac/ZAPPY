@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <string>
 #include <chrono>
+#include <iostream>
 #include "modules/RessourceGatheringSpawning.hpp"
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
@@ -28,6 +29,8 @@ RessourceGatheringSpawning::RessourceGatheringSpawning()
  * @brief Execute the spawning behavior
  */
 void RessourceGatheringSpawning::execute() {
+    std::cout << "Player with PID " << getpid()
+              << " executing Resource Gathering and Spawning Module" << std::endl;
     int foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                     AI::Data::i().inventory.end() ?
                     AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
@@ -92,6 +95,21 @@ void RessourceGatheringSpawning::execute() {
         recentlySpawned = true;
         spawnCooldown = 0;
     }
+
+    // Handle picking up non-food items if present (priority 0.2)
+    if (!AI::Data::i().vision.empty() && !AI::Data::i().vision[0].empty()) {
+        const size_t midY = AI::Data::i().vision[0].size() / 2;
+        auto& currentTile = AI::Data::i().vision[0][midY];
+        bool tookSomething = false;
+        for (const auto& item : currentTile) {
+            if (item.first != "Food" && item.second > 0) {
+                AI::Interface::i().sendCommand("Take " + item.first + "\n");
+                tookSomething = true;
+            }
+        }
+        if (tookSomething)
+            return;
+    }
 }
 
 /**
@@ -109,7 +127,7 @@ float RessourceGatheringSpawning::getPriority() {
         if (foodCount <= 3) {
             return 0.01f;
         } else {
-            float dynamicPriority = 0.01f + (foodCount * 0.01f);
+            float dynamicPriority = 0.01f + (foodCount * 0.05f);
             return dynamicPriority;
         }
     }
@@ -120,6 +138,22 @@ float RessourceGatheringSpawning::getPriority() {
         LOG_INFO("Sufficient resources for spawning, priority: 0.3");
         return 0.3f;
     }
+    spawnCooldown = 0;
+    recentlySpawned = false;
+    needToFeed = false;
+
+    // Check current tile for non-food items, but do not send commands here
+    if (!AI::Data::i().vision.empty() && !AI::Data::i().vision[0].empty()) {
+        const size_t midY = AI::Data::i().vision[0].size() / 2;
+        auto& currentTile = AI::Data::i().vision[0][midY];
+        for (const auto& item : currentTile) {
+            if (item.first != "food" && item.second > 0) {
+                // Non-food item found, return higher priority
+                return 0.2f;
+            }
+        }
+    }
+
     return 0.8f;
 }
 

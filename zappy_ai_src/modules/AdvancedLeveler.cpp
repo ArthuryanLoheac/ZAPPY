@@ -10,6 +10,7 @@
 #include <vector>
 #include <utility>
 #include <iostream>
+#include <unistd.h>
 
 #include "Data/Data.hpp"
 #include "Interface/Interface.hpp"
@@ -90,6 +91,8 @@ double AdvancedLeveler::computePriority(int level,
     priority *= requirements.playerCount;
     priority = std::log1p(priority) / std::log1p(5.0);
     priority = std::max(1.0, priority);
+    std::cout << "Computed priority: " << priority
+              << " for level: " << level << std::endl;
     return priority;
 }
 
@@ -260,6 +263,9 @@ float AdvancedLeveler::getPriority() {
 }
 
 void AdvancedLeveler::execute() {
+    std::cout << "Player with PID " << getpid()
+              << " executing Advanced Leveler Module with state: "
+              << static_cast<int>(_moduleState) << std::endl;
     switch (_moduleState) {
         case Idling: {
             LOG_INFO("Prerequisites met, sending invitation for ritual");

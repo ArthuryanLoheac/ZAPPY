@@ -1,13 +1,14 @@
 #pragma once
 
-#include "modules/AIModule.hpp"
 #include <vector>
 #include <string>
+
+#include "modules/AIModule.hpp"
 
 /**
  * @class HarvesterSpawner
  * @brief Module that spawns feeder and harvester AI agents
- * 
+ *
  * This module is responsible for creating feeder and harvester units
  * but does not pick up items. It's used after the KirbyModule completes
  * its resource collection phase.
@@ -50,6 +51,6 @@ class HarvesterSpawner : public AIModule {
 
     int feederCount;     ///< Number of feeders spawned
     int harvesterCount;  ///< Number of harvesters spawned
-    int ticksUntilNextSpawn; ///< Ticks until next spawn attempt
-    bool isSpawnCooldown;    ///< Whether we're in spawn cooldown
+    int ticksUntilNextSpawn;  ///< Ticks until next spawn attempt
+    bool isSpawnCooldown;     ///< Whether we're in spawn cooldown
 };

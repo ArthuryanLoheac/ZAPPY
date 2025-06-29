@@ -30,7 +30,8 @@ RessourceGatheringSpawning::RessourceGatheringSpawning()
  */
 void RessourceGatheringSpawning::execute() {
     std::cout << "Player with PID " << getpid()
-              << " executing Resource Gathering and Spawning Module" << std::endl;
+              << " executing Resource Gathering and Spawning Module"
+              << std::endl;
     int foodCount = AI::Data::i().inventory.find(AI::Data::Material_t::Food) !=
                     AI::Data::i().inventory.end() ?
                     AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;

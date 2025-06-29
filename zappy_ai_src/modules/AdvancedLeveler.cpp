@@ -1,5 +1,7 @@
 #include "modules/AdvancedLeveler.hpp"
 
+#include <unistd.h>
+
 #include <cmath>
 #include <unordered_map>
 #include <algorithm>
@@ -10,7 +12,6 @@
 #include <vector>
 #include <utility>
 #include <iostream>
-#include <unistd.h>
 
 #include "Data/Data.hpp"
 #include "Interface/Interface.hpp"

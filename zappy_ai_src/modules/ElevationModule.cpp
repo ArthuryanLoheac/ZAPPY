@@ -6,12 +6,16 @@
 */
 
 #include "modules/ElevationModule.hpp"
+
+#include <unistd.h>
+
 #include <iostream>
 #include <algorithm>
+#include <string>
+
 #include "../Interface/Interface.hpp"
 #include "../Data/Data.hpp"
 #include "../../libc/include/logs.h"
-#include <unistd.h>
 
 /**
  * @brief Initialize the ElevationModule with default values
@@ -76,7 +80,8 @@ void ElevationModule::checkResources() {
 /**
  * @brief Execute the elevation module behavior
  *
- * Manages the sequence of looking for linemate, moving to it, and starting incantation
+ * Manages the sequence of looking for linemate, moving to it,
+ * and starting incantation
  */
 void ElevationModule::execute() {
     elevationPriority = 0.6f;
@@ -123,7 +128,8 @@ bool ElevationModule::checkCurrentTileForLinemate() {
         LOG_INFO("Found linemate on current tile!");
         targetX = 0;
         targetY = 0;
-        std::cout << "Linemate found at (0, 0)!!!!!!!!!!!!!!!!!!!!" << std::endl;
+        std::cout << "Linemate found at (0, 0)!!!!!!!!!!!!!!!!!!!!"
+            << std::endl;
         return true;
     }
     std::cout << "No linemate found on current tile." << std::endl;
@@ -173,7 +179,8 @@ void ElevationModule::dropAllInventory() {
             continue;
         }
         std::string itemName = AI::Data::materialToString(item.first);
-        std::transform(itemName.begin(), itemName.end(), itemName.begin(), ::tolower);
+        std::transform(itemName.begin(), itemName.end(), itemName.begin(),
+            ::tolower);
         int itemCount = item.second;
         for (int i = 0; i < itemCount; ++i) {
             AI::Interface::i().sendCommand("Set " + itemName + "\n");

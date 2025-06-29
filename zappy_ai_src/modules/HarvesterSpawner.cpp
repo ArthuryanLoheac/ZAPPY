@@ -1,17 +1,21 @@
 #include "modules/HarvesterSpawner.hpp"
+
+#include <unistd.h>
+
+#include <string>
+
 #include "Interface/Interface.hpp"
 #include "Data/Data.hpp"
 #include "../../libc/include/logs.h"
-#include <unistd.h>
-#include <string>
 
 /**
  * @brief Constructs a new HarvesterSpawner object
- * 
+ *
  * Initializes the module with default values for spawn counts and cooldown.
  */
-HarvesterSpawner::HarvesterSpawner() 
-    : feederCount(0), harvesterCount(0), ticksUntilNextSpawn(100), isSpawnCooldown(false) {
+HarvesterSpawner::HarvesterSpawner()
+    : feederCount(0), harvesterCount(0),
+      ticksUntilNextSpawn(100), isSpawnCooldown(false) {
     LOG_INFO("HarvesterSpawner module initialized");
 }
 
@@ -22,7 +26,7 @@ HarvesterSpawner::~HarvesterSpawner() = default;
 
 /**
  * @brief Executes the main logic of the HarvesterSpawner module
- * 
+ *
  * Attempts to spawn feeders and harvesters based on team needs.
  */
 void HarvesterSpawner::execute() {
@@ -36,7 +40,7 @@ void HarvesterSpawner::execute() {
     }
 
     analyzeTeamNeeds();
-    
+
     // Don't pick up resources, just focus on spawning
     AI::Interface::i().sendCommand(LOOK);
 }
@@ -51,13 +55,13 @@ float HarvesterSpawner::getPriority() {
 
 /**
  * @brief Analyzes team needs and determines what agents to spawn
- * 
+ *
  * Checks food levels and team composition to decide whether to spawn
  * feeders or harvesters.
  */
 void HarvesterSpawner::analyzeTeamNeeds() {
     int foodCount = AI::Data::i().inventory[AI::Data::Material_t::Food];
-    
+
     // Need more food collectors if food is low
     if (foodCount < 4 && feederCount < 3) {
         if (spawnAgent("FEEDER")) {
@@ -67,7 +71,7 @@ void HarvesterSpawner::analyzeTeamNeeds() {
             return;
         }
     }
-    
+
     // Otherwise spawn harvesters
     if (foodCount >= 4 && harvesterCount < 4) {
         if (spawnAgent("HARVESTER")) {
@@ -87,16 +91,16 @@ void HarvesterSpawner::analyzeTeamNeeds() {
     } else {
         if (spawnAgent("HARVESTER")) {
             harvesterCount++;
-            LOG_INFO("Spawned additional harvester (total: %d)", harvesterCount);
+            LOG_INFO("Spawned additional harvester (total: %d)",
+                harvesterCount);
             isSpawnCooldown = true;
         }
     }
-
 }
 
 /**
  * @brief Attempts to spawn a new agent with the specified role
- * 
+ *
  * @param role The role to assign to the new agent ("FEEDER" or "HARVESTER")
  * @return true if spawning was successful, false otherwise
  */
@@ -110,7 +114,7 @@ bool HarvesterSpawner::spawnAgent(const std::string& role) {
 
     // Send fork command
     AI::Interface::i().sendCommand("Fork");
-    
+
     // Broadcast role need message for the newly spawned agent
     if (role == "FEEDER") {
         AI::Interface::i().sendMessage("NEED_FEEDER");
@@ -123,6 +127,6 @@ bool HarvesterSpawner::spawnAgent(const std::string& role) {
         AI::Interface::i().sendMessage("NEED_HARVESTER");
         LOG_INFO("Broadcasting NEED_HARVESTER for newly forked process");
     }
-    
+
     return true;
 }

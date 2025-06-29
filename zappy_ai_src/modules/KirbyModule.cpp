@@ -254,18 +254,19 @@ void KirbyModule::spit() {
     LOG_INFO("Kirby completed trip: walked %d steps, dropped %d items,"
         " used %d ticks out of %d",
              forwardCount, itemsDropped, tickUsed, timeRemaining);
-    
+
     // Add the HarvesterSpawner module once when operation is complete
     if (!hasSpawnedHarvester) {
         Logic::getInstance().addModule(std::make_unique<HarvesterSpawner>());
-        LOG_INFO("Added HarvesterSpawner module to continue with feeding and harvesting");
+        LOG_INFO("Added HarvesterSpawner module to "
+            "continue with feeding and harvesting");
         hasSpawnedHarvester = true;
     }
 }
 
 /**
  * @brief Takes all objects from the current cell after a look command.
- * 
+ *
  * Prioritizes collection of non-food items first, then collects food.
  * Updates tick usage for each take command executed.
  */

@@ -57,7 +57,8 @@ int returnHelp() {
               << "Options:\n"
               << "  -h <ip>       : Set the server IP address\n"
               << "  -p <port>     : Set the server port (0-65535)\n"
-              << "  -v, -vv, -vvv : Set verbose level (WARNING, INFO, DEBUG\n";
+              << "  -v, -vv, -vvv : Set verbose level (WARNING, INFO, DEBUG\n"
+              << "  -o            : Enable low detail mode\n";
     return 84;
 }
 

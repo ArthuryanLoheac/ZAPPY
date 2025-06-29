@@ -50,14 +50,13 @@ void pin_command(zappy_t *zappy, client_t *client, char **args)
         LOG_WARNING("Invalid arguments for command pin.");
         add_to_buffer(&client->out_buffer, "ko\n");
         return;
-    } else {
-        if (args[0][1] < '0' || args[0][1] > '9') {
-            LOG_WARNING("[%i]: Invalid player id for pin command: %s",
-                client->fd, args[0]);
-            add_to_buffer(&client->out_buffer, "ko\n");
-            return;
-        }
-        id = atoi(args[0] + 1);
-        send_player_inventory(zappy, client, id);
     }
+    if (args[0][1] < '0' || args[0][1] > '9') {
+        LOG_WARNING("[%i]: Invalid player id for pin command: %s",
+            client->fd, args[0]);
+        add_to_buffer(&client->out_buffer, "ko\n");
+        return;
+    }
+    id = atoi(args[0] + 1);
+    send_player_inventory(zappy, client, id);
 }

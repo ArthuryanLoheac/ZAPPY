@@ -87,6 +87,12 @@ class Player {
      */
     ~Player() {}
 
+    void setXY(int newX, int newY) {
+        std::lock_guard<std::mutex> lock(mutexDatas);
+        x = newX;
+        y = newY;
+    }
+
     /**
      * @brief Initializes the player with the given team and level.
      *

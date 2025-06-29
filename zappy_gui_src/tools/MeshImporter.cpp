@@ -30,7 +30,6 @@ const Vec3d &rotation) {
         throw GUI::ShaderCompilationException("Error loading mesh");
     std::shared_ptr<Mesh> node = std::shared_ptr<Mesh>(GUI::Window::i()
         .smgr->addAnimatedMeshSceneNode(mesh), [](Mesh* p) {(void) p;});
-    cleanupUnusedResources();
     if (node) {
         node->setScale(scale * GUI::PathManager::i().getScale(meshName));
         node->setRotation(Vec3d(rotation));

@@ -169,6 +169,23 @@ RFC 222                   Zappy GUI Protocol              Jun 2025
    levelup <SP> #n <CRLF> ->
       Level up the player N by one
 
+   d_forward <SP> #n <CRLF> ->
+      Move the AI with id n forward
+
+   d_backward <SP> #n <CRLF> ->
+      Move the AI with id n backward
+
+   d_left <SP> #n <CRLF> ->
+      Move the AI with id n left
+
+   d_right <SP> #n <CRLF> ->
+      Move the AI with id n right
+
+   d_fork <SP> #n <CRLF> ->
+      Simulate a fork for the AI with id n
+
+   d_eject <SP> #n <CRLF> ->
+      Simulate a eject for the AI with id n
                                                                [Page 5]
 
 RFC 222                   Zappy GUI Protocol              Jun 2025

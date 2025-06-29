@@ -60,6 +60,13 @@ This document describes the client/server communication protocol used in the Zap
 | `suc` | Unknown command |
 | `sbp` | Command parameter error |
 | `ping` | Send the response to see the delay with the server |
+| `levelup #n` | Level up the player N by one |
+| `d_forward #n` | Move the AI with id n forward |
+| `d_backward #n` | Move the AI with id n backward |
+| `d_left #n` | Move the AI with id n left |
+| `d_right #n` | Move the AI with id n right |
+| `d_fork #n` | Simulate a fork for the AI with id n |
+| `d_eject #n` | Simulate a eject for the AI with id n |
 
 ---
 

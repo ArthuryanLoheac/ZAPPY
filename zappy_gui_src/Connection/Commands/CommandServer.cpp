@@ -242,7 +242,8 @@ void NetworkForGui::pinCommand(std::vector<std::string> &args) {
             throw CommandParsingException("Invalid resource in pin command");
         p.setRessource(i - 4, r);
     }
-    p.setPosition(x, y);
+    p.setXY(x, y);
+    GUI::Window::i().needUpdatePlayers = true;
 }
 
 /**

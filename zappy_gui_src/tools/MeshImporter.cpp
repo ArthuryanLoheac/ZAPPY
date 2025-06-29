@@ -30,6 +30,7 @@ const Vec3d &rotation) {
         throw GUI::ShaderCompilationException("Error loading mesh");
     std::shared_ptr<Mesh> node = std::shared_ptr<Mesh>(GUI::Window::i()
         .smgr->addAnimatedMeshSceneNode(mesh), [](Mesh* p) {(void) p;});
+    cleanupUnusedResources();
     if (node) {
         node->setScale(scale * GUI::PathManager::i().getScale(meshName));
         node->setRotation(Vec3d(rotation));
@@ -66,6 +67,18 @@ irr::scene::IAnimatedMesh *MeshImporter::getMesh(std::string meshName) {
 }
 
 /**
+ * @brief Removes a mesh from memory if it is no longer used.
+ *
+ * @param meshName Name of the mesh file (without extension).
+ */
+void MeshImporter::removeMesh(const std::string &meshName) {
+    if (meshes.find(meshName) != meshes.end()) {
+        meshes[meshName]->drop();
+        meshes.erase(meshName);
+    }
+}
+
+/**
  * @brief Retrieves a texture by its name.
  *
  * @param textureName Name of the texture file (without extension).
@@ -84,6 +97,17 @@ irr::video::ITexture *MeshImporter::getTexture(std::string textureName) {
         return mesh;
     }
     return textures[textureName];
+}
+
+/**
+ * @brief Removes a texture from memory if it is no longer used.
+ *
+ * @param textureName Name of the texture file (without extension).
+ */
+void MeshImporter::removeTexture(const std::string &textureName) {
+    if (textures.find(textureName) != textures.end()) {
+        textures.erase(textureName);
+    }
 }
 
 /**
@@ -131,4 +155,33 @@ irr::video::SColor MeshImporter::getColor(std::string teamName) {
         colorTeam[teamName] = colors[iColor++];
     }
     return colorTeam[teamName];
+}
+
+/**
+ * @brief Cleans up unused meshes from memory.
+ */
+void MeshImporter::cleanupUnusedMeshes() {
+    for (auto it = meshes.begin(); it != meshes.end();) {
+        if (it->second && it->second->getReferenceCount() == 1) {
+            it = meshes.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
+/**
+ * @brief Cleans up unused meshes and textures from memory.
+ */
+void MeshImporter::cleanupUnusedResources() {
+    cleanupUnusedMeshes();
+
+    // Clean up unused textures
+    for (auto it = textures.begin(); it != textures.end();) {
+        if (it->second->getReferenceCount() == 1) {
+            it = textures.erase(it);
+        } else {
+            ++it;
+        }
+    }
 }

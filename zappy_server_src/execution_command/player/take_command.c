@@ -95,7 +95,7 @@ void take_command(zappy_t *zappy, client_t *client, char **args)
     char buffer[256];
     char buffer2[256];
 
-    if (client == NULL || zappy == NULL)
+    if (!client || !zappy || !zappy->map || !args || !args[0])
         return;
     if (!take_object(zappy,
         &zappy->map->grid[client->stats.y][client->stats.x], args[0])) {

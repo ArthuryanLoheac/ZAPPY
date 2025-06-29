@@ -99,7 +99,6 @@ irr::video::IVideoDriver* _driver) {
 
         drawPlayerInfo(idPlayer, font);
     } catch (const std::exception &e) {
-        std::cerr << "Error in drawUI: " << e.what() << std::endl;
     }
 }
 

@@ -33,8 +33,7 @@ void send_player_inventory(zappy_t *zappy, client_t *gui, int id)
             return;
         }
     }
-    LOG_WARNING("[%i]: Unknown player id(%i) from pin gui request",
-        gui->fd, id);
+    LOG_WARNING("[%i]: Unknown player id (%i)", gui->fd, id);
     add_to_buffer(&gui->out_buffer, "ko\n");
 }
 
@@ -42,22 +41,19 @@ void pin_command(zappy_t *zappy, client_t *client, char **args)
 {
     int id;
 
-    if (!client) {
-        LOG_WARNING("Invalid arguments for command pin.");
+    if (!client)
         return;
-    }
     if (!args || !args[0] || strlen(args[0]) < 2) {
         LOG_WARNING("Invalid arguments for command pin.");
         add_to_buffer(&client->out_buffer, "ko\n");
         return;
-    } else {
-        if (args[0][1] < '0' || args[0][1] > '9') {
-            LOG_WARNING("[%i]: Invalid player id for pin command: %s",
-                client->fd, args[0]);
-            add_to_buffer(&client->out_buffer, "ko\n");
-            return;
-        }
-        id = atoi(args[0] + 1);
-        send_player_inventory(zappy, client, id);
     }
+    if (args[0][1] < '0' || args[0][1] > '9') {
+        LOG_WARNING("[%i]: Invalid player id for pin command: %s",
+            client->fd, args[0]);
+        add_to_buffer(&client->out_buffer, "ko\n");
+        return;
+    }
+    id = atoi(args[0] + 1);
+    send_player_inventory(zappy, client, id);
 }

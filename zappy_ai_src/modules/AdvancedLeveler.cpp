@@ -92,8 +92,6 @@ double AdvancedLeveler::computePriority(int level,
     priority *= requirements.playerCount;
     priority = std::log1p(priority) / std::log1p(5.0);
     priority = std::max(1.0, priority);
-    std::cout << "Computed priority: " << priority
-              << " for level: " << level << std::endl;
     return priority;
 }
 
@@ -227,15 +225,6 @@ static void spitRequiredMaterial(AI::Data::Inventory_t &inv, int ritualLevel) {
 }
 
 float AdvancedLeveler::getPriority() {
-    static int inventoryPrintCounter = 0;
-    if (++inventoryPrintCounter >= 10) {
-        inventoryPrintCounter = 0;
-        std::cout << "Inventory: ";
-        for (const auto& [mat, qty] : AI::Data::i().inventory) {
-            std::cout << AI::Data::materialToString(mat) << "=" << qty << " ";
-        }
-        std::cout << std::endl;
-    }
     auto &msgQueue = AI::Data::i().messageQueue;
 
     if (AI::Data::i().level < 2)
@@ -264,9 +253,6 @@ float AdvancedLeveler::getPriority() {
 }
 
 void AdvancedLeveler::execute() {
-    std::cout << "Player with PID " << getpid()
-              << " executing Advanced Leveler Module with state: "
-              << static_cast<int>(_moduleState) << std::endl;
     switch (_moduleState) {
         case Idling: {
             LOG_INFO("Prerequisites met, sending invitation for ritual");

@@ -44,16 +44,12 @@ float ElevationModule::getPriority() {
         AI::Data::i().inventory.at(AI::Data::Material_t::Food) : 0;
     if (foodCount < 3) {
         LOG_INFO("Elevation Module Priority: 0.7 (not enough food)");
-        std::cout << "Not enough food for elevation: " << foodCount
-                  << std::endl;
         return 0.7f;
     }
     float ret = elevationPriority;
     elevationPriority -= 0.05f;
     if (elevationPriority < 0.0f)
         elevationPriority = 0.0f;
-    std::cout << "Elevation Module Priority: " << ret
-              << " with food count: " << foodCount << std::endl;
     return ret;
 }
 
@@ -71,9 +67,6 @@ void ElevationModule::checkResources() {
                   != AI::Data::i().inventory.end()
                   && AI::Data::i().inventory.at(AI::Data::Material_t::Linemate)
                   > 0;
-    std::cout << "Food count: " << foodCount
-              << ", Has linemate: " << hasLinemate << std::endl;
-
     hasSufficientFood = (foodCount >= 3);
 }
 
@@ -85,8 +78,6 @@ void ElevationModule::checkResources() {
  */
 void ElevationModule::execute() {
     elevationPriority = 0.6f;
-    std::cout << "Player with PID " << getpid()
-              << " executing Elevation Module" << std::endl;
     checkResources();
 
     static int lookCounter = 0;
@@ -98,7 +89,6 @@ void ElevationModule::execute() {
     }
 
     if (!foundSpot && !hasLinemate) {
-        std::cout << "Looking for linemate..." << std::endl;
         foundSpot = findElevationSpot();
         if (!foundSpot) {
             AI::Interface::i().sendCommand(LOOK);
@@ -115,7 +105,6 @@ void ElevationModule::execute() {
  * @return True if linemate is found on current tile
  */
 bool ElevationModule::checkCurrentTileForLinemate() {
-    std::cout << "Checking current tile for linemate..." << std::endl;
     if (AI::Data::i().vision.empty() || AI::Data::i().vision[0].empty()) {
         return false;
     }
@@ -128,11 +117,8 @@ bool ElevationModule::checkCurrentTileForLinemate() {
         LOG_INFO("Found linemate on current tile!");
         targetX = 0;
         targetY = 0;
-        std::cout << "Linemate found at (0, 0)!!!!!!!!!!!!!!!!!!!!"
-            << std::endl;
         return true;
     }
-    std::cout << "No linemate found on current tile." << std::endl;
     return false;
 }
 

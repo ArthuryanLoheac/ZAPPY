@@ -1,9 +1,11 @@
-#pragma once
+#ifndef ZAPPY_AI_SRC_MODULES_HARVESTERSPAWNER_HPP_
+#define ZAPPY_AI_SRC_MODULES_HARVESTERSPAWNER_HPP_
+
 
 #include <vector>
 #include <string>
-
 #include "modules/AIModule.hpp"
+
 
 /**
  * @class HarvesterSpawner
@@ -52,5 +54,7 @@ class HarvesterSpawner : public AIModule {
     int feederCount;     ///< Number of feeders spawned
     int harvesterCount;  ///< Number of harvesters spawned
     int ticksUntilNextSpawn;  ///< Ticks until next spawn attempt
-    bool isSpawnCooldown;     ///< Whether we're in spawn cooldown
+    bool isSpawnCooldown;    ///< Whether we're in spawn cooldown
 };
+
+#endif  // ZAPPY_AI_SRC_MODULES_HARVESTERSPAWNER_HPP_

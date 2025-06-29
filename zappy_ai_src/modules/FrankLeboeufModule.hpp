@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ZAPPY_AI_SRC_MODULES_FRANKLEBOEUFMODULE_HPP_
+#define ZAPPY_AI_SRC_MODULES_FRANKLEBOEUFMODULE_HPP_
+
 
 #include "modules/AIModule.hpp"
 
@@ -38,3 +40,5 @@ class FrankLeboeufModule : public AIModule {
 
  private:
 };
+
+#endif  // ZAPPY_AI_SRC_MODULES_FRANKLEBOEUFMODULE_HPP_

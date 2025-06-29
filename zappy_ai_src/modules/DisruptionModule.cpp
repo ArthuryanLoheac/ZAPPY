@@ -29,9 +29,6 @@ DisruptionModule::DisruptionModule(): lookProbability(0), actionCounter(0),
  * based on the current probability.
  */
 void DisruptionModule::execute() {
-    std::cout << "Player with PID " << getpid()
-              << " executing Disruption Module with action counter: "
-              << actionCounter << std::endl;
     actionCounter++;
     sendRandomMovement();
     if (shouldSendLook()) {
@@ -93,8 +90,6 @@ int DisruptionModule::checkVisionElevation() {
             auto& tile = AI::Data::i().vision[x][y];
 
             if (tile["player"] > 2 && getNumberStone(tile) > 2) {
-                std::cout << "Disruption Module found elevation at: "
-                            << x << ", " << relativeY << std::endl;
                 attack(x, relativeY);
                 return 1;
             }

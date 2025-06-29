@@ -38,10 +38,7 @@ void HarvesterSpawner::execute() {
         }
         return;
     }
-
     analyzeTeamNeeds();
-
-    // Don't pick up resources, just focus on spawning
     AI::Interface::i().sendCommand(LOOK);
 }
 
@@ -105,17 +102,14 @@ void HarvesterSpawner::analyzeTeamNeeds() {
  * @return true if spawning was successful, false otherwise
  */
 bool HarvesterSpawner::spawnAgent(const std::string& role) {
-    // Check if there's enough food to fork
     int foodCount = AI::Data::i().inventory[AI::Data::Material_t::Food];
     if (foodCount <= 3) {
         LOG_INFO("Not enough food to spawn a %s agent", role.c_str());
         return false;
     }
 
-    // Send fork command
     AI::Interface::i().sendCommand("Fork");
 
-    // Broadcast role need message for the newly spawned agent
     if (role == "FEEDER") {
         AI::Interface::i().sendMessage("NEED_FEEDER");
         AI::Interface::i().sendMessage("NEED_FEEDER");

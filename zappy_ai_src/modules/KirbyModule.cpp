@@ -255,11 +255,10 @@ void KirbyModule::spit() {
         " used %d ticks out of %d",
              forwardCount, itemsDropped, tickUsed, timeRemaining);
 
-    // Add the HarvesterSpawner module once when operation is complete
     if (!hasSpawnedHarvester) {
         Logic::getInstance().addModule(std::make_unique<HarvesterSpawner>());
-        LOG_INFO("Added HarvesterSpawner module to "
-            "continue with feeding and harvesting");
+        LOG_INFO("Added HarvesterSpawner module to continue with feeding"
+            " and harvesting");
         hasSpawnedHarvester = true;
     }
 }

@@ -96,7 +96,7 @@ void set_command(zappy_t *zappy, client_t *client, char **args)
     char buffer[256];
     char buffer2[256];
 
-    if (client == NULL || zappy == NULL)
+    if (client == NULL || !zappy || !args || !args[0] || zappy->map)
         return;
     if (!put_object(zappy, &client->stats,
         &zappy->map->grid[client->stats.y][client->stats.x], args[0])) {
